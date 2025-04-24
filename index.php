@@ -53,7 +53,7 @@
             border: 1px solid white;
         }
     </style>
-    <title>Asset Management Audit Test</title>
+    <title>Asset Management Audit index</title>
 </head>
 
 <body>
@@ -152,24 +152,26 @@
 
     // Path to your spreadsheet file
     $filePath = NULL;
-    try {
     if (isset($_POST['filePath'])) {
-        $filePath = $_POST['filePath'];
-        if (file_exists($filePath)) {
-        } else {
-            echo "File does not exist";
+        if (isset($_FILES['filePath']) &&
+        $_FILE['filePath']['error'] === UPLOAD_ERR_OK &&
+        $_FILE['filePath']['type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        $tmpPath = $_FILES['filePath']['tmp_name'];
+        try {
+            $filePath = $tmpPath;
+        } catch (Exception $e) {
         }
+    }
     } else {
     }
-} catch (Exception $e) {
-}
+
 
     ?>
 
     <form id="sheet" name="form" action="index.php" method="POST">
         <label for="filePath"> Enter File: </label>
-        <input type="text" name="filePath" id="filePath">
-        <button type="submit" onClick="doNotReload()">Submit</button>
+        <input type="file" name="filePath" id="filePath">
+        <button type="submit" >Submit</button>
     </form>
     <div id="additionalInputs"></div>
 
