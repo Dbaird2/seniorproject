@@ -166,7 +166,7 @@
 
     ?>
 
-    <form id="sheet" name="form" action="test.php" method="POST">
+    <form id="sheet" name="form" action="index.php" method="POST">
         <label for="filePath"> Enter File: </label>
         <input type="text" name="filePath" id="filePath">
         <button type="submit" onClick="doNotReload()">Submit</button>
@@ -404,7 +404,7 @@ if (!$empty) {
     }
     echo "</div>";
     ?>
-    <form id="dynamicForm" method='POST' action='test.php' onLoad="addNewInput()">
+    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
@@ -429,7 +429,7 @@ if (!$empty) {
     </form>
 
 
-    <form id="makeSheet" method='POST' action='test.php'>
+    <form id="makeSheet" method='POST' action='index.php'>
         <?php
         foreach ($array as $value) {
             echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
@@ -534,7 +534,7 @@ if (!$empty) {
             var filePath = $('filePath').val();
 
             $.ajax({
-                url: 'test.php',
+                url: 'index.php',
                 type: 'POST',
                 data: {
                     filePath: filePath,
