@@ -188,6 +188,7 @@ if (isset($_POST['filePath'])) {
                 }
             }
         } catch (Exception $e) {
+            echo "Error uploading file";
         }
     }
 } else {
