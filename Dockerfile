@@ -26,4 +26,4 @@ RUN composer install --no-dev --optimize-autoloader --verbose
 EXPOSE 10000
 
 # Command to start the PHP built-in server
-CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
+CMD ["php", "-S", "0.0.0.0:10000", "-t", "."]
