@@ -151,8 +151,9 @@ if (isset($_POST['create'])) {
 }
 
 // Path to your spreadsheet file
+echo "Before filePath POST\n";
 $filePath = NULL;
-if (isset($_POST['filePath'])) {
+#if (isset($_POST['filePath'])) {
     if (isset($_FILES['filePath']) &&
         $_FILE['filePath']['error'] === UPLOAD_ERR_OK &&
         $_FILE['filePath']['type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
@@ -191,8 +192,9 @@ if (isset($_POST['filePath'])) {
             echo "Error uploading file";
         }
     }
-} else {
-}
+echo "After filePath POST\n";
+#} else {
+#}
 
 
 ?>
@@ -200,6 +202,7 @@ if (isset($_POST['filePath'])) {
     <form id="sheet" name="form" action="index.php" method="POST">
         <label for="filePath"> Enter File: </label>
         <input type="file" name="filePath" id="filePath">
+<br>
         <button type="submit" >Submit</button>
     </form>
     <div id="additionalInputs"></div>
