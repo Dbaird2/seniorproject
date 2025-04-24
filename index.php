@@ -201,7 +201,7 @@ echo "After filePath POST\n";
 
 ?>
 
-    <form id="sheet" name="form" action="index.php" method="POST">
+    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
         <label for="filePath"> Enter File: </label>
         <input type="file" name="filePath" id="filePath">
 <br>
