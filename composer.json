@@ -1,0 +1,6 @@
+{
+    "name": "dbaird2/vscode",
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.1"
+    }
+}
