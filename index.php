@@ -155,8 +155,7 @@ echo "Before filePath POST\n";
 $filePath = NULL;
 #if (isset($_POST['filePath'])) {
     if (isset($_FILES['filePath']) &&
-        $_FILE['filePath']['error'] === UPLOAD_ERR_OK &&
-        $_FILE['filePath']['type'] === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        $_FILE['filePath']['error'] === UPLOAD_ERR_OK) {
         $tmpPath = $_FILES['filePath']['tmp_name'];
         try {
             $filePath = $tmpPath;
@@ -192,6 +191,7 @@ $filePath = NULL;
             echo "Error uploading file";
         }
     }
+echo "<br>";
 echo "After filePath POST\n";
 #} else {
 #}
