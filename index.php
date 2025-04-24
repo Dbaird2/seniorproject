@@ -159,6 +159,11 @@
         $tmpPath = $_FILES['filePath']['tmp_name'];
         try {
             $filePath = $tmpPath;
+            $spreadsheet = IOFactory::load($filePath);
+
+
+            // Get the first worksheet
+            $worksheet = $spreadsheet->getActiveSheet();
         } catch (Exception $e) {
         }
     }
@@ -178,11 +183,6 @@
     <?php
     // Load the spreadsheet
     if (!is_null($filePath)) {
-    $spreadsheet = IOFactory::load($filePath);
-   
-
-    // Get the first worksheet
-    $worksheet = $spreadsheet->getActiveSheet();
     }
 
     $row_number = 1;
