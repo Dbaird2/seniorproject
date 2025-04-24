@@ -156,8 +156,8 @@ $filePath = $_FILES['filePath']['tmp_name'];
 echo $filePath . "<br>";
 
 #if (isset($_POST['filePath'])) {
-    if (isset($_FILES['filePath']) &&
-        /*$_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
+    if (isset($_FILES['filePath']) 
+        /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
         $tmpPath = $_FILES['filePath']['tmp_name'];
         try {
             $filePath = $tmpPath;
