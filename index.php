@@ -152,10 +152,12 @@ if (isset($_POST['create'])) {
 
 // Path to your spreadsheet file
 echo "Before filePath POST\n";
-$filePath = NULL;
+$filePath = $_FILES['filePath']['tmp_name'];
+echo $filePath . "<br>";
+
 #if (isset($_POST['filePath'])) {
     if (isset($_FILES['filePath']) &&
-        $_FILE['filePath']['error'] === UPLOAD_ERR_OK) {
+        /*$_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
         $tmpPath = $_FILES['filePath']['tmp_name'];
         try {
             $filePath = $tmpPath;
