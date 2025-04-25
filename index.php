@@ -70,6 +70,14 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 if (isset($_POST['create'])) {
+    $saveDir = __DIR__ . '/exports/';
+    echo "Looking for: $filePath<br>";
+    var_dump(file_exists($filePath));
+    if (!file_exists($saveDir)) {
+        mkdir($saveDir, 0777, true);
+    }
+    $fileNameOnly = basename($filePath);
+    $filePath = $saveDir . $fileNameOnly;
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
