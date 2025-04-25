@@ -95,7 +95,7 @@ if (isset($_POST['create'])) {
     $po = $_POST['po_num'];
     $old_tags = $_POST['old_tag'];
     $desc = $_POST['description'];
-    $filePath = $_POST['filePath'];
+    $filePath = $_FILES['filePath']['tmp_name'];
     echo "Looking for: $filePath<br>";
     var_dump(file_exists($filePath));
     $fileNameOnly = basename($filePath);
