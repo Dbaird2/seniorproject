@@ -232,6 +232,8 @@ try {
     }
 } catch (Exception $e) {
     echo "Error uploading file";
+} catch (\TypeError $e) {
+    echo "TypeError";
 }
 
 ?>
@@ -328,7 +330,8 @@ if (isset($_POST['dynamicInput'])) {
         }
     }
 }
-
+try {
+    if (!is_null($worksheet)){
 $worksheet->getRowIterator(1);
 $cellB = $worksheet->getCell('B' . 2);
 $cellH = $worksheet->getCell('H' . 2);
@@ -347,6 +350,9 @@ $column_headers[] = $H;
 $column_headers[] = $I;
 $column_headers[] = $J;
 $column_headers[] = $N;
+    }
+} catch (\Throwable $e) {
+}
 
 $colors = ['lightgray', 'white'];
 $empty = false;
@@ -356,6 +362,8 @@ try {
 
     } 
 } catch (Exception $e) {
+    $empty = TRUE;
+} catch (\Throwable $e) {
     $empty = TRUE;
 }
 if (!$empty) {
