@@ -94,7 +94,7 @@ if (isset($_POST['create'])) {
     $sn = $_POST['serial'];
     $po = $_POST['po_num'];
     $old_tags = $_POST['old_tag'];
-    $desc = $_POST['description'];
+    $desc = $_POST['description']tmp_;
     $filePath = $_FILES['filePath']['tmp_name'];
     echo "Looking for: $filePath<br>";
     var_dump(file_exists($filePath));
@@ -167,7 +167,7 @@ echo $filePath . "<br>";
 #if (isset($_POST['filePath'])) {
     if (isset($_FILES['filePath']) 
         /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
-        $tmpPath = $_FILES['filePath']['name'];
+        $tmpPath = $_FILES['filePath']['tmp_name'];
         try {
             $filePath = $tmpPath;
             $spreadsheet = IOFactory::load($tmpPath);
