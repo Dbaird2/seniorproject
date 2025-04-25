@@ -71,13 +71,10 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
      */
 if (isset($_POST['create'])) {
     $saveDir = __DIR__ . '/exports/';
-    echo "Looking for: $filePath<br>";
-    var_dump(file_exists($filePath));
+
     if (!file_exists($saveDir)) {
         mkdir($saveDir, 0777, true);
     }
-    $fileNameOnly = basename($filePath);
-    $filePath = $saveDir . $fileNameOnly;
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
@@ -99,6 +96,10 @@ if (isset($_POST['create'])) {
     $old_tags = $_POST['old_tag'];
     $desc = $_POST['description'];
     $filePath = $_POST['filePath'];
+    echo "Looking for: $filePath<br>";
+    var_dump(file_exists($filePath));
+    $fileNameOnly = basename($filePath);
+    $filePath = $saveDir . $fileNameOnly;
 
     $empty_scan = is_null($previous_inputs[0]) ? true : false;
     $file_empty = is_null($old_tags[1]) ? true : false;
