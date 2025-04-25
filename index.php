@@ -167,10 +167,9 @@ echo $filePath . "<br>";
 #if (isset($_POST['filePath'])) {
     if (isset($_FILES['filePath']) 
         /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
-        $tmpPath = $_FILES['filePath']['tmp_name'];
+        $tmpPath = $_FILES['filePath']['name'];
         try {
             $filePath = $tmpPath;
-            echo $filePath;
             $spreadsheet = IOFactory::load($tmpPath);
 
 
