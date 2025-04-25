@@ -454,7 +454,7 @@ foreach ($array as $row) {
 echo "</div>";
 ?>
     <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()">
+    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
@@ -482,7 +482,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
     </form>
 
 
-    <form id="makeSheet" method='POST' action='index.php'>
+    <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
 <?php
 
 if (isset($_FILES['filePath']) 
