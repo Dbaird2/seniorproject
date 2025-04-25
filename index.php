@@ -70,142 +70,169 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 if (isset($_POST['create'])) {
-    $saveDir = __DIR__ . '/exports/';
+    try {
+        $saveDir = __DIR__ . '/exports/';
 
-    if (!file_exists($saveDir)) {
-        mkdir($saveDir, 0777, true);
-    }
-    $spreadsheet = new Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
-    $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
-        /*
+        if (!file_exists($saveDir)) {
+            mkdir($saveDir, 0777, true);
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
         echo "<pre>";
         var_dump($_POST);
         echo"</pre>";
-         */
 
-    $row_index = 2;
-    $previous_times = $_POST['previousTime'];
-    $previous_inputs = $_POST['previousInputContainer'];
-    //var_dump($previous_inputs);
-    //echo sizeof($previous_inputs);
-    $headers = $_POST['headers'];
-    $loc = $_POST['loc'];
-    $sn = $_POST['serial'];
-    $po = $_POST['po_num'];
-    $old_tags = $_POST['old_tag'];
-    $desc = $_POST['description'];
-    $filePath = $_FILES['filePath']['tmp_name'];
-    echo "Looking for: $filePath<br>";
-    var_dump(file_exists($filePath));
-    $fileNameOnly = basename($filePath);
-    $filePath = $saveDir . $fileNameOnly;
+        $row_index = 2;
+        $previous_times = $_POST['previousTime'];
+        $previous_inputs = $_POST['previousInputContainer'];
+        //var_dump($previous_inputs);
+        //echo sizeof($previous_inputs);
+        $headers = $_POST['headers'];
+        $loc = $_POST['loc'];
+        $sn = $_POST['serial'];
+        $po = $_POST['po_num'];
+        $old_tags = $_POST['old_tag'];
+        $desc = $_POST['description'];
+        $filePath = $_FILES['filePath']['tmp_name'];
+        echo "Looking for: $filePath<br>";
+        var_dump(file_exists($filePath));
+        $fileNameOnly = basename($filePath);
+        $filePath = $saveDir . $fileNameOnly;
 
-    $empty_scan = is_null($previous_inputs[0]) ? true : false;
-    $file_empty = is_null($old_tags[1]) ? true : false;
+        $empty_scan = is_null($previous_inputs[0]) ? true : false;
+        $file_empty = is_null($old_tags[1]) ? true : false;
 
 
-    $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
-    $filePath = str_replace(".xls", "_AUDIT", $filePath);
-    $filePath = $filePath . ".xlsx";
+        $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
+        $filePath = str_replace(".xls", "_AUDIT", $filePath);
+        $filePath = $filePath . ".xlsx";
 
-    for ($i = 0; $i < count($column_letters); $i++) {
-        $sheet->setCellValue($column_letters[$i], $headers[$i]);
-    }
-    $sheet->setCellValue('I1', 'Extra Tags');
-    $i = 0;
-    if (!$file_empty) {
-        foreach ($old_tags as $row) {
-            $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
-
-            $sheet->setCellValue('D' . $row_index, $desc[$i]);
-            $sheet->setCellValue('E' . $row_index, $sn[$i]);
-            $sheet->setCellValue('F' . $row_index, $loc[$i]);
-            $sheet->setCellValue('G' . $row_index, $po[$i]);
-
-            $i++;
-            $row_index++;
+        for ($i = 0; $i < count($column_letters); $i++) {
+            $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
-        $h_row = 2;
-        for ($j = 0; $j < sizeof($previous_inputs); $j++) {
-            for ($i = 0; $i < sizeof($old_tags); $i++) {
-                if ($previous_inputs[$j] == $old_tags[$i]) {
-                    $sheet->setCellValue('B' . $i + 2, $previous_inputs[$j]);
-                    $sheet->setCellValue('C' . $i + 2, $previous_times[$j]);
-                    break;
-                } else if ($i == sizeof($old_tags) - 1) {
+        $sheet->setCellValue('I1', 'Extra Tags');
+        $i = 0;
+        if (!$file_empty) {
+            foreach ($old_tags as $row) {
+                $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
+
+                $sheet->setCellValue('D' . $row_index, $desc[$i]);
+                $sheet->setCellValue('E' . $row_index, $sn[$i]);
+                $sheet->setCellValue('F' . $row_index, $loc[$i]);
+                $sheet->setCellValue('G' . $row_index, $po[$i]);
+
+                $i++;
+                $row_index++;
+            }
+            $h_row = 2;
+            for ($j = 0; $j < sizeof($previous_inputs); $j++) {
+                for ($i = 0; $i < sizeof($old_tags); $i++) {
+                    if ($previous_inputs[$j] == $old_tags[$i]) {
+                        $sheet->setCellValue('B' . $i + 2, $previous_inputs[$j]);
+                        $sheet->setCellValue('C' . $i + 2, $previous_times[$j]);
+                        break;
+                    } else if ($i == sizeof($old_tags) - 1) {
+                        $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
+                        $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
+                    }
+                }
+                echo "<br>";
+            }
+        } else {
+            $sheet->setCellValue('A2', 'No Assets Found');
+            if (!$empty_scan) {
+                $h_row=2;
+                for ($j = 0; $j < sizeof($previous_inputs); $j++) {
                     $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
                     $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
                 }
             }
-            echo "<br>";
         }
-    } else {
-        $sheet->setCellValue('A2', 'No Assets Found');
-        if (!$empty_scan) {
-            $h_row=2;
-            for ($j = 0; $j < sizeof($previous_inputs); $j++) {
-                $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
-                $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
-            }
-        }
+
+        // Use PhpSpreadsheet to save the file on the server
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($filePath);
+
+        header('Location: download.php?file=' . urlencode($filePath));
+    } catch (Exception $e) {
+        echo "Something went wrong trying to parse before downloading ". $e;
     }
-
-    // Use PhpSpreadsheet to save the file on the server
-    $writer = new Xlsx($spreadsheet);
-    $writer->save($filePath);
-
-    header('Location: download.php?file=' . urlencode($filePath));
     exit();
 }
 
-// Path to your spreadsheet file
-echo "Before filePath POST\n";
-$filePath = $_FILES['filePath']['tmp_name'];
-echo $filePath . "<br>";
 
 #if (isset($_POST['filePath'])) {
-    if (isset($_FILES['filePath']) 
-        /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
-        $tmpPath = $_FILES['filePath']['tmp_name'];
-        try {
-            $filePath = $tmpPath;
-            $spreadsheet = IOFactory::load($tmpPath);
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
+    $tmpPath = $_FILES['filePath']['tmp_name'];
+    try {
+        $filePath = $tmpPath;
+        $spreadsheet = IOFactory::load($tmpPath);
 
 
-            // Get the first worksheet
-            $worksheet = $spreadsheet->getActiveSheet();
+        // Get the first worksheet
+        $worksheet = $spreadsheet->getActiveSheet();
 
-            $row_number = 1;
-            $array = [];
-            $old_tags = [];
-            $disc_arr = [];
-            $sn_arr = [];
-            $loc_arr = [];
-            $po_arr = [];
-            $tag_array = [];
-            $time_array = [];
-            $column_headers = [];
+        $row_number = 1;
+        $array = [];
+        $old_tags = [];
+        $disc_arr = [];
+        $sn_arr = [];
+        $loc_arr = [];
+        $po_arr = [];
+        $tag_array = [];
+        $time_array = [];
+        $column_headers = [];
 
-            echo $filePath . "<br>";
-            $tag = $worksheet->getCell('B2')->getValue() . ":";
-            // Loop through the rows and columns
-            foreach ($worksheet->getRowIterator() as $row) {
-                foreach ($row->getCellIterator() as $cell) {
-                    $coordinate = $cell->getCoordinate();
-                    $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Horizontal alignment
-                    $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); // Vertical alignment
-                }
+        echo $filePath . "<br>";
+        $tag = $worksheet->getCell('B2')->getValue() . ":";
+        // Loop through the rows and columns
+        foreach ($worksheet->getRowIterator() as $row) {
+            foreach ($row->getCellIterator() as $cell) {
+                $coordinate = $cell->getCoordinate();
+                $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Horizontal alignment
+                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); // Vertical alignment
             }
-        } catch (Exception $e) {
-            echo "Error uploading file";
+        }
+    } catch (Exception $e) {
+        echo "Error uploading file";
+    }
+}
+
+$tmpPath = $_FILES['filePath']['tmp_name'] ?? NULL;
+try {
+    $filePath = $tmpPath;
+    $spreadsheet = IOFactory::load($tmpPath);
+
+
+    // Get the first worksheet
+    $worksheet = $spreadsheet->getActiveSheet();
+
+    $row_number = 1;
+    $array = [];
+    $old_tags = [];
+    $disc_arr = [];
+    $sn_arr = [];
+    $loc_arr = [];
+    $po_arr = [];
+    $tag_array = [];
+    $time_array = [];
+    $column_headers = [];
+
+    echo $filePath . "<br>";
+    $tag = $worksheet->getCell('B2')->getValue() . ":";
+    // Loop through the rows and columns
+    foreach ($worksheet->getRowIterator() as $row) {
+        foreach ($row->getCellIterator() as $cell) {
+            $coordinate = $cell->getCoordinate();
+            $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Horizontal alignment
+            $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); // Vertical alignment
         }
     }
-echo "<br>";
-echo "After filePath POST\n";
-#} else {
-#}
-
+} catch (Exception $e) {
+    echo "Error uploading file";
+}
 
 ?>
 
