@@ -75,6 +75,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
      */
+$worksheet = NULL;
 if (isset($_POST['create'])) {
     try {
         $saveDir = __DIR__ . '/exports/';
@@ -85,13 +86,13 @@ if (isset($_POST['create'])) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
-        echo "<pre>";
-        var_dump($_POST);
-        echo"</pre>";
+        //echo "<pre>";
+        //var_dump($_POST);
+        //echo"</pre>";
 
         $row_index = 2;
-        $previous_times = $_POST['previousTime'];
-        $previous_inputs = $_POST['previousInputContainer'];
+        $previous_times = $_POST['previousTime'] ?? NULL;
+        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
         //var_dump($previous_inputs);
         //echo sizeof($previous_inputs);
         $headers = $_POST['headers'];
@@ -101,8 +102,8 @@ if (isset($_POST['create'])) {
         $old_tags = $_POST['old_tag'];
         $desc = $_POST['description'];
         $filePath = $_FILES['filePath']['tmp_name'];
-        echo "Looking for: $filePath<br>";
-        var_dump(file_exists($filePath));
+        //echo "Looking for: " .  $filePath . "<br>";
+        //var_dump(file_exists($filePath));
         $fileNameOnly = basename($filePath);
         $filePath = $saveDir . $fileNameOnly;
 
@@ -433,14 +434,12 @@ if (!$empty) {
 $i = 0;
 echo "<div class='show-tags'>";
 echo "<h3 style=margin-bottom:-1vh;margin-left:0.6vw;>Tags Scanned</h3>";
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $row) {
     foreach ($tag_array as $tag_row) {
-        if ($row == $tag_row) {
-            $match2 = 1;
-            break;
-        } else {
-            $match2 = 0;
-        }
+        $match2 = ($row == $tag_row) ? 1 : 0;
+        if ($match2) break;
     }
     if ($match2) {
         echo "<b> <li style=color:green;>" . $row . "</b>  " . $time_array[$i] . "</li><br>";
@@ -450,6 +449,7 @@ foreach ($array as $row) {
 
     }
     $i++;
+}
 }
 echo "</div>";
 ?>
