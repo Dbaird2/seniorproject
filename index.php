@@ -198,7 +198,6 @@ if (isset($_FILES['filePath'])
     } catch (Exception $e) {
         echo "Error uploading file";
     }
-}
 
 $tmpPath = $_FILES['filePath']['tmp_name'] ?? NULL;
 try {
@@ -236,15 +235,9 @@ try {
     echo "TypeError";
 }
 
+}
 ?>
 
-    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
-        <label for="filePath"> Enter File: </label>
-        <input type="file" name="filePath" id="filePath">
-<br>
-        <button type="submit" >Submit</button>
-    </form>
-    <div id="additionalInputs"></div>
 
 <?php
 // Load the spreadsheet
@@ -456,6 +449,13 @@ foreach ($array as $row) {
 }
 echo "</div>";
 ?>
+    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
+        <label for="filePath"> Enter File: </label>
+        <input type="file" name="filePath" id="filePath">
+<br>
+        <button type="submit" >Submit</button>
+    </form>
+    <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
