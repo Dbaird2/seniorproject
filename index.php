@@ -57,6 +57,12 @@
 </head>
 
 <body>
+    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
+        <label for="filePath"> Enter File: </label>
+        <input type="file" name="filePath" id="filePath">
+<br>
+        <button type="submit" >Submit</button>
+    </form>
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
@@ -118,9 +124,9 @@ if (isset($_POST['create'])) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
 
                 $sheet->setCellValue('D' . $row_index, $desc[$i]);
-                $sheet->setCellValue('E' . $row_index, $sn[$i]);
+                #$sheet->setCellValue('E' . $row_index, $sn[$i]);
                 $sheet->setCellValue('F' . $row_index, $loc[$i]);
-                $sheet->setCellValue('G' . $row_index, $po[$i]);
+                #$sheet->setCellValue('G' . $row_index, $po[$i]);
 
                 $i++;
                 $row_index++;
@@ -241,8 +247,6 @@ try {
 
 <?php
 // Load the spreadsheet
-if (!is_null($filePath)) {
-}
 echo "<pre>";
 //var_dump($_POST);
 echo "</pre>";
@@ -323,7 +327,8 @@ if (isset($_POST['dynamicInput'])) {
         }
     }
 }
-try {
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
     if (!is_null($worksheet)){
 $worksheet->getRowIterator(1);
 $cellB = $worksheet->getCell('B' . 2);
@@ -344,7 +349,6 @@ $column_headers[] = $I;
 $column_headers[] = $J;
 $column_headers[] = $N;
     }
-} catch (\Throwable $e) {
 }
 
 $colors = ['lightgray', 'white'];
@@ -449,12 +453,6 @@ foreach ($array as $row) {
 }
 echo "</div>";
 ?>
-    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
-        <label for="filePath"> Enter File: </label>
-        <input type="file" name="filePath" id="filePath">
-<br>
-        <button type="submit" >Submit</button>
-    </form>
     <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()">
         <label for="inputContainer"> Enter Tags: </label>
@@ -466,6 +464,8 @@ echo "</div>";
 <?php
 
 
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $value) {
     echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
 }
@@ -474,6 +474,7 @@ foreach ($time_array as $time) {
 }
 
 echo "<input type='hidden' name='filePath' value='$filePath'>";
+}
 ?>
 
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
@@ -483,6 +484,9 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 
     <form id="makeSheet" method='POST' action='index.php'>
 <?php
+
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $value) {
     echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
 }
@@ -509,6 +513,7 @@ foreach ($loc_arr as $location) {
 }
 
 echo "<input type='hidden' name='filePath' value='$filePath'>";
+}
 ?>
         <button type='submit' id='create' name='create'>Export Excel File</button>
     </form>
