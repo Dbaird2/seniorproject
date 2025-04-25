@@ -94,7 +94,7 @@ if (isset($_POST['create'])) {
     $sn = $_POST['serial'];
     $po = $_POST['po_num'];
     $old_tags = $_POST['old_tag'];
-    $desc = $_POST['description']tmp_;
+    $desc = $_POST['description'];
     $filePath = $_FILES['filePath']['tmp_name'];
     echo "Looking for: $filePath<br>";
     var_dump(file_exists($filePath));
