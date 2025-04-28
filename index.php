@@ -172,6 +172,23 @@ if (isset($_POST['create'])) {
 #if (isset($_POST['filePath'])) {
 if (isset($_FILES['filePath']) 
     /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
+    if (isset($_POST['fileContent'])) {
+    $encodedFileContent = $_POST['fileContent'];
+    $fileName = $_POST['fileName'];
+
+    // Decode the Base64 content back to its original binary form
+    $fileContent = base64_decode($encodedFileContent);
+
+    $stream = fopen('php://memory', 'r+');
+
+    // Write the decoded file content to the memory stream
+    fwrite($stream, $fileContent);
+
+    // Rewind the stream to the beginning before passing it to IOFactory
+    rewind($stream);
+    // Now you can process the file content as needed
+    echo "Received file content for file: $fileName";
+    }
     $tmpPath = $_FILES['filePath']['tmp_name'];
     try {
         $filePath = $tmpPath;
@@ -468,19 +485,27 @@ if (isset($_FILES['filePath'])
 
 if (isset($_FILES['filePath']) 
     /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
+    $fileTmpPath = $_FILES['filePath']['tmp_name'];
+    $fileName = $_FILES['filePath']['name'];
+
+    // Read the file into memory
+    $fileContent = file_get_contents($fileTmpPath);
+
+    // Base64 encode the file content
+    $encodedFileContent = base64_encode($fileContent);
 foreach ($array as $value) {
     echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
 }
 foreach ($time_array as $time) {
     echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
 }
-
+echo "<input type='hidden' name='fileContent' value='$encodedFileContent'>";
 echo "<input type='hidden' name='filePath' value='$filePath'>";
 }
 ?>
 
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
-        <button type="submit" id='dynamicSubmit' onClick="doNotReload()">Submit</button>
+        <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
 <?php
 }
