@@ -195,6 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 } else {
     echo "No file uploaded.";
 }
+
+if (isset($_POST['filePath']) {
+    $filePath = $_POST['filePath']);
+}
+
 if (isset($filePath)) {
 
 #if (isset($_POST['filePath'])) {
