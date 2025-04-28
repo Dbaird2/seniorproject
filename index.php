@@ -166,6 +166,9 @@ if (isset($_POST['create'])) {
     }
     exit();
 }
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Get file info
@@ -195,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 } else {
     echo "No file uploaded.";
 }
+if (isset($filePath)) {
 
 #if (isset($_POST['filePath'])) {
 try {
@@ -490,7 +494,9 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
         <button type='submit' id='create' name='create'>Export Excel File</button>
     </form>
 
-
+<?php
+}
+?>
 <script>
 
 function addNewInput() {
