@@ -94,11 +94,13 @@
         $uploadDir = 'uploads/';
         $targetFilePath = $uploadDir . basename($fileName);
 
+        /*
         $allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];
         if (!in_array($fileType, $allowedFileTypes)) {
             echo "Invalid file type.";
             exit;
         }
+         */
 
         if (move_uploaded_file($fileTmpPath, $targetFilePath)) {
             echo "File uploaded successfully to $targetFilePath";
