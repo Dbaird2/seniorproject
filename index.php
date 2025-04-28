@@ -92,6 +92,9 @@
         $fileType = $_FILES['file']['type'];
 
         $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true); // Create the directory if it doesn't exist
+        }
         $targetFilePath = $uploadDir . basename($fileName);
 
         /*
