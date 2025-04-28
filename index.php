@@ -166,9 +166,6 @@ if (isset($_POST['create'])) {
     }
     exit();
 }
-echo "<pre>";
-var_dump($_POST);
-echo "</pre>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Get file info
@@ -496,6 +493,9 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 
 <?php
 }
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
 ?>
 <script>
 
