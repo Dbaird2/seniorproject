@@ -87,11 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $targetFilePath = $uploadDir . basename($fileName);
 
     // Validate file type (optional)
-    $allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];  // Example types
+    /*$allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];  // Example types
     if (!in_array($fileType, $allowedFileTypes)) {
         echo "Invalid file type.";
         exit;
-    }
+    }*/
 
     // Check if the file is uploaded without errors
     if (move_uploaded_file($fileTmpPath, $targetFilePath)) {
