@@ -70,7 +70,7 @@
 
     // Handle file upload
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-        handleFileUpload();
+        $filePath = handleFileUpload();
     }
 
     // Handle form to create new sheet
@@ -110,6 +110,7 @@
         } else {
             echo "Error uploading file.";
         }
+        return $targetFilePath;
     }
 
     // Function to create Excel sheet
