@@ -452,6 +452,8 @@ foreach ($array as $row) {
 }
 }
 echo "</div>";
+if (isset($_FILES['filePath']) 
+    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 ?>
     <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
@@ -480,7 +482,9 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit' onClick="doNotReload()">Submit</button>
     </form>
-
+<?php
+}
+?>
 
     <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
 <?php
@@ -512,8 +516,8 @@ foreach ($loc_arr as $location) {
     echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($location) . "'>";
 }
 
-echo "<input type='hidden' name='filePath' value='$filePath'>";
 }
+echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
         <button type='submit' id='create' name='create'>Export Excel File</button>
     </form>
