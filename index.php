@@ -198,8 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
 #if (isset($_POST['filePath'])) {
 try {
-    $filePath = $tmpPath;
-    $spreadsheet = IOFactory::load($tmpPath);
+    $spreadsheet = IOFactory::load($filePath);
 
 
     // Get the first worksheet
@@ -216,7 +215,7 @@ try {
     $time_array = [];
     $column_headers = [];
 
-    echo $filePath . "<br>";
+    echo $filePath . " filePath<br> ";
     $tag = $worksheet->getCell('B2')->getValue() . ":";
     // Loop through the rows and columns
     foreach ($worksheet->getRowIterator() as $row) {
