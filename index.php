@@ -59,7 +59,7 @@
 <body>
     <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
         <label for="filePath"> Enter File: </label>
-        <input type="file" name="filePath" id="filePath">
+        <input type="file" name="file" id="filePath">
 <br>
         <button type="submit" >Submit</button>
     </form>
@@ -75,6 +75,33 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
      */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+    // Get file info
+    $fileTmpPath = $_FILES['file']['tmp_name'];
+    $fileName = $_FILES['file']['name'];
+    $fileSize = $_FILES['file']['size'];
+    $fileType = $_FILES['file']['type'];
+
+    // Define the target directory to save the uploaded file
+    $uploadDir = 'uploads/';  // Ensure this directory is writable by the server
+    $targetFilePath = $uploadDir . basename($fileName);
+
+    // Validate file type (optional)
+    $allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf'];  // Example types
+    if (!in_array($fileType, $allowedFileTypes)) {
+        echo "Invalid file type.";
+        exit;
+    }
+
+    // Check if the file is uploaded without errors
+    if (move_uploaded_file($fileTmpPath, $targetFilePath)) {
+        echo "File uploaded successfully to $targetFilePath";
+    } else {
+        echo "Error uploading file.";
+    }
+} else {
+    echo "No file uploaded.";
+}
 $worksheet = NULL;
 if (isset($_POST['create'])) {
     try {
@@ -101,7 +128,6 @@ if (isset($_POST['create'])) {
         $po = $_POST['po_num'];
         $old_tags = $_POST['old_tag'];
         $desc = $_POST['description'];
-        $filePath = $_FILES['filePath']['tmp_name'];
         //echo "Looking for: " .  $filePath . "<br>";
         //var_dump(file_exists($filePath));
         $fileNameOnly = basename($filePath);
@@ -169,47 +195,9 @@ if (isset($_POST['create'])) {
 }
 
 
-#if (isset($_POST['filePath'])) {
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
-    $tmpPath = $_FILES['filePath']['tmp_name'];
-    try {
-        $filePath = $tmpPath;
-        $spreadsheet = IOFactory::load($tmpPath);
 
-
-        // Get the first worksheet
-        $worksheet = $spreadsheet->getActiveSheet();
-
-        $row_number = 1;
-        $array = [];
-        $old_tags = [];
-        $disc_arr = [];
-        $sn_arr = [];
-        $loc_arr = [];
-        $po_arr = [];
-        $tag_array = [];
-        $time_array = [];
-        $column_headers = [];
-
-        echo $filePath . "<br>";
-        $tag = $worksheet->getCell('B2')->getValue() . ":";
-        // Loop through the rows and columns
-        foreach ($worksheet->getRowIterator() as $row) {
-            foreach ($row->getCellIterator() as $cell) {
-                $coordinate = $cell->getCoordinate();
-                $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Horizontal alignment
-                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); // Vertical alignment
-            }
-        }
-    } catch (Exception $e) {
-        echo "Error uploading file";
-    }
-
-$tmpPath = $_FILES['filePath']['tmp_name'] ?? NULL;
 try {
-    $filePath = $tmpPath;
-    $spreadsheet = IOFactory::load($tmpPath);
+    $spreadsheet = IOFactory::load($filePath);
 
 
     // Get the first worksheet
@@ -242,7 +230,6 @@ try {
     echo "TypeError";
 }
 
-}
 ?>
 
 
@@ -328,8 +315,6 @@ if (isset($_POST['dynamicInput'])) {
         }
     }
 }
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
     if (!is_null($worksheet)){
 $worksheet->getRowIterator(1);
 $cellB = $worksheet->getCell('B' . 2);
@@ -350,7 +335,6 @@ $column_headers[] = $I;
 $column_headers[] = $J;
 $column_headers[] = $N;
     }
-}
 
 $colors = ['lightgray', 'white'];
 $empty = false;
@@ -434,8 +418,6 @@ if (!$empty) {
 $i = 0;
 echo "<div class='show-tags'>";
 echo "<h3 style=margin-bottom:-1vh;margin-left:0.6vw;>Tags Scanned</h3>";
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $row) {
     foreach ($tag_array as $tag_row) {
         $match2 = ($row == $tag_row) ? 1 : 0;
@@ -450,10 +432,7 @@ foreach ($array as $row) {
     }
     $i++;
 }
-}
 echo "</div>";
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 ?>
     <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
@@ -466,8 +445,6 @@ if (isset($_FILES['filePath'])
 <?php
 
 
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $value) {
     echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
 }
@@ -475,21 +452,17 @@ foreach ($time_array as $time) {
     echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
 }
 echo "<input type='hidden' name='filePath' value='$filePath'>";
-}
 ?>
 
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit' onSubmit="doNotReload()">Submit</button>
     </form>
 <?php
-}
 ?>
 
     <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
 <?php
 
-if (isset($_FILES['filePath']) 
-    /*&& $_FILE['filePath']['error'] === UPLOAD_ERR_OK*/) {
 foreach ($array as $value) {
     echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
 }
@@ -515,7 +488,6 @@ foreach ($loc_arr as $location) {
     echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($location) . "'>";
 }
 
-}
 echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
         <button type='submit' id='create' name='create' onSubmit="doNotReload()">Export Excel File</button>
@@ -523,13 +495,6 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 
 
 <script>
-$(document).ready(function () {
-    $('dynamicSubmit').click(function () {
-        $.post($this.attr("action"), $("#dynamicForm").serialize(), function (response) {
-            alert(response)
-        });
-    });
-});
 
 function addNewInput() {
     // Create the div and input
