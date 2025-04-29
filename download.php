@@ -16,7 +16,8 @@ if (isset($_GET['file'])) {
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
 
-        readfile($filePath);
+        echo $filePath;
+        //readfile($filePath);
 
         // Optionally, delete the file after sending (if you don't need it anymore)
         // unlink($filePath);

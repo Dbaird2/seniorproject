@@ -76,7 +76,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 $worksheet = NULL;
-if (isset($_POST['create'])) {
+if (isset($_POST['create']) && isset($filePath) {
     try {
         $saveDir = __DIR__ . '/exports/';
 
@@ -159,8 +159,11 @@ if (isset($_POST['create'])) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-
-        header('Location: download.php?file=' . urlencode($filePath));
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="myfile.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
@@ -499,7 +502,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 <?php
 }
 echo "<pre>";
-var_dump($_POST);
+//var_dump($_POST);
 echo "</pre>";
 ?>
 <script>
