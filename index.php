@@ -76,7 +76,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 $worksheet = NULL;
-if (isset($_POST['create']) && isset($filePath)) {
+if (isset($_GET['create']) && isset($filePath)) {
     try {
         $saveDir = __DIR__ . '/exports/';
 
@@ -162,7 +162,7 @@ if (isset($_POST['create']) && isset($filePath)) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
-        echo $filePath . "<br>";
+        //echo $filePath . "<br>";
         readfile($filePath);
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
@@ -192,7 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
         // Return the file path after successful upload
-        echo "File uploaded successfully. File path: $filePath";
     } else {
         echo "Error uploading file.";
     }
@@ -467,7 +466,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 <?php
 ?>
 
-    <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
+    <form id="makeSheet" method='GET' action='index.php' enctype="multipart/form-data">
 <?php
 
 foreach ($array as $value) {
