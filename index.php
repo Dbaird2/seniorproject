@@ -76,7 +76,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 $worksheet = NULL;
-if (isset($_POST['create']) && isset($filePath) {
+if (isset($_POST['create']) && isset($filePath)) {
     try {
         $saveDir = __DIR__ . '/exports/';
 
