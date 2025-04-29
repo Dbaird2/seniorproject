@@ -162,6 +162,7 @@ if (isset($_POST['create']) && isset($filePath)) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="myfile.xlsx"');
         header('Cache-Control: max-age=0');
+        $filePath = __DIR__ . $filePath;
         echo $filePath . "<br>";
         readfile($filePath);
         //header('Location: download.php?file=' . urlencode($filePath));
