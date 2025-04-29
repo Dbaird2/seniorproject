@@ -159,10 +159,10 @@ if (isset($_POST['create']) && isset($filePath)) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="myfile.xlsx"');
-        header('Cache-Control: max-age=0');
         $filePath = __DIR__ . $filePath;
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
+        header('Cache-Control: max-age=0');
         echo $filePath . "<br>";
         readfile($filePath);
         //header('Location: download.php?file=' . urlencode($filePath));
