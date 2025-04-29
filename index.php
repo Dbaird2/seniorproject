@@ -159,7 +159,6 @@ if (isset($_POST['create']) && isset($filePath)) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        $filePath = __DIR__ . $filePath;
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
@@ -198,11 +197,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Error uploading file.";
     }
 } else {
-    echo "No file uploaded.";
 }
 
 if (isset($_POST['filePath'])) {
     $filePath = $_POST['filePath'];
+    $filePath = __DIR__ . $filePath;
 }
 
 if (isset($filePath)) {
