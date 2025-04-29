@@ -86,9 +86,11 @@ if (isset($_POST['create'])) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
+        /*
         echo "<pre>";
         var_dump($_POST);
         echo"</pre>";
+         */
 
         $row_index = 2;
         $previous_times = $_POST['previousTime'] ?? NULL;
@@ -158,9 +160,12 @@ if (isset($_POST['create'])) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
+        ob_clean();
+        flush();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
+        header('Content-Transfer-Encoding: binary');
         readfile($filePath);
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
