@@ -169,7 +169,7 @@ if (isset($_POST['create']) && isset($filePath)) {
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
-    exit();
+    //exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
