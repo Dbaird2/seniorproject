@@ -1,84 +1,14 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <style>
-        .excel-info {
-            border: 2px outset black;
-            background-color: white;
-            text-align: left;
-            width: 60%;
-
-            margin-bottom: -0.0em;
-            display: inline-block;
-        }
-
-        li {
-            list-style-type: none;
-        }
-
-        .inner-text {
-            margin-top: -1vh;
-            margin-bottom: -1vh;
-            font-size: 0.8em;
-        }
-
-        .show-tags {
-            position: absolute;
-            /* Position the form relative to the viewport */
-            top: 0;
-            /* Align it to the top */
-            right: 34vh;
-            /* Align it to the right */
-        }
-
-        .show-tags li {
-            padding-top: 1em;
-            margin-top: -5%;
-            font-size: 80%;
-            margin-bottom: -2.5vh;
-        }
-
-        body {
-            margin: 0;
-            height: 100vh;
-        }
-
-        #dynamicForm {
-            position: absolute;
-            top: 1vh;
-            right: 10.5vh;
-            padding: 10px;
-            background-color: white;
-            border: 1px solid white;
-        }
-    </style>
-    <title>Asset Management Excel</title>
-</head>
-
-<body>
-    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
-        <label for="file"> Enter File: </label>
-        <input type="file" name="file" id="filePath">
-<br>
-        <button type="submit" >Submit</button>
-    </form>
 <?php
-require __DIR__ . '/vendor/autoload.php';
-
+        require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    /*
-    ini_set('display_errors', '1');
-    ini_set('display_startup_errors', '1');
-    error_reporting(E_ALL);
-     */
-$worksheet = NULL;
+        use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if (isset($_POST['create'])) {
+
     try {
         $saveDir = __DIR__ . '/exports/';
+
 
         if (!file_exists($saveDir)) {
             mkdir($saveDir, 0777, true);
@@ -86,6 +16,7 @@ if (isset($_POST['create'])) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
+        $filePath = __DIR__ . $_POST['filePath'];
         /*
         echo "<pre>";
         var_dump($_POST);
@@ -173,6 +104,83 @@ if (isset($_POST['create'])) {
     }
     //exit();
 }
+?>
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <style>
+        .excel-info {
+            border: 2px outset black;
+            background-color: white;
+            text-align: left;
+            width: 60%;
+
+            margin-bottom: -0.0em;
+            display: inline-block;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .inner-text {
+            margin-top: -1vh;
+            margin-bottom: -1vh;
+            font-size: 0.8em;
+        }
+
+        .show-tags {
+            position: absolute;
+            /* Position the form relative to the viewport */
+            top: 0;
+            /* Align it to the top */
+            right: 34vh;
+            /* Align it to the right */
+        }
+
+        .show-tags li {
+            padding-top: 1em;
+            margin-top: -5%;
+            font-size: 80%;
+            margin-bottom: -2.5vh;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+        }
+
+        #dynamicForm {
+            position: absolute;
+            top: 1vh;
+            right: 10.5vh;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid white;
+        }
+    </style>
+    <title>Asset Management Excel</title>
+</head>
+
+<?php
+
+    /*
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+     */
+$worksheet = NULL;
+?>
+<body>
+    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
+        <label for="file"> Enter File: </label>
+        <input type="file" name="file" id="filePath">
+<br>
+        <button type="submit" >Submit</button>
+    </form>
+<?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Get file info
