@@ -143,7 +143,6 @@ if (isset($_POST['create']) && isset($filePath)) {
                         $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
                     }
                 }
-                echo "<br>";
             }
         } else {
             $sheet->setCellValue('A2', 'No Assets Found');
@@ -160,12 +159,9 @@ if (isset($_POST['create']) && isset($filePath)) {
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
         $filePath = __DIR__ . $filePath;
-        ob_clean();
-        flush();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
-        header('Content-Transfer-Encoding: binary');
         readfile($filePath);
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
