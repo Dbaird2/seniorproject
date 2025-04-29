@@ -8,7 +8,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if (isset($_POST['create'])) {
     try {
         $filePath = __DIR__ . $_POST['filePath'];
-        flush();
         try {
         } catch (Exception $e) {
         }
@@ -89,7 +88,7 @@ if (isset($_POST['create'])) {
         header('Content-Transfer-Encoding: binary');
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
-        readfile($filePath);
+        //readfile($filePath);
         error_reporting(1);
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
