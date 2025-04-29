@@ -84,7 +84,7 @@ if (isset($_POST['create'])) {
         }
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
-        $writer->save($filePath);
+        $writer->save('php://output');
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
