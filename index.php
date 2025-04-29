@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -11,8 +13,8 @@ if (isset($_POST['create'])) {
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
+        error_reporting(1);
         try {
-            require __DIR__ . '/vendor/autoload.php';
         } catch (Exception $e) {
         }
         $saveDir = __DIR__ . '/exports/';
