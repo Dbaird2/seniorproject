@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 }
 
 if (isset($_POST['filePath'])) {
-    $filePath = $_POST['filePath']);
+    $filePath = $_POST['filePath'];
 }
 
 if (isset($filePath)) {
