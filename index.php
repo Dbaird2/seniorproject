@@ -76,7 +76,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 $worksheet = NULL;
-if (isset($_GET['create']) && isset($filePath)) {
+if (isset($_POST['create']) && isset($filePath)) {
     try {
         $saveDir = __DIR__ . '/exports/';
 
@@ -143,7 +143,6 @@ if (isset($_GET['create']) && isset($filePath)) {
                         $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
                     }
                 }
-                echo "<br>";
             }
         } else {
             $sheet->setCellValue('A2', 'No Assets Found');
@@ -159,11 +158,15 @@ if (isset($_GET['create']) && isset($filePath)) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
+        ob_clean();
+        flush();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
+        header('Content-Transfer-Encoding: binary');
         //echo $filePath . "<br>";
         readfile($filePath);
+        exit;
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
@@ -466,7 +469,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 <?php
 ?>
 
-    <form id="makeSheet" method='GET' action='index.php' enctype="multipart/form-data">
+    <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
 <?php
 
 foreach ($array as $value) {
