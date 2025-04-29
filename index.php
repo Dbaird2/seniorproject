@@ -76,7 +76,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
     error_reporting(E_ALL);
      */
 $worksheet = NULL;
-if (isset($_POST['create']) && isset($filePath)) {
+if (isset($_POST['create'])) {
     try {
         $saveDir = __DIR__ . '/exports/';
 
@@ -86,9 +86,9 @@ if (isset($_POST['create']) && isset($filePath)) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
-        //echo "<pre>";
-        //var_dump($_POST);
-        //echo"</pre>";
+        echo "<pre>";
+        var_dump($_POST);
+        echo"</pre>";
 
         $row_index = 2;
         $previous_times = $_POST['previousTime'] ?? NULL;
@@ -158,7 +158,6 @@ if (isset($_POST['create']) && isset($filePath)) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        $filePath = __DIR__ . $filePath;
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
@@ -196,11 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Error uploading file.";
     }
 } else {
+    echo "No file uploaded.";
 }
 
 if (isset($_POST['filePath'])) {
     $filePath = $_POST['filePath'];
-        $filePath = __DIR__ . $filePath;
 }
 
 if (isset($filePath)) {
