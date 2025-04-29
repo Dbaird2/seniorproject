@@ -1,9 +1,4 @@
 <?php
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
-header('Cache-Control: max-age=0');
-header('Content-Transfer-Encoding: binary');
-require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -12,6 +7,14 @@ if (isset($_POST['create'])) {
     try {
         $filePath = __DIR__ . $_POST['filePath'];
         flush();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
+        header('Cache-Control: max-age=0');
+        header('Content-Transfer-Encoding: binary');
+        try {
+            require __DIR__ . '/vendor/autoload.php';
+        } catch (Exception $e) {
+        }
         $saveDir = __DIR__ . '/exports/';
         if (!file_exists($saveDir)) {
             mkdir($saveDir, 0777, true);
