@@ -143,6 +143,7 @@ if (isset($_POST['create']) && isset($filePath)) {
                         $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
                     }
                 }
+                echo "<br>";
             }
         } else {
             $sheet->setCellValue('A2', 'No Assets Found');
@@ -158,15 +159,14 @@ if (isset($_POST['create']) && isset($filePath)) {
         // Use PhpSpreadsheet to save the file on the server
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
+        $filePath = __DIR__ . $filePath;
         ob_clean();
         flush();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
-        //echo $filePath . "<br>";
         readfile($filePath);
-        exit;
         //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
@@ -195,6 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
         // Return the file path after successful upload
+        echo "File uploaded successfully. File path: $filePath";
     } else {
         echo "Error uploading file.";
     }
@@ -203,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
 if (isset($_POST['filePath'])) {
     $filePath = $_POST['filePath'];
-    $filePath = __DIR__ . $filePath;
+        $filePath = __DIR__ . $filePath;
 }
 
 if (isset($filePath)) {
