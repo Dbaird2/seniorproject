@@ -17,7 +17,7 @@ if (isset($_GET['file'])) {
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
-        header('Content-Length ' . filesize($filePath));
+        header('Content-Length: ' . filesize($filePath));
 
         flush();
         readfile($filePath);
