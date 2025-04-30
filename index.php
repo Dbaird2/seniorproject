@@ -378,7 +378,7 @@ if (!$empty) {
 
         $tag_array[] = $cellB->getValue();
         echo "<div class='excel-info' style=border-style: solid;margin-bottom:1em;>";
-        echo "<div style='background-color:$color;height:110%;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
+        echo "<div style='background-color:$color;' class='inner-text'>";
         echo "<ul>";
         echo "<li style=float:left;margin-left:-2em; tabindex='2'><b>" . $row_number . "</b></li>";
         $match = 0;
