@@ -1,6 +1,4 @@
-
 <html>
-
 <head>
     <style>
         .excel-info {
@@ -56,7 +54,7 @@
     <title>Asset Management Excel</title>
 </head>
 <?php
-//error_reporting(0);
+error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
