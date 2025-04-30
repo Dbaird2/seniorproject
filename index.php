@@ -451,7 +451,7 @@ foreach ($array as $row) {
 echo "</div>";
 ?>
     <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
+    <form id="dynamicForm" method='POST' action='index.php' enctype="multipart/form-data">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
