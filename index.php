@@ -1,3 +1,60 @@
+
+<html>
+
+<head>
+    <style>
+        .excel-info {
+            border: 2px outset black;
+            background-color: white;
+            text-align: left;
+            width: 60%;
+
+            margin-bottom: -0.0em;
+            display: inline-block;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .inner-text {
+            margin-top: -1vh;
+            margin-bottom: -1vh;
+            font-size: 0.8em;
+        }
+
+        .show-tags {
+            position: absolute;
+            /* Position the form relative to the viewport */
+            top: 0;
+            /* Align it to the top */
+            right: 34vh;
+            /* Align it to the right */
+        }
+
+        .show-tags li {
+            padding-top: 1em;
+            margin-top: -5%;
+            font-size: 80%;
+            margin-bottom: -2.5vh;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+        }
+
+        #dynamicForm {
+            position: absolute;
+            top: 1vh;
+            right: 10.5vh;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid white;
+        }
+    </style>
+    <title>Asset Management Excel</title>
+</head>
 <?php
 error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
@@ -104,62 +161,6 @@ if (isset($_POST['create'])) {
 }
 ?>
 
-<html>
-
-<head>
-    <style>
-        .excel-info {
-            border: 2px outset black;
-            background-color: white;
-            text-align: left;
-            width: 60%;
-
-            margin-bottom: -0.0em;
-            display: inline-block;
-        }
-
-        li {
-            list-style-type: none;
-        }
-
-        .inner-text {
-            margin-top: -1vh;
-            margin-bottom: -1vh;
-            font-size: 0.8em;
-        }
-
-        .show-tags {
-            position: absolute;
-            /* Position the form relative to the viewport */
-            top: 0;
-            /* Align it to the top */
-            right: 34vh;
-            /* Align it to the right */
-        }
-
-        .show-tags li {
-            padding-top: 1em;
-            margin-top: -5%;
-            font-size: 80%;
-            margin-bottom: -2.5vh;
-        }
-
-        body {
-            margin: 0;
-            height: 100vh;
-        }
-
-        #dynamicForm {
-            position: absolute;
-            top: 1vh;
-            right: 10.5vh;
-            padding: 10px;
-            background-color: white;
-            border: 1px solid white;
-        }
-    </style>
-    <title>Asset Management Excel</title>
-</head>
 
 <?php
 
