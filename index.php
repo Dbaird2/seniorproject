@@ -109,9 +109,9 @@ if (isset($_POST['create'])) {
             foreach ($old_tags as $row) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
                 $sheet->setCellValue('D' . $row_index, $desc[$i]);
-                #$sheet->setCellValue('E' . $row_index, $sn[$i]);
+                $sheet->setCellValue('E' . $row_index, $sn[$i]);
                 $sheet->setCellValue('F' . $row_index, $loc[$i]);
-                #$sheet->setCellValue('G' . $row_index, $po[$i]);
+                $sheet->setCellValue('G' . $row_index, $po[$i]);
                 $i++;
                 $row_index++;
             }
@@ -406,21 +406,20 @@ if (!$empty) {
             $disc_arr[] = $cellH->getValue();
         }
         $sn = $cellI->getValue();
+        $sn = is_null($sn) ? "EMPTY" : $sn;
+        echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
         $sn_arr[] = $sn;
-        if ($sn != NULL) {
-            echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
-        }
+
         $loc = $cellJ->getValue();
+        $loc = is_null($loc) ? "EMPTY" : $loc;
+        echo "<b>Location: </b>" . $loc;
         $loc_arr[] = $loc;
-        if ($loc != NULL) {
-            echo "<b>Location: </b>" . $loc;
-        }
+
         $po = $cellN->getValue();
+        $po = is_null($po) ? "EMPTY" : $po;
         $po_arr[] = $sn;
-        if ($po != NULL) {
-            echo "<b> |</b>  ";
-            echo "<b>PO:</b> " . $po;
-        }
+        echo "<b> |</b>  ";
+        echo "<b>PO:</b> " . $po;
         echo "</div>";
         echo "</div>";
         $row_number++;
