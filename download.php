@@ -1,4 +1,5 @@
 <?php
+ error_reporting(0);
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -18,6 +19,7 @@ if (isset($_GET['file'])) {
         header('Content-Transfer-Encoding: binary');
         header('Content-Length ' . filesize($filePath));
 
+        flush();
         readfile($filePath);
         exit;
         //$writer->save('php://output');
