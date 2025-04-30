@@ -1,34 +1,21 @@
 <?php
- error_reporting(0);
-
+error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
 if (isset($_GET['file'])) {
-    $filePath = urldecode($_GET['file']);
+    $baseDir = __DIR__ . '/exports/';
+    $fileName = basename(urldecode($_GET['file']));
+    $filePath = $baseDir . $fileName;
 
     if (file_exists($filePath)) {
-        // Set headers for file download
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($filePath));
-        var_dump($filePath);
-        error_reporting(1);
-        /*
         flush();
         readfile($filePath);
-         */
         exit;
-        //$writer->save('php://output');
-
-        // Optionally, delete the file after sending (if you don't need it anymore)
-        // unlink($filePath);
     } else {
         echo "File does not exist.";
     }

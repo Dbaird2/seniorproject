@@ -56,7 +56,7 @@
     <title>Asset Management Excel</title>
 </head>
 <?php
-error_reporting(0);
+//error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -108,10 +108,10 @@ if (isset($_POST['create'])) {
         if (!$file_empty) {
             foreach ($old_tags as $row) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
-                #$sheet->setCellValue('D' . $row_index, $desc[$i]);
-                #$sheet->setCellValue('E' . $row_index, $sn[$i]);
-                #$sheet->setCellValue('F' . $row_index, $loc[$i]);
-                #$sheet->setCellValue('G' . $row_index, $po[$i]);
+                $sheet->setCellValue('D' . $row_index, $desc[$i]);
+                $sheet->setCellValue('E' . $row_index, $sn[$i]);
+                $sheet->setCellValue('F' . $row_index, $loc[$i]);
+                $sheet->setCellValue('G' . $row_index, $po[$i]);
                 $i++;
                 $row_index++;
             }
