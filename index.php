@@ -159,9 +159,11 @@ if (isset($_POST['create'])) {
     <title>Asset Management Excel</title>
 </head>
 <?php
+/*
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-//error_reporting(0);
+ */
+error_reporting(0);
 
 
 
