@@ -201,12 +201,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
         // Return the file path after successful upload
-        echo "File uploaded successfully. File path: $filePath";
+        echo "File uploaded successfully.";
     } else {
         echo "Error uploading file.";
     }
 } else {
-    echo "No file uploaded.";
 }
 
 if (isset($_POST['filePath'])) {
@@ -234,7 +233,6 @@ try {
     $time_array = [];
     $column_headers = [];
 
-    echo $filePath . " filePath<br> ";
     $tag = $worksheet->getCell('B2')->getValue() . ":";
     // Loop through the rows and columns
     foreach ($worksheet->getRowIterator() as $row) {
