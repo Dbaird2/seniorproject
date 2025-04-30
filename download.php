@@ -19,6 +19,7 @@ if (isset($_GET['file'])) {
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($filePath));
         var_dump($filePath);
+        error_reporting(1);
         /*
         flush();
         readfile($filePath);
