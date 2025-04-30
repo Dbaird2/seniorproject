@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -163,7 +164,6 @@ if (isset($_POST['create'])) {
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
  */
-error_reporting(0);
 
 
 
