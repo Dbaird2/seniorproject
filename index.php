@@ -206,6 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Error uploading file.";
     }
 } else {
+    echo "No file uploaded.";
 }
 
 if (isset($_POST['filePath'])) {
@@ -233,6 +234,7 @@ try {
     $time_array = [];
     $column_headers = [];
 
+    echo $filePath . " filePath<br> ";
     $tag = $worksheet->getCell('B2')->getValue() . ":";
     // Loop through the rows and columns
     foreach ($worksheet->getRowIterator() as $row) {
@@ -406,20 +408,21 @@ if (!$empty) {
             $disc_arr[] = $cellH->getValue();
         }
         $sn = $cellI->getValue();
-        $sn = is_null($sn) ? "EMPTY" : $sn;
-        echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
         $sn_arr[] = $sn;
-
+        if ($sn != NULL) {
+            echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
+        }
         $loc = $cellJ->getValue();
-        $loc = is_null($loc) ? "EMPTY" : $loc;
-        echo "<b>Location: </b>" . $loc;
         $loc_arr[] = $loc;
-
+        if ($loc != NULL) {
+            echo "<b>Location: </b>" . $loc;
+        }
         $po = $cellN->getValue();
-        $po = is_null($po) ? "EMPTY" : $po;
         $po_arr[] = $sn;
-        echo "<b> |</b>  ";
-        echo "<b>PO:</b> " . $po;
+        if ($po != NULL) {
+            echo "<b> |</b>  ";
+            echo "<b>PO:</b> " . $po;
+        }
         echo "</div>";
         echo "</div>";
         $row_number++;
