@@ -451,11 +451,11 @@ foreach ($array as $row) {
 echo "</div>";
 ?>
     <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='index.php' enctype="multipart/form-data">
+    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
-            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onfocus="addNewInput()">
+            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
 
         </div>
 <?php
@@ -530,7 +530,7 @@ function addNewInput() {
     newInput.placeholder = 'Enter tag';
     newInput.classList.add('dynamic-input');
 
-    newInput.addEventListener("focus", addNewInput, false)
+    newInput.addEventListener("change", addNewInput, false)
 
         const timeInput = document.createElement('input');
     timeInput.type = 'hidden';
@@ -590,10 +590,11 @@ function doNotReload(event) {
 
     })
 }
+/*
 window.addEventListener("load", function () {
     addNewInput();
 });
-
+ */
 
 </script>
 </body>
