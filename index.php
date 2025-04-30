@@ -201,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
         // Return the file path after successful upload
-        echo "File uploaded successfully.";
+        echo "File uploaded successfully. File path: $filePath";
     } else {
         echo "Error uploading file.";
     }
@@ -378,7 +378,7 @@ if (!$empty) {
 
         $tag_array[] = $cellB->getValue();
         echo "<div class='excel-info' style=border-style: solid;margin-bottom:1em;>";
-        echo "<div style='background-color:$color;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
+        echo "<div style='background-color:$color;height:110%;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
         echo "<ul>";
         echo "<li style=float:left;margin-left:-2em; tabindex='2'><b>" . $row_number . "</b></li>";
         $match = 0;
@@ -455,7 +455,7 @@ echo "</div>";
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
-            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onfocus="addNewInput()">
 
         </div>
 <?php
@@ -530,7 +530,7 @@ function addNewInput() {
     newInput.placeholder = 'Enter tag';
     newInput.classList.add('dynamic-input');
 
-    newInput.addEventListener("change", addNewInput, false)
+    newInput.addEventListener("focus", addNewInput, false)
 
         const timeInput = document.createElement('input');
     timeInput.type = 'hidden';
@@ -590,11 +590,10 @@ function doNotReload(event) {
 
     })
 }
-/*
 window.addEventListener("load", function () {
     addNewInput();
 });
- */
+
 
 </script>
 </body>
