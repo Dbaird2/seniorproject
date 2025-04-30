@@ -82,15 +82,18 @@ if (isset($_POST['create'])) {
             }
         }
         // Use PhpSpreadsheet to save the file on the server
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
         $writer = new Xlsx($spreadsheet);
-        $writer->save('php://output');
+        //$writer->save('php://output');
         //readfile($filePath);
+        header('Location: download.php?file=' . urlencode($filePath));
         error_reporting(1);
-        //header('Location: download.php?file=' . urlencode($filePath));
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
