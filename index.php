@@ -108,9 +108,9 @@ if (isset($_POST['create'])) {
         if (!$file_empty) {
             foreach ($old_tags as $row) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
-                $sheet->setCellValue('D' . $row_index, $desc[$i]);
+                #$sheet->setCellValue('D' . $row_index, $desc[$i]);
                 #$sheet->setCellValue('E' . $row_index, $sn[$i]);
-                $sheet->setCellValue('F' . $row_index, $loc[$i]);
+                #$sheet->setCellValue('F' . $row_index, $loc[$i]);
                 #$sheet->setCellValue('G' . $row_index, $po[$i]);
                 $i++;
                 $row_index++;
@@ -201,12 +201,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
         // Return the file path after successful upload
-        echo "File uploaded successfully. File path: $filePath";
+        echo "File uploaded successfully.";
     } else {
         echo "Error uploading file.";
     }
 } else {
-    echo "No file uploaded.";
 }
 
 if (isset($_POST['filePath'])) {
@@ -234,7 +233,6 @@ try {
     $time_array = [];
     $column_headers = [];
 
-    echo $filePath . " filePath<br> ";
     $tag = $worksheet->getCell('B2')->getValue() . ":";
     // Loop through the rows and columns
     foreach ($worksheet->getRowIterator() as $row) {
@@ -378,7 +376,7 @@ if (!$empty) {
 
         $tag_array[] = $cellB->getValue();
         echo "<div class='excel-info' style=border-style: solid;margin-bottom:1em;>";
-        echo "<div style='background-color:$color;height:110%;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
+        echo "<div style='background-color:$color;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
         echo "<ul>";
         echo "<li style=float:left;margin-left:-2em; tabindex='2'><b>" . $row_number . "</b></li>";
         $match = 0;
@@ -408,21 +406,20 @@ if (!$empty) {
             $disc_arr[] = $cellH->getValue();
         }
         $sn = $cellI->getValue();
+        $sn = is_null($sn) ? "EMPTY" : $sn;
+        echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
         $sn_arr[] = $sn;
-        if ($sn != NULL) {
-            echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
-        }
+
         $loc = $cellJ->getValue();
+        $loc = is_null($loc) ? "EMPTY" : $loc;
+        echo "<b>Location: </b>" . $loc;
         $loc_arr[] = $loc;
-        if ($loc != NULL) {
-            echo "<b>Location: </b>" . $loc;
-        }
+
         $po = $cellN->getValue();
+        $po = is_null($po) ? "EMPTY" : $po;
         $po_arr[] = $sn;
-        if ($po != NULL) {
-            echo "<b> |</b>  ";
-            echo "<b>PO:</b> " . $po;
-        }
+        echo "<b> |</b>  ";
+        echo "<b>PO:</b> " . $po;
         echo "</div>";
         echo "</div>";
         $row_number++;
@@ -455,7 +452,7 @@ echo "</div>";
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
-            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onfocus="addNewInput()">
+            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
 
         </div>
 <?php
@@ -530,7 +527,7 @@ function addNewInput() {
     newInput.placeholder = 'Enter tag';
     newInput.classList.add('dynamic-input');
 
-    newInput.addEventListener("focus", addNewInput, false)
+    newInput.addEventListener("change", addNewInput, false)
 
         const timeInput = document.createElement('input');
     timeInput.type = 'hidden';
@@ -590,10 +587,11 @@ function doNotReload(event) {
 
     })
 }
+/*
 window.addEventListener("load", function () {
     addNewInput();
 });
-
+ */
 
 </script>
 </body>
