@@ -18,9 +18,11 @@ if (isset($_GET['file'])) {
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($filePath));
-
+        var_dump($filePath);
+        /*
         flush();
         readfile($filePath);
+         */
         exit;
         //$writer->save('php://output');
 
