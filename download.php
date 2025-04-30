@@ -15,6 +15,7 @@ if (isset($_GET['file'])) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
+        header('Content-Transfer-Encoding: binary');
 
         //readfile($filePath);
         $writer->save('php://output');
