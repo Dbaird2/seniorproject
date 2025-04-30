@@ -109,9 +109,9 @@ if (isset($_POST['create'])) {
             foreach ($old_tags as $row) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
                 $sheet->setCellValue('D' . $row_index, $desc[$i]);
-                $sheet->setCellValue('E' . $row_index, $sn[$i]);
+                #$sheet->setCellValue('E' . $row_index, $sn[$i]);
                 $sheet->setCellValue('F' . $row_index, $loc[$i]);
-                $sheet->setCellValue('G' . $row_index, $po[$i]);
+                #$sheet->setCellValue('G' . $row_index, $po[$i]);
                 $i++;
                 $row_index++;
             }
