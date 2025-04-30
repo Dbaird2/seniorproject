@@ -85,10 +85,12 @@ if (isset($_POST['create'])) {
         if (ob_get_length()) {
             ob_end_clean();
         }
+        /*
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
+         */
         $writer = new Xlsx($spreadsheet);
         //$writer->save('php://output');
         //readfile($filePath);
