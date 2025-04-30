@@ -16,9 +16,11 @@ if (isset($_GET['file'])) {
         header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
         header('Cache-Control: max-age=0');
         header('Content-Transfer-Encoding: binary');
+        header('Content-Length ' . filesize($filePath));
 
-        //readfile($filePath);
-        $writer->save('php://output');
+        readfile($filePath);
+        exit;
+        //$writer->save('php://output');
 
         // Optionally, delete the file after sending (if you don't need it anymore)
         // unlink($filePath);

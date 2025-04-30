@@ -92,6 +92,7 @@ if (isset($_POST['create'])) {
         header('Content-Transfer-Encoding: binary');
          */
         $writer = new Xlsx($spreadsheet);
+        $writer->save($filePath);
         //$writer->save('php://output');
         //readfile($filePath);
         header('Location: download.php?file=' . urlencode($filePath));
