@@ -10,7 +10,7 @@ include_once("navbar.php");
 ?>
 
 <!-- Header -->
-<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+<header class="w3-container w3-blue w3-center" style="padding:128px 16px">
   <h1 class="w3-margin w3-jumbo"></h1>
   <p class="w3-xlarge"></p>
   <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"></button>
@@ -29,7 +29,7 @@ include_once("navbar.php");
     </div>
 
     <div class="w3-third w3-center">
-      <i class="fa fa-anchor w3-padding-64 w3-text-red"></i>
+      <i class="fa fa-anchor w3-padding-64 w3-text-blue"></i>
     </div>
   </div>
 </div>
@@ -38,7 +38,7 @@ include_once("navbar.php");
 <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
   <div class="w3-content">
     <div class="w3-third w3-center">
-      <i class="fa fa-coffee w3-padding-64 w3-text-red w3-margin-right"></i>
+      <i class="fa fa-coffee w3-padding-64 w3-text-blue w3-margin-right"></i>
     </div>
 
     <div class="w3-twothird">
