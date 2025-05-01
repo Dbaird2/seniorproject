@@ -176,12 +176,14 @@ error_reporting(E_ALL);
 $worksheet = NULL;
 ?>
 <body>
+<section style="float:left;position:absolute; top:2vh;">
     <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
         <label for="file"> Enter File: </label>
         <input type="file" name="file" id="filePath">
 <br>
         <button type="submit" >Submit</button>
     </form>
+</section>
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
