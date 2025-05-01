@@ -109,9 +109,7 @@ include_once("navbar.php");
 <head>
     <style>
 #showExcel {
-  position:absolute;
-  top:8vh;
-  margin-left: 20vw;
+  margin-left: 5vw;
   max-width: 60%;
   margin-bottom: -1em;
 }
@@ -150,6 +148,7 @@ margin-bottom:1vh;
 .row-number {
   float: left;
 margin-right:1vw;
+margin-bottom:1vh;
   color: #003366;
 }
 
@@ -196,7 +195,7 @@ margin-right:1vw;
 
         #dynamicForm {
             position: absolute;
-            top: 0;
+            top: 5vh;
             right: 10.5vw;
             padding: 10px;
             background-color: white;
