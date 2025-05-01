@@ -214,7 +214,7 @@ $worksheet = NULL;
 ?>
 <body>
 <section style="position:absolute; top:8vh;">
-    <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
+    <form id="sheet" name="form" action="auditing.php" method="POST" enctype="multipart/form-data">
         <label for="file"> Enter File: </label>
         <input type="file" name="file" id="filePath">
 <br>
@@ -493,7 +493,7 @@ foreach ($array as $row) {
 echo "</div>";
 ?>
     <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='index.php' onLoad="addNewInput()" enctype="multipart/form-data">
+    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
         <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
@@ -518,7 +518,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 <?php
 ?>
 
-    <form id="makeSheet" method='POST' action='index.php' enctype="multipart/form-data">
+    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 <?php
 
 foreach ($array as $value) {
