@@ -194,6 +194,38 @@ include_once("navbar.php");
   #sheet button:hover {
     background-color: #0056b3;
   }
+ .show-tags {
+    background-color: #ffffff;
+    margin-top: 2vh;
+    margin-left: 5vw;
+    padding: 20px 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .show-tags h3 {
+    color: #003366;
+    margin-bottom: 10px;
+  }
+
+  .show-tags ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .show-tags li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .tag-match {
+    color: green;
+  }
+
+  .tag-miss {
+    color: red;
+  }
     </style>
     <title>Asset Management Excel</title>
 </head>
@@ -393,7 +425,7 @@ $column_headers[] = $J;
 $column_headers[] = $N;
 }
 
-$colors = ['lightgray', 'white'];
+$colors = ['lightblue', 'white'];
 $empty = false;
 try {
     if ($worksheet->getRowIterator(3) == NULL) {
@@ -475,21 +507,18 @@ if (!$empty) {
 
 $i = 0;
 echo "<div class='show-tags'>";
-echo "<h3 style=margin-bottom:-1vh;margin-left:0.6vw;>Tags Scanned</h3>";
+echo "<h3 >Tags Scanned</h3>";
+echo "<ul>";
 foreach ($array as $row) {
     foreach ($tag_array as $tag_row) {
         $match2 = ($row == $tag_row) ? 1 : 0;
         if ($match2) break;
     }
-    if ($match2) {
-        echo "<b> <li style=color:green;>" . $row . "</b>  " . $time_array[$i] . "</li><br>";
-
-    } else {
-        echo "<b> <li style=color:red;>" . $row . "</b>  " . $time_array[$i] . "</li><br>";
-
-    }
+    $colorClass = $match2 ? "tag-match" : "tag-miss";
+    echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
     $i++;
 }
+echo "</ul>";
 echo "</div>";
 ?>
     <div id="additionalInputs"></div>
