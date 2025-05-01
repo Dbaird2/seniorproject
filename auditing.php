@@ -110,7 +110,7 @@ include_once("navbar.php");
     <style>
 #showExcel {
   margin-left: 5vw;
-  max-width: 90%;
+  max-width: 60%;
   margin-bottom: 1em;
 }
 
@@ -142,6 +142,7 @@ include_once("navbar.php");
 
 .inner-text li {
   margin: 5px 0;
+margin-bottom:1vh;
 }
 
 .row-number {
