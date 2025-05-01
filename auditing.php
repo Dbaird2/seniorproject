@@ -108,25 +108,67 @@ include_once("navbar.php");
 <html>
 <head>
     <style>
-        .excel-info {
-            border: 2px outset black;
-            background-color: white;
-            text-align: left;
-            width: 60%;
+#showExcel {
+  margin-left: 5vw;
+  max-width: 90%;
+  margin-bottom: 1em;
+}
 
-            margin-bottom: -0.0em;
-            display: inline-block;
-        }
+.excel-info {
+  border: 1px solid #cce0ff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
 
-        li {
-            list-style-type: none;
-        }
+.inner-text {
+  padding: 10px 15px;
+  font-family: Arial, sans-serif;
+}
 
-        .inner-text {
-            margin-top: -1vh;
-            margin-bottom: -1vh;
-            font-size: 0.8em;
-        }
+.row-even {
+  background-color: #f0f8ff;
+}
+
+.row-odd {
+  background-color: #ffffff;
+}
+
+.inner-text ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.inner-text li {
+  margin: 5px 0;
+}
+
+.row-number {
+  float: left;
+  margin-right: 1em;
+  color: #003366;
+}
+
+.match-tag {
+  color: green;
+}
+
+.miss-tag {
+  color: red;
+}
+
+.match-desc {
+  color: green;
+}
+
+.miss-desc {
+  color: red;
+}
+
+.neutral-tag {
+  color: black;
+}
 
         .show-tags {
             position: absolute;
@@ -162,7 +204,7 @@ include_once("navbar.php");
     padding: 20px 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    max-width: 300px;
   }
 
   #sheet label {
@@ -440,6 +482,7 @@ try {
 if (!$empty) {
     foreach ($worksheet->getRowIterator(3) as $row) {
 
+        /*
         $cellB = $worksheet->getCell('B' . $row->getRowIndex());
         $cellH = $worksheet->getCell('H' . $row->getRowIndex());
         $cellI = $worksheet->getCell('I' . $row->getRowIndex());
@@ -501,6 +544,55 @@ if (!$empty) {
         $row_number++;
         echo "</section>";
 
+
+    }
+         */
+        $cellB = $worksheet->getCell('B' . $row->getRowIndex());
+        $cellH = $worksheet->getCell('H' . $row->getRowIndex());
+        $cellI = $worksheet->getCell('I' . $row->getRowIndex());
+        $cellJ = $worksheet->getCell('J' . $row->getRowIndex());
+        $cellN = $worksheet->getCell('N' . $row->getRowIndex());
+
+        $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
+
+        echo "<section id='showExcel'>";
+        $tag_array[] = $cellB->getValue();
+
+        echo "<div class='excel-info'>";
+        echo "<div class='inner-text $color_class'>";
+        echo "<ul>";
+        echo "<li class='row-number'><strong>$row_number</strong></li>";
+
+        $match = in_array($cellB->getValue(), $array);
+
+        if ($cellB->getValue() == 'Tag Number') {
+            echo "<li><strong class='neutral-tag'>" . $cellB->getValue() . "</strong></li>";
+        } else {
+            $tagClass = $match ? "match-tag" : "miss-tag";
+            $descClass = $match ? "match-desc" : "miss-desc";
+
+            echo "<li><strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
+            echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
+
+            $disc_arr[] = $cellH->getValue();
+
+            $sn = $cellI->getValue() ?? "EMPTY";
+            $sn_arr[] = $sn;
+            echo "<strong>SN:</strong> $sn | ";
+
+            $loc = $cellJ->getValue() ?? "EMPTY";
+            $loc_arr[] = $loc;
+            echo "<strong>Location:</strong> $loc | ";
+
+            $po = $cellN->getValue() ?? "EMPTY";
+            $po_arr[] = $po;
+            echo "<strong>PO:</strong> $po</li>";
+        }
+
+        echo "</ul>";
+        echo "</div></div></section>";
+
+        $row_number++;
     }
 }
 
