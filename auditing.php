@@ -156,7 +156,44 @@ include_once("navbar.php");
             padding: 10px;
             background-color: white;
             border: 1px solid white;
-        }
+        } 
+#sheet {
+    background-color: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+  }
+
+  #sheet label {
+    display: block;
+    margin-bottom: 8px;
+    color: #003366;
+    font-weight: bold;
+  }
+
+  #sheet input[type="file"] {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 6px;
+    border: 1px solid #cce0ff;
+    border-radius: 4px;
+    background-color: #f0f8ff;
+  }
+
+  #sheet button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #sheet button:hover {
+    background-color: #0056b3;
+  }
     </style>
     <title>Asset Management Excel</title>
 </head>
@@ -176,7 +213,7 @@ error_reporting(E_ALL);
 $worksheet = NULL;
 ?>
 <body>
-<section style="float:left;position:absolute; top:2vh;">
+<section style="position:absolute; top:8vh;">
     <form id="sheet" name="form" action="index.php" method="POST" enctype="multipart/form-data">
         <label for="file"> Enter File: </label>
         <input type="file" name="file" id="filePath">
@@ -380,6 +417,7 @@ if (!$empty) {
         $color_change = $row_number % 2;
         $color = $colors[$color_change];
 
+        echo "<section id='showExcel'>";
         $tag_array[] = $cellB->getValue();
         echo "<div class='excel-info' style=border-style: solid;margin-bottom:1em;>";
         echo "<div style='background-color:$color;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
@@ -429,6 +467,7 @@ if (!$empty) {
         echo "</div>";
         echo "</div>";
         $row_number++;
+        echo "</section>";
 
     }
 }
