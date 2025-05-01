@@ -110,7 +110,7 @@ include_once("navbar.php");
     <style>
 #showExcel {
   position:absolute;
-  top:0;
+  top:8vh;
   margin-left: 20vw;
   max-width: 60%;
   margin-bottom: -1em;
@@ -149,6 +149,7 @@ margin-bottom:1vh;
 
 .row-number {
   float: left;
+margin-right:1vw;
   color: #003366;
 }
 
