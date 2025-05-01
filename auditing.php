@@ -111,7 +111,7 @@ include_once("navbar.php");
 #showExcel {
   margin-left: 5vw;
   max-width: 60%;
-  margin-bottom: 1em;
+  margin-bottom: -1em;
 }
 
 .excel-info {
@@ -147,7 +147,6 @@ margin-bottom:1vh;
 
 .row-number {
   float: left;
-  margin-right: 1em;
   color: #003366;
 }
 
@@ -194,8 +193,8 @@ margin-bottom:1vh;
 
         #dynamicForm {
             position: absolute;
-            top: 1vh;
-            right: 10.5vh;
+            top: 5vh;
+            right: 10.5vw;
             padding: 10px;
             background-color: white;
             border: 1px solid white;
@@ -241,9 +240,9 @@ margin-bottom:1vh;
     background-color: #ffffff;
     margin-top: 2vh;
     margin-left: 5vw;
-    padding: 20px 30px;
+    padding: 2vh 30px;
     border-radius: 8px;
-    max-width: 500px;
+    max-width: 10%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
