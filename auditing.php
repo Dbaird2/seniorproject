@@ -187,7 +187,8 @@ margin-bottom:1vh;
 }
 
         .show-tags {
-            float:left;
+            position:absolute;
+left:0;
         }
 
         .show-tags li {
