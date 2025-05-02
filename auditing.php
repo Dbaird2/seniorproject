@@ -111,6 +111,7 @@ include_once("navbar.php");
 body {
             margin: 0;
             height: 100vh;
+  width: 100%;
 position:absolute;
 top:8vh;
 }
@@ -154,7 +155,6 @@ margin-bottom:1vh;
 }
 
 .row-number {
-  float: left;
 margin-right:1vw;
 margin-bottom:1vh;
   color: #003366;
@@ -203,44 +203,47 @@ margin-bottom:1vh;
             padding: 10px;
             background-color: white;
             border: 1px solid white;
-        } 
+        }
 #sheet {
     background-color: #ffffff;
-    padding: 20px 30px;
-    border-radius: 8px;
+    padding: 0.6vw 1vw;
+    border-radius: 1vw;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
+    max-width: 12vw;
   }
-
+#dynamicForm label,
   #sheet label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 0.2vw;
     color: #003366;
     font-weight: bold;
   }
 
   #sheet input[type="file"] {
-    width: 100%;
-    margin-bottom: 20px;
-    padding: 6px;
+    width: 80%;
+    margin-bottom: 1vh;
+    padding: 0.3vw;
     border: 1px solid #cce0ff;
-    border-radius: 4px;
+    border-radius: 1vw;
     background-color: #f0f8ff;
   }
-
+#dynamicForm button,
+#makeSheet button,
   #sheet button {
     background-color: #007BFF;
     color: #fff;
-    padding: 10px 16px;
+    padding: 0.2vw 0.3vw;
     border: none;
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
   }
-
+#dynamicForm button:hover,
+#makeSheet button:hover,
   #sheet button:hover {
     background-color: #0056b3;
   }
+
  .show-tags {
     background-color: #ffffff;
     margin-top: 2vh;
@@ -273,6 +276,41 @@ margin-bottom:1vh;
   .tag-miss {
     color: red;
   }
+.formId {
+  float:top;
+  display:flex;
+  justify-content:center;
+
+}
+
+.dynamicId {
+ line-height: 28px;
+ border: 2px solid transparent;
+ border-bottom-color: #777;
+ padding: .2rem 0;
+ outline: none;
+ background-color: transparent;
+ color: #0d0c22;
+ transition: .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.dynamicId:focus, dynamicId:hover {
+ outline: none;
+ padding: .2rem 1rem;
+ border-radius: 1rem;
+ border-color: #7a9cc6;
+}
+
+.dynamicId::placeholder {
+ color: #777;
+}
+
+.dynamicId:focus::placeholder {
+ opacity: 0;
+ transition: opacity .3s;
+}
+
+
     </style>
     <title>Asset Management Excel</title>
 </head>
@@ -292,14 +330,11 @@ error_reporting(E_ALL);
 $worksheet = NULL;
 ?>
 <body>
-<section style="position:absolute; top:8vh;">
-    <form id="sheet" name="form" action="auditing.php" method="POST" enctype="multipart/form-data">
-        <label for="file"> Enter File: </label>
-        <input type="file" name="file" id="filePath">
-<br>
-        <button type="submit" >Submit</button>
-    </form>
-</section>
+<form id="sheet" name="form" action="auditing.php" method="POST" enctype="multipart/form-data">
+            <label for="file">Enter File:</label>
+            <input type="file" name="file" id="filePath">
+            <button type="submit">Submit</button>
+        </form>
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
@@ -620,10 +655,9 @@ echo "</div>";
 ?>
     <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-        <label for="inputContainer"> Enter Tags: </label>
         <div id="inputContainer">
             <!-- Input fields will appear here -->
-            <input type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
 
         </div>
 <?php
@@ -643,7 +677,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
     </form>
 <?php
 ?>
-
+<div class='formId'>
     <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 <?php
 
@@ -676,6 +710,7 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
         <button type='submit' id='create' name='create'>Export Excel File</button>
     </form>
+</div>
 
 <?php
 }
