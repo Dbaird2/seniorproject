@@ -159,6 +159,7 @@ margin-bottom:1vh;
 }
 
 .row-number {
+margin-right:0.1vw;
 display:flex;
 margin-right:1vw;
 margin-bottom:1vh;
@@ -186,7 +187,7 @@ margin-bottom:1vh;
 }
 
         .show-tags {
-float:right;
+            float:left;
         }
 
         .show-tags li {
@@ -610,7 +611,8 @@ if (!$empty) {
         } else {
             $tagClass = $match ? "match-tag" : "miss-tag";
             $descClass = $match ? "match-desc" : "miss-desc";
-
+            
+            echo "<strong>Tag:</strong>";
             echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
             echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
 
