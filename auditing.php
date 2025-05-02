@@ -109,6 +109,8 @@ include_once("navbar.php");
 <head>
     <style>
 body {
+            margin: 0;
+            height: 100vh;
 position:absolute;
 top:8vh;
 }
@@ -192,11 +194,6 @@ margin-bottom:1vh;
             margin-top: -5%;
             font-size: 80%;
             margin-bottom: -2.5vh;
-        }
-
-        body {
-            margin: 0;
-            height: 100vh;
         }
 
         #dynamicForm {
