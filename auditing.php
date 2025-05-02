@@ -121,6 +121,7 @@ top:8vh;
 #showExcel {
 display:flex;
 justify-content:center;
+align-items:left;
   margin-left: 5vw;
   max-width: 65%;
   margin-bottom: -1em;
@@ -600,7 +601,7 @@ if (!$empty) {
         echo "<div class='excel-info'>";
         echo "<div class='inner-text $color_class'>";
         echo "<ul>";
-        echo "<li class='row-number'><strong>$row_number</strong>";
+        echo "<li class='row-number'><strong>$row_number  </strong>";
 
         $match = in_array($cellB->getValue(), $array);
 
