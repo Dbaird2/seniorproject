@@ -120,11 +120,11 @@ top:8vh;
 }
 #showExcel {
 display:flex;
-justify-content:center;
-align-items:left;
-  margin-left: 5vw;
-  max-width: 65%;
-  margin-bottom: -1em;
+justify-content:right;
+  align-items:left;
+  margin-left:13vw;
+  max-width: 60%;
+  margin-bottom: 0.5em;
 }
 
 .excel-info {
@@ -135,7 +135,7 @@ align-items:left;
 }
 
 .inner-text {
-  padding: 1vw 1.5vw;
+  padding: 1vh 1vw;
   font-family: Arial, sans-serif;
 }
 
@@ -154,15 +154,14 @@ align-items:left;
 }
 
 .inner-text li {
-  margin: 0.5vw 0;
-margin-bottom:1vh;
+  margin: 0vw 0;
+margin-bottom:0vh;
 }
 
 .row-number {
-margin-right:0.1vw;
-display:flex;
-margin-right:1vw;
-margin-bottom:1vh;
+margin-right:0vw;
+margin-bottom:0vh;
+
   color: #003366;
 }
 
@@ -185,6 +184,22 @@ margin-bottom:1vh;
 .neutral-tag {
   color: black;
 }
+
+        .show-tags {
+            position: absolute;
+            /* Position the form relative to the viewport */
+            top: 0;
+            /* Align it to the top */
+            right: 34vh;
+            /* Align it to the right */
+        }
+
+        .show-tags li {
+            padding-top: 1em;
+            margin-top: -5%;
+            font-size: 80%;
+            margin-bottom: -2.5vh;
+        }
 
         #dynamicForm {
             position: absolute;
@@ -234,7 +249,7 @@ margin-bottom:1vh;
     background-color: #0056b3;
   }
 
-.show-tags {
+ .show-tags {
    position:absolute;
    left:0vw;
    top:25vh;
@@ -264,6 +279,7 @@ margin-bottom:1vh;
     margin-bottom: 0.5vw;
     font-size: 0.9rem;
   }
+
   .tag-match {
     color: green;
   }
