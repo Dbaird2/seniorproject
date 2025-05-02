@@ -600,17 +600,17 @@ if (!$empty) {
         echo "<div class='excel-info'>";
         echo "<div class='inner-text $color_class'>";
         echo "<ul>";
-        echo "<li class='row-number'><strong>$row_number</strong></li>";
+        echo "<li class='row-number'><strong>$row_number</strong>";
 
         $match = in_array($cellB->getValue(), $array);
 
         if ($cellB->getValue() == 'Tag Number') {
-            echo "<li><strong class='neutral-tag'>" . $cellB->getValue() . "</strong></li>";
+            echo "<strong class='neutral-tag'>" . $cellB->getValue() . "</strong>";
         } else {
             $tagClass = $match ? "match-tag" : "miss-tag";
             $descClass = $match ? "match-desc" : "miss-desc";
 
-            echo "<li><strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
+            echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
             echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
 
             $disc_arr[] = $cellH->getValue();
