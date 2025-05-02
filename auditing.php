@@ -120,22 +120,22 @@ top:8vh;
 }
 #showExcel {
 display:flex;
-justify-content:right;
+justify-content:left;
   align-items:left;
-  margin-left:13vw;
-  max-width: 60%;
-  margin-bottom: 0.5em;
+  margin-left:22vw;
+  max-width: 70%;
+  margin-bottom: 0;
 }
 
 .excel-info {
-  border: 1px solid #cce0ff;
-  border-radius: 6px;
+  border: 0.1vh solid #cce0ff;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .inner-text {
-  padding: 1vh 1vw;
+  padding: 0.5vh 0.5vw;
   font-family: Arial, sans-serif;
 }
 
@@ -161,7 +161,7 @@ margin-bottom:0vh;
 .row-number {
 margin-right:0vw;
 margin-bottom:0vh;
-
+  
   color: #003366;
 }
 
@@ -291,7 +291,7 @@ margin-bottom:0vh;
   float:top;
   display:flex;
   justify-content:center;
-
+  
 }
 
 .dynamicId {
@@ -320,6 +320,7 @@ margin-bottom:0vh;
  opacity: 0;
  transition: opacity .3s;
 }
+
 
 
     </style>
@@ -612,7 +613,7 @@ if (!$empty) {
         echo "<div class='excel-info'>";
         echo "<div class='inner-text $color_class'>";
         echo "<ul>";
-        echo "<li class='row-number'><strong>$row_number  </strong>";
+        echo "<li class='row-number'><strong>$row_number &nbsp;  </strong>";
 
         $match = in_array($cellB->getValue(), $array);
 
