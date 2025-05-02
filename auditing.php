@@ -210,6 +210,7 @@ margin-bottom:0vh;
             border: 1px solid white;
         }
 #sheet {
+  float:left;
     background-color: #ffffff;
     padding: 0.6vw 1vw;
     border-radius: 1vw;
@@ -320,7 +321,6 @@ margin-bottom:0vh;
  opacity: 0;
  transition: opacity .3s;
 }
-
 
 
     </style>
