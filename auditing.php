@@ -108,6 +108,10 @@ include_once("navbar.php");
 <html>
 <head>
     <style>
+body {
+position:absolute;
+top:8vh;
+}
 #showExcel {
   margin-left: 5vw;
   max-width: 60%;
