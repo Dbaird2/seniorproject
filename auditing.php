@@ -102,11 +102,14 @@ if (isset($_POST['create'])) {
     }
     //exit();
 }
-include_once("navbar.php");
 ?>
 
 <html>
 <head>
+<?php
+include_once("navbar.php");
+?>
+
     <style>
 body {
             margin: 0;
@@ -119,7 +122,7 @@ top:8vh;
 display:flex;
 justify-content:center;
   margin-left: 5vw;
-  max-width: 60%;
+  max-width: 65%;
   margin-bottom: -1em;
 }
 
@@ -131,7 +134,7 @@ justify-content:center;
 }
 
 .inner-text {
-  padding: 10px 15px;
+  padding: 1vw 1.5vw;
   font-family: Arial, sans-serif;
 }
 
@@ -150,11 +153,12 @@ justify-content:center;
 }
 
 .inner-text li {
-  margin: 5px 0;
+  margin: 0.5vw 0;
 margin-bottom:1vh;
 }
 
 .row-number {
+display:flex;
 margin-right:1vw;
 margin-bottom:1vh;
   color: #003366;
@@ -181,18 +185,13 @@ margin-bottom:1vh;
 }
 
         .show-tags {
-            position: absolute;
-            /* Position the form relative to the viewport */
-            top: 0;
-            /* Align it to the top */
-            right: 34vh;
-            /* Align it to the right */
+float:right;
         }
 
         .show-tags li {
             padding-top: 1em;
             margin-top: -5%;
-            font-size: 80%;
+            font-size: 60%;
             margin-bottom: -2.5vh;
         }
 
@@ -639,7 +638,7 @@ if (!$empty) {
 
 $i = 0;
 echo "<div class='show-tags'>";
-echo "<h3 >Tags Scanned</h3>";
+echo "<h4 >Tags Scanned</h4>";
 echo "<ul>";
 foreach ($array as $row) {
     foreach ($tag_array as $tag_row) {
@@ -731,7 +730,7 @@ function addNewInput() {
     //newInput.onfocus = 'addNewInput()';
     //newInput.id = 'addInputButton';
     newInput.placeholder = 'Enter tag';
-    newInput.classList.add('dynamic-input');
+    newInput.classList.add('dynamicId');
 
     newInput.addEventListener("change", addNewInput, false)
 
