@@ -114,6 +114,8 @@ top:8vh;
 }
 #showExcel {
   margin-left: 5vw;
+ position:absolute;
+ left:50%; 
   max-width: 60%;
   margin-bottom: -1em;
 }
