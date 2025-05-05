@@ -114,226 +114,230 @@ include_once("navbar.php");
 body {
             margin: 0;
             height: 100vh;
-            font-size: 0.8vw;
-  width: 100%;
-position:absolute;
-top:8vh;
-}
-#makeSheet,
-#showExcel {
-display:flex;
-justify-content:left;
-  align-items:left;
-  margin-left:22vw;
-  max-width: 70%;
-  margin-bottom: 0;
-}
+            font-size: calc(0.5vw + 0.4vh);
+            width: 100%;
+            position: absolute;
+            top: 8vh;
+        }
 
-.excel-info {
-  border: 0.1vh solid #cce0ff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
+        #makeSheet,
+        #showExcel {
+            display: flex;
+            margin:auto;
+            justify-content: left;
+            align-items: left;
+            max-width: 50%;
+        }
 
-.inner-text {
-    font-size: 0.8vw;
-  padding: 0.5vh 0.5vw;
-  font-family: Arial, sans-serif;
-}
+        .excel-info {
+            border: 0.1vh solid #cce0ff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
 
-.row-even {
-  background-color: #f0f8ff;
-}
+        .inner-text {
+            font-size: calc(0.5vw + 0.4vh);
+            padding: 0.5vh 0.5vw;
+            font-family: Arial, sans-serif;
+        }
 
-.row-odd {
-  background-color: #ffffff;
-}
+        .row-even {
+            background-color: #f0f8ff;
+        }
 
-.inner-text ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
+        .row-odd {
+            background-color: #ffffff;
+        }
 
-.inner-text li {
-  margin: 0vw 0;
-margin-bottom:0vh;
-}
+        .inner-text ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.row-number {
-margin-right:0vw;
-margin-bottom:0vh;
+        .inner-text li {
+            margin: 0vw 0;
+            margin-bottom: 0vh;
+        }
 
-  color: #003366;
-}
+        .row-number {
+            margin-right: 0vw;
+            margin-bottom: 0vh;
 
-.match-tag {
-  color: green;
-}
+            color: #003366;
+        }
 
-.miss-tag {
-  color: red;
-}
+        .match-tag {
+            color: green;
+        }
 
-.match-desc {
-  color: green;
-}
+        .miss-tag {
+            color: red;
+        }
 
-.miss-desc {
-  color: red;
-}
+        .match-desc {
+            color: green;
+        }
 
-.neutral-tag {
-  color: black;
-}
+        .miss-desc {
+            color: red;
+        }
 
-
+        .neutral-tag {
+            color: black;
+        }
 
 
-#sheet {
-    position:fixed;
-  float:left;
-  top:7vh;
-    background-color: #ffffff;
-    padding: 0.6vw 1vw;
-    border-radius: 1vw;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 12vw;
-  }
-#dynamicForm label,
-  #sheet label {
-    display: block;
-    margin-bottom: 0.2vw;
-    color: #003366;
-    font-weight: bold;
-  }
 
-  #sheet input[type="file"] {
-    font-size:0.6vw;
 
-    width: 80%;
-    margin-bottom: 1vh;
-    padding: 0.3vw;
-    border: 1px solid #cce0ff;
-    border-radius: 1vw;
-    background-color: #f0f8ff;
-  }
-#dynamicForm button,
-#makeSheet button,
-  #sheet button {
-    font-size:0.6vw;
+        #sheet {
+            position: fixed;
+            float: left;
+            top: 4.5rem;
+            background-color: #ffffff;
+            padding: 0.6vw 1vw;
+            border-radius: 1vw;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 12vw;
+        }
 
-    width:4vw;
-    background-color: #007BFF;
-    color: #fff;
-    padding: 0.2vw 0.3vw;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-#dynamicForm button:hover,
-#makeSheet button:hover,
-  #sheet button:hover {
-    background-color: #0056b3;
-  }
+        #dynamicForm label,
+        #sheet label {
+            display: block;
+            margin-bottom: 0.2vw;
+            color: #003366;
+            font-weight: bold;
+        }
 
- .show-tags {
-    display:flex;
-   position:fixed;
-   flex-wrap: wrap;
-    justify-content: center;
-   left:0vw;
-   top:25vh;
-    background-color: #ffffff;
-    margin-top: 0vh;
-    margin-left: 0vw;
-    padding: 1vh 0vw;
-    border-radius: 8px;
-    max-width: 15%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
+        #sheet input[type="file"] {
+            font-size: calc(0.5vw + 0.4vh);
 
-  .show-tags h4 {
-    color: #003366;
-    margin-top:1vh;
-  }
+            width: 80%;
+            margin-bottom: 1vh;
+            padding: 0.3vw;
+            border: 1px solid #cce0ff;
+            border-radius: 1vw;
+            background-color: #f0f8ff;
+        }
 
-  .show-tags ul {
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    list-style-type: none;
-    padding-left: 0;
-    justify-content: center;
-    margin-bottom:0.1vw;
-  }
+        #dynamicForm button,
+        #makeSheet button,
+        #sheet button {
+            font-size: calc(0.5vw + 0.4vh);
 
-  .show-tags li {
-    margin-bottom: 0.5vw;
-    font-size: 0.8vw 0.8vh;
-  }
+            width: 4vw;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 0.2vw 0.3vw;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-  .tag-match {
-    color: green;
-  }
+        #dynamicForm button:hover,
+        #makeSheet button:hover,
+        #sheet button:hover {
+            background-color: #0056b3;
+        }
 
-  .tag-miss {
-    color: red;
-  }
-.formId {
-  float:top;
-  display:flex;
-  justify-content:center;
+        .show-tags {
+            display: flex;
+            position: fixed;
+            flex-wrap: wrap;
+            justify-content: center;
+            left: 0vw;
+            top: calc(15rem);
+            background-color: #ffffff;
+            margin-top: 0vh;
+            margin-left: 0vw;
+            padding: 1vh 0vw;
+            border-radius: 8px;
+            max-width: 15%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
 
-}
+        .show-tags h4 {
+            color: #003366;
+            margin-top: 1vh;
+        }
 
-#dynamicForm {
-            position:fixed;
-            top: 5vh;
-            right: 8.5vw;
-            width:20vw;
+        .show-tags ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            list-style-type: none;
+            padding-left: 0;
+            justify-content: center;
+            margin-bottom: 0.1rem;
+            margin-right:-0.3rem;
+        }
+
+        .show-tags li {
+            margin-bottom: 0.5vw;
+            font-size: calc(0.5vw + 0.4vh);
+        }
+
+        .tag-match {
+            color: green;
+        }
+
+        .tag-miss {
+            color: red;
+        }
+
+        .formId {
+            float: top;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        #dynamicForm {
+            position: fixed;
+            top: 3rem;
+            right:0;
             padding: 10px;
             background-color: white;
             border: 1px solid white;
         }
 
-.dynamicId {
-    font-size:0.7vw;
+        .dynamicId {
+            font-size: calc(0.5vw + 0.4vh);
 
-    width:10vw;
-    line-height: 28px;
- border: 2px solid transparent;
- border-bottom-color: #777;
- padding: .2rem 0;
- outline: none;
- background-color: transparent;
- color: #0d0c22;
- transition: .3s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
+            line-height: 28px;
+            border: 2px solid transparent;
+            border-bottom-color: #777;
+            padding: .2rem 0;
+            outline: none;
+            background-color: transparent;
+            color: #0d0c22;
+            transition: .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
 
-.dynamicId:focus, dynamicId:hover {
-    font-size:0.7vw;
+        .dynamicId:focus,
+        .dynamicId:hover {
+            font-size: calc(0.5vw + 0.4vh);
 
- outline: none;
- padding: .2rem 1rem;
- border-radius: 1rem;
- border-color: #7a9cc6;
-}
+            outline: none;
+            padding: .2rem 1rem;
+            border-radius: 1rem;
+            border-color: #7a9cc6;
+        }
 
-.dynamicId::placeholder {
-    font-size:0.7vw;
+        .dynamicId::placeholder {
+            font-size: calc(0.5vw + 0.4vh);
 
- color: #777;
-}
+            color: #777;
+        }
 
-.dynamicId:focus::placeholder {
-    font-size:0.7vw;
+        .dynamicId:focus::placeholder {
+            font-size: calc(0.5vw + 0.4vh);
 
- opacity: 0;
- transition: opacity .3s;
-}
+            opacity: 0;
+            transition: opacity .3s;
+        }
     </style>
     <title>Asset Management Excel</title>
 </head>
