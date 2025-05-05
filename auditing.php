@@ -114,6 +114,7 @@ include_once("navbar.php");
 body {
             margin: 0;
             height: 100vh;
+            font-size: 0.8vw;
   width: 100%;
 position:absolute;
 top:8vh;
@@ -136,6 +137,7 @@ justify-content:left;
 }
 
 .inner-text {
+    font-size: 0.8vw;
   padding: 0.5vh 0.5vw;
   font-family: Arial, sans-serif;
 }
@@ -186,34 +188,13 @@ margin-bottom:0vh;
   color: black;
 }
 
-        .show-tags {
-            position: absolute;
-            /* Position the form relative to the viewport */
-            top: 0;
-            /* Align it to the top */
-            right: 34vh;
-            /* Align it to the right */
-        }
 
-        .show-tags li {
-            padding-top: 1em;
-            margin-top: -5%;
-            font-size: 80%;
-            margin-bottom: -2.5vh;
-        }
 
-        #dynamicForm {
-            position:fixed;
-            top: 5vh;
-            right: 10.5vw;
-            padding: 10px;
-            background-color: white;
-            border: 1px solid white;
-        }
+
 #sheet {
     position:fixed;
   float:left;
-  top:0;
+  top:7vh;
     background-color: #ffffff;
     padding: 0.6vw 1vw;
     border-radius: 1vw;
@@ -229,6 +210,8 @@ margin-bottom:0vh;
   }
 
   #sheet input[type="file"] {
+    font-size:0.6vw;
+
     width: 80%;
     margin-bottom: 1vh;
     padding: 0.3vw;
@@ -239,6 +222,9 @@ margin-bottom:0vh;
 #dynamicForm button,
 #makeSheet button,
   #sheet button {
+    font-size:0.6vw;
+
+    width:4vw;
     background-color: #007BFF;
     color: #fff;
     padding: 0.2vw 0.3vw;
@@ -256,33 +242,37 @@ margin-bottom:0vh;
  .show-tags {
     display:flex;
    position:fixed;
+   flex-wrap: wrap;
+    justify-content: center;
    left:0vw;
    top:25vh;
     background-color: #ffffff;
     margin-top: 0vh;
     margin-left: 0vw;
-    padding: 1vh 1vw;
+    padding: 1vh 0vw;
     border-radius: 8px;
-    max-width: 13%;
+    max-width: 15%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .show-tags h4 {
     color: #003366;
     margin-top:1vh;
-    margin-bottom: 1.5vh;
   }
 
   .show-tags ul {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     list-style-type: none;
     padding-left: 0;
-    margin-top:0.1vw;
+    justify-content: center;
     margin-bottom:0.1vw;
   }
 
   .show-tags li {
     margin-bottom: 0.5vw;
-    font-size: 0.9rem;
+    font-size: 0.8vw 0.8vh;
   }
 
   .tag-match {
@@ -299,8 +289,20 @@ margin-bottom:0vh;
 
 }
 
-.dynamicId {
+#dynamicForm {
+            position:fixed;
+            top: 5vh;
+            right: 8.5vw;
+            width:20vw;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid white;
+        }
 
+.dynamicId {
+    font-size:0.7vw;
+
+    width:10vw;
     line-height: 28px;
  border: 2px solid transparent;
  border-bottom-color: #777;
@@ -312,6 +314,8 @@ margin-bottom:0vh;
 }
 
 .dynamicId:focus, dynamicId:hover {
+    font-size:0.7vw;
+
  outline: none;
  padding: .2rem 1rem;
  border-radius: 1rem;
@@ -319,10 +323,14 @@ margin-bottom:0vh;
 }
 
 .dynamicId::placeholder {
+    font-size:0.7vw;
+
  color: #777;
 }
 
 .dynamicId:focus::placeholder {
+    font-size:0.7vw;
+
  opacity: 0;
  transition: opacity .3s;
 }
