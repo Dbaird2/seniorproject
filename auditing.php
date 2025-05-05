@@ -118,6 +118,7 @@ body {
 position:absolute;
 top:8vh;
 }
+#makeSheet,
 #showExcel {
 display:flex;
 justify-content:left;
@@ -161,7 +162,7 @@ margin-bottom:0vh;
 .row-number {
 margin-right:0vw;
 margin-bottom:0vh;
-  
+
   color: #003366;
 }
 
@@ -202,7 +203,7 @@ margin-bottom:0vh;
         }
 
         #dynamicForm {
-            position: absolute;
+            position:fixed;
             top: 5vh;
             right: 10.5vw;
             padding: 10px;
@@ -210,7 +211,9 @@ margin-bottom:0vh;
             border: 1px solid white;
         }
 #sheet {
+    position:fixed;
   float:left;
+  top:0;
     background-color: #ffffff;
     padding: 0.6vw 1vw;
     border-radius: 1vw;
@@ -251,7 +254,8 @@ margin-bottom:0vh;
   }
 
  .show-tags {
-   position:absolute;
+    display:flex;
+   position:fixed;
    left:0vw;
    top:25vh;
     background-color: #ffffff;
@@ -292,11 +296,12 @@ margin-bottom:0vh;
   float:top;
   display:flex;
   justify-content:center;
-  
+
 }
 
 .dynamicId {
- line-height: 28px;
+
+    line-height: 28px;
  border: 2px solid transparent;
  border-bottom-color: #777;
  padding: .2rem 0;
@@ -321,8 +326,6 @@ margin-bottom:0vh;
  opacity: 0;
  transition: opacity .3s;
 }
-
-
     </style>
     <title>Asset Management Excel</title>
 </head>
