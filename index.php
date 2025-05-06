@@ -11,23 +11,22 @@ include_once("navbar.php");
 
 <!-- Header -->
 <header class="w3-container w3-blue w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo"></h1>
-  <p class="w3-xlarge"></p>
-  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"></button>
+  <h1 class="w3-margin w3-jumbo">Asset Management System</h1>
+  <p class="w3-xlarge">Easily track, audit, and export your organization's assets</p>
+  <a href="auditing.php" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</a>
 </header>
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
     <div class="w3-twothird">
-      <h1></h1>
-      <h5 class="w3-padding-32"></h5>
+      <h1>Track and Mage Assets</h1>
+      <h5 class="w3-padding-32">Keep a clear record of your equipment, supplies, and tags.</h5>
 
       <p class="w3-text-grey">
-        
+        Our system helps you scan, audit, and export inventory reports. Whether you're in IT, facilities, or logistics, this app streamlines your asset workflow.
         </p>
     </div>
-
     <div class="w3-third w3-center">
     </div>
   </div>
@@ -40,11 +39,11 @@ include_once("navbar.php");
     </div>
 
     <div class="w3-twothird">
-      <h1></h1>
-      <h5 class="w3-padding-32"></h5>
+      <h1>How It Works</h1>
+      <h5 class="w3-padding-32">Scan &rArr; Compare &rArr; Export</h5>
 
       <p class="w3-text-grey">
-       
+         Upload your inventory list, scan items in real time, view mismatches, and export a detailed Excel report. All in one place — fast and easy.
         </p>
     </div>
   </div>
