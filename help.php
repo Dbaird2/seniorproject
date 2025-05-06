@@ -304,12 +304,6 @@ include_once("navbar.php")
                     </a>
                 </li>
                 <li>
-                    <a href="faq/data-exports.php">
-                        How do I export my data?
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </li>
-                <li>
                     <a href="faq/all-faqs.php">
                         View all FAQs
                         <i class="fas fa-list"></i>
