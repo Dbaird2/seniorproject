@@ -298,13 +298,13 @@ include_once("navbar.php")
                     </a>
                 </li>
                 <li>
-                    <a href="faq/excel-import.php">
+                    <a href="faq/excel-imports.php">
                         How do I audit?
                         <i class="fas fa-arrow-right"></i>
                     </a>
                 </li>
                 <li>
-                    <a href="faq/data-export.php">
+                    <a href="faq/data-exports.php">
                         How do I export my data?
                         <i class="fas fa-arrow-right"></i>
                     </a>
