@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $email = $password = $confirm_password = "";
     }
 }
-include_once("navbar.php");
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>

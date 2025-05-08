@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-include_once("navbar.php");
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>

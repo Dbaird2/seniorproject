@@ -59,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = "";
     }
 }
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>
