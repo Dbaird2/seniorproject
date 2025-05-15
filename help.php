@@ -251,30 +251,6 @@ include_once("navbar.php")
 
     <!-- Main content -->
     <main class="container">
-        <!-- Help categories -->
-        <section>
-            <h2>Help Categories</h2>
-            <div class="categories">
-                <div class="category-card">
-                    <h3><i class="fas fa-file-alt"></i> Documentation</h3>
-                    <p>Browse our detailed documentation to find guides and references.</p>
-                    <a href="#" class="link">View documentation <i class="fas fa-arrow-right"></i></a>
-                </div>
-
-                <div class="category-card">
-                    <h3><i class="fas fa-comments"></i> Community Forum</h3>
-                    <p>Join discussions and get help from our community members.</p>
-                    <a href="#" class="link">Visit forum <i class="fas fa-arrow-right"></i></a>
-                </div>
-
-                <div class="category-card">
-                    <h3><i class="fas fa-question-circle"></i> Support Tickets</h3>
-                    <p>Create a support ticket for direct assistance from our team.</p>
-                    <a href="#" class="link">Open ticket <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-        </section>
-
         <!-- FAQs - Updated to use links -->
         <section>
             <h2>Frequently Asked Questions</h2>

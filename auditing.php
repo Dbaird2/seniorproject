@@ -6,43 +6,52 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if (isset($_POST['create'])) {
+
+    # This if statement will get the current directory +appended filename,
+    # current direct + appended export directory, create the export directory
+    # if it does not exist. Get all the info that was sent in array. 
+    # Format it according to how it is wanted for PHPSpreadsheet Excel
+    # it will then create a excel sheet, save it to the sheet, then
+    # encode it for file transfering to download 
     try {
         $filePath = __DIR__ . $_POST['filePath'];
-        try {
-        } catch (Exception $e) {
-        }
+       
         $saveDir = __DIR__ . '/exports/';
         if (!file_exists($saveDir)) {
             mkdir($saveDir, 0777, true);
         }
+        # START SPREADSHEET
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+        
+        # LOCATION FOR EXCEL HEADERS
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
-        /*
-        echo "<pre>";
-        var_dump($_POST);
-        echo"</pre>";
-         */
         $row_index = 2;
+
+        # GET POST DATA
         $previous_times = $_POST['previousTime'] ?? NULL;
         $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
-        //var_dump($previous_inputs);
-        //echo sizeof($previous_inputs);
         $headers = $_POST['headers'];
         $loc = $_POST['loc'];
         $sn = $_POST['serial'];
         $po = $_POST['po_num'];
         $old_tags = $_POST['old_tag'];
         $desc = $_POST['description'];
-        //echo "Looking for: " .  $filePath . "<br>";
-        //var_dump(file_exists($filePath));
+
+        # GET DOWNLOAD PATH READY
         $fileNameOnly = basename($filePath);
         $filePath = $saveDir . $fileNameOnly;
+
+        # CHECK IF EMPTY
         $empty_scan = is_null($previous_inputs[0]) ? true : false;
         $file_empty = is_null($old_tags[1]) ? true : false;
+
+        # CHANGE FILE NAME
         $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
         $filePath = str_replace(".xls", "_AUDIT", $filePath);
         $filePath = $filePath . ".xlsx";
+
+        # SET HEADERS IN SHEET
         for ($i = 0; $i < count($column_letters); $i++) {
             $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
@@ -85,22 +94,14 @@ if (isset($_POST['create'])) {
         if (ob_get_length()) {
             ob_end_clean();
         }
-        /*
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . basename($filePath) . '"');
-        header('Cache-Control: max-age=0');
-        header('Content-Transfer-Encoding: binary');
-         */
+
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        //$writer->save('php://output');
-        //readfile($filePath);
         header('Location: download.php?file=' . urlencode($filePath));
         error_reporting(1);
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
-    //exit();
 }
 ?>
 
@@ -187,9 +188,6 @@ body {
         .neutral-tag {
             color: black;
         }
-
-
-
 
         #sheet {
             position: fixed;
@@ -371,9 +369,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileSize = $_FILES['file']['size'];
     $fileType = $_FILES['file']['type'];
 
+    # CHECK IF XLSX OR XLS
+    $file_type_check = substr($fileName, strlen($fileName) - 4);
+    if ($file_type_check != 'xlsx' && $file_type_check != '.xls') {
+        echo "<h3'>File type not allowed</h3>";
+        return;
+    } 
+
     // Define the target directory to save the uploaded file
     $uploadDir = 'uploads/';
-    
+
     // Ensure the upload directory exists
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // Create the directory if it doesn't exist
@@ -398,156 +403,184 @@ if (isset($_POST['filePath'])) {
 
 if (isset($filePath)) {
 
-#if (isset($_POST['filePath'])) {
-try {
-    $spreadsheet = IOFactory::load($filePath);
+    try {
+        $spreadsheet = IOFactory::load($filePath);
 
 
-    // Get the first worksheet
-    $worksheet = $spreadsheet->getActiveSheet();
+        // Get the worksheet
+        $worksheet = $spreadsheet->getActiveSheet();
 
-    $row_number = 1;
-    $array = [];
-    $old_tags = [];
-    $disc_arr = [];
-    $sn_arr = [];
-    $loc_arr = [];
-    $po_arr = [];
-    $tag_array = [];
-    $time_array = [];
-    $column_headers = [];
+        $row_number = 1;
+        $array = [];
+        $old_tags = [];
+        $disc_arr = [];
+        $sn_arr = [];
+        $loc_arr = [];
+        $po_arr = [];
+        $tag_array = [];
+        $time_array = [];
+        $column_headers = [];
 
-    $tag = $worksheet->getCell('B2')->getValue() . ":";
-    // Loop through the rows and columns
-    foreach ($worksheet->getRowIterator() as $row) {
-        foreach ($row->getCellIterator() as $cell) {
-            $coordinate = $cell->getCoordinate();
-            $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Horizontal alignment
-            $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); // Vertical alignment
+        $tag = $worksheet->getCell('B2')->getValue() . ":";
+        // Loop through the rows and columns
+        foreach ($worksheet->getRowIterator() as $row) {
+            foreach ($row->getCellIterator() as $cell) {
+                $coordinate = $cell->getCoordinate();
+                # HORIZONTAL
+                $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                # VERTICAL
+                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
+            }
         }
+    } catch (Exception $e) {
+        echo "Error uploading file";
+    } catch (\TypeError $e) {
+        echo "TypeError";
     }
-} catch (Exception $e) {
-    echo "Error uploading file";
-} catch (\TypeError $e) {
-    echo "TypeError";
-}
 
-// Load the spreadsheet
-echo "<pre>";
-//var_dump($_POST);
-echo "</pre>";
-if (isset($_POST['dynamicInput'])) {
-    $previous_times = $_POST['previousTime'] ?? NULL;       
-    $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
+    // Load the spreadsheet
+    echo "<pre>";
+    //var_dump($_POST);
+    echo "</pre>";
+    if (isset($_POST['dynamicInput'])) {
+        $previous_times = $_POST['previousTime'] ?? NULL;       
+        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
 
-    $inputs = $_POST['dynamicInput'];
-    $timeInputs = $_POST['dynamicTime'];
-    $seen = [];
-    $pSeen = [];
-    $pNewTimes = [];
-    $pNewInputs = [];
-    $newTimes = [];
+        $inputs = $_POST['dynamicInput'];
+        $timeInputs = $_POST['dynamicTime'];
 
-    foreach ($inputs as $key => $input) {
-        if (!isset($seen[$input])) {
-            $seen[$input] = true; // Mark this input as seen
-            $newInputs[] = $input;
-            $newTimes[] = $timeInputs[$key];
-        }
-    }
-        /*foreach ($inputs as $key => $input) {
-            if (!in_array($input, $seen)) {
-                $seen[] = $input;
+        # CHECK FOR DUPES IN NEW TAG INPUTS
+        $seen = [];
+        $newTimes = [];
+        $newInputs = [];
+        foreach ($inputs as $key => $input) {
+            if (!isset($seen[$input])) {
+                $seen[$input] = true;
                 $newInputs[] = $input;
                 $newTimes[] = $timeInputs[$key];
             }
         }
-         */
-    if (!is_null($previous_inputs)) {
 
-        foreach ($previous_inputs as $key => $input) {
-            if (!in_array($input, $pSeen)) {
-                $pSeen[] = $input;
-                $pNewInputs[] = $input;
-                $pNewTimes[] = $previous_times[$key];
-            }
-        }
-
-        $dupes = [];
-        foreach ($previous_inputs as $key => $previousInput) {
-            foreach ($newInputs as $newKey => $newInput) {
-                if ($previousInput == $newInput) {
-                    $dupes[] = $newKey;
+        # CHECK FOR DUPES IN OLD TAG INPUTS
+        if (!is_null($previous_inputs)) {
+            $pSeen = [];
+            $pNewTimes = [];
+            $pNewInputs = [];
+            foreach ($previous_inputs as $key => $input) {
+                if (!in_array($input, $pSeen)) {
+                    $pSeen[] = $input;
+                    $pNewInputs[] = $input;
+                    $pNewTimes[] = $previous_times[$key];
                 }
             }
+
+
+            # previous_inputs -> pNewInputs
+            /*
+             * OLD CODE WORKS
+            $dupes = [];
+            foreach ($pNewInputs as $key => $previousInput) {
+                foreach ($newInputs as $newKey => $newInput) {
+                    if ($previousInput == $newInput) {
+                        $dupes[] = $newKey;
+                    }
+                }
+            }
+             */
+            $dupes = [];
+            $new_input_set = [];
+            foreach ($newInputs as $input) {
+                $newInputSet[$input] = true;
+            }
+
+            foreach ($pNewInputs as $key => $input) {
+                if (isset($newInputSet[$input])) {
+                    unset($pNewInputs[$key]);
+                    unset($pNewTimes[$key]);
+                }
+            }
+            /*
+             * OLD UNOPTIMIZED
+            foreach ($newInputs as $key => $previousInput) {
+                foreach ($pNewInputs as $newKey => $newInput) {
+                    if ($previousInput == $newInput) {
+                        $dupes[] = $newKey;
+                        break;
+                    }
+                }
+            }
+
+            # newTimes -> pNewTimes, newInputs -> pNewInputs
+            foreach ($dupes as $newKey) {
+                unset($pNewTimes[$newKey]);
+                unset($pNewInputs[$newKey]);
+            }
+             */
+            $pNewInputs = array_values($pNewInputs);
+            $pNewTimes = array_values($pNewTimes);
         }
 
-        foreach ($dupes as $newKey) {
-            unset($newTimes[$newKey]);
-            unset($newInputs[$newKey]);
+        # GET OLD TAGS READY
+        foreach ($pNewInputs as $index => $value) {
+            if ($value != NULL) {
+                $array[] = htmlspecialchars($value);
+            }
+        }
+
+        # GET OLD TIMESTAMPS READY
+        foreach ($pNewTimes as $index => $time2) {
+            if ($value != NULL) {
+                $time_array[] = htmlspecialchars($time2);
+            }
+        }
+        # GET NEW TIMESTAMPS READY
+        foreach ($newTimes as $index => $time) {
+            if ($time != NULL) {
+                $time_array[] = htmlspecialchars($time);
+            }
+        }
+        # GET NEW TAGS READY
+        foreach ($newInputs as $index => $value) {
+            if ($value != NULL) {
+                $array[] = htmlspecialchars($value);
+            }
         }
     }
-
-
-    foreach ($pNewInputs as $index => $value) {
-        if ($value != NULL) {
-            $array[] = htmlspecialchars($value);
-        }
-    }
-
-    foreach ($pNewTimes as $index => $time2) {
-        if ($value != NULL) {
-            $time_array[] = htmlspecialchars($time2);
-        }
-    }
-
-    foreach ($newTimes as $index => $time) {
-        if ($time != NULL) {
-            $time_array[] = htmlspecialchars($time);
-        }
-    }
-
-    foreach ($newInputs as $index => $value) {
-        if ($value != NULL) {
-            $array[] = htmlspecialchars($value);
-        }
-    }
-}
     if (!is_null($worksheet)){
-$worksheet->getRowIterator(1);
-$cellB = $worksheet->getCell('B' . 2);
-$cellH = $worksheet->getCell('H' . 2);
-$cellI = $worksheet->getCell('I' . 2);
-$cellJ = $worksheet->getCell('J' . 2);
-$cellN = $worksheet->getCell('N' . 2);
-$tags = $cellB->getValue('B2');
-$H = $cellH->getValue('H2');
-$I = $cellI->getValue('I2');
-$J = $cellJ->getValue('J2');
-$N = $cellN->getValue('N2');
-$column_headers[] = $tags;
-$column_headers[] = 'Audited Tags';
-$column_headers[] = 'Timestamp';
-$column_headers[] = $H;
-$column_headers[] = $I;
-$column_headers[] = $J;
-$column_headers[] = $N;
-}
+        $worksheet->getRowIterator(1);
+        $cellB = $worksheet->getCell('B' . 2);
+        $cellH = $worksheet->getCell('H' . 2);
+        $cellI = $worksheet->getCell('I' . 2);
+        $cellJ = $worksheet->getCell('J' . 2);
+        $cellN = $worksheet->getCell('N' . 2);
+        $tags = $cellB->getValue('B2');
+        $H = $cellH->getValue('H2');
+        $I = $cellI->getValue('I2');
+        $J = $cellJ->getValue('J2');
+        $N = $cellN->getValue('N2');
+        $column_headers[] = $tags;
+        $column_headers[] = 'Audited Tags';
+        $column_headers[] = 'Timestamp';
+        $column_headers[] = $H;
+        $column_headers[] = $I;
+        $column_headers[] = $J;
+        $column_headers[] = $N;
+    }
 
-$colors = ['lightblue', 'white'];
-$empty = false;
-try {
-    if ($worksheet->getRowIterator(3) == NULL) {
-        throw new Exception('File Messed up');
+    $colors = ['lightblue', 'white'];
+    $empty = false;
+    try {
+        if ($worksheet->getRowIterator(3) == NULL) {
+            throw new Exception('File Messed up');
 
-    } 
-} catch (Exception $e) {
-    $empty = TRUE;
-} catch (\Throwable $e) {
-    $empty = TRUE;
-}
-if (!$empty) {
-    foreach ($worksheet->getRowIterator(3) as $row) {
+        } 
+    } catch (Exception $e) {
+        $empty = TRUE;
+    } catch (\Throwable $e) {
+        $empty = TRUE;
+    }
+    if (!$empty) {
+        foreach ($worksheet->getRowIterator(3) as $row) {
 
         /*
         $cellB = $worksheet->getCell('B' . $row->getRowIndex());
@@ -614,72 +647,72 @@ if (!$empty) {
 
     }
          */
-        $cellB = $worksheet->getCell('B' . $row->getRowIndex());
-        $cellH = $worksheet->getCell('H' . $row->getRowIndex());
-        $cellI = $worksheet->getCell('I' . $row->getRowIndex());
-        $cellJ = $worksheet->getCell('J' . $row->getRowIndex());
-        $cellN = $worksheet->getCell('N' . $row->getRowIndex());
+            $cellB = $worksheet->getCell('B' . $row->getRowIndex());
+            $cellH = $worksheet->getCell('H' . $row->getRowIndex());
+            $cellI = $worksheet->getCell('I' . $row->getRowIndex());
+            $cellJ = $worksheet->getCell('J' . $row->getRowIndex());
+            $cellN = $worksheet->getCell('N' . $row->getRowIndex());
 
-        $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
+            $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
 
-        echo "<section id='showExcel'>";
-        $tag_array[] = $cellB->getValue();
+            echo "<section id='showExcel'>";
+            $tag_array[] = $cellB->getValue();
 
-        echo "<div class='excel-info'>";
-        echo "<div class='inner-text $color_class'>";
-        echo "<ul>";
-        echo "<li class='row-number'><strong>$row_number &nbsp;  </strong>";
+            echo "<div class='excel-info'>";
+            echo "<div class='inner-text $color_class'>";
+            echo "<ul>";
+            echo "<li class='row-number'><strong>$row_number &nbsp;  </strong>";
 
-        $match = in_array($cellB->getValue(), $array);
+            $match = in_array($cellB->getValue(), $array);
 
-        if ($cellB->getValue() == 'Tag Number') {
-            echo "<strong class='neutral-tag'>" . $cellB->getValue() . "</strong>";
-        } else {
-            $tagClass = $match ? "match-tag" : "miss-tag";
-            $descClass = $match ? "match-desc" : "miss-desc";
-            
-            echo "<strong>Tag:</strong>";
-            echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
-            echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
+            if ($cellB->getValue() == 'Tag Number') {
+                echo "<strong class='neutral-tag'>" . $cellB->getValue() . "</strong>";
+            } else {
+                $tagClass = $match ? "match-tag" : "miss-tag";
+                $descClass = $match ? "match-desc" : "miss-desc";
 
-            $disc_arr[] = $cellH->getValue();
+                echo "<strong>Tag:</strong>";
+                echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
+                echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
 
-            $sn = $cellI->getValue() ?? "EMPTY";
-            $sn_arr[] = $sn;
-            echo "<strong>SN:</strong> $sn | ";
+                $disc_arr[] = $cellH->getValue();
 
-            $loc = $cellJ->getValue() ?? "EMPTY";
-            $loc_arr[] = $loc;
-            echo "<strong>Location:</strong> $loc | ";
+                $sn = $cellI->getValue() ?? "EMPTY";
+                $sn_arr[] = $sn;
+                echo "<strong>SN:</strong> $sn | ";
 
-            $po = $cellN->getValue() ?? "EMPTY";
-            $po_arr[] = $po;
-            echo "<strong>PO:</strong> $po</li>";
+                $loc = $cellJ->getValue() ?? "EMPTY";
+                $loc_arr[] = $loc;
+                echo "<strong>Location:</strong> $loc | ";
+
+                $po = $cellN->getValue() ?? "EMPTY";
+                $po_arr[] = $po;
+                echo "<strong>PO:</strong> $po</li>";
+            }
+
+            echo "</ul>";
+            echo "</div></div></section>";
+
+            $row_number++;
         }
-
-        echo "</ul>";
-        echo "</div></div></section>";
-
-        $row_number++;
     }
-}
 
 
-$i = 0;
-echo "<div class='show-tags'>";
-echo "<h4 >Tags Scanned</h4>";
-echo "<ul>";
-foreach ($array as $row) {
-    foreach ($tag_array as $tag_row) {
-        $match2 = ($row == $tag_row) ? 1 : 0;
-        if ($match2) break;
+    $i = 0;
+    echo "<div class='show-tags'>";
+    echo "<h4 >Tags Scanned</h4>";
+    echo "<ul>";
+    foreach ($array as $row) {
+        foreach ($tag_array as $tag_row) {
+            $match2 = ($row == $tag_row) ? 1 : 0;
+            if ($match2) break;
+        }
+        $colorClass = $match2 ? "tag-match" : "tag-miss";
+        echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
+        $i++;
     }
-    $colorClass = $match2 ? "tag-match" : "tag-miss";
-    echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
-    $i++;
-}
-echo "</ul>";
-echo "</div>";
+    echo "</ul>";
+    echo "</div>";
 ?>
     <div id="additionalInputs"></div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
@@ -691,13 +724,13 @@ echo "</div>";
 <?php
 
 
-foreach ($array as $value) {
-    echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
-}
-foreach ($time_array as $time) {
-    echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
-}
-echo "<input type='hidden' name='filePath' value='$filePath'>";
+    foreach ($array as $value) {
+        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
+    }
+    foreach ($time_array as $time) {
+        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
+    }
+    echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
 
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
@@ -709,32 +742,32 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
     <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 <?php
 
-foreach ($array as $value) {
-    echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
-}
-foreach ($tag_array as $old_tag) {
-    echo "<input type='hidden' name='old_tag[]' value='" . htmlspecialchars($old_tag) . "'>";
-}
-foreach ($time_array as $time) {
-    echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
-}
-foreach ($column_headers as $header) {
-    echo "<input type='hidden' name='headers[]' value='" . htmlspecialchars($header) . "'>";
-}
-foreach ($disc_arr as $description) {
-    echo "<input type='hidden' name='description[]' value='" . htmlspecialchars($description) . "'>";
-}
-foreach ($sn_arr as $serial) {
-    echo "<input type='hidden' name='serial[]' value='" . htmlspecialchars($serial) . "'>";
-}
-foreach ($po_arr as $po_num) {
-    echo "<input type='hidden' name='po_num[]' value='" . htmlspecialchars($po_num) . "'>";
-}
-foreach ($loc_arr as $location) {
-    echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($location) . "'>";
-}
+    foreach ($array as $value) {
+        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
+    }
+    foreach ($tag_array as $old_tag) {
+        echo "<input type='hidden' name='old_tag[]' value='" . htmlspecialchars($old_tag) . "'>";
+    }
+    foreach ($time_array as $time) {
+        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
+    }
+    foreach ($column_headers as $header) {
+        echo "<input type='hidden' name='headers[]' value='" . htmlspecialchars($header) . "'>";
+    }
+    foreach ($disc_arr as $description) {
+        echo "<input type='hidden' name='description[]' value='" . htmlspecialchars($description) . "'>";
+    }
+    foreach ($sn_arr as $serial) {
+        echo "<input type='hidden' name='serial[]' value='" . htmlspecialchars($serial) . "'>";
+    }
+    foreach ($po_arr as $po_num) {
+        echo "<input type='hidden' name='po_num[]' value='" . htmlspecialchars($po_num) . "'>";
+    }
+    foreach ($loc_arr as $location) {
+        echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($location) . "'>";
+    }
 
-echo "<input type='hidden' name='filePath' value='$filePath'>";
+    echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
         <button type='submit' id='create' name='create'>Export Excel File</button>
     </form>
@@ -742,9 +775,6 @@ echo "<input type='hidden' name='filePath' value='$filePath'>";
 
 <?php
 }
-echo "<pre>";
-//var_dump($_POST);
-echo "</pre>";
 ?>
 <script>
 
@@ -822,7 +852,7 @@ function doNotReload(event) {
     })
 }
 /*
-window.addEventListener("load", function () {
+    window.addEventListener("load", function () {
     addNewInput();
 });
  */
