@@ -553,23 +553,23 @@ if (isset($filePath)) {
         $worksheet->getRowIterator(1);
         // GET HEADERS STARTING AT ROW 2
         // TAG NUMBER
-        $cellB = $worksheet->getCell('E' . 2);
+        $cellB = $worksheet->getCell('D' . 2);
         // DESCR
-        $cellH = $worksheet->getCell('F' . 2);
+        $cellH = $worksheet->getCell('E' . 2);
         // SN
-        $cellI = $worksheet->getCell('P' . 2);
+        $cellI = $worksheet->getCell('O' . 2);
         // LOCATION
-        $cellJ = $worksheet->getCell('T' . 2);
+        $cellJ = $worksheet->getCell('S' . 2);
         // PO
         $cellN = $worksheet->getCell('ZZZ' . 2);
         // TOTAL COST
-        $cellAA = $worksheet->getCell('AA' . 2);
-        $tags = $cellB->getValue('E2');
-        $H = $cellH->getValue('F2');
-        $I = $cellI->getValue('P2');
-        $J = $cellJ->getValue('T2');
+        $cellAA = $worksheet->getCell('Z' . 2);
+        $tags = $cellB->getValue('D2');
+        $H = $cellH->getValue('E2');
+        $I = $cellI->getValue('O2');
+        $J = $cellJ->getValue('S2');
         $N = $cellN->getValue('ZZZ2');
-        $AA = $cellN->getValue('AA2');
+        $AA = $cellN->getValue('Z2');
         $column_headers[] = $tags;
         $column_headers[] = 'Audited Tags';
         $column_headers[] = 'Timestamp';
@@ -594,12 +594,12 @@ if (isset($filePath)) {
     }
     if (!$empty) {
         foreach ($worksheet->getRowIterator(3) as $row) {
-            $cellB = $worksheet->getCell('E' . $row->getRowIndex());
-            $cellH = $worksheet->getCell('F' . $row->getRowIndex());
-            $cellI = $worksheet->getCell('P' . $row->getRowIndex());
-            $cellJ = $worksheet->getCell('T' . $row->getRowIndex());
+            $cellB = $worksheet->getCell('D' . $row->getRowIndex());
+            $cellH = $worksheet->getCell('E' . $row->getRowIndex());
+            $cellI = $worksheet->getCell('O' . $row->getRowIndex());
+            $cellJ = $worksheet->getCell('S' . $row->getRowIndex());
             $cellN = $worksheet->getCell('ZZZ' . $row->getRowIndex());
-            $cellAA = $worksheet->getCell('AA' . $row->getRowIndex());
+            $cellAA = $worksheet->getCell('Z' . $row->getRowIndex());
 
             $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
 
