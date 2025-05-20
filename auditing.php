@@ -253,12 +253,14 @@ body {
             padding: 1vh 0vw;
             border-radius: 8px;
             max-width: 15%;
+            width:10rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .show-tags h4 {
             color: #003366;
             margin-top: 1vh;
+            font-size: calc(0.5vw + 0.5vh);
         }
 
         .show-tags ul {
@@ -317,7 +319,6 @@ body {
         .dynamicId:focus,
         .dynamicId:hover {
             font-size: calc(0.5vw + 0.4vh);
-
             outline: none;
             padding: .2rem 1rem;
             border-radius: 1rem;
