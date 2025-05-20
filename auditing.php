@@ -24,6 +24,9 @@ if (isset($_POST['create'])) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
+        foreach (range('A', 'HH') as $columnID) {
+            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
         # LOCATION FOR EXCEL HEADERS
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
         $row_index = 2;
@@ -109,8 +112,6 @@ if (isset($_POST['create'])) {
 <head>
 <?php
 include_once("navbar.php");
-$t = time();
-echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t). '</h1>';
 
 ?>
 
@@ -439,10 +440,6 @@ if (isset($filePath)) {
             }
         }
          */
-        foreach (range('A', 'HH') as $columnID) {
-
-            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
-        }
     } catch (Exception $e) {
         echo "Error uploading file";
     } catch (\TypeError $e) {
@@ -648,7 +645,7 @@ if (isset($filePath)) {
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
-                echo "<strong>Cost:</strong> $cost</li>";
+                echo "<strong>Cost: </strong>$$cost</li>";
             }
 
             echo "</ul>";
@@ -664,13 +661,7 @@ if (isset($filePath)) {
     echo "<h4 >Tags Scanned</h4>";
     echo "<ul>";
     foreach ($array as $row) {
-        /*
-        foreach ($tag_array as $tag_row) {
-         */
         $match2 = in_array($row, $tag_array) ? 1 : 0;
-            //$match2 = ($row == $tag_row) ? 1 : 0;
-            //if ($match2) continue;
-        //}
         $colorClass = $match2 ? "tag-match" : "tag-miss";
         echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
         $i++;
@@ -742,8 +733,6 @@ if (isset($filePath)) {
 
 <?php
 }
-$t = time();
-echo '<h1>end of file: ' . date("Y-m-d H:i:s", $t) . '</h1>';
 ?>
 <script>
 
