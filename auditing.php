@@ -109,6 +109,9 @@ if (isset($_POST['create'])) {
 <head>
 <?php
 include_once("navbar.php");
+$t = time();
+echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t)'</h1>';
+
 ?>
 
     <style>
@@ -639,7 +642,7 @@ if (isset($filePath)) {
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
-                echo "<strong>PO:</strong> $cost</li>";
+                echo "<strong>Cost:</strong> $cost</li>";
             }
 
             echo "</ul>";
@@ -733,6 +736,8 @@ if (isset($filePath)) {
 
 <?php
 }
+$t = time();
+echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t)'</h1>';
 ?>
 <script>
 
