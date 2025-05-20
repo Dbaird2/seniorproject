@@ -25,7 +25,7 @@ if (isset($_POST['create'])) {
         $sheet = $spreadsheet->getActiveSheet();
         
         foreach (range('A', 'HH') as $columnID) {
-            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         # LOCATION FOR EXCEL HEADERS
         $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
