@@ -418,6 +418,7 @@ if (isset($filePath)) {
         $sn_arr = [];
         $loc_arr = [];
         $po_arr = [];
+        $cost_arr = [];
         $tag_array = [];
         $time_array = [];
         $column_headers = [];
@@ -548,17 +549,27 @@ if (isset($filePath)) {
         }
     }
     if (!is_null($worksheet)){
+        // SKIPS FIRST ROW
         $worksheet->getRowIterator(1);
-        $cellB = $worksheet->getCell('B' . 2);
-        $cellH = $worksheet->getCell('H' . 2);
-        $cellI = $worksheet->getCell('I' . 2);
-        $cellJ = $worksheet->getCell('J' . 2);
-        $cellN = $worksheet->getCell('N' . 2);
-        $tags = $cellB->getValue('B2');
-        $H = $cellH->getValue('H2');
-        $I = $cellI->getValue('I2');
-        $J = $cellJ->getValue('J2');
-        $N = $cellN->getValue('N2');
+        // GET HEADERS STARTING AT ROW 2
+        // TAG NUMBER
+        $cellB = $worksheet->getCell('E' . 2);
+        // DESCR
+        $cellH = $worksheet->getCell('F' . 2);
+        // SN
+        $cellI = $worksheet->getCell('P' . 2);
+        // LOCATION
+        $cellJ = $worksheet->getCell('T' . 2);
+        // PO
+        $cellN = $worksheet->getCell('ZZZ' . 2);
+        // TOTAL COST
+        $cellAA = $worksheet->getCell('AA' . 2);
+        $tags = $cellB->getValue('E2');
+        $H = $cellH->getValue('F2');
+        $I = $cellI->getValue('P2');
+        $J = $cellJ->getValue('T2');
+        $N = $cellN->getValue('ZZZ2');
+        $AA = $cellN->getValue('AA2');
         $column_headers[] = $tags;
         $column_headers[] = 'Audited Tags';
         $column_headers[] = 'Timestamp';
@@ -566,6 +577,7 @@ if (isset($filePath)) {
         $column_headers[] = $I;
         $column_headers[] = $J;
         $column_headers[] = $N;
+        $column_headers[] = $AA;
     }
 
     $colors = ['lightblue', 'white'];
@@ -582,77 +594,12 @@ if (isset($filePath)) {
     }
     if (!$empty) {
         foreach ($worksheet->getRowIterator(3) as $row) {
-
-        /*
-        $cellB = $worksheet->getCell('B' . $row->getRowIndex());
-        $cellH = $worksheet->getCell('H' . $row->getRowIndex());
-        $cellI = $worksheet->getCell('I' . $row->getRowIndex());
-        $cellJ = $worksheet->getCell('J' . $row->getRowIndex());
-        $cellN = $worksheet->getCell('N' . $row->getRowIndex());
-
-        $color_change = $row_number % 2;
-        $color = $colors[$color_change];
-
-        echo "<section id='showExcel'>";
-        $tag_array[] = $cellB->getValue();
-        echo "<div class='excel-info' style=border-style: solid;margin-bottom:1em;>";
-        echo "<div style='background-color:$color;margin-top:-1em;margin-bottom:-1em;' class='inner-text'>";
-        echo "<ul>";
-        echo "<li style=float:left;margin-left:-2em; tabindex='2'><b>" . $row_number . "</b></li>";
-        $match = 0;
-        foreach ($array as $row) {
-            if ($cellB->getValue() == $row) {
-                $match = 1;
-                break;
-            } else {
-                $match = 0;
-            }
-        }
-        if ($match) {
-            echo $tag . str_repeat(' ', 4);
-            echo "<b style=color:green;border:5vh solid black>" . $cellB->getValue() . " |</b> ";
-            echo "<b>Description:</b> ";
-            echo "<b style=color:green;>" . $cellH->getValue() . "</b>";
-            echo "<b> |</b>  ";
-            $disc_arr[] = $cellH->getValue();
-        } else if ($cellB->getValue() == 'Tag Number') {
-            echo "<b style=color:black;>" . $cellB->getValue() . "</b>  ";
-        } else {
-            echo $tag . str_repeat(' ', 4);
-            echo "<b style=color:red;>" . $cellB->getValue() . "</b> |</b>  ";
-            echo "<b>Description:</b> ";
-            echo "<b style=color:red;>" . $cellH->getValue() . "</b>";
-            echo "<b> |  " . "</b>";
-            $disc_arr[] = $cellH->getValue();
-        }
-        $sn = $cellI->getValue();
-        $sn = is_null($sn) ? "EMPTY" : $sn;
-        echo "<b>SN: </b>" . $sn . " <b>|</b>  ";
-        $sn_arr[] = $sn;
-
-        $loc = $cellJ->getValue();
-        $loc = is_null($loc) ? "EMPTY" : $loc;
-        echo "<b>Location: </b>" . $loc;
-        $loc_arr[] = $loc;
-
-        $po = $cellN->getValue();
-        $po = is_null($po) ? "EMPTY" : $po;
-        $po_arr[] = $sn;
-        echo "<b> |</b>  ";
-        echo "<b>PO:</b> " . $po;
-        echo "</div>";
-        echo "</div>";
-        $row_number++;
-        echo "</section>";
-
-
-    }
-         */
-            $cellB = $worksheet->getCell('B' . $row->getRowIndex());
-            $cellH = $worksheet->getCell('H' . $row->getRowIndex());
-            $cellI = $worksheet->getCell('I' . $row->getRowIndex());
-            $cellJ = $worksheet->getCell('J' . $row->getRowIndex());
-            $cellN = $worksheet->getCell('N' . $row->getRowIndex());
+            $cellB = $worksheet->getCell('E' . $row->getRowIndex());
+            $cellH = $worksheet->getCell('F' . $row->getRowIndex());
+            $cellI = $worksheet->getCell('P' . $row->getRowIndex());
+            $cellJ = $worksheet->getCell('T' . $row->getRowIndex());
+            $cellN = $worksheet->getCell('ZZZ' . $row->getRowIndex());
+            $cellAA = $worksheet->getCell('AA' . $row->getRowIndex());
 
             $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -689,6 +636,10 @@ if (isset($filePath)) {
                 $po = $cellN->getValue() ?? "EMPTY";
                 $po_arr[] = $po;
                 echo "<strong>PO:</strong> $po</li>";
+
+                $cost = $cellAA->getValue() ?? "EMPTY";
+                $cost_arr[] = $cost;
+                echo "<strong>PO:</strong> $cost</li>";
             }
 
             echo "</ul>";
@@ -704,10 +655,13 @@ if (isset($filePath)) {
     echo "<h4 >Tags Scanned</h4>";
     echo "<ul>";
     foreach ($array as $row) {
+        /*
         foreach ($tag_array as $tag_row) {
-            $match2 = ($row == $tag_row) ? 1 : 0;
-            if ($match2) break;
-        }
+         */
+        $match2 = in_array($row, $tag_array) ? 1 : 0;
+            //$match2 = ($row == $tag_row) ? 1 : 0;
+            //if ($match2) continue;
+        //}
         $colorClass = $match2 ? "tag-match" : "tag-miss";
         echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
         $i++;
@@ -766,6 +720,9 @@ if (isset($filePath)) {
     }
     foreach ($loc_arr as $location) {
         echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($location) . "'>";
+    }
+    foreach ($cost_arr as $cost) {
+        echo "<input type='hidden' name='cost[]' value='" . htmlspecialchars($cost) . "'>";
     }
 
     echo "<input type='hidden' name='filePath' value='$filePath'>";
