@@ -110,7 +110,7 @@ if (isset($_POST['create'])) {
 <?php
 include_once("navbar.php");
 $t = time();
-echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t)'</h1>';
+echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t). '</h1>';
 
 ?>
 
@@ -427,6 +427,7 @@ if (isset($filePath)) {
         $column_headers = [];
 
         $tag = $worksheet->getCell('B2')->getValue() . ":";
+        /*
         // Loop through the rows and columns
         foreach ($worksheet->getRowIterator() as $row) {
             foreach ($row->getCellIterator() as $cell) {
@@ -436,6 +437,10 @@ if (isset($filePath)) {
                 # VERTICAL
                 $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
             }
+        }
+         */
+        foreach (range('A', 'HH') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
     } catch (Exception $e) {
         echo "Error uploading file";
@@ -737,7 +742,7 @@ if (isset($filePath)) {
 <?php
 }
 $t = time();
-echo '<h1>Start of file: ' . date("Y-m-d H:i:s", $t)'</h1>';
+echo '<h1>end of file: ' . date("Y-m-d H:i:s", $t) . '</h1>';
 ?>
 <script>
 
