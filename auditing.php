@@ -440,7 +440,8 @@ if (isset($filePath)) {
         }
          */
         foreach (range('A', 'HH') as $columnID) {
-            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+
+            $worksheet->getColumnDimension($columnID)->setAutoSize(true);
         }
     } catch (Exception $e) {
         echo "Error uploading file";
