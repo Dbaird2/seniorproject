@@ -40,6 +40,7 @@ if (isset($_POST['create'])) {
         $po = $_POST['po_num'];
         $old_tags = $_POST['old_tag'];
         $desc = $_POST['description'];
+        $cost = $_POST['cost'];
 
         # GET DOWNLOAD PATH READY
         $fileNameOnly = basename($filePath);
@@ -47,7 +48,7 @@ if (isset($_POST['create'])) {
 
         # CHECK IF EMPTY
         $empty_scan = is_null($previous_inputs[0]) ? true : false;
-        $file_empty = is_null($old_tags[1]) ? true : false;
+        $file_empty = is_null($old_tags[0]) ? true : false;
 
         # CHANGE FILE NAME
         $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
@@ -67,6 +68,7 @@ if (isset($_POST['create'])) {
                 $sheet->setCellValue('E' . $row_index, $sn[$i]);
                 $sheet->setCellValue('F' . $row_index, $loc[$i]);
                 $sheet->setCellValue('G' . $row_index, $po[$i]);
+                $sheet->setCellValue('G' . $row_index, $cost[$i]);
                 $i++;
                 $row_index++;
             }
