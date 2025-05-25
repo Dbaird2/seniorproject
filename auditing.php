@@ -28,7 +28,7 @@ if (isset($_POST['create'])) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         # LOCATION FOR EXCEL HEADERS
-        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1'];
+        $column_letters = ['A1', 'E1', 'F1', 'G1', 'H1', 'I1'];
         $row_index = 2;
 
         # GET POST DATA
@@ -87,8 +87,8 @@ if (isset($_POST['create'])) {
                 for ($i = 0; $i < sizeof($old_tags); $i++) {
                     if ($previous_inputs[$j] == $old_tags[$i]) {
                         $sheet->setCellValue('B' . $i + 2, $previous_inputs[$j]);
-                        $sheet->setCellValue('C' . $i + 2, $previousV_notes[$j]);
-                        $sheet->setCellValue('D' . $i + 2, $previousV_times[$j]);
+                        $sheet->setCellValue('C' . $i + 2, $previous_notes[$j]);
+                        $sheet->setCellValue('D' . $i + 2, $previous_times[$j]);
                         break;
                     } else if ($i == sizeof($old_tags) - 1) {
                         $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
@@ -611,6 +611,7 @@ if (isset($filePath)) {
                 //echo "<h1>$count</h1>";
                 if ($count == 6) {
                     $column_header = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
+                    break;
                 }
             }
             if ($count == 6) break;
@@ -622,8 +623,6 @@ if (isset($filePath)) {
                 $column_headers[$key] = 'Total Cost';
             }
         }
-        $column_headers[] = 'Tags Matched';
-        $column_headers[] = 'Timestamp';
     }
         
     $first_char = substr($string, 0, 1);
@@ -820,6 +819,7 @@ function addNewInput() {
     const noteInput = document.createElement('input');
     noteInput.type = 'text';
     noteInput.name = 'dynamicNote[]';
+    noteInput.value = '';
     noteInput.placeholder = 'Notes';
     // Append input to the div and the div to the container
     inputDiv.appendChild(noteInput);
