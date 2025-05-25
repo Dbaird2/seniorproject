@@ -2,6 +2,8 @@
     "name": "dason/senior",
     "require": {
         "phpmailer/phpmailer": "^6.10",
-        "phpoffice/phpspreadsheet": "^4.2"
+        "phpoffice/phpspreadsheet": "^4.2",
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/polyfill-ctype": "^1.32"
     }
 }

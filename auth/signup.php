@@ -1,5 +1,5 @@
 <?php
-include_once("navbar.php");
+include_once("../navbar.php");
 #require_once("../config.php");
 
 $err = 0;

@@ -1,5 +1,5 @@
 <?php
-include_once("navbar.php");
+include_once("../navbar.php");
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

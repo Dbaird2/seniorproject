@@ -1,8 +1,8 @@
 <?php
-
-require __DIR__ . '/vender/autoload.php'
-
 use Dotenv\Dotenv;
+require __DIR__ . '/vendor/autoload.php';
+
+
 
 if (file_exists(__DIR__ . '/.env')) {
     $dotenv = Dotenv::createImmutable(__DIR__);
@@ -16,7 +16,7 @@ $db_user = $_ENV['DB_USER'] ?? NULL;
 $db_pass = $_ENV['DB_PASS'] ?? NULL;
 
 try {
-    $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $dbu_pass, array());
+    $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, array());
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     header("location: /ConnectionFailed");
