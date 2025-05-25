@@ -513,6 +513,7 @@ if (isset($filePath)) {
                 $newInputSet[$input] = true;
             }
             echo "<pre>";
+            var_dump($pNewInputs);
             var_dump($pNewTimes);
             echo "</pre>";
 
@@ -565,7 +566,7 @@ if (isset($filePath)) {
         # GET OLD TIMESTAMPS READY
         foreach ($pNewTimes as $index => $time) {
             if ($time != NULL) {
-                $time_array[] = htmlspecialchars($time2);
+                $time_array[] = htmlspecialchars($time);
             }
         }
         # GET NEW TIMESTAMPS READY
