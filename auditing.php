@@ -819,7 +819,7 @@ function addNewInput() {
     const noteInput = document.createElement('input');
     noteInput.type = 'text';
     noteInput.name = 'dynamicNote[]';
-    noteInput.value = '';
+    noteInput.value = 'none';
     noteInput.placeholder = 'Notes';
     // Append input to the div and the div to the container
     inputDiv.appendChild(noteInput);
