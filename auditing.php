@@ -65,17 +65,20 @@ if (isset($_POST['create'])) {
             $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
         $sheet->setCellValue('B1', 'Tags Matched');
-        $sheet->setCellValue('C1', 'Timestamp');
-        $sheet->setCellValue('I1', 'Extra Tags');
+        $sheet->setCellValue('C1', 'Notes');
+        $sheet->setCellValue('D1', 'Timestamp');
+        $sheet->setCellValue('J1', 'Extra Tags');
+        $sheet->setCellValue('K1', 'Notes');
+        $sheet->setCellValue('L1', 'Timestamps');
         $i = 0;
         if (!$file_empty) {
             foreach ($old_tags as $row) {
                 $sheet->setCellValue('A' . $row_index, $old_tags[$i]);
-                $sheet->setCellValue('D' . $row_index, $desc[$i]);
-                $sheet->setCellValue('E' . $row_index, $sn[$i]);
-                $sheet->setCellValue('F' . $row_index, $loc[$i]);
-                $sheet->setCellValue('G' . $row_index, $dept[$i]);
-                $sheet->setCellValue('H' . $row_index, $cost[$i]);
+                $sheet->setCellValue('E' . $row_index, $desc[$i]);
+                $sheet->setCellValue('F' . $row_index, $sn[$i]);
+                $sheet->setCellValue('G' . $row_index, $loc[$i]);
+                $sheet->setCellValue('H' . $row_index, $dept[$i]);
+                $sheet->setCellValue('I' . $row_index, $cost[$i]);
                 $i++;
                 $row_index++;
             }
@@ -84,11 +87,13 @@ if (isset($_POST['create'])) {
                 for ($i = 0; $i < sizeof($old_tags); $i++) {
                     if ($previous_inputs[$j] == $old_tags[$i]) {
                         $sheet->setCellValue('B' . $i + 2, $previous_inputs[$j]);
-                        $sheet->setCellValue('C' . $i + 2, $previous_times[$j]);
+                        $sheet->setCellValue('C' . $i + 2, $previousV_notes[$j]);
+                        $sheet->setCellValue('D' . $i + 2, $previousV_times[$j]);
                         break;
                     } else if ($i == sizeof($old_tags) - 1) {
                         $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
-                        $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
+                        $sheet->setCellValue('J' . $h_row++, $previous_notes[$j]);
+                        $sheet->setCellValue('K' . $h_row++, $previous_times[$j]);
                     }
                 }
             }
@@ -98,7 +103,8 @@ if (isset($_POST['create'])) {
                 $h_row=2;
                 for ($j = 0; $j < sizeof($previous_inputs); $j++) {
                     $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
-                    $sheet->setCellValue('J' . $h_row++, $previous_times[$j]);
+                    $sheet->setCellValue('J' . $h_row++, $previous_notes[$j]);
+                    $sheet->setCellValue('K' . $h_row++, $previous_times[$j]);
                 }
             }
         }
@@ -588,7 +594,7 @@ if (isset($filePath)) {
         // GET HEADERS STARTING AT ROW 2
         // TAG NUMBER
         $cell_array = [];
-        $headers = ['Tag Number', 'Tags Matched', 'Timestamp', 'Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
+        $headers = ['Tag Number','Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
         $count = 0;
 
         for ($row = 1; $row <= 4; $row++) {
@@ -603,7 +609,9 @@ if (isset($filePath)) {
                     $count++;
                 }
                 //echo "<h1>$count</h1>";
-                if ($count == 6) break;
+                if ($count == 6) {
+                    $column_header = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
+                }
             }
             if ($count == 6) break;
         }
