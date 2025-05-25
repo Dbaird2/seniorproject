@@ -28,7 +28,7 @@ if (isset($_POST['create'])) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         # LOCATION FOR EXCEL HEADERS
-        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1'];
+        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1'];
         $row_index = 2;
 
         # GET POST DATA
@@ -59,8 +59,13 @@ if (isset($_POST['create'])) {
 
         # SET HEADERS IN SHEET
         for ($i = 0; $i < count($column_letters); $i++) {
+            if ($i == 1) {
+                $i = $i + 3;
+            }
             $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
+        $sheet->setCelValue('B1', 'Tags Matched');
+        $sheet->setCellValue('C1', 'Timestamp');
         $sheet->setCellValue('I1', 'Extra Tags');
         $i = 0;
         if (!$file_empty) {
@@ -609,6 +614,8 @@ if (isset($filePath)) {
                 $column_headers[$key] = 'Total Cost';
             }
         }
+        $column_headers[] = 'Tags Matched';
+        $column_headers[] = 'Timestamp';
     }
         
     $first_char = substr($string, 0, 1);
