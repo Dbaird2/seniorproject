@@ -42,6 +42,7 @@ if (isset($_POST['create'])) {
         $old_tags = $_POST['old_tag'];
         $desc = $_POST['description'];
         $cost = $_POST['cost'];
+        $dept = $_POST['dept'];
 
         # GET DOWNLOAD PATH READY
         $fileNameOnly = basename($filePath);
@@ -68,8 +69,8 @@ if (isset($_POST['create'])) {
                 $sheet->setCellValue('D' . $row_index, $desc[$i]);
                 $sheet->setCellValue('E' . $row_index, $sn[$i]);
                 $sheet->setCellValue('F' . $row_index, $loc[$i]);
-                $sheet->setCellValue('G' . $row_index, $po[$i]);
-                $sheet->setCellValue('G' . $row_index, $cost[$i]);
+                $sheet->setCellValue('G' . $row_index, $dept[$i]);
+                $sheet->setCellValue('H' . $row_index, $cost[$i]);
                 $i++;
                 $row_index++;
             }
@@ -582,7 +583,7 @@ if (isset($filePath)) {
         // GET HEADERS STARTING AT ROW 2
         // TAG NUMBER
         $cell_array = [];
-        $headers = ['Tag Number', 'Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
+        $headers = ['Tag Number', 'Tags Matched', 'Timestamp', 'Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
         $count = 0;
 
         for ($row = 1; $row <= 4; $row++) {

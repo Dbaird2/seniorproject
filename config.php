@@ -1,7 +1,7 @@
 <?php
 use Dotenv\Dotenv;
 require __DIR__ . '/vendor/autoload.php';
-if (file_exists(__DIR__ . '/.env')) {
+if (file_exists(__DIR__ . '/etc/secrets/DB_HOST')) {
     $dotenv = Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 }
@@ -17,8 +17,7 @@ try {
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-    var_dump($db_host, $db_port, $db_name);
-    die('Connection Failed ' . $db_host . $db_port . $db_name . $db_user . $db_pass);
+    die('Connection Failed ');
 } 
 ?>
 
