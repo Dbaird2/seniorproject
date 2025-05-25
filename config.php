@@ -17,6 +17,7 @@ try {
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     error_log($e->getMessage());
+    var_dump($db_host, $db_port, $db_name);
     die('Connection Failed ' . $db_host . $db_port . $db_name . $db_user . $db_pass);
 } 
 ?>
