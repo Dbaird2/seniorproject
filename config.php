@@ -19,11 +19,11 @@ try {
     error_log($e->getMessage());
     die('Connection Failed');
 } 
-echo "<h3>$db_host </h3>";
-echo "<h3>$db_port </h3>";
-echo "<h3>$db_name </h3>";
-echo "<h3>$db_user </h3>";
-echo "<h3>$db_pass </h3>";
+echo "<h3>host $db_host </h3>";
+echo "<h3>port $db_port </h3>";
+echo "<h3>name $db_name </h3>";
+echo "<h3>user $db_user </h3>";
+echo "<h3>pass $db_pass </h3>";
 ?>
 
 
