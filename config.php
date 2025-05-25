@@ -17,13 +17,8 @@ try {
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-    die('Connection Failed');
+    die('Connection Failed ' . $db_host . $db_port . $db_name . $db_user . $db_pass);
 } 
-echo "<h3>host $db_host </h3>";
-echo "<h3>port $db_port </h3>";
-echo "<h3>name $db_name </h3>";
-echo "<h3>user $db_user </h3>";
-echo "<h3>pass $db_pass </h3>";
 ?>
 
 
