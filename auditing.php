@@ -464,7 +464,6 @@ if (isset($filePath)) {
         $inputs = $_POST['dynamicInput'];
         $timeInputs = $_POST['dynamicTime'];
         $noteInputs = $_POST['dynamicNote'];
-        var_dump($previous_times);
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
@@ -513,6 +512,9 @@ if (isset($filePath)) {
             foreach ($newInputs as $input) {
                 $newInputSet[$input] = true;
             }
+            echo "<pre>";
+            var_dump($pNewTimes);
+            echo "</pre>";
 
             foreach ($previous_inputs as $key => $input) {
                 if (isset($newInputSet[$input])) {
@@ -521,7 +523,9 @@ if (isset($filePath)) {
                     unset($pNewNotes[$key]);
                 }
             }
+            echo "<pre>";
             var_dump($pNewTimes);
+            echo "</pre>";
             /*
              * OLD UNOPTIMIZED
             foreach ($newInputs as $key => $previousInput) {
