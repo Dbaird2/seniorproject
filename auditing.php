@@ -656,7 +656,7 @@ if (isset($filePath)) {
                 echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
 
                 $desc = $cellH->getValue();
-                $disc_arr[] = $desc
+                $disc_arr[] = $desc;
                 echo "<strong>$column_headers[1]:</strong> <span class='$descClass'>" . $desc . "</span> | ";
 
                 $sn = $cellI->getValue() ?? "EMPTY";
