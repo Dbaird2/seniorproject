@@ -64,7 +64,7 @@ if (isset($_POST['create'])) {
             }
             $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
-        $sheet->setCelValue('B1', 'Tags Matched');
+        $sheet->setCellValue('B1', 'Tags Matched');
         $sheet->setCellValue('C1', 'Timestamp');
         $sheet->setCellValue('I1', 'Extra Tags');
         $i = 0;
@@ -464,6 +464,7 @@ if (isset($filePath)) {
         $inputs = $_POST['dynamicInput'];
         $timeInputs = $_POST['dynamicTime'];
         $noteInputs = $_POST['dynamicNote'];
+        var_dump($previous_times);
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
@@ -520,6 +521,7 @@ if (isset($filePath)) {
                     unset($pNewNotes[$key]);
                 }
             }
+            var_dump($pNewTimes);
             /*
              * OLD UNOPTIMIZED
             foreach ($newInputs as $key => $previousInput) {
