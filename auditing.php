@@ -719,7 +719,7 @@ if (isset($filePath)) {
         <div id="inputContainer">
             <!-- Input fields will appear here -->
             <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" placeholder="Notes">
+            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
         </div>
 <?php
 
