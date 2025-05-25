@@ -514,7 +514,7 @@ if (isset($filePath)) {
                 $newInputSet[$input] = true;
             }
 
-            foreach ($pNewInputs as $key => $input) {
+            foreach ($previous_inputs as $key => $input) {
                 if (isset($newInputSet[$input])) {
                     unset($pNewInputs[$key]);
                     unset($pNewTimes[$key]);
@@ -559,8 +559,8 @@ if (isset($filePath)) {
         }
 
         # GET OLD TIMESTAMPS READY
-        foreach ($pNewTimes as $index => $time2) {
-            if ($value != NULL) {
+        foreach ($pNewTimes as $index => $time) {
+            if ($time != NULL) {
                 $time_array[] = htmlspecialchars($time2);
             }
         }
