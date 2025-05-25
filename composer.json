@@ -1,6 +1,7 @@
 {
-    "name": "dbaird2/vscode",
+    "name": "dason/senior",
     "require": {
-        "phpoffice/phpspreadsheet": "^4.1"
+        "phpmailer/phpmailer": "^6.10",
+        "phpoffice/phpspreadsheet": "^4.2"
     }
 }

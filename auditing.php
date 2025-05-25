@@ -9,13 +9,13 @@ if (isset($_POST['create'])) {
 
     # This if statement will get the current directory +appended filename,
     # current direct + appended export directory, create the export directory
-    # if it does not exist. Get all the info that was sent in array. 
+    # if it does not exist. Get all the info that was sent in array.
     # Format it according to how it is wanted for PHPSpreadsheet Excel
     # it will then create a excel sheet, save it to the sheet, then
-    # encode it for file transfering to download 
+    # encode it for file transfering to download
     try {
         $filePath = __DIR__ . $_POST['filePath'];
-       
+
         $saveDir = __DIR__ . '/exports/';
         if (!file_exists($saveDir)) {
             mkdir($saveDir, 0777, true);
@@ -23,7 +23,7 @@ if (isset($_POST['create'])) {
         # START SPREADSHEET
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        
+
         foreach (range('A', 'HH') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
@@ -33,6 +33,7 @@ if (isset($_POST['create'])) {
 
         # GET POST DATA
         $previous_times = $_POST['previousTime'] ?? NULL;
+        $previous_notes = $_POST['previousNote'] ?? NULL;
         $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
         $headers = $_POST['headers'];
         $loc = $_POST['loc'];
@@ -258,8 +259,8 @@ body {
             margin-left: 0vw;
             padding: 1vh 0vw;
             border-radius: 8px;
-            max-width: 15%;
-            width:10rem;
+            max-width: 20%;
+            width:15rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
@@ -275,9 +276,9 @@ body {
             justify-content: space-between;
             list-style-type: none;
             padding-left: 0;
-            justify-content: center;
+            justify-content: left;
             margin-bottom: 0.1rem;
-            margin-right:-0.3rem;
+            margin-left: 0.5rem;
         }
 
         .show-tags li {
@@ -353,12 +354,11 @@ error_reporting(E_ALL);
  */
 
 
-
-    /*
+/*
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
-     */
+  */   
 $worksheet = NULL;
 ?>
 <body>
@@ -381,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if ($file_type_check != 'xlsx' && $file_type_check != '.xls') {
         echo "<h3'>File type not allowed</h3>";
         return;
-    } 
+    }
 
     // Define the target directory to save the uploaded file
     $uploadDir = 'uploads/';
@@ -427,9 +427,10 @@ if (isset($filePath)) {
         $cost_arr = [];
         $tag_array = [];
         $time_array = [];
+        $note_array = [];
         $column_headers = [];
 
-        $tag = $worksheet->getCell('B2')->getValue() . ":";
+        //$tag = $worksheet->getCell('B2')->getValue() . ":";
         /*
         // Loop through the rows and columns
         foreach ($worksheet->getRowIterator() as $row) {
@@ -438,7 +439,7 @@ if (isset($filePath)) {
                 # HORIZONTAL
                 $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 # VERTICAL
-                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
+                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
             }
         }
          */
@@ -449,25 +450,26 @@ if (isset($filePath)) {
     }
 
     // Load the spreadsheet
-    echo "<pre>";
-    //var_dump($_POST);
-    echo "</pre>";
     if (isset($_POST['dynamicInput'])) {
-        $previous_times = $_POST['previousTime'] ?? NULL;       
+        $previous_times = $_POST['previousTime'] ?? NULL;
         $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
+        $previous_notes = $_POST['previousNote'] ?? NULL;
 
         $inputs = $_POST['dynamicInput'];
         $timeInputs = $_POST['dynamicTime'];
+        $noteInputs = $_POST['dynamicNote'];
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
         $newTimes = [];
         $newInputs = [];
+        $newNotes = [];
         foreach ($inputs as $key => $input) {
             if (!isset($seen[$input])) {
                 $seen[$input] = true;
                 $newInputs[] = $input;
                 $newTimes[] = $timeInputs[$key];
+                $newNotes[] = $noteInputs[$key];
             }
         }
 
@@ -476,11 +478,13 @@ if (isset($filePath)) {
             $pSeen = [];
             $pNewTimes = [];
             $pNewInputs = [];
+            $pNewNotes = [];
             foreach ($previous_inputs as $key => $input) {
                 if (!in_array($input, $pSeen)) {
                     $pSeen[] = $input;
                     $pNewInputs[] = $input;
                     $pNewTimes[] = $previous_times[$key];
+                    $pNewNotes[] = $previous_notes[$key];
                 }
             }
 
@@ -507,6 +511,7 @@ if (isset($filePath)) {
                 if (isset($newInputSet[$input])) {
                     unset($pNewInputs[$key]);
                     unset($pNewTimes[$key]);
+                    unset($pNewNotes[$key]);
                 }
             }
             /*
@@ -528,12 +533,20 @@ if (isset($filePath)) {
              */
             $pNewInputs = array_values($pNewInputs);
             $pNewTimes = array_values($pNewTimes);
+            $pNewNotes = array_values($pNewNotes);
         }
 
         # GET OLD TAGS READY
         foreach ($pNewInputs as $index => $value) {
             if ($value != NULL) {
                 $array[] = htmlspecialchars($value);
+            }
+        }
+
+        # GET OLD NOTES READY
+        foreach ($pNewNotes as $index => $value) {
+            if ($value != NULL) {
+                $note_array[] = htmlspecialchars($value);
             }
         }
 
@@ -555,38 +568,50 @@ if (isset($filePath)) {
                 $array[] = htmlspecialchars($value);
             }
         }
+
+        # GET NEW NOTES READY
+        foreach ($newNotes as $index => $value) {
+            if ($value != NULL) {
+                $note_array[] = htmlspecialchars($value);
+            }
+        }
     }
     if (!is_null($worksheet)){
         // SKIPS FIRST ROW
-        $worksheet->getRowIterator(1);
+        #$worksheet->getRowIterator(1);
         // GET HEADERS STARTING AT ROW 2
         // TAG NUMBER
-        $cellB = $worksheet->getCell('D' . 2);
-        // DESCR
-        $cellH = $worksheet->getCell('E' . 2);
-        // SN
-        $cellI = $worksheet->getCell('O' . 2);
-        // LOCATION
-        $cellJ = $worksheet->getCell('S' . 2);
-        // PO
-        $cellN = $worksheet->getCell('ZZZ' . 2);
-        // TOTAL COST
-        $cellAA = $worksheet->getCell('Z' . 2);
-        $tags = $cellB->getValue('D2');
-        $H = $cellH->getValue('E2');
-        $I = $cellI->getValue('O2');
-        $J = $cellJ->getValue('S2');
-        $N = $cellN->getValue('ZZZ2');
-        $AA = $cellN->getValue('Z2');
-        $column_headers[] = $tags;
-        $column_headers[] = 'Audited Tags';
-        $column_headers[] = 'Timestamp';
-        $column_headers[] = $H;
-        $column_headers[] = $I;
-        $column_headers[] = $J;
-        $column_headers[] = $N;
-        $column_headers[] = $AA;
+        $cell_array = [];
+        $headers = ['Tag Number', 'Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
+        $count = 0;
+
+        for ($row = 1; $row <= 4; $row++) {
+            foreach (range('A', 'Z') as $columnID) {
+                $cell = $columnID . $row;
+                $cell_value = $worksheet->getCell($columnID . $row)->getValue();
+                // If this cell value is in your $headers array
+                if (in_array($cell_value, $headers)) {
+                    $column_headers[] = $cell_value;
+                    // Add the cell reference (like "A1") to the result array
+                    $cell_array[] = $columnID . $row;
+                    $count++;
+                }
+                //echo "<h1>$count</h1>";
+                if ($count == 6) break;
+            }
+            if ($count == 6) break;
+        }
+        foreach ($column_headers as $key => $header) {
+            if ($header == 'Custodian Deptid') {
+                $column_headers[$key] = 'Dept ID';
+            } else if ($header == 'COST Total Cost') {
+                $column_headers[$key] = 'Total Cost';
+            }
+        }
     }
+        
+    $first_char = substr($string, 0, 1);
+        
 
     $colors = ['lightblue', 'white'];
     $empty = false;
@@ -594,7 +619,7 @@ if (isset($filePath)) {
         if ($worksheet->getRowIterator(3) == NULL) {
             throw new Exception('File Messed up');
 
-        } 
+        }
     } catch (Exception $e) {
         $empty = TRUE;
     } catch (\Throwable $e) {
@@ -602,12 +627,12 @@ if (isset($filePath)) {
     }
     if (!$empty) {
         foreach ($worksheet->getRowIterator(3) as $row) {
-            $cellB = $worksheet->getCell('D' . $row->getRowIndex());
-            $cellH = $worksheet->getCell('E' . $row->getRowIndex());
-            $cellI = $worksheet->getCell('O' . $row->getRowIndex());
-            $cellJ = $worksheet->getCell('S' . $row->getRowIndex());
-            $cellN = $worksheet->getCell('ZZZ' . $row->getRowIndex());
-            $cellAA = $worksheet->getCell('Z' . $row->getRowIndex());
+            $cellB = $worksheet->getCell(substr($cell_array[0], 0, 1) . $row->getRowIndex());
+            $cellH = $worksheet->getCell(substr($cell_array[1], 0, 1) . $row->getRowIndex());
+            $cellI = $worksheet->getCell(substr($cell_array[2], 0, 1) . $row->getRowIndex());
+            $cellJ = $worksheet->getCell(substr($cell_array[3], 0, 1) . $row->getRowIndex());
+            $cellN = $worksheet->getCell(substr($cell_array[4], 0, 1) . $row->getRowIndex());
+            $cellAA = $worksheet->getCell(substr($cell_array[5], 0, 1) . $row->getRowIndex());
 
             $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -627,27 +652,28 @@ if (isset($filePath)) {
                 $tagClass = $match ? "match-tag" : "miss-tag";
                 $descClass = $match ? "match-desc" : "miss-desc";
 
-                echo "<strong>Tag:</strong>";
+                echo "<strong>$column_headers[0]: </strong>";
                 echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
-                echo "<strong>Description:</strong> <span class='$descClass'>" . $cellH->getValue() . "</span> | ";
 
-                $disc_arr[] = $cellH->getValue();
+                $desc = $cellH->getValue();
+                $disc_arr[] = $desc
+                echo "<strong>$column_headers[1]:</strong> <span class='$descClass'>" . $desc . "</span> | ";
 
                 $sn = $cellI->getValue() ?? "EMPTY";
                 $sn_arr[] = $sn;
-                echo "<strong>SN:</strong> $sn | ";
+                echo "<strong>$column_headers[2]:</strong> $sn | ";
 
                 $loc = $cellJ->getValue() ?? "EMPTY";
                 $loc_arr[] = $loc;
-                echo "<strong>Location:</strong> $loc | ";
+                echo "<strong>$column_headers[3]</strong> $loc | ";
 
                 $po = $cellN->getValue() ?? "EMPTY";
                 $po_arr[] = $po;
-                echo "<strong>PO:</strong> $po</li>";
+                echo "<strong>$column_headers[4] </strong> $po</li>";
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
-                echo "<strong>Cost: </strong>$$cost</li>";
+                echo "<strong>$column_headers[5] </strong>$$cost</li>";
             }
 
             echo "</ul>";
@@ -655,7 +681,9 @@ if (isset($filePath)) {
 
             $row_number++;
         }
+            
     }
+        
 
 
     $i = 0;
@@ -665,7 +693,7 @@ if (isset($filePath)) {
     foreach ($array as $row) {
         $match2 = in_array($row, $tag_array) ? 1 : 0;
         $colorClass = $match2 ? "tag-match" : "tag-miss";
-        echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$time_array[$i]} </li>";
+        echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$note_array[$i]} <br> {$time_array[$i]}  </li>";
         $i++;
     }
     echo "</ul>";
@@ -676,7 +704,7 @@ if (isset($filePath)) {
         <div id="inputContainer">
             <!-- Input fields will appear here -->
             <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-
+            <input class="dynamicId" type="text" name="dynamicNote[]" placeholder="Notes">
         </div>
 <?php
 
@@ -686,6 +714,9 @@ if (isset($filePath)) {
     }
     foreach ($time_array as $time) {
         echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
+    }
+    foreach ($note_array as $note) {
+        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
     }
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
@@ -708,6 +739,9 @@ if (isset($filePath)) {
     foreach ($time_array as $time) {
         echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
     }
+    foreach ($note_array as $note) {
+        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
+    }
     foreach ($column_headers as $header) {
         echo "<input type='hidden' name='headers[]' value='" . htmlspecialchars($header) . "'>";
     }
@@ -726,6 +760,9 @@ if (isset($filePath)) {
     foreach ($cost_arr as $cost) {
         echo "<input type='hidden' name='cost[]' value='" . htmlspecialchars($cost) . "'>";
     }
+    foreach ($dept_arr as $dept) {
+        echo "<input type='hidden' name='dept[]' value='" . htmlspecialchars($dept) . "'>";
+    }
 
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
@@ -743,25 +780,36 @@ function addNewInput() {
     const inputDiv = document.createElement('div');
     inputDiv.classList.add('input-container');
 
+    
+
     const newInput = document.createElement('input');
     newInput.type = 'text';
     newInput.name = 'dynamicInput[]';
     //newInput.onfocus = 'addNewInput()';
     //newInput.id = 'addInputButton';
     newInput.placeholder = 'Enter tag';
+    inputDiv.appendChild(newInput);
+
     newInput.classList.add('dynamicId');
 
-    newInput.addEventListener("change", addNewInput, false)
+    newInput.addEventListener("change", addNewInput, false);
 
-        const timeInput = document.createElement('input');
+    const timeInput = document.createElement('input');
     timeInput.type = 'hidden';
     timeInput.name = 'dynamicTime[]';
     timeInput.value = getFormattedDateTime();
-
     // Append input to the div and the div to the container
     inputDiv.appendChild(timeInput);
 
-    inputDiv.appendChild(newInput);
+    const noteInput = document.createElement('input');
+    noteInput.type = 'text';
+    noteInput.name = 'dynamicNote[]';
+    noteInput.placeholder = 'Notes';
+    // Append input to the div and the div to the container
+    inputDiv.appendChild(noteInput);
+
+    noteInput.classList.add('dynamicId');
+
     const inputContainer = document.getElementById('inputContainer');
     inputContainer.appendChild(inputDiv);
 }

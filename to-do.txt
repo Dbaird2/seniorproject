@@ -1,1 +1,9 @@
 Make other user accounts in sql for different CRUD operations for base users
+
+ALL FILES THAT NEED STRICT ACCESS
+    auditing.php
+    search_asset.php
+    change_asset_tag.php
+    
+
+

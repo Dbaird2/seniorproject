@@ -11,20 +11,32 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </style>
 
 <!-- Navbar -->
-<div class="w3-animate-opacity w3-top">
-  <div class="w3-bar w3-blue w3-card w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="https://dataworks-7b7x.onrender.com/index.php" class="w3-bar-item w3-button w3-padding-large w3-white  w3-left-align">Home</a>
-    <a href="https://dataworks-7b7x.onrender.com/auditing.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white  w3-left-align">Start an Audit</a>
-    <a href="https://dataworks-7b7x.onrender.com/search_asset.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white  w3-left-align">Search Assets</a>
-    <a href="https://dataworks-7b7x.onrender.com/change_asset_tag.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white  w3-left-align">Change Asset Tags</a>
-    <a href="https://dataworks-7b7x.onrender.com/help.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white  w3-left-align">FAQ</a>
-    <a href="https://dataworks-7b7x.onrender.com/auth/login.php" class="w3-bar-item w3-button w3-padding-large w3-white w3-right-align w3-right">Login</a>
-    <a href="https://dataworks-7b7x.onrender.com/auth/signup.php" class="w3-bar-item w3-button w3-padding-large w3-right-align w3-right">Signup</a>
+<div class="w3-animate-opacity w3-top" >
+  <div class="w3-bar w3-cobalt w3-card w3-medium">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-medium w3-right w3-padding-large w3-hover-white w3-medium w3-cobalt" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="https://dataworks-7b7x.onrender.com/index.php" class="w3-bar-item w3-button w3-hover-white w3-padding-medium w3-left-align">Home</a>
+<?php
+if (isset($_SESSION['id'])) {
+?>
+    <a href="https://dataworks-7b7x.onrender.com/auditing.php" class="w3-bar-item w3-button w3-hide-small w3-padding-medium w3-hover-white  w3-left-align">Start an Audit</a>
+    <a href="https://dataworks-7b7x.onrender.com/search_asset.php" class="w3-bar-item w3-button w3-hide-small w3-padding-medium w3-hover-white  w3-left-align">Search Assets</a>
+    <a href="https://dataworks-7b7x.onrender.com/change_asset_tag.php" class="w3-bar-item w3-button w3-hide-small w3-padding-medium w3-hover-white  w3-left-align">Change Asset Tags</a>
+<?php
+}
+?>
+
+    <a href="https://dataworks-7b7x.onrender.com/auth/login.php" class="w3-bar-item w3-button w3-padding-medium w3-white w3-right-align w3-right">Login</a>
+<?php
+if (isset($_SESSION['id'])) {
+?>
+    <a href="https://dataworks-7b7x.onrender.com/auth/signup.php" class="w3-bar-item w3-button w3-padding-medium w3-right-align w3-right">Signup</a>
+<?php
+  }
+?>
    </div>
-  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-    <a href="auditing.php" class="w3-bar-item w3-button w3-padding-large">Start an Audit</a>
-    <a href="help.php" class="w3-bar-item w3-button w3-padding-large">Help</a>
+  <div id="navDemo" class="w3-bar-block w3-hover-cobalt w3-light-gray w3-hide w3-hide-medium w3-right-align w3-hide-medium w3-medium">
+    <a href="auditing.php" class="w3-bar-item w3-button w3-padding-medium">Start an Audit</a>
+    <a href="https://dataworks-7b7x.onrender.com/help.php" class="w3-bar-item w3-button w3-padding-medium">Help</a>
   </div>
 </div>
 
@@ -39,4 +51,5 @@ function myFunction() {
     x.className = x.className.replace(" w3-show", "");
   }
 }
+
 </script>

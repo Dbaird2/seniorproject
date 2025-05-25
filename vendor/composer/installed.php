@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'dbaird2/vscode',
+        'name' => 'dason/senior',
         'pretty_version' => '1.0.0+no-version-set',
         'version' => '1.0.0.0',
         'reference' => null,
@@ -19,7 +19,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'dbaird2/vscode' => array(
+        'dason/senior' => array(
             'pretty_version' => '1.0.0+no-version-set',
             'version' => '1.0.0.0',
             'reference' => null,
@@ -55,10 +55,19 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.10.0',
+            'version' => '6.10.0.0',
+            'reference' => 'bf74d75a1fde6beaa34a0ddae2ec5fce0f72a144',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'phpoffice/phpspreadsheet' => array(
-            'pretty_version' => '4.1.0',
-            'version' => '4.1.0.0',
-            'reference' => '6ff18c3a8df3a945492f75ce455d77f7ad55dd5c',
+            'pretty_version' => '4.2.0',
+            'version' => '4.2.0.0',
+            'reference' => '5f6d7410e5fd72cac1aa67d4f05f4fe664d01ba6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpoffice/phpspreadsheet',
             'aliases' => array(),
