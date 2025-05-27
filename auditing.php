@@ -678,6 +678,7 @@ if (isset($filePath)) {
             }
             if ($count == 6) break;
         }
+        /*
         foreach ($column_headers as $key => $header) {
             if ($header == 'Custodian Deptid') {
                 $column_headers[$key] = 'Dept ID';
@@ -687,6 +688,7 @@ if (isset($filePath)) {
                 $column_headers[$key] = $header;
             }
         }
+         */
     }
 
     $first_char = substr($string, 0, 1);
