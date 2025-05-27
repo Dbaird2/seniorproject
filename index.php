@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (isset($_SESSION['id'])) {
     require_once 'config.php';
     include_once 'navbar.php';
     $query = "SELECT * FROM asset_info join asset_change_view
@@ -56,7 +56,7 @@ if (!isset($_SESSION['role'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Asset Management System</title>
 </head>
 <style>
     li {
@@ -270,7 +270,7 @@ if (!isset($_SESSION['role'])) {
             <div class="head-bot">
             
                 <div class="small-box">
-                    <span class="small-box-text"><?php $asset_count['asset_count'] ?>0<br></span>
+                    <span class="small-box-text"><?php $asset_count['total_assets'] ?>0<br></span>
                     <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Total Assets</strong></span>
                 </div>
                 <div class="small-box">
