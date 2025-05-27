@@ -660,20 +660,31 @@ if (isset($filePath)) {
         $count = 0;
 
         for ($row = 1; $row <= 4; $row++) {
-            foreach (range('A', 'Z') as $columnID) {
+            foreach (range('A', 'ZZ') as $columnID) {
                 $cell = $columnID . $row;
                 $cell_value = $worksheet->getCell($columnID . $row)->getValue();
+                
                 // If this cell value is in your $headers array
                 if (in_array($cell_value, $headers)) {
                     $column_headers[] = $cell_value;
                     // Add the cell reference (like "A1") to the result array
-                    $cell_array[] = $columnID . $row;
+                    $cell_array[$cell_value] = $columnID . $row;
                     $count++;
                 }
-                //echo "<h1>$count</h1>";
+                foreach (range( 'A', 'H') as $columnID2) {
+                    $cell2 = $columnID . $columnID2 . $row;
+                    $cell_value2 = $worksheet->getCell($cell2)->getValue();
+
+                    if (in_array($cell_value2, $headers)) {
+                        $columns_headers[] = $cell_value2;
+                        $cell_array[$cell_value2] = $cell2;
+                        $count++;
+                    }
                 if ($count == 6) {
-                    $column_header = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
+                    #$column_headers = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
                     break;
+                }
+                if ($count == 6) break;
                 }
             }
             if ($count == 6) break;
@@ -709,16 +720,26 @@ if (isset($filePath)) {
     if (!$empty) {
         echo "<section id='showExcel'>";
         echo "<div class='row'>";
-        foreach ($column_headers as $header) {
-            echo "<div class='excel-info'><strong>" . htmlspecialchars($header) . "</strong> </div>";
+        $offset = substr($cell_array['Tag Number'], 1 ,1) + 1;
+        echo "<div class='excel-info'><strong>Tag Number</strong> </div>";
+        echo "<div class='excel-info'><strong>Descript</strong> </div>";
+        echo "<div class='excel-info'><strong>Serial ID</strong> </div>";
+        echo "<div class='excel-info'><strong>Location</strong> </div>";
+        echo "<div class='excel-info'><strong>Dept</strong> </div>";
+        echo "<div class='excel-info'><strong>Cost</strong> </div>";
+        foreach ($cell_array as $key => $values) {
+            $sizes[$key] = strlen($values)-1;
         }
-        foreach ($worksheet->getRowIterator(3) as $row) {
-            $cellB = $worksheet->getCell(substr($cell_array[0], 0, 1) . $row->getRowIndex());
-            $cellH = $worksheet->getCell(substr($cell_array[1], 0, 1) . $row->getRowIndex());
-            $cellI = $worksheet->getCell(substr($cell_array[2], 0, 1) . $row->getRowIndex());
-            $cellJ = $worksheet->getCell(substr($cell_array[3], 0, 1) . $row->getRowIndex());
-            $cellN = $worksheet->getCell(substr($cell_array[4], 0, 1) . $row->getRowIndex());
-            $cellAA = $worksheet->getCell(substr($cell_array[5], 0, 1) . $row->getRowIndex());
+        
+        foreach ($worksheet->getRowIterator($offset) as $row) {
+            
+            $cellB = $worksheet->getCell(substr($cell_array['Tag Number'], 0, $sizes['Tag Number']) . $row->getRowIndex());
+            $cellH = $worksheet->getCell(substr($cell_array['Descr'], 0, $sizes['Descr']) . $row->getRowIndex());
+            $cellI = $worksheet->getCell(substr($cell_array['Serial ID'], 0, $sizes['Serial ID']) . $row->getRowIndex());
+            $cellJ = $worksheet->getCell(substr($cell_array['Location'], 0, $sizes['Location']) . $row->getRowIndex());
+            $cellN = $worksheet->getCell(substr($cell_array['Custodian Deptid'], 0, $sizes['Custodian Deptid']) . $row->getRowIndex());
+            $cellAA = $worksheet->getCell(substr($cell_array['COST Total Cost'], 0, $sizes['COST Total Cost']) . $row->getRowIndex());
+
 
             $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
 
@@ -754,7 +775,7 @@ if (isset($filePath)) {
                  */
                 $dept = $cellN->getValue() ?? "EMPTY";
                 $dept_arr[] = $dept;
-                echo "<div class='excel-info $color_class'>$" . $dept . "</div>";
+                echo "<div class='excel-info $color_class'>" . $dept . "</div>";
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
