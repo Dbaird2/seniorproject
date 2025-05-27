@@ -91,9 +91,9 @@ if (isset($_POST['create'])) {
                         $sheet->setCellValue('D' . $i + 2, $previous_times[$j]);
                         break;
                     } else if ($i == sizeof($old_tags) - 1) {
-                        $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
-                        $sheet->setCellValue('J' . $h_row++, $previous_notes[$j]);
-                        $sheet->setCellValue('K' . $h_row++, $previous_times[$j]);
+                        $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
+                        $sheet->setCellValue('K' . $h_row++, $previous_notes[$j]);
+                        $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
                     }
                 }
             }
@@ -102,9 +102,9 @@ if (isset($_POST['create'])) {
             if (!$empty_scan) {
                 $h_row=2;
                 for ($j = 0; $j < sizeof($previous_inputs); $j++) {
-                    $sheet->setCellValue('I' . $h_row, $previous_inputs[$j]);
-                    $sheet->setCellValue('J' . $h_row++, $previous_notes[$j]);
-                    $sheet->setCellValue('K' . $h_row++, $previous_times[$j]);
+                    $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
+                    $sheet->setCellValue('K' . $h_row++, $previous_notes[$j]);
+                    $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
                 }
             }
         }
