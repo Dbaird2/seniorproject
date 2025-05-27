@@ -157,7 +157,7 @@ include_once("navbar.php");
             text-align: center;
         }
 
-        #makeSheet,
+      
         #showExcel {
 
             margin:auto;
@@ -299,7 +299,7 @@ include_once("navbar.php");
         }
 
         .show-tags {
-            height: 70vh;
+            max-height: 65vh;
             overflow-y: auto;
             display: flex;
             position: fixed;
@@ -312,7 +312,7 @@ include_once("navbar.php");
             margin-left: 0vw;
             padding: 1vh 0vw;
             border-radius: 8px;
-            max-width: 20%;
+            max-width: 18%;
             width:15rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
