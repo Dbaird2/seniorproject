@@ -131,7 +131,7 @@ include_once("navbar.php");
 ?>
 
     <style>
-body {
+        body {
             margin: 0;
             height: 100vh;
             font-size: calc(0.5vw + 0.4vh);
@@ -147,16 +147,23 @@ body {
 
         #makeSheet,
         #showExcel {
-            display: flex;
+
             margin:auto;
+            text-align:center;
             justify-content: left;
-            align-items: left;
-            max-width: 50%;
+            max-width: 55%;
         }
 
         .excel-info {
+            min-height: 4vh;
+            max-height: 4vh;
+            min-width: 9vw;
+            max-width: 9vw;
+            flex: 1;
+            justify-content: center;
             border: 0.1vh solid #cce0ff;
-            border-radius: 8px;
+            text-align: center;
+            border-radius: 0px;
             overflow: hidden;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
@@ -184,6 +191,8 @@ body {
         .inner-text li {
             margin: 0vw 0;
             margin-bottom: 0vh;
+                        list-style-type: none;
+
         }
 
         .row-number {
@@ -361,6 +370,12 @@ body {
             opacity: 0;
             transition: opacity .3s;
         }
+
+        .row{
+            display: flex;
+            flex-wrap: wrap;
+            text-align: center;
+        }
     </style>
     <title>Asset Management Excel</title>
 </head>
@@ -375,7 +390,7 @@ error_reporting(E_ALL);
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
-  */   
+  */
 $worksheet = NULL;
 ?>
 <body>
@@ -593,6 +608,8 @@ if (isset($filePath)) {
             }
         }
     }
+
+    // GET HEADERS FROM WORKSHEET
     if (!is_null($worksheet)){
         // SKIPS FIRST ROW
         #$worksheet->getRowIterator(1);
@@ -629,9 +646,9 @@ if (isset($filePath)) {
             }
         }
     }
-        
+
     $first_char = substr($string, 0, 1);
-        
+
 
     $colors = ['lightblue', 'white'];
     $empty = false;
@@ -646,8 +663,10 @@ if (isset($filePath)) {
         $empty = TRUE;
     }
     if (!$empty) {
+        echo "<section id='showExcel'>";
+        echo "<div class='row'>";
         foreach ($column_headers as $header) {
-            echo "<div class='head'><strong>" . htmlspecialchars($header) . "</strong> </div>";
+            echo "<div class='excel-info'><strong>" . htmlspecialchars($header) . "</strong> </div>";
         }
         foreach ($worksheet->getRowIterator(3) as $row) {
             $cellB = $worksheet->getCell(substr($cell_array[0], 0, 1) . $row->getRowIndex());
@@ -657,14 +676,11 @@ if (isset($filePath)) {
             $cellN = $worksheet->getCell(substr($cell_array[4], 0, 1) . $row->getRowIndex());
             $cellAA = $worksheet->getCell(substr($cell_array[5], 0, 1) . $row->getRowIndex());
 
-            $color_class = ($row_number % 2 === 0) ? 'row-even' : 'row-odd';
+            $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
 
-            echo "<section id='showExcel'>";
             $tag_array[] = $cellB->getValue();
 
-            echo "<div class='excel-info'>";
-            echo "<div class='inner-text $color_class'>";
-            echo "<li class='row-number'><strong>$row_number &nbsp;  </strong></li>";
+            //echo "<div class='inner-text $color_class'>";
 
             $match = in_array($cellB->getValue(), $array);
 
@@ -673,36 +689,38 @@ if (isset($filePath)) {
             } else {
                 $tagClass = $match ? "match-tag" : "miss-tag";
                 $descClass = $match ? "match-desc" : "miss-desc";
-                echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
+                echo "<div class='$tagClass excel-info $color_class'>" . $row_number . " . &nbsp; " . $cellB->getValue() . "</div>";
 
                 $desc = $cellH->getValue();
                 $disc_arr[] = $desc;
-                echo "<span class='$descClass'>" . $desc . "</span> | ";
+                echo "<div class='$descClass excel-info $color_class'>" . $desc . "</div>";
 
                 $sn = $cellI->getValue() ?? "EMPTY";
                 $sn_arr[] = $sn;
-                echo " $sn ";
+                echo "<div class='excel-info $color_class'>" . $sn . "</div>";
 
                 $loc = $cellJ->getValue() ?? "EMPTY";
                 $loc_arr[] = $loc;
-                echo " $loc ";
+                echo "<div class='excel-info $color_class'>" . $loc . "</div>";
 
                 $po = $cellN->getValue() ?? "EMPTY";
                 $po_arr[] = $po;
-                echo "$po<";
+                echo "<div class='excel-info $color_class'>" . $po . "</div>";
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
-                echo " $$cost";
+                echo "<div class='excel-info $color_class'>$" . $cost . "</div>";
             }
+            //echo "</div>";
 
-            echo "</div></div></section>";
 
             $row_number++;
         }
-            
+        echo "</div></section>";
+
+
     }
-        
+
 
 
     $i = 0;
@@ -799,7 +817,7 @@ function addNewInput() {
     const inputDiv = document.createElement('div');
     inputDiv.classList.add('input-container');
 
-    
+
 
     const newInput = document.createElement('input');
     newInput.type = 'text';

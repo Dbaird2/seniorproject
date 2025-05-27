@@ -1,6 +1,6 @@
 <?php
-include_once("navbar.php");
-#require_once("../config.php");
+include_once("../navbar.php");
+require_once("../config.php");
 
 $err = 0;
 $user_err = $email_err = $f_name_err = $l_name_err = '';
