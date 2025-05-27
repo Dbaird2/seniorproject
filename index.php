@@ -423,6 +423,6 @@ if (isset($_SESSION['id'])) {
 </html>
 <?php
 } else {
-    header("Location: https://dataworks-7b7x.onrender.com/login.php");
+    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit();
 }
