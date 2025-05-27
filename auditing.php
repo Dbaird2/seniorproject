@@ -496,6 +496,7 @@ if (isset($filePath)) {
         $loc_arr = [];
         $po_arr = [];
         $cost_arr = [];
+        $dept_arr = [];
         $tag_array = [];
         $time_array = [];
         $note_array = [];
@@ -682,6 +683,8 @@ if (isset($filePath)) {
                 $column_headers[$key] = 'Dept ID';
             } else if ($header == 'COST Total Cost') {
                 $column_headers[$key] = 'Total Cost';
+            } else {
+                $column_headers[$key] = $header;
             }
         }
     }
@@ -749,6 +752,10 @@ if (isset($filePath)) {
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
                 echo "<div class='excel-info $color_class'>$" . $cost . "</div>";
+
+                $dept = $cellAA->getValue() ?? "EMPTY";
+                $dept_arr[] = $dept;
+                echo "<div class='excel-info $color_class'>$" . $dept . "</div>";
             }
             //echo "</div>";
 
