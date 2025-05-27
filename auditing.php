@@ -92,7 +92,7 @@ if (isset($_POST['create'])) {
                         break;
                     } else if ($i == sizeof($old_tags) - 1) {
                         $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
-                        $sheet->setCellValue('K' . $h_row++, $previous_notes[$j]);
+                        $sheet->setCellValue('K' . $h_row, $previous_notes[$j]);
                         $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
                     }
                 }
@@ -103,7 +103,7 @@ if (isset($_POST['create'])) {
                 $h_row=2;
                 for ($j = 0; $j < sizeof($previous_inputs); $j++) {
                     $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
-                    $sheet->setCellValue('K' . $h_row++, $previous_notes[$j]);
+                    $sheet->setCellValue('K' . $h_row, $previous_notes[$j]);
                     $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
                 }
             }
@@ -138,6 +138,18 @@ include_once("navbar.php");
             width: 100%;
             position: absolute;
             top: 8vh;
+        }
+        body::-webkit-scrollbar {
+            width: 1em;
+        }
+        
+        body::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        
+        body::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+            outline: 1px solid slategrey;
         }
         .row {
             display: flex;
@@ -252,8 +264,21 @@ include_once("navbar.php");
             background-color: #f0f8ff;
         }
 
+        #makeSheet button {
+            font-size: calc(0.5vw + 0.4vh);
+
+            width: 6vw;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 0.2vw 0.3vh;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
         #dynamicForm button,
-        #makeSheet button,
         #sheet button {
             font-size: calc(0.5vw + 0.4vh);
 
@@ -274,6 +299,8 @@ include_once("navbar.php");
         }
 
         .show-tags {
+            height: 70vh;
+            overflow-y: auto;
             display: flex;
             position: fixed;
             flex-wrap: wrap;
@@ -288,6 +315,18 @@ include_once("navbar.php");
             max-width: 20%;
             width:15rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .show-tags::-webkit-scrollbar {
+            width: 1em;
+        }
+        
+        .show-tags::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        }
+        
+        .show-tags::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+            outline: 1px solid slategrey;
         }
 
         .show-tags h4 {
@@ -734,36 +773,8 @@ if (isset($filePath)) {
         $i++;
     }
     echo "</ul>";
-    echo "</div>";
-?>
-    <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-        <div id="inputContainer">
-            <!-- Input fields will appear here -->
-            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
-        </div>
-<?php
-
-
-    foreach ($array as $value) {
-        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
-    }
-    foreach ($time_array as $time) {
-        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
-    }
-    foreach ($note_array as $note) {
-        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
-    }
-    echo "<input type='hidden' name='filePath' value='$filePath'>";
-?>
-
-        <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
-        <button type="submit" id='dynamicSubmit'>Submit</button>
-    </form>
-<?php
-?>
-<div class='formId'>
+    ?>
+    <div class='formId'>
     <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 <?php
 
@@ -803,9 +814,40 @@ if (isset($filePath)) {
 
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
-        <button type='submit' id='create' name='create'>Export Excel File</button>
+        <button type='submit' id='create' name='create'>Export Excel</button>
     </form>
 </div>
+<?php
+    echo "</div>";
+?>
+    <div id="additionalInputs"></div>
+    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+        <div id="inputContainer">
+            <!-- Input fields will appear here -->
+            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
+        </div>
+<?php
+
+
+    foreach ($array as $value) {
+        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
+    }
+    foreach ($time_array as $time) {
+        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
+    }
+    foreach ($note_array as $note) {
+        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
+    }
+    echo "<input type='hidden' name='filePath' value='$filePath'>";
+?>
+
+        <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
+        <button type="submit" id='dynamicSubmit'>Submit</button>
+    </form>
+<?php
+?>
+
 
 <?php
 }
