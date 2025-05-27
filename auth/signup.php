@@ -1,5 +1,5 @@
 <?php
-include_once("../navbar.php");
+include_once("navbar.php");
 #require_once("../config.php");
 
 $err = 0;
@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .formAtt {
             margin-bottom:1vh;
-            width: 23vw;
+            width: 100%;
             height: 1.3vh;
             color: rgb(36, 35, 42);
             font-size: calc(1vh + 0.3vw);

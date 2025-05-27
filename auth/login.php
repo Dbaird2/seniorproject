@@ -1,6 +1,6 @@
 <?php
-include_once("../navbar.php");
-include_once("../config.php");
+include_once("navbar.php");
+#include_once("../config.php");
  ?>
 
  <?php
@@ -76,7 +76,7 @@ include_once("../config.php");
         }
         .formAtt {
             margin-bottom:1rem;
-            width: 23vw;
+            width:100%;
             color: rgb(36, 35, 42);
             font-size: calc(1vh + 0.3vw);
             line-height: 20px;

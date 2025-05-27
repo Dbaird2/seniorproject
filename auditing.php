@@ -139,6 +139,11 @@ body {
             position: absolute;
             top: 8vh;
         }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            text-align: center;
+        }
 
         #makeSheet,
         #showExcel {
@@ -641,6 +646,9 @@ if (isset($filePath)) {
         $empty = TRUE;
     }
     if (!$empty) {
+        foreach ($column_headers as $header) {
+            echo "<div class='head'><strong>" . htmlspecialchars($header) . "</strong> </div>";
+        }
         foreach ($worksheet->getRowIterator(3) as $row) {
             $cellB = $worksheet->getCell(substr($cell_array[0], 0, 1) . $row->getRowIndex());
             $cellH = $worksheet->getCell(substr($cell_array[1], 0, 1) . $row->getRowIndex());
@@ -656,8 +664,7 @@ if (isset($filePath)) {
 
             echo "<div class='excel-info'>";
             echo "<div class='inner-text $color_class'>";
-            echo "<ul>";
-            echo "<li class='row-number'><strong>$row_number &nbsp;  </strong>";
+            echo "<li class='row-number'><strong>$row_number &nbsp;  </strong></li>";
 
             $match = in_array($cellB->getValue(), $array);
 
@@ -666,32 +673,29 @@ if (isset($filePath)) {
             } else {
                 $tagClass = $match ? "match-tag" : "miss-tag";
                 $descClass = $match ? "match-desc" : "miss-desc";
-
-                echo "<strong>$column_headers[0]: </strong>";
                 echo "<strong class='$tagClass'>" . $cellB->getValue() . "</strong> | ";
 
                 $desc = $cellH->getValue();
                 $disc_arr[] = $desc;
-                echo "<strong>$column_headers[1]:</strong> <span class='$descClass'>" . $desc . "</span> | ";
+                echo "<span class='$descClass'>" . $desc . "</span> | ";
 
                 $sn = $cellI->getValue() ?? "EMPTY";
                 $sn_arr[] = $sn;
-                echo "<strong>$column_headers[2]:</strong> $sn | ";
+                echo " $sn ";
 
                 $loc = $cellJ->getValue() ?? "EMPTY";
                 $loc_arr[] = $loc;
-                echo "<strong>$column_headers[3]</strong> $loc | ";
+                echo " $loc ";
 
                 $po = $cellN->getValue() ?? "EMPTY";
                 $po_arr[] = $po;
-                echo "<strong>$column_headers[4] </strong> $po</li>";
+                echo "$po<";
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
-                echo "<strong>$column_headers[5] </strong>$$cost</li>";
+                echo " $$cost";
             }
 
-            echo "</ul>";
             echo "</div></div></section>";
 
             $row_number++;
