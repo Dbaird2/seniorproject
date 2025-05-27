@@ -747,17 +747,19 @@ if (isset($filePath)) {
                 $loc_arr[] = $loc;
                 echo "<div class='excel-info $color_class'>" . $loc . "</div>";
 
+                /*
                 $po = $cellN->getValue() ?? "EMPTY";
                 $po_arr[] = $po;
                 echo "<div class='excel-info $color_class'>" . $po . "</div>";
+                 */
+                $dept = $cellN->getValue() ?? "EMPTY";
+                $dept_arr[] = $dept;
+                echo "<div class='excel-info $color_class'>$" . $dept . "</div>";
 
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
                 echo "<div class='excel-info $color_class'>$" . $cost . "</div>";
 
-                $dept = $cellAA->getValue() ?? "EMPTY";
-                $dept_arr[] = $dept;
-                echo "<div class='excel-info $color_class'>$" . $dept . "</div>";
             }
             //echo "</div>";
 
