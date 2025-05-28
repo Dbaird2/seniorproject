@@ -24,7 +24,7 @@ if (isset($_POST['create'])) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        foreach (range('A', 'HH') as $columnID) {
+        foreach (range('A', 'Z') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         # LOCATION FOR EXCEL HEADERS
@@ -642,7 +642,7 @@ if (isset($filePath)) {
                         $count++;
                     }
                 if ($count == 6) {
-                    #$column_headers = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
+                    $column_headers = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
                     break;
                 }
                 if ($count == 6) break;
