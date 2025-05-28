@@ -59,9 +59,6 @@ if (isset($_POST['create'])) {
 
         # SET HEADERS IN SHEET
         for ($i = 0; $i < count($column_letters); $i++) {
-            if ($i == 1) {
-                $i = $i + 3;
-            }
             $sheet->setCellValue($column_letters[$i], $headers[$i]);
         }
         $sheet->setCellValue('B1', 'Tags Matched');
@@ -83,6 +80,7 @@ if (isset($_POST['create'])) {
                 $row_index++;
             }
             $h_row = 2;
+            if (!$empty_scan) {
             for ($j = 0; $j < sizeof($previous_inputs); $j++) {
                 for ($i = 0; $i < sizeof($old_tags); $i++) {
                     if ($previous_inputs[$j] == $old_tags[$i]) {
@@ -97,6 +95,7 @@ if (isset($_POST['create'])) {
                     }
                 }
             }
+        }
         } else {
             $sheet->setCellValue('A2', 'No Assets Found');
             if (!$empty_scan) {
@@ -170,7 +169,7 @@ include_once("navbar.php");
             min-height: 4vh;
             max-height: 4vh;
             min-width: 9vw;
-            max-width: 9vw;
+            max-width: 20vw;
             flex: 1;
             justify-content: center;
             border: 0.1vh solid #cce0ff;
@@ -415,7 +414,11 @@ include_once("navbar.php");
             flex-wrap: wrap;
             text-align: center;
         }
+        .row-4rols {
+           
+        }
     </style>
+
     <title>Asset Management Excel</title>
 </head>
 <?php
@@ -502,19 +505,6 @@ if (isset($filePath)) {
         $note_array = [];
         $column_headers = [];
 
-        //$tag = $worksheet->getCell('B2')->getValue() . ":";
-        /*
-        // Loop through the rows and columns
-        foreach ($worksheet->getRowIterator() as $row) {
-            foreach ($row->getCellIterator() as $cell) {
-                $coordinate = $cell->getCoordinate();
-                # HORIZONTAL
-                $worksheet->getStyle($coordinate)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                # VERTICAL
-                $worksheet->getStyle($coordinate)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-            }
-        }
-         */
     } catch (Exception $e) {
         echo "Error uploading file";
     } catch (\TypeError $e) {
@@ -560,19 +550,6 @@ if (isset($filePath)) {
                 }
             }
 
-
-            # previous_inputs -> pNewInputs
-            /*
-             * OLD CODE WORKS
-            $dupes = [];
-            foreach ($pNewInputs as $key => $previousInput) {
-                foreach ($newInputs as $newKey => $newInput) {
-                    if ($previousInput == $newInput) {
-                        $dupes[] = $newKey;
-                    }
-                }
-            }
-             */
             $dupes = [];
             $new_input_set = [];
             foreach ($newInputs as $input) {
@@ -586,23 +563,7 @@ if (isset($filePath)) {
                     unset($pNewNotes[$key]);
                 }
             }
-            /*
-             * OLD UNOPTIMIZED
-            foreach ($newInputs as $key => $previousInput) {
-                foreach ($pNewInputs as $newKey => $newInput) {
-                    if ($previousInput == $newInput) {
-                        $dupes[] = $newKey;
-                        break;
-                    }
-                }
-            }
-
-            # newTimes -> pNewTimes, newInputs -> pNewInputs
-            foreach ($dupes as $newKey) {
-                unset($pNewTimes[$newKey]);
-                unset($pNewInputs[$newKey]);
-            }
-             */
+         
             $pNewInputs = array_values($pNewInputs);
             $pNewTimes = array_values($pNewTimes);
             $pNewNotes = array_values($pNewNotes);
@@ -689,17 +650,6 @@ if (isset($filePath)) {
             }
             if ($count == 6) break;
         }
-        /*
-        foreach ($column_headers as $key => $header) {
-            if ($header == 'Custodian Deptid') {
-                $column_headers[$key] = 'Dept ID';
-            } else if ($header == 'COST Total Cost') {
-                $column_headers[$key] = 'Total Cost';
-            } else {
-                $column_headers[$key] = $header;
-            }
-        }
-         */
     }
 
     $first_char = substr($string, 0, 1);
@@ -721,76 +671,88 @@ if (isset($filePath)) {
         echo "<section id='showExcel'>";
         echo "<div class='row'>";
         $offset = substr($cell_array['Tag Number'], 1 ,1) + 1;
-        echo "<div class='excel-info'><strong>Tag Number</strong> </div>";
-        echo "<div class='excel-info'><strong>Descript</strong> </div>";
-        echo "<div class='excel-info'><strong>Serial ID</strong> </div>";
-        echo "<div class='excel-info'><strong>Location</strong> </div>";
-        echo "<div class='excel-info'><strong>Dept</strong> </div>";
-        echo "<div class='excel-info'><strong>Cost</strong> </div>";
+      
+        $column_count = 0;
         foreach ($cell_array as $key => $values) {
             $sizes[$key] = strlen($values)-1;
+            $column_count++;
         }
         
+        
+    
         foreach ($worksheet->getRowIterator($offset) as $row) {
+            if ($row_number == 1) {
+                if (!is_null($cell_array['Tag Number'])) {
+                    echo "<div class='excel-info'><strong>Tag Number</strong> </div>";
+                }
+                if (!is_null($cell_array['Descr'])) {
+                    echo "<div class='excel-info'><strong>Description</strong> </div>";
+                }
+                if (!is_null($cell_array['Serial ID'])) {
+                    echo "<div class='excel-info'><strong>Serial ID</strong> </div>";
+                }
+                if (!is_null($cell_array['Location'])) {
+                    echo "<div class='excel-info'><strong>Location</strong> </div>";
+                }
+                if (!is_null($cell_array['Custodian Deptid'])) {
+                    echo "<div class='excel-info'><strong>Dept ID</strong> </div>";
+                }
+                if (!is_null($cell_array['COST Total Cost'])) {
+                    echo "<div class='excel-info'><strong>Cost</strong> </div>";    
+                } 
+            } 
             
-            $cellB = $worksheet->getCell(substr($cell_array['Tag Number'], 0, $sizes['Tag Number']) . $row->getRowIndex());
-            $cellH = $worksheet->getCell(substr($cell_array['Descr'], 0, $sizes['Descr']) . $row->getRowIndex());
-            $cellI = $worksheet->getCell(substr($cell_array['Serial ID'], 0, $sizes['Serial ID']) . $row->getRowIndex());
-            $cellJ = $worksheet->getCell(substr($cell_array['Location'], 0, $sizes['Location']) . $row->getRowIndex());
-            $cellN = $worksheet->getCell(substr($cell_array['Custodian Deptid'], 0, $sizes['Custodian Deptid']) . $row->getRowIndex());
-            $cellAA = $worksheet->getCell(substr($cell_array['COST Total Cost'], 0, $sizes['COST Total Cost']) . $row->getRowIndex());
+            if (!is_null($cell_array['Tag Number'])) {
 
+                $cellB = $worksheet->getCell(substr($cell_array['Tag Number'], 0, $sizes['Tag Number']) . $row->getRowIndex());
+                $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
 
-            $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
-
-            $tag_array[] = $cellB->getValue();
-
-            //echo "<div class='inner-text $color_class'>";
-
-            $match = in_array($cellB->getValue(), $array);
-
-            if ($cellB->getValue() == 'Tag Number') {
-                echo "<strong class='neutral-tag'>" . $cellB->getValue() . "</strong>";
-            } else {
+                $tag_array[] = $cellB->getValue();
+    
+    
+                $match = in_array($cellB->getValue(), $array);
                 $tagClass = $match ? "match-tag" : "miss-tag";
                 $descClass = $match ? "match-desc" : "miss-desc";
                 echo "<div class='$tagClass excel-info $color_class'>" . $row_number . " . &nbsp; " . $cellB->getValue() . "</div>";
-
+            }
+            if (!is_null($cell_array['Descr'])) {
+                $cellH = $worksheet->getCell(substr($cell_array['Descr'], 0, $sizes['Descr']) . $row->getRowIndex());
                 $desc = $cellH->getValue();
                 $disc_arr[] = $desc;
                 echo "<div class='$descClass excel-info $color_class'>" . $desc . "</div>";
-
+            }
+            if (!is_null($cell_array['Serial ID'])) {
+                $cellI = $worksheet->getCell(substr($cell_array['Serial ID'], 0, $sizes['Serial ID']) . $row->getRowIndex());
                 $sn = $cellI->getValue() ?? "EMPTY";
                 $sn_arr[] = $sn;
                 echo "<div class='excel-info $color_class'>" . $sn . "</div>";
-
+            }
+            if (!is_null($cell_array['Location'])) {
+                $cellJ = $worksheet->getCell(substr($cell_array['Location'], 0, $sizes['Location']) . $row->getRowIndex());
                 $loc = $cellJ->getValue() ?? "EMPTY";
                 $loc_arr[] = $loc;
                 echo "<div class='excel-info $color_class'>" . $loc . "</div>";
-
-                /*
-                $po = $cellN->getValue() ?? "EMPTY";
-                $po_arr[] = $po;
-                echo "<div class='excel-info $color_class'>" . $po . "</div>";
-                 */
+            }
+            if (!is_null($cell_array['Custodian Deptid'])) {
+                $cellN = $worksheet->getCell(substr($cell_array['Custodian Deptid'], 0, $sizes['Custodian Deptid']) . $row->getRowIndex());
                 $dept = $cellN->getValue() ?? "EMPTY";
                 $dept_arr[] = $dept;
                 echo "<div class='excel-info $color_class'>" . $dept . "</div>";
-
+            }
+            if (!is_null($cell_array['COST Total Cost'])) {
+                $cellAA = $worksheet->getCell(substr($cell_array['COST Total Cost'], 0, $sizes['COST Total Cost']) . $row->getRowIndex());
                 $cost = $cellAA->getValue() ?? "EMPTY";
                 $cost_arr[] = $cost;
                 echo "<div class='excel-info $color_class'>$" . $cost . "</div>";
 
-            }
-            //echo "</div>";
-
-
+            } 
             $row_number++;
         }
         echo "</div></section>";
-
+       
 
     }
+    
 
 
 
@@ -884,7 +846,10 @@ if (isset($filePath)) {
 <?php
 }
 ?>
-<script>
+<?php
+
+?>
+   <script>
 
 function addNewInput() {
     // Create the div and input
@@ -971,6 +936,15 @@ function doNotReload(event) {
 
     })
 }
+function changeBoxSize(box_size) {
+    var resize = document.querySelectorAll('.excel-info');
+    console.log(box_size, resize.length);
+    
+    resize.forEach(el => {
+        el.style.minWidth = box_size;
+        console.log(el, "sefaef", box_size)
+    });
+}
 /*
     window.addEventListener("load", function () {
     addNewInput();
@@ -978,4 +952,11 @@ function doNotReload(event) {
  */
 
 </script>
+<?php
+    if ($column_count == 4) {
+        echo "<script>changeBoxSize('11vw');</script>";
+    } else if ($column_count == 5){
+        echo "<script>changeBoxSize('10vw');</script>";
+    }
+        ?>
 </body>
