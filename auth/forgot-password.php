@@ -1,5 +1,6 @@
 <?php
 include_once("../navbar.php");
+require_once("../config.php");
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
