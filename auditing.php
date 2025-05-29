@@ -76,6 +76,7 @@ if (isset($_POST['create'])) {
                 $sheet->setCellValue('G' . $row_index, $loc[$i]);
                 $sheet->setCellValue('H' . $row_index, $dept[$i]);
                 $sheet->setCellValue('I' . $row_index, $cost[$i]);
+                $sheet->setCellValue('J' . $row_index, $cost[$i]);
                 $i++;
                 $row_index++;
             }
@@ -89,9 +90,9 @@ if (isset($_POST['create'])) {
                         $sheet->setCellValue('D' . $i + 2, $previous_times[$j]);
                         break;
                     } else if ($i == sizeof($old_tags) - 1) {
-                        $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
-                        $sheet->setCellValue('K' . $h_row, $previous_notes[$j]);
-                        $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
+                        $sheet->setCellValue('L' . $h_row, $previous_inputs[$j]);
+                        $sheet->setCellValue('M' . $h_row, $previous_notes[$j]);
+                        $sheet->setCellValue('N' . $h_row++, $previous_times[$j]);
                     }
                 }
             }
@@ -101,9 +102,9 @@ if (isset($_POST['create'])) {
             if (!$empty_scan) {
                 $h_row=2;
                 for ($j = 0; $j < sizeof($previous_inputs); $j++) {
-                    $sheet->setCellValue('J' . $h_row, $previous_inputs[$j]);
-                    $sheet->setCellValue('K' . $h_row, $previous_notes[$j]);
-                    $sheet->setCellValue('L' . $h_row++, $previous_times[$j]);
+                    $sheet->setCellValue('L' . $h_row, $previous_inputs[$j]);
+                    $sheet->setCellValue('M' . $h_row, $previous_notes[$j]);
+                    $sheet->setCellValue('N' . $h_row++, $previous_times[$j]);
                 }
             }
         }
@@ -141,11 +142,11 @@ include_once("navbar.php");
         body::-webkit-scrollbar {
             width: 1em;
         }
-        
+
         body::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
         }
-        
+
         body::-webkit-scrollbar-thumb {
             background-color: darkgrey;
             outline: 1px solid slategrey;
@@ -156,7 +157,7 @@ include_once("navbar.php");
             text-align: center;
         }
 
-      
+
         #showExcel {
 
             margin:auto;
@@ -168,7 +169,7 @@ include_once("navbar.php");
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 9vw;
+            min-width: 7vw;
             max-width: 20vw;
             flex: 1;
             justify-content: center;
@@ -318,11 +319,11 @@ include_once("navbar.php");
         .show-tags::-webkit-scrollbar {
             width: 1em;
         }
-        
+
         .show-tags::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
         }
-        
+
         .show-tags::-webkit-scrollbar-thumb {
             background-color: darkgrey;
             outline: 1px solid slategrey;
@@ -415,7 +416,7 @@ include_once("navbar.php");
             text-align: center;
         }
         .row-4rols {
-           
+
         }
     </style>
 
@@ -470,20 +471,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     // Move the uploaded file to the specified path
     if (move_uploaded_file($fileTmpPath, $filePath)) {
-        // Return the file path after successful upload
-        echo "File uploaded successfully.";
     } else {
         echo "Error uploading file.";
     }
-} else {
-}
-
+} 
+/*
 if (isset($_POST['filePath'])) {
     $filePath = $_POST['filePath'];
 }
+    */
 
 if (isset($filePath)) {
-
     try {
         $spreadsheet = IOFactory::load($filePath);
 
@@ -563,7 +561,7 @@ if (isset($filePath)) {
                     unset($pNewNotes[$key]);
                 }
             }
-         
+
             $pNewInputs = array_values($pNewInputs);
             $pNewTimes = array_values($pNewTimes);
             $pNewNotes = array_values($pNewNotes);
@@ -617,14 +615,14 @@ if (isset($filePath)) {
         // GET HEADERS STARTING AT ROW 2
         // TAG NUMBER
         $cell_array = [];
-        $headers = ['Tag Number','Descr', 'Serial ID', 'Location','Custodian Deptid', 'COST Total Cost'];
+        $headers = ['Tag Number','Descr', 'Serial ID', 'Location', 'Dept', 'COST Total Cost', 'PO No.'];
         $count = 0;
 
         for ($row = 1; $row <= 4; $row++) {
             foreach (range('A', 'ZZ') as $columnID) {
                 $cell = $columnID . $row;
                 $cell_value = $worksheet->getCell($columnID . $row)->getValue();
-                
+
                 // If this cell value is in your $headers array
                 if (in_array($cell_value, $headers)) {
                     $column_headers[] = $cell_value;
@@ -641,14 +639,14 @@ if (isset($filePath)) {
                         $cell_array[$cell_value2] = $cell2;
                         $count++;
                     }
-                if ($count == 6) {
-                    $column_headers = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost"];
+                if ($count == 7) {
+                    $column_headers = ["Tag Number", "Description", "Serial Number", "Location", "Dept ID", "Cost", "PO"];
                     break;
                 }
-                if ($count == 6) break;
+                if ($count == 7) break;
                 }
             }
-            if ($count == 6) break;
+            if ($count == 7) break;
         }
     }
 
@@ -671,15 +669,15 @@ if (isset($filePath)) {
         echo "<section id='showExcel'>";
         echo "<div class='row'>";
         $offset = substr($cell_array['Tag Number'], 1 ,1) + 1;
-      
+
         $column_count = 0;
         foreach ($cell_array as $key => $values) {
             $sizes[$key] = strlen($values)-1;
             $column_count++;
         }
-        
-        
-    
+
+
+
         foreach ($worksheet->getRowIterator($offset) as $row) {
             if ($row_number == 1) {
                 if (!is_null($cell_array['Tag Number'])) {
@@ -694,22 +692,26 @@ if (isset($filePath)) {
                 if (!is_null($cell_array['Location'])) {
                     echo "<div class='excel-info'><strong>Location</strong> </div>";
                 }
-                if (!is_null($cell_array['Custodian Deptid'])) {
+                
+                if (!is_null($cell_array['Dept'])) {
                     echo "<div class='excel-info'><strong>Dept ID</strong> </div>";
                 }
                 if (!is_null($cell_array['COST Total Cost'])) {
-                    echo "<div class='excel-info'><strong>Cost</strong> </div>";    
-                } 
-            } 
-            
+                    echo "<div class='excel-info'><strong>Cost</strong> </div>";
+                }
+                if (!is_null($cell_array['PO No.'])) {
+                    echo "<div class='excel-info'><strong>PO</strong> </div>";
+                }
+            }
+
             if (!is_null($cell_array['Tag Number'])) {
 
                 $cellB = $worksheet->getCell(substr($cell_array['Tag Number'], 0, $sizes['Tag Number']) . $row->getRowIndex());
                 $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
 
                 $tag_array[] = $cellB->getValue();
-    
-    
+
+
                 $match = in_array($cellB->getValue(), $array);
                 $tagClass = $match ? "match-tag" : "miss-tag";
                 $descClass = $match ? "match-desc" : "miss-desc";
@@ -733,8 +735,8 @@ if (isset($filePath)) {
                 $loc_arr[] = $loc;
                 echo "<div class='excel-info $color_class'>" . $loc . "</div>";
             }
-            if (!is_null($cell_array['Custodian Deptid'])) {
-                $cellN = $worksheet->getCell(substr($cell_array['Custodian Deptid'], 0, $sizes['Custodian Deptid']) . $row->getRowIndex());
+            if (!is_null($cell_array['Dept'])) {
+                $cellN = $worksheet->getCell(substr($cell_array['Dept'], 0, $sizes['Dept']) . $row->getRowIndex());
                 $dept = $cellN->getValue() ?? "EMPTY";
                 $dept_arr[] = $dept;
                 echo "<div class='excel-info $color_class'>" . $dept . "</div>";
@@ -745,14 +747,21 @@ if (isset($filePath)) {
                 $cost_arr[] = $cost;
                 echo "<div class='excel-info $color_class'>$" . $cost . "</div>";
 
-            } 
+            }
+            if (!is_null($cell_array['PO No.'])) {
+                $po_cell = $worksheet->getCell(substr($cell_array['PO No.'], 0, $sizes['PO No.']) . $row->getRowIndex());
+                $po = $po_cell->getValue() ?? "EMPTY";
+                $po_arr[] = $po;
+                echo "<div class='excel-info $color_class'>" . $po . "</div>";
+
+            }
             $row_number++;
         }
         echo "</div></section>";
-       
+
 
     }
-    
+
 
 
 
@@ -939,7 +948,7 @@ function doNotReload(event) {
 function changeBoxSize(box_size) {
     var resize = document.querySelectorAll('.excel-info');
     console.log(box_size, resize.length);
-    
+
     resize.forEach(el => {
         el.style.minWidth = box_size;
         console.log(el, "sefaef", box_size)
@@ -953,10 +962,16 @@ function changeBoxSize(box_size) {
 
 </script>
 <?php
-    if ($column_count == 4) {
+    if ($count == 4) {
         echo "<script>changeBoxSize('11vw');</script>";
-    } else if ($column_count == 5){
+        echo "<h1>".$column_count."</h1>";
+
+    } else if ($count == 5) {
         echo "<script>changeBoxSize('10vw');</script>";
+    } else if ($count === 6) {
+
+        echo "<script>changeBoxSize('9vw');</script>";
     }
+
         ?>
 </body>
