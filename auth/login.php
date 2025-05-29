@@ -1,6 +1,7 @@
 <?php
+error_reporting(0);
 include_once("../navbar.php");
-require_once("../config.php");
+include_once("../config.php");
  ?>
 
  <?php
@@ -28,11 +29,12 @@ require_once("../config.php");
                     $stmt = $dbh->prepare($stmt);
                     if ($stmt->execute([$id])) {
                         error_log("Error updating last_login");
+                    } else {
+                        header("location https://dataworks-7b7x.onrender.com/index.php");
                     }
                 }
             }
             $stmt = NULL;
-            
         } else {
             $err = "Invalid email or password";
         }
@@ -173,7 +175,7 @@ require_once("../config.php");
                 <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return validateForm()">
                     <label id="form-label" for="email">Email Address</label>
                     <input class="formAtt" type="text" name="email" id="email" placeholder="example@csub.edu" onblur="validateEmail()" required>
-                    <div id="err_email" style="color:red;"></div>
+                    <div id="err_email" style="color:red;"><?php $err?></div>
 
                     <br>
                     <label id="form-label" for="pw">Password</label>
@@ -224,3 +226,4 @@ require_once("../config.php");
     </script>                                                                                                       
 </body>
 </html>
+
