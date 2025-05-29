@@ -10,7 +10,7 @@ require_once("../config.php");
         $pw = $_POST['pw'] ?? "";
         if (!empty($email) && !empty($pw)) {
             
-            $stmt = "SELECT email, pw, id, role FROM user_table WHERE email = ?";
+            $stmt = "SELECT email, pw, id, u_role FROM user_table WHERE email = ?";
             $stmt = $dbh->prepare($stmt);
             if (!($stmt->execute([$email]))) {
                 $err = "Error getting info" . $stmt->errorInfo()[2];
@@ -21,7 +21,8 @@ require_once("../config.php");
                         session_start();
                     }
                     $_SESSION['id'] = $user_check['id'];
-                    $_SESSION['role'] = $user_check['role'];
+                    $_SESSION['email'] = $user_check['email'];
+                    $_SESSION['role'] = $user_check['u_role'];
 
                     $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
                     $stmt = $dbh->prepare($stmt);
