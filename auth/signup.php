@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = $_POST['role'] ?? ''; 
 
     if (!empty($username)) {
-         /*
+         
             $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
             $stmt = $dbh->prepare($stmt);
             if ($stmt->execute([$username, $email])) {
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $err = 1;
                 } 
             }
-                 */ 
+                
     } 
 
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     if (!empty($deptid)) {
-        /*
+        
         $stmt = "SELECT distinct deptid FROM user_table where deptid = ?";
         $stmt = $dbh->prepare($stmt);
         $stmt->execute([$deptid]);
@@ -50,10 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $dept_err = "Department does not exist";
             $err = 1;
         }
-*/
+
     }
     if (!$err) {
-        /*
+        
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name) 
         VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (PDOException $e) {
             error_log($e->getMessage());
         }
-        */
+        
     }
 
 }
