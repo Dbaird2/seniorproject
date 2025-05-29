@@ -58,7 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
-            $stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]);
+            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
+                header("location: https://datawork-7b7x.onrender.com");
+            }
         } catch (PDOException $e) {
             error_log($e->getMessage());
         }

@@ -30,7 +30,7 @@ include_once("../config.php");
                     if ($stmt->execute([$id])) {
                         error_log("Error updating last_login");
                     } else {
-                        header("location https://dataworks-7b7x.onrender.com/index.php");
+                        header("Location: https://dataworks-7b7x.onrender.com/index.php");
                     }
                 }
             }
@@ -226,4 +226,3 @@ include_once("../config.php");
     </script>                                                                                                       
 </body>
 </html>
-
