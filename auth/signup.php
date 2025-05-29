@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     if (!empty($deptid)) {
         
-        $stmt = "SELECT distinct deptid FROM user_table where deptid = ?";
+        $stmt = "SELECT distinct dept_id FROM user_table where dept_id = ?";
         $stmt = $dbh->prepare($stmt);
         $stmt->execute([$deptid]);
         if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $dbh->prepare($stmt);
         try {
             if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
-                header("location: https://datawork-7b7x.onrender.com");
+                header("Location: https://datawork-7b7x.onrender.com");
             }
         } catch (PDOException $e) {
             error_log($e->getMessage());
