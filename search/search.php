@@ -1,9 +1,19 @@
 <?php
 include_once("config.php");
-include_once ("navbar.php");
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Search using AJAX</title>
+  <!-- Including jQuery is required. -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <!-- Including our scripting file. -->
+  <script type="text/javascript" src="script.js"></script>
+  <!-- Including CSS file. -->
+</head>
 <style>
-    .asset-search {
+
+.asset-search {
         margin-top: 2vh;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         background-color: white;
@@ -61,8 +71,10 @@ include_once ("navbar.php");
         box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     }
 </style>
+<body>
+<!-- Search box. -->
 <div class="asset-search">
-            <input class="search-input" type="text" name="search" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <input class="search-input" type="text" name="search" id="search" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
             <select class="filter-select" name="categories" id="categories">
                 <option value="all">All Categories</option>
                 <option value="electronics">Electronics</option>
@@ -76,3 +88,9 @@ include_once ("navbar.php");
                 </select>
             <button class="search-button" onclick="performSearch()">Search</button>
         </div>
+  <br>
+  <br />
+  <!-- Suggestions will be displayed in below div. -->
+  <div id="display"></div>
+</body>
+</html>
