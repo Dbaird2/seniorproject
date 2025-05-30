@@ -22,11 +22,11 @@ if (isset($_SESSION['id'])) {
     <a href="https://dataworks-7b7x.onrender.com/auditing.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Start an Audit</a>
     <a href="https://dataworks-7b7x.onrender.com/search_asset.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Search Assets</a>
     <a href="https://dataworks-7b7x.onrender.com/change_asset_tag.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Change Asset Tags</a>
-    <a href="https://dataworks-7b7x.onrender.com/auth/login.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Login</a>
+    <a href="https://dataworks-7b7x.onrender.com/auth/logout.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Logout</a>
 <?php
 } else {
 ?>
-    <a href="https://dataworks-7b7x.onrender.com/auth/logout.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Logout</a>
+    <a href="https://dataworks-7b7x.onrender.com/auth/login.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Login</a>
 <?php
 }
 if (isset($_SESSION['id']) && $_SESSION['id'] === 'admin') {

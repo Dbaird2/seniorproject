@@ -1,9 +1,9 @@
 <?php
 error_reporting(0);
 include_once("../config.php");
- ?>
-
- <?php
+if (isset($_SESSION['email']) {
+    header("location: https://dataworks-7b7x.onrender.com/index.php");
+}
  $email_err = $pw_err = $err = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST['email'] ?? "";
@@ -27,9 +27,9 @@ include_once("../config.php");
                     $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
                     $stmt = $dbh->prepare($stmt);
                     if ($stmt->execute([$id])) {
-                        header("Location: https://dataworks-7b7x.onrender.com/index.php");
+                        header("location: https://dataworks-7b7x.onrender.com/index.php");
                     } else {
-                        error_log("Error updating last_login");
+                        error_log("Error updating last_login" . $stmt->errorInfo());
                     }
                 }
             }
