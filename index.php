@@ -5,10 +5,9 @@ if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';
     $query = "SELECT * FROM asset_info
-        WHERE date_added < NOW() - INTERVAL '1 week'
         ORDER BY date_added DESC LIMIT 10";
 
-    $user_query = "SELECT * FROM user_table ORDER BY last_login DESC LIMIT 5";
+    $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'yyyy-MM-dd hh:mm:ss') FROM user_table ORDER BY last_login DESC LIMIT 5";
 
     $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
@@ -270,15 +269,15 @@ if (isset($_SESSION['email'])) {
             <div class="head-bot">
             
                 <div class="small-box">
-                    <span class="small-box-text"><?php $asset_count['total_assets'] ?>0<br></span>
+                    <span class="small-box-text"><?= $asset_count['total_assets'] ?><br></span>
                     <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Total Assets</strong></span>
                 </div>
                 <div class="small-box">
-                    <span class="small-box-text"><?php $weekly_changes['weekly_changes'] ?>0<br></span>
+                    <span class="small-box-text"><?= $weekly_changes['weekly_changes'] ?><br></span>
                     <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Weekly Change(s)</strong></span>
                 </div>
                 <div class="small-box">
-                    <span class="small-box-text"><?php $weekly_adds['weekly_adds'] ?>0<br></span>
+                    <span class="small-box-text"><?= $weekly_adds['weekly_adds'] ?><br></span>
                     <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Weekly Add(s)</strong></span>
                 </div>
             </div>
@@ -338,7 +337,7 @@ if (isset($_SESSION['email'])) {
                 <div class="recent-activity">
                     <h3>Recent Activity</h3>               
 <?php
-    $row = 0;
+    $row = 1;
         foreach ($users as $key => $user) {
 ?>
                     <div class="login-activity"><?=$row?>. User <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in as <?= $user['last_login'] ?></div>                
