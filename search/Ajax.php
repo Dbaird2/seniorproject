@@ -1,5 +1,5 @@
 <?php
-include_once "config.php";
+include_once "../config.php";
 
 if (isset($_POST['search'])) {
     $tag = $_POST['search'];
