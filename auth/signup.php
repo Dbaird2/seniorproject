@@ -65,11 +65,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     if (!$err) {
         
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?);";
+        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name) 
+        VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
-            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
+            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name]))) {
                 header("Location: https://datawork-7b7x.onrender.com");
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
