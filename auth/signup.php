@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $err = 1;
             } else {
                 $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($user_check) {
+                if ($user_check > 0) {
                     if ($user_check['username'] === $username) {
                         $user_err = "Username or Email already exists";
                         $err = 1;
