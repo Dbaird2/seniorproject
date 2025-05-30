@@ -5,14 +5,14 @@ if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';
     $query = "SELECT * FROM asset_info
-        WHERE date_added < NOW() - INTERVAL 1 WEEK
+        WHERE date_added < NOW() - INTERVAL '1 week'
         ORDER BY date_added DESC LIMIT 5";
 
     $user_query = "SELECT * FROM user_table ORDER BY last_login DESC LIMIT 5";
 
     $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
-    $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE timestamp >= NOW() - INTERVAL 1 WEEK";
+    $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE timestamp >= NOW() - INTERVAL '1 week'";
 
         $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
     try {
