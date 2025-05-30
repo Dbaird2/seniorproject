@@ -29,4 +29,4 @@ EXPOSE 8080
 
 # Command to start the PHP built-in server
 # CMD ["php", "-S", "0.0.0.0:10000", "-t", "."]
-CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t public"]
+CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t ."]
