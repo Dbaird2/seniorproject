@@ -12,7 +12,7 @@ if (isset($_SESSION['email'])) {
 
     $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
-    $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE timestamp >= NOW() - INTERVAL '1 week'";
+    $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
 
         $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
     try {
