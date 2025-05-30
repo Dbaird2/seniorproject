@@ -64,8 +64,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     if (!$err) {
         
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name) 
-        VALUES (?, ?, ?, ?, ?, ?);";
+        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
             if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
@@ -409,7 +409,7 @@ include_once("../navbar.php");
                     <div id="err_msg" style="color:red;"></div>
 
                     <label id="form-label" for="deptid">Department ID</label>
-                    <input class="formAtt" type="text" name="deptid" id="deptid" placeholder="D20106" onblur="validateDept()" required>
+                    <input class="formAtt" type="text" name="deptid" id="deptid" placeholder="Ex: D20106" onblur="validateDept()" required>
                     <?php echo "<label style='color:red; text-align: center;'> $dept_err </label>"; ?>
                     <div id="dept_err" style="color:red;"></div>
 

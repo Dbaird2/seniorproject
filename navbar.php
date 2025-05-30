@@ -29,7 +29,7 @@ if (isset($_SESSION['id'])) {
     <a href="https://dataworks-7b7x.onrender.com/auth/login.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Login</a>
 <?php
 }
-if (isset($_SESSION['id']) && $_SESSION['id'] === 'admin') {
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
 ?>
     <a href="https://dataworks-7b7x.onrender.com/auth/signup.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Signup</a>
 <?php
