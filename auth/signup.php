@@ -2,6 +2,11 @@
 include_once("../navbar.php");
 require_once("../config.php");
 
+ini_set('display_error', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+
 $err = 0;
 $user_err = $email_err = $f_name_err = $l_name_err = '';
 $pw_err = $cpw_err = $dept_err = '';
@@ -19,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          
             $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
             $stmt = $dbh->prepare($stmt);
-            if ($stmt->execute([$username, $email])) {
+            if (!($stmt->execute([$username, $email]))) {
                 echo "<p> Error with database </p>";
                 $err = 1;
             } else {
