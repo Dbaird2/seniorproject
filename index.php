@@ -4,7 +4,7 @@ session_start();
 if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';
-    $query = "SELECT * FROM asset_info
+    $query = "SELECT * FROM asset_info NATURAL JOIN room_table
         ORDER BY date_added DESC LIMIT 10";
 
     $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as last_login FROM user_table ORDER BY last_login DESC LIMIT 5";
@@ -304,7 +304,7 @@ if (isset($_SESSION['email'])) {
                 <div class="asset-item asset-even asset-header">
                     <div class="asset-id">Asset Tag</div>
                     <div class="asset-status">Asset Name</div>
-                    <div class="asset-category">Category</div>
+                    <div class="asset-category">Asset Type</div>
                     <div class="asset-location">In Room Tag</div>
                     <div class="asset-price">Price</div>
                     <div class="asset-price">Department</div>
@@ -316,7 +316,7 @@ if (isset($_SESSION['email'])) {
                 <div class="asset-item asset-odd">
                     <div class="asset-id"><?= $asset['asset_tag'] ?></div>
                     <div class="asset-status"><?= $asset['asset_name'] ?></div>
-                    <div class="asset-category"><?= $asset['category'] ?></div>
+                    <div class="asset-category"><?= $asset['asset_type'] ?></div>
                     <div class="asset-location"><?= $asset['room_tag'] ?></div>
                     <div class="asset-price">$<?= $asset['asset_price'] ?></div>
                     <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
