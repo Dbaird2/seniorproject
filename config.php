@@ -16,9 +16,6 @@ try {
     $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, array());
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     session_start();
-    echo "<pre>";
-    print_r($_SESSION);
-    echo "</pre>";
 } catch (PDOException $e) {
     error_log($e->getMessage());
 } 

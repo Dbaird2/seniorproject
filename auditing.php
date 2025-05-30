@@ -1,5 +1,6 @@
 <?php
 error_reporting(0);
+include_once("config.php");
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
