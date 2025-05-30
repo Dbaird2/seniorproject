@@ -66,11 +66,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!$err) {
         
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
-        VALUES (?, ?, ?, ?, ?, ?);";
+        VALUES (?, ?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
             if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
                 header("Location: https://datawork-7b7x.onrender.com");
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                    $_SESSION['email'] = $email;
+                    $_SESSION['role'] = $role;
+                }
             }
         } catch (PDOException $e) {
             error_log($e->getMessage());
