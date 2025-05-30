@@ -1,5 +1,4 @@
 <?php
-include_once("../navbar.php");
 require_once("../config.php");
 
 ini_set('display_error', '1');
@@ -84,6 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 }
+include_once("../navbar.php");
 
 ?>
     <meta charset="UTF-8">
