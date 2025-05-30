@@ -11,7 +11,7 @@ $err = 0;
 $user_err = $email_err = $f_name_err = $l_name_err = '';
 $pw_err = $cpw_err = $dept_err = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
+    $user_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
     $email_err = (($email = $_POST['email'] ?? '') != '') ? "" : "Empty Email Field";
     $f_name = $_POST['f_name'] ?? '';
     $l_name = $_POST['l_name'] ?? '';
@@ -29,7 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $err = 1;
             } else {
                 $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($user_check) {
+                if ($user_check['username'] === $_POST['username']) {
+                    $user_err = "Username or Email already exists";
+                    $err = 1;
+                } 
+                if ($user_check['email'] === $_POST['email']) {
                     $user_err = "Username or Email already exists";
                     $err = 1;
                 } 
@@ -59,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     if (!$err) {
         
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name) 
+        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
         VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
@@ -374,12 +378,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <form id="singup-form" method="post" action="signup.php" oninput="validateForm()" onblur="return validateForm()" >
                     <label id="form-label" for="username">Username</label>
                     <input class="formAtt" type="text" name="username" id="username" placeholder="Choose a username" onblur="validateUsername()" required>
-                    <?php echo "<label style='color:red; text-align: center;'> $user_err </label>"; ?>
+                    <?php echo "<label style='color:red; text-align: center;'>". $user_err ."</label>"; ?>
                     <div id="err_user" style="color:red;font-size:1.1vh;"></div>
 
                     <label id="form-label" for="email">Email Address</label>
                     <input class="formAtt" type="text" name="email" id="email" placeholder="example@csub.edu" onblur="validateEmail()" required>
-                    <?php echo "<label style='color:red; text-align: center;'> $user_err </label>"; ?>
+                    <?php echo "<label style='color:red; text-align: center;'>". $user_err ."</label>"; ?>
                     <div id="err_email" style="color:red;"></div>
 
 
