@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+error_reporting(0);
 if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';

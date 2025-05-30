@@ -1,4 +1,5 @@
 <?php
+include_once("../navbar.php");
 session_destroy();
 session_unset();
 
