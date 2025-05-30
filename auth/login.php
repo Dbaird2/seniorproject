@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include_once("../config.php");
-if (isset($_SESSION['email']) {
+if (isset($_SESSION['email'])) {
     header("location: https://dataworks-7b7x.onrender.com/index.php");
 }
  $email_err = $pw_err = $err = "";
