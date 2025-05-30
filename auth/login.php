@@ -1,6 +1,5 @@
 <?php
 error_reporting(0);
-include_once("../navbar.php");
 include_once("../config.php");
  ?>
 
@@ -28,9 +27,9 @@ include_once("../config.php");
                     $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
                     $stmt = $dbh->prepare($stmt);
                     if ($stmt->execute([$id])) {
-                        error_log("Error updating last_login");
-                    } else {
                         header("Location: https://dataworks-7b7x.onrender.com/index.php");
+                    } else {
+                        error_log("Error updating last_login");
                     }
                 }
             }
@@ -40,6 +39,7 @@ include_once("../config.php");
         }
 
     }
+include_once("../navbar.php");
  ?>
 
     <meta charset="UTF-8">

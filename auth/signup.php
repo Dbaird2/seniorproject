@@ -68,8 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
         try {
-            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name]))) {
-                header("Location: https://datawork-7b7x.onrender.com/index.php");
+            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
+                header("Location: https://dataworks-7b7x.onrender.com/index.php");
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                     $_SESSION['email'] = $email;
@@ -416,9 +416,10 @@ include_once("../navbar.php");
                     <label id="form-label" for="role">User Role</label>
              
                     <select class="select" name="role" id="role">
+                        <option value="user">User</option>
                         <option value="custodian">Custodian</option>
                         <option value="management">Management</option>
-                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
                     </select>
 
                     <button id="btn" class="button-58" type="submit" role="button" oninput="validateForm()">Create Account</button>
