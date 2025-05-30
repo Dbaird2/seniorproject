@@ -6,7 +6,7 @@ if (isset($_SESSION['email'])) {
     include_once 'navbar.php';
     $query = "SELECT * FROM asset_info
         WHERE date_added < NOW() - INTERVAL '1 week'
-        ORDER BY date_added DESC LIMIT 5";
+        ORDER BY date_added DESC LIMIT 10";
 
     $user_query = "SELECT * FROM user_table ORDER BY last_login DESC LIMIT 5";
 
@@ -14,7 +14,7 @@ if (isset($_SESSION['email'])) {
 
     $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
 
-        $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
+    $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
     try {
         $stmt = $dbh->prepare($query);
         $stmt_user = $dbh->prepare($user_query);
@@ -301,100 +301,30 @@ if (isset($_SESSION['email'])) {
         </div>
         <div class="recent-asset-change">
             <div class="recent-assets">
-                <?php
-                    // REPLACE TAG, STATUS, ETC WITH $assets[0]['asset_tag'], 
-                    // $assets[0]['status'], ETC WHEN DB DATA IS AVAILABLE
-                ?>
                 <h3>Recent Asset Additions</h3>
                 <div class="asset-item asset-even asset-header">
                     <div class="asset-id">Asset Tag</div>
-                    <div class="asset-status">Status</div>
+                    <div class="asset-status">Asset Name</div>
                     <div class="asset-category">Category</div>
-                    <div class="asset-location">Location</div>
+                    <div class="asset-location">In Room Tag</div>
                     <div class="asset-price">Price</div>
                     <div class="asset-price">Department</div>
 
                 </div>
+<?php
+    foreach ($assets as $key => $asset) {
+?>
                 <div class="asset-item asset-odd">
-                    <div class="asset-id"><?php $assets[0]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[0]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[0]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[0]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[0]['asset_price'] ?>$500</div>
-                    <div class="asset-deptid"><?php $assets[0]['deptid'] ?>Bob</div>
+                    <div class="asset-id"><?= $asset['asset_tag'] ?></div>
+                    <div class="asset-status"><?= $asset['asset_name'] ?></div>
+                    <div class="asset-category"><?= $asset['category'] ?></div>
+                    <div class="asset-location"><?= $asset['room_tag'] ?></div>
+                    <div class="asset-price">$<?= $asset['asset_price'] ?></div>
+                    <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
                 </div>
-                <div class="asset-item asset-even">
-                    <div class="asset-id"><?php $assets[1]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[1]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[1]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[1]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[1]['asset_price'] ?>$500</div>
-                    <div class="asset-price"><?php $assets[1]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?php $assets[2]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[2]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[2]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[2]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[2]['asset_price'] ?>$500</div>
-                    <div class="asset-deptid"><?php $assets[2]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-even">
-                    <div class="asset-id"><?php $assets[3]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[3]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[3]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[3]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[3]['asset_price'] ?>$500</div>
-                    <div class="asset-price"><?php $assets[3]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?php $assets[4]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[4]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[4]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[4]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[4]['asset_price'] ?>$500</div>
-                    <div class="asset-deptid"><?php $assets[4]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-even">
-                    <div class="asset-id"><?php $assets[5]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[5]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[5]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[5]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[5]['asset_price'] ?>$500</div>
-                    <div class="asset-price"><?php $assets[5]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?php $assets[6]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[6]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[6]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[6]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[6]['asset_price'] ?>$500</div>
-                    <div class="asset-deptid"><?php $assets[6]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-even">
-                    <div class="asset-id"><?php $assets[7]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[7]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[7]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[7]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[7]['asset_price'] ?>$500</div>
-                    <div class="asset-price"><?php $assets[7]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?php $assets[8]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[8]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[8]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[8]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[8]['asset_price'] ?>$500</div>
-                    <div class="asset-deptid"><?php $assets[8]['deptid'] ?>Bob</div>
-                </div>
-                <div class="asset-item asset-even">
-                    <div class="asset-id"><?php $assets[9]['asset_tag'] ?>67890</div>
-                    <div class="asset-status"><?php $assets[9]['status'] ?>Disposed</div>
-                    <div class="asset-category"><?php $assets[9]['category'] ?>Electronics</div>
-                    <div class="asset-location"><?php $assets[9]['asset_loc'] ?>Warehouse A</div>
-                    <div class="asset-price"><?php $assets[9]['asset_price'] ?>$500</div>
-                    <div class="asset-price"><?php $assets[9]['deptid'] ?>Bob</div>
-                </div>
+<?php
+    }
+?>
                 
             </div>
             <div class="activity">
@@ -407,11 +337,15 @@ if (isset($_SESSION['email'])) {
                 </div>
                 <div class="recent-activity">
                     <h3>Recent Activity</h3>               
-                    <div class="login-activity">1. User Donald Trump logged in {TIMESTAMP HERE}</div>  
-                    <div class="login-activity">2. User Donald Trump logged in {TIMESTAMP HERE}</div>
-                    <div class="login-activity">3. User Donald Trump logged in {TIMESTAMP HERE}</div>
-                    <div class="login-activity">4. User Donald Trump logged in {TIMESTAMP HERE}</div>
-                    <div class="login-activity">5. User Donald Trump logged in {TIMESTAMP HERE}</div>                
+<?php
+    $row = 0;
+        foreach ($users as $key => $user) {
+?>
+                    <div class="login-activity"><?=$row?>. User <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in as <?= $user['last_login'] ?></div>                
+<?php
+            $row++;
+        }
+?>
                 </div>
             </div>
 
