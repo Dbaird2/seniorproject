@@ -355,6 +355,6 @@ if (isset($_SESSION['role'])) {
 </html>
 <?php
 } else {
-    //header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
+    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit();
 }
