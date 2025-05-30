@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     if (!empty($deptid)) {
         
-        $stmt = "SELECT distinct dept_id FROM user_table where dept_id = ?";
+        $stmt = "SELECT distinct dept_id FROM department where dept_id = ?";
         $stmt = $dbh->prepare($stmt);
         $stmt->execute([$deptid]);
         if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
