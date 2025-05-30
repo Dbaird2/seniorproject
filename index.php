@@ -1,8 +1,8 @@
 <?php
 error_reporting(0);
 require_once 'config.php';
-include_once 'navbar.php';
 if (isset($_SESSION['role'])) {
+include_once 'navbar.php';
     $query = "SELECT * FROM asset_info NATURAL JOIN room_table
         ORDER BY date_added DESC LIMIT 10";
 
