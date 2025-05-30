@@ -4,9 +4,9 @@ session_start();
 if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';
-    $query = "SELECT * FROM asset_info join asset_change_view
-        WHERE timestamp < NOW() - INTERVAL 1 WEEK
-        ORDER BY timestamp DESC LIMIT 5";
+    $query = "SELECT * FROM asset_info
+        WHERE date_added < NOW() - INTERVAL 1 WEEK
+        ORDER BY date_added DESC LIMIT 5";
 
     $user_query = "SELECT * FROM user_table ORDER BY last_login DESC LIMIT 5";
 
