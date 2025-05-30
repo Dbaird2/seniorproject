@@ -14,7 +14,7 @@ if (isset($_SESSION['email'])) {
 
     $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE timestamp >= NOW() - INTERVAL 1 WEEK";
 
-        $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM asset_change_view WHERE timestamp >= NOW() - INTERVAL 1 WEEK";
+        $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
     try {
         $stmt = $dbh->prepare($query);
         $stmt_user = $dbh->prepare($user_query);
