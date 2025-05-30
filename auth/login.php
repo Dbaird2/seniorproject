@@ -17,9 +17,6 @@ if (isset($_SESSION['email'])) {
             } else {
                 $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($user_check && password_verify($pw, $user_check['pw'])) {
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
                     $_SESSION['id'] = $user_check['id'];
                     $_SESSION['email'] = $user_check['email'];
                     $_SESSION['role'] = $user_check['u_role'];
