@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $dbh->prepare($stmt);
         try {
             if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name]))) {
-                header("Location: https://datawork-7b7x.onrender.com");
+                header("Location: https://datawork-7b7x.onrender.com/index.php");
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                     $_SESSION['email'] = $email;

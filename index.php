@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (isset($_SESSION['id'])) {
+if (isset($_SESSION['email'])) {
     require_once 'config.php';
     include_once 'navbar.php';
     $query = "SELECT * FROM asset_info join asset_change_view
