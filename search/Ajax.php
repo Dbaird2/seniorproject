@@ -1,3 +1,6 @@
+<?php
+require_once ("../config.php");
+?>
 <style>
      body {
             margin: 0;
