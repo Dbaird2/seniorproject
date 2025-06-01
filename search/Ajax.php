@@ -192,7 +192,7 @@ if (isset($_POST['search'])) {
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
             ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                    <strong><a id="openModalLink"><?= $safe_tag?></a></strong>
+                    <strong><a href="#" id="openModalLink"><?= $safe_tag?></a></strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
