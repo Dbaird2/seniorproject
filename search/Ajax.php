@@ -64,6 +64,78 @@ error_reporting(0);
         .row-odd {
             background-color: #ffffff;
         }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scrolling if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less depending on screen size */
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Style the tab */
+        .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+        }
+
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+        background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+        background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+        }
         </style>
 <?php
 if (isset($_POST['search'])) {
@@ -120,7 +192,7 @@ if (isset($_POST['search'])) {
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
             ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                    <strong><a href="#somewhere.php"><?= $safe_tag?></a></strong>
+                    <strong><a id="openModalLink"><?= $safe_tag?></a></strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
@@ -146,5 +218,61 @@ if (isset($_POST['search'])) {
         echo "</section>";
 
     }
+    ?>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close">&times;</span>
+            <div class="popup-tabs">
+                <button class="tablinks" onclick="changeTabs(event, 'Display')">Item Display</button>
+                <button class="tablinks" onclick="changeTabs(event, 'Change-info')">Change Asset Info</button>
+            </div>
+            <div id="Display" class="tabcontent">
+                <h3>Asset Display</h3>
+                <p>Asset Tag: <?php echo $safe_tag ?></p>
+                <p>Name: <?= $safe_name ?></p>
+                <p>Dept ID: <?= $safe_deptid ?></p>
+                <p>PO: <?=  $safe_po ?></p>
+                <p>Room Tag: <?=  $safe_room ?></p>
+                <p>SN: <?= $safe_serial ?></p>
+                <p>Price: <?=  $safe_price ?></p>
+
+            </div>
+            <div id="Change-info" class="tabcontent">
+                <h3>Change Asset Info</h3>
+                <form action="change_asset_info.php" method="post">
+                    <label for="asset_tag">Asset Tag:</label>
+                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" >
+                    <br>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="in_service">In Service</option>
+                        <option value="disposed">Disposed</option>
+                    </select>
+                    <br>
+                    <label for="name">Asset Name:</label>
+                    <input type="text" id="name" name="name" value="<?= $safe_name ?>" >
+                    <br>
+                   
+                    <label for="deptid">Department ID:</label>
+                    <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" >
+                    <br>
+                    <label for="po">Purchase Order:</label>
+                    <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
+                    <br>
+                    <label for="location">Room Tag:</label>
+                    <input type="text" id="location" name="location" value="<?= $safe_room ?>" >
+                    <br>
+                    <label for="serial">Serial Number:</label>
+                    <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
+                    <br>
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" value="<?= $safe_price ?>">
+                    <br>
+                    <button type="submit">Update Asset</button>
+                </form>
+        </div>
+    </div> 
+    <?php
 }
 ?>

@@ -2,7 +2,7 @@
 error_reporting(0);
 require_once 'config.php';
 if (isset($_SESSION['role'])) {
-include_once 'navbar.php';
+    include_once 'navbar.php';
     $query = "SELECT * FROM asset_info NATURAL JOIN room_table
         ORDER BY date_added DESC LIMIT 10";
 
@@ -78,9 +78,9 @@ include_once 'navbar.php';
         width: 90vw;
         margin: 0 auto;
         padding: -1vh 0;
-        
+
     }
-    
+
     .small-box {
         background-color: rgb(129, 195, 228);
         margin: 0.5vw;
@@ -122,63 +122,6 @@ include_once 'navbar.php';
     .head-bot-text {
         font-size:calc(1vh+2vw);
     }
-    .asset-search {
-        margin-top: 2vh;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        background-color: white;
-        border: lightgray 1px solid;
-        border-radius: 30px;
-        margin: 0 auto;
-        padding: 1vh 2vw;
-        width: 90vw;
-    }
-    #submit-btn:hover {
-        transform: translateY(-2px);
-    }
-    .search-input {
-        padding: 12px 16px;
-        border: 2px solid #e2e8f0;
-        border-radius: 10px;
-        font-size: calc(1.0vh + 0.4vw);
-        transition: border-color 0.3s ease;
-        background: #f8fafc;
-    }
-    .search-input:focus {
-        outline: none;
-        border-color: #3b82f6;
-        background: white;
-    }
-    .filter-select {
-        font-size: calc(1.0vh + 0.4vw);
-        padding: 12px 16px;
-        border: 2px solid #e2e8f0;
-        border-radius: 10px;
-        background: #f8fafc;
-        cursor: pointer;
-    }
-
-    .filter-select:focus {
-        outline: none;
-        border-color: #3b82f6;
-        background: white;
-    }
-
-    .search-button {
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        font-size: calc(1.0vh + 0.4vw);
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .search-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    }
     .recent-asset-change {
         display: flex;
         justify-content: space-between;
@@ -202,7 +145,7 @@ include_once 'navbar.php';
         margin-top: 2vh;
         width: 40vw;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        
+
     }
     .recent-activity {
         background-color: white;
@@ -266,7 +209,7 @@ include_once 'navbar.php';
                 <p>Monitor and manage your organization's assets in real-time</p>
             </div>
             <div class="head-bot">
-            
+
                 <div class="small-box">
                     <span class="small-box-text"><?= $asset_count['total_assets'] ?><br></span>
                     <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Total Assets</strong></span>
@@ -282,49 +225,6 @@ include_once 'navbar.php';
             </div>
         </div>
         <br>
-        <div class="asset-search">
-            <input class="search-input" type="text" name="search" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-            <select class="filter-select" name="categories" id="categories">
-                <option value="all">All Categories</option>
-                <option value="electronics">Electronics</option>
-                <option value="vehicles">Vehicles</option>
-                <option value="equipment">Equipment</option>
-            </select>
-            <select class="filter-select" id="statusFilter">
-                    <option value="">All Status</option>
-                    <option value="service">In Service</option>
-                    <option value="disposed">Disposed</option>
-                </select>
-            <button class="search-button" onclick="performSearch()">Search</button>
-        </div>
-        <div class="recent-asset-change">
-            <div class="recent-assets">
-                <h3>Recent Asset Additions</h3>
-                <div class="asset-item asset-even asset-header">
-                    <div class="asset-id">Asset Tag</div>
-                    <div class="asset-status">Asset Name</div>
-                    <div class="asset-category">Asset Type</div>
-                    <div class="asset-location">In Room Tag</div>
-                    <div class="asset-price">Price</div>
-                    <div class="asset-price">Department</div>
-
-                </div>
-<?php
-    foreach ($assets as $key => $asset) {
-?>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?= $asset['asset_tag'] ?></div>
-                    <div class="asset-status"><?= $asset['asset_name'] ?></div>
-                    <div class="asset-category"><?= $asset['asset_type'] ?></div>
-                    <div class="asset-location"><?= $asset['room_tag'] ?></div>
-                    <div class="asset-price">$<?= $asset['asset_price'] ?></div>
-                    <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
-                </div>
-<?php
-    }
-?>
-                
-            </div>
             <div class="activity">
                 <div class="quick-actions">
                     <h3>Quick Actions</h3>
@@ -337,12 +237,12 @@ include_once 'navbar.php';
                     <h3>Recent Activity</h3>               
 <?php
     $row = 1;
-        foreach ($users as $key => $user) {
+    foreach ($users as $key => $user) {
 ?>
                     <div class="login-activity"><?=$row?>. User <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in as <?= $user['last_login'] ?></div>                
 <?php
-            $row++;
-        }
+        $row++;
+    }
 ?>
                 </div>
             </div>
@@ -350,7 +250,7 @@ include_once 'navbar.php';
 
         </div>
     </section>
-    
+
 </body>
 </html>
 <?php
