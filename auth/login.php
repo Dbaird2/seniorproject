@@ -167,7 +167,7 @@ include_once("../navbar.php");
 <body>
     <div class="container">
         <div class="header">
-            <h2 style="font-size:calc(2vh + 1.1vw);font-family: 'Times New Roman', serif;">Welcome Back</h2>
+            <h2 style="font-size:calc(2vh + 1.1vw);">Welcome Back</h2>
     </div>
             <div class="body">
                 <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return validateForm()">

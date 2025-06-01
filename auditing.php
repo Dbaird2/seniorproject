@@ -65,9 +65,9 @@ if (isset($_POST['create'])) {
         $sheet->setCellValue('B1', 'Tags Matched');
         $sheet->setCellValue('C1', 'Notes');
         $sheet->setCellValue('D1', 'Timestamp');
-        $sheet->setCellValue('J1', 'Extra Tags');
-        $sheet->setCellValue('K1', 'Notes');
-        $sheet->setCellValue('L1', 'Timestamps');
+        $sheet->setCellValue('L1', 'Extra Tags');
+        $sheet->setCellValue('M1', 'Notes');
+        $sheet->setCellValue('N1', 'Timestamps');
         $i = 0;
         if (!$file_empty) {
             foreach ($old_tags as $row) {
@@ -77,7 +77,7 @@ if (isset($_POST['create'])) {
                 $sheet->setCellValue('G' . $row_index, $loc[$i]);
                 $sheet->setCellValue('H' . $row_index, $dept[$i]);
                 $sheet->setCellValue('I' . $row_index, $cost[$i]);
-                $sheet->setCellValue('J' . $row_index, $cost[$i]);
+                $sheet->setCellValue('J' . $row_index, $po[$i]);
                 $i++;
                 $row_index++;
             }

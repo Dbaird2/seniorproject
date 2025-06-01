@@ -91,7 +91,7 @@ include_once("../navbar.php");
     <title>Sign up</title>
     <style>
         body {
-            font-family: 'Times New Roman', serif;
+font-family: "Lato", sans-serif; 
             display: flex;
             flex-direction: column; 
             justify-content: space-between; 
@@ -378,8 +378,8 @@ include_once("../navbar.php");
 <body>
     <div class="container">
         <div class="header">
-            <h2 style="font-size:calc(2vh + 1vw);font-family: 'Times New Roman', serif;">Create an Account</h2>
-            <p style="font-size:calc(0.8vh + 0.3vw);font-family: 'Times New Roman', serif;"> Please fill in the form to create an account</p>
+            <h2 style="font-size:calc(2vh + 1vw);">Create an Account</h2>
+            <p style="font-size:calc(0.8vh + 0.3vw);"> Please fill in the form to create an account</p>
         </div>
             <div class="body">
                 <form id="singup-form" method="post" action="signup.php" oninput="validateForm()" onblur="return validateForm()" >
@@ -426,9 +426,9 @@ include_once("../navbar.php");
                 </form>
                 <div class="footer">
                   
-                    <p style="padding-top:2vh;font-size:calc(1.0vh +0.5vw);font-family: 'Times New Roman', serif;">Already have an account? <a href="login.php">Login Here</a></p> 
+                    <p style="padding-top:2vh;font-size:calc(1.0vh +0.5vw);">Already have an account? <a href="login.php">Login Here</a></p> 
                 
-                    <p style="font-size:calc(1.0vh +0.5vw);font-family: 'Times New Roman', serif;">By signing up, you agree to our Terms of Service and Privacy Policy</p>
+                    <p style="font-size:calc(1.0vh +0.5vw);">By signing up, you agree to our Terms of Service and Privacy Policy</p>
                 </div>
         </div>
     </div>
