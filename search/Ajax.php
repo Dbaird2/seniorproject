@@ -70,7 +70,7 @@ if (isset($_POST['search'])) {
     $tag = $_POST['search'];
     $result = [];
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, r.dept_id FROM asset_info as a JOIN room_table as r ON r.room_tag = a.room_tag WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag r.dept_id LIKE :tag";
+        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, r.dept_id FROM asset_info as a JOIN room_table as r ON r.room_tag = a.room_tag WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR r.dept_id LIKE :tag";
     } else if ($_SESSION['role'] === 'custodian' || $_SESSION['role'] === 'user') {
     }
 
