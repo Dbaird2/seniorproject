@@ -430,11 +430,9 @@ error_reporting(E_ALL);
  */
 
 
-/*
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
-  */
 $worksheet = NULL;
 ?>
 <body>
@@ -476,11 +474,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Error uploading file.";
     }
 } 
-/*
 if (isset($_POST['filePath'])) {
     $filePath = $_POST['filePath'];
 }
-    */
 
 if (isset($filePath)) {
     try {
