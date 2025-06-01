@@ -5,7 +5,7 @@ include_once("../navbar.php");
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Live Search using AJAX</title>
+  <title>Asset Management</title>
   <!-- Including jQuery is required. -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <!-- Including our scripting file. -->
