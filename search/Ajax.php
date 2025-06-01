@@ -1,5 +1,6 @@
 <?php
 require_once ("../config.php");
+error_reporting(0);
 ?>
 <style>
      body {
@@ -68,7 +69,7 @@ require_once ("../config.php");
 if (isset($_POST['search'])) {
     $tag = $_POST['search'];
     $result = [];
-    $query = "SELECT asset_tag FROM asset_info WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag LIMIT 25 ";
+    $query = "SELECT * FROM asset_info WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag LIMIT 25 ";
     $exec_query = $dbh->prepare($query);
     $exec_query->execute(['tag' => "%$tag%"]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
