@@ -22,9 +22,9 @@ if (isset($_SESSION['email'])) {
                     $_SESSION['role'] = $user_check['u_role'];
                     $_SESSION['deptid'] = $user_check['dept_id'];
 
-                    $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
-                    $stmt = $dbh->prepare($stmt);
-                    if ($stmt->execute([$id])) {
+                    $query = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
+                    $stmt2 = $dbh->prepare($query);
+                    if ($stmt2->execute([$$_SESSION['id']])) {
                         header("location: https://dataworks-7b7x.onrender.com/index.php");
                     } else {
                         error_log("Error updating last_login" . $stmt->errorInfo());
@@ -32,6 +32,7 @@ if (isset($_SESSION['email'])) {
                 }
             }
             $stmt = NULL;
+            $stmt2 = NULL;
         } else {
             $err = "Invalid email or password";
         }
