@@ -225,7 +225,7 @@ if (isset($_SESSION['role'])) {
             </div>
         </div>
         <br>
-    <div class="recent-asset-change">Add commentMore actions
+    <div class="recent-asset-change">
             <div class="recent-assets">
                 <h3>Recent Asset Additions</h3>
                 <div class="asset-item asset-even asset-header">

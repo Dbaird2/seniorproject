@@ -273,6 +273,45 @@ if (isset($_POST['search'])) {
                 </form>
         </div>
     </div> 
+    <script>
+    const modal = document.getElementById("myModal");
+
+    const openModalLink = document.getElementById("openModalLink");
+
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    openModalLink.onclick = function(event) {
+            event.preventDefault(); 
+                modal.style.display = "block"; 
+    }
+
+    closeModalBtn.onclick = function() {
+            modal.style.display = "none"; 
+    }
+
+    window.onclick = function(event) {
+            if (event.target == modal) {
+                        modal.style.display = "none"; 
+                            }
+    }
+
+    function changeTabs(evt, tab) {
+          var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                      }
+
+              tablinks = document.getElementsByClassName("tablinks");
+              for (i = 0; i < tablinks.length; i++) {
+                      tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+
+                document.getElementById(tab).style.display = "block";
+                evt.currentTarget.className += " active";
+    }
+    </script>
     <?php
 }
 ?>
