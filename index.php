@@ -225,6 +225,34 @@ if (isset($_SESSION['role'])) {
             </div>
         </div>
         <br>
+    <div class="recent-asset-change">Add commentMore actions
+            <div class="recent-assets">
+                <h3>Recent Asset Additions</h3>
+                <div class="asset-item asset-even asset-header">
+                    <div class="asset-id">Asset Tag</div>
+                    <div class="asset-status">Asset Name</div>
+                    <div class="asset-category">Asset Type</div>
+                    <div class="asset-location">In Room Tag</div>
+                    <div class="asset-price">Price</div>
+                    <div class="asset-price">Department</div>
+
+                </div>
+<?php
+        foreach ($assets as $key => $asset) {
+?>
+                <div class="asset-item asset-odd">
+                    <div class="asset-id"><?= $asset['asset_tag'] ?></div>
+                    <div class="asset-status"><?= $asset['asset_name'] ?></div>
+                    <div class="asset-category"><?= $asset['asset_type'] ?></div>
+                    <div class="asset-location"><?= $asset['room_tag'] ?></div>
+                    <div class="asset-price">$<?= $asset['asset_price'] ?></div>
+                    <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
+                </div>
+<?php
+                }
+?>
+                
+            </div>
             <div class="activity">
                 <div class="quick-actions">
                     <h3>Quick Actions</h3>
