@@ -10,11 +10,18 @@ include_once("../navbar.php");
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <!-- Including our scripting file. -->
   <script type="text/javascript" src="script.js"></script>
-  <!-- Including CSS file. -->
 </head>
 <style>
 
-.asset-search {
+    body {
+            margin: 0;
+            height: 100vh;
+            font-size: calc(0.5vw + 0.4vh);
+            width: 100%;
+            position: absolute;
+            top: 8vh;
+    }
+    .asset-search {
         margin-top: 2vh;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         background-color: white;
@@ -22,7 +29,7 @@ include_once("../navbar.php");
         border-radius: 30px;
         margin: 0 auto;
         padding: 1vh 2vw;
-        width: 90vw;
+        width: 85vw;
     }
     #submit-btn:hover {
         transform: translateY(-2px);
