@@ -69,7 +69,8 @@ error_reporting(0);
 if (isset($_POST['search'])) {
     $tag = $_POST['search'];
     $result = [];
-    $query = "SELECT * FROM asset_info WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag LIMIT 25 ";
+    $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, r.dept_id FROM asset_info as a JOIN room_table as r ON r.room_tag = a.room_tag WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag";
+
     $exec_query = $dbh->prepare($query);
     $exec_query->execute(['tag' => "%$tag%"]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
@@ -110,7 +111,7 @@ if (isset($_POST['search'])) {
             $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
             $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
             $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);    
-            $safe_price = htmlspecialchars($row['price'], ENT_QUOTES);  
+            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);  
             $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
             $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
