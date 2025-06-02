@@ -24,7 +24,7 @@ if (isset($_SESSION['email'])) {
 
                     $query = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
                     $stmt2 = $dbh->prepare($query);
-                    if ($stmt2->execute([$$_SESSION['id']])) {
+                    if ($stmt2->execute([$_SESSION['id']])) {
                         header("location: https://dataworks-7b7x.onrender.com/index.php");
                     } else {
                         error_log("Error updating last_login" . $stmt->errorInfo());
