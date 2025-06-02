@@ -47,7 +47,7 @@ error_reporting(E_ALL);
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 8vw;
+            min-width: 9vw;
             max-width: 15vw;
             flex: 1;
             justify-content: center;
@@ -69,78 +69,6 @@ error_reporting(E_ALL);
 
         .row-odd {
             background-color: #ffffff;
-        }
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scrolling if needed */
-            background-color: rgb(0, 0, 0); /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
-            padding-top: 60px;
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less depending on screen size */
-        }
-
-        /* Close button */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        /* Style the tab */
-        .tab {
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-        }
-
-        /* Style the buttons that are used to open the tab content */
-        .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-        }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-        background-color: #ddd;
-        }
-
-        /* Create an active/current tablink class */
-        .tab button.active {
-        background-color: #ccc;
-        }
-
-        /* Style the tab content */
-        .tabcontent {
-        display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-top: none;
         }
         </style>
 <?php
