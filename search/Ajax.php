@@ -1,7 +1,13 @@
 <?php
 require_once ("../config.php");
-error_reporting(0);
+error_reporting(E_ALL);
 ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modals with PHP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <style>
      body {
             margin: 0;
@@ -14,11 +20,11 @@ error_reporting(0);
         body::-webkit-scrollbar {
             width: 1em;
         }
-        
+
         body::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
         }
-        
+
         body::-webkit-scrollbar-thumb {
             background-color: darkgrey;
             outline: 1px solid slategrey;
@@ -28,7 +34,7 @@ error_reporting(0);
             text-align: center;
         }
 
-      
+
         #showExcel {
             display: flex;
             flex-wrap: wrap;
@@ -155,7 +161,7 @@ if (isset($_POST['search'])) {
         echo "<section id='showExcel'>";
         echo "<div class='row'>";
         echo "<div id='showExcel'  class='search-results'>";
-        ?>
+?>
         <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                     <strong>Asset Tag</strong>
                 </div>
@@ -177,7 +183,7 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <strong>Price</strong>
                 </div>
-                <?php
+<?php
         foreach ($result as $row) {
             $row_number++;
             $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
@@ -190,9 +196,9 @@ if (isset($_POST['search'])) {
             $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
             $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
-            ?>
+?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                    <strong><a href="#" id="openModalLink"><?= $safe_tag?></a></strong>
+                <strong><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button></strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
@@ -212,106 +218,60 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_price ?>
                 </div>
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span id="closeModalBtn" class="close">&times;</span>
-            <div class="popup-tabs">
-                <button class="tablinks" onclick="changeTabs(event, 'Display')">Item Display</button>
-                <button class="tablinks" onclick="changeTabs(event, 'Change-info')">Change Asset Info</button>
-            </div>
-            <div id="Display" class="tabcontent">
-                <h3>Asset Display</h3>
-                <p>Asset Tag: <?php echo $safe_tag ?></p>
-                <p>Name: <?= $safe_name ?></p>
-                <p>Dept ID: <?= $safe_deptid ?></p>
-                <p>PO: <?=  $safe_po ?></p>
-                <p>Room Tag: <?=  $safe_room ?></p>
-                <p>SN: <?= $safe_serial ?></p>
-                <p>Price: <?=  $safe_price ?></p>
+<div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
+                <!-- Modal content -->
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel<?= $safe_tag; ?>">Asset Details for <?= $safe_tag ?></h5>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="change_asset_info.php" method="post">
+                                <label for="asset_tag">Asset Tag:</label>
+                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" >
+                                <br>
+                                <label for="status">Status:</label>
+                                <select id="status" name="status">
+                                    <option value="in_service">In Service</option>
+                                    <option value="disposed">Disposed</option>
+                                </select>
+                                <br>
+                                <label for="name">Asset Name:</label>
+                                <input type="text" id="name" name="name" value="<?= $safe_name ?>" >
+                                <br>
 
+                                <label for="deptid">Department ID:</label>
+                                <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" >
+                                <br>
+                                <label for="po">Purchase Order:</label>
+                                <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
+                                <br>
+                                <label for="location">Room Tag:</label>
+                                <input type="text" id="location" name="location" value="<?= $safe_room ?>" >
+                                <br>
+                                <label for="serial">Serial Number:</label>
+                                <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
+                                <br>
+                                <label for="price">Price:</label>
+                                <input type="number" id="price" name="price" value="<?= $safe_price ?>">
+                                <br>
+                                <button type="submit">Update Asset</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div> 
             </div>
-            <div id="Change-info" class="tabcontent">
-                <h3>Change Asset Info</h3>
-                <form action="change_asset_info.php" method="post">
-                    <label for="asset_tag">Asset Tag:</label>
-                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" >
-                    <br>
-                    <label for="status">Status:</label>
-                    <select id="status" name="status">
-                        <option value="in_service">In Service</option>
-                        <option value="disposed">Disposed</option>
-                    </select>
-                    <br>
-                    <label for="name">Asset Name:</label>
-                    <input type="text" id="name" name="name" value="<?= $safe_name ?>" >
-                    <br>
-                   
-                    <label for="deptid">Department ID:</label>
-                    <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" >
-                    <br>
-                    <label for="po">Purchase Order:</label>
-                    <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
-                    <br>
-                    <label for="location">Room Tag:</label>
-                    <input type="text" id="location" name="location" value="<?= $safe_room ?>" >
-                    <br>
-                    <label for="serial">Serial Number:</label>
-                    <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
-                    <br>
-                    <label for="price">Price:</label>
-                    <input type="number" id="price" name="price" value="<?= $safe_price ?>">
-                    <br>
-                    <button type="submit">Update Asset</button>
-                </form>
-        </div>
-    </div> 
-            <?php
+<?php
         }
         echo "</div></div>";
         echo "</section>";
 
     }
-    ?>
-    <script>
-    const modal = document.getElementById("myModal");
-
-    const openModalLink = document.getElementById("openModalLink");
-
-    const closeModalBtn = document.getElementById("closeModalBtn");
-
-    openModalLink.onclick = function(event) {
-            event.preventDefault(); 
-                modal.style.display = "block"; 
-    }
-
-    closeModalBtn.onclick = function() {
-            modal.style.display = "none"; 
-    }
-
-    window.onclick = function(event) {
-            if (event.target == modal) {
-                        modal.style.display = "none"; 
-                            }
-    }
-
-    function changeTabs(evt, tab) {
-          var i, tabcontent, tablinks;
-
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = "none";
-                      }
-
-              tablinks = document.getElementsByClassName("tablinks");
-              for (i = 0; i < tablinks.length; i++) {
-                      tablinks[i].className = tablinks[i].className.replace(" active", "");
-                        }
-
-                document.getElementById(tab).style.display = "block";
-                evt.currentTarget.className += " active";
-    }
-    </script>
-    <?php
 }
 ?>
