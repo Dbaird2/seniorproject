@@ -212,13 +212,6 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_price ?>
                 </div>
-            <?php
-        }
-        echo "</div></div>";
-        echo "</section>";
-
-    }
-    ?>
     <div id="myModal" class="modal">
         <!-- Modal content -->
         <div class="modal-content">
@@ -273,6 +266,13 @@ if (isset($_POST['search'])) {
                 </form>
         </div>
     </div> 
+            <?php
+        }
+        echo "</div></div>";
+        echo "</section>";
+
+    }
+    ?>
     <script>
     const modal = document.getElementById("myModal");
 
