@@ -99,9 +99,6 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
                     <strong>Department ID</strong>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
-                   <strong> Purchase Order</strong>
-                </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                    <strong> Room Tag</strong>
                 </div>
@@ -111,8 +108,8 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <strong>Price</strong>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                    <strong>PO</strong>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
+                   <strong> Purchase Order</strong>
                 </div>
 <?php
         foreach ($result as $row) {
@@ -129,13 +126,15 @@ if (isset($_POST['search'])) {
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                <strong><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button></strong>
+                <strong>
+                    <button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
+                </strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
-                    <?= $safe_po?> 
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
+                    <?= $safe_deptid ?>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                     <?= $safe_room ?>
@@ -143,12 +142,8 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_serial ?>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <?= $safe_deptid ?>
-                </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     $<?= $safe_price ?>
-                </div>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_po ?>
