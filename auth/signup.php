@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['pw'] ?? '';
     $con_password = $_POST['cpw'] ?? '';
     $deptid = $_POST['deptid'] ?? '';
+    $dept_id_array = array_filter(explode(',', $deptid), fn($v) => trim($v) !== '');
     $role = $_POST['role'] ?? ''; 
 
     if (!empty($username)) {
@@ -52,10 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     if (!empty($deptid)) {
-        
-        $stmt = "SELECT distinct dept_id FROM department where dept_id = ?";
+        $placeholder = implode(',', array_fill(0, count($dept_id_array), '?');
+        $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
         $stmt = $dbh->prepare($stmt);
-        $stmt->execute([$deptid]);
+        $stmt->execute([$dept_id_array]);
         if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
             $dept_err = "Department does not exist";
             $err = 1;
@@ -67,8 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?);";
         $stmt = $dbh->prepare($stmt);
+        $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
+        $dept_stmt = $dbh->prepare($dept_cust);
+        $full_name = $f_name . " " . $l_name;
         try {
-            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $deptid]))) {
+            if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $dept_id_array]))) {
+                $dept_stmt->execute([$full_name, $dept_id_array]);
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();

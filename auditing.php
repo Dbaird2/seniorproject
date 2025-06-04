@@ -29,7 +29,7 @@ if (isset($_POST['create'])) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
         # LOCATION FOR EXCEL HEADERS
-        $column_letters = ['A1', 'E1', 'F1', 'G1', 'H1', 'I1'];
+        $column_letters = ['A1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1'];
         $row_index = 2;
 
         # GET POST DATA

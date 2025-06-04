@@ -256,9 +256,9 @@ if (isset($_SESSION['role'])) {
             <div class="activity">
                 <div class="quick-actions">
                     <h3>Quick Actions</h3>
-                    <div class="option"><a href="#add_asset.php">➕ Add Asset</a></div>
+                    <div class="option"><a href="#add_asset.php">➕Add Asset</a></div>
                     <div class="option"><a href="auditing.php">Start Audit</a></div>
-                    <div class="option"><a href="#change_asset_tag.php">Change Asset Tags</a></div>
+                    <div class="option"><a href="#change_asset_tag.php">Search Assets</a></div>
                     <div class="option"><a href="help.php">Help</a></div>
                 </div>
                 <div class="recent-activity">
@@ -267,15 +267,13 @@ if (isset($_SESSION['role'])) {
     $row = 1;
     foreach ($users as $key => $user) {
 ?>
-                    <div class="login-activity"><?=$row?>. User <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in as <?= $user['last_login'] ?></div>                
+                    <div class="login-activity"><?=$row?>. User <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in at <?= $user['last_login'] ?></div>                
 <?php
         $row++;
     }
 ?>
                 </div>
             </div>
-
-
         </div>
     </section>
 

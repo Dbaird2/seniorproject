@@ -47,7 +47,7 @@ error_reporting(E_ALL);
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 9vw;
+            min-width: 8vw;
             max-width: 15vw;
             flex: 1;
             justify-content: center;
@@ -76,7 +76,7 @@ if (isset($_POST['search'])) {
     $tag = $_POST['search'];
     $result = [];
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, r.dept_id FROM asset_info as a JOIN room_table as r ON r.room_tag = a.room_tag WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR r.dept_id LIKE :tag";
+        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag";
     } else if ($_SESSION['role'] === 'custodian' || $_SESSION['role'] === 'user') {
     }
 
@@ -111,6 +111,9 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <strong>Price</strong>
                 </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+                    <strong>PO</strong>
+                </div>
 <?php
         foreach ($result as $row) {
             $row_number++;
@@ -131,9 +134,6 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <?= $safe_deptid ?>
-                </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
                     <?= $safe_po?> 
                 </div>
@@ -143,8 +143,15 @@ if (isset($_POST['search'])) {
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_serial ?>
                 </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
+                    <?= $safe_deptid ?>
+                </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                    <?= $safe_price ?>
+                    $<?= $safe_price ?>
+                </div>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+                    <?= $safe_po ?>
                 </div>
 <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                 <!-- Modal content -->
@@ -161,21 +168,12 @@ if (isset($_POST['search'])) {
                                 <label for="asset_tag">Asset Tag:</label>
                                 <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" >
                                 <br>
-                                <label for="status">Status:</label>
-                                <select id="status" name="status">
-                                    <option value="in_service">In Service</option>
-                                    <option value="disposed">Disposed</option>
-                                </select>
-                                <br>
                                 <label for="name">Asset Name:</label>
                                 <input type="text" id="name" name="name" value="<?= $safe_name ?>" >
                                 <br>
 
                                 <label for="deptid">Department ID:</label>
                                 <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" >
-                                <br>
-                                <label for="po">Purchase Order:</label>
-                                <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
                                 <br>
                                 <label for="location">Room Tag:</label>
                                 <input type="text" id="location" name="location" value="<?= $safe_room ?>" >
@@ -185,6 +183,15 @@ if (isset($_POST['search'])) {
                                 <br>
                                 <label for="price">Price:</label>
                                 <input type="number" id="price" name="price" value="<?= $safe_price ?>">
+                                <br>
+                                <label for="po">Purchase Order:</label>
+                                <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
+                                <br>
+                                <label for="status">Status:</label>
+                                <select id="status" name="status">
+                                    <option value="in_service">In Service</option>
+                                    <option value="disposed">Disposed</option>
+                                </select>
                                 <br>
                                 <button type="submit">Update Asset</button>
                             </form>
