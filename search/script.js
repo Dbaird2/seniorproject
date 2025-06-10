@@ -39,7 +39,7 @@ function fill(Value) {
          }
      });
     //On pressing a key on "Search box" in "search.php" file. This function will be called.
-     $("#search").load(function() {
+     $("#search").ready(function() {
         //Assigning search box value to javascript variable named as "name".
          var name = $('#search').val();
          var offset = $('#offset').val();

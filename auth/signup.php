@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $full_name = $f_name . " " . $l_name;
         try {
             if ($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $dept_id_array])) {
-                $dept_stmt->execute([$full_name, $dept_id_array]);
+                $dept_stmt->execute([$full_name], $dept_id_array);
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
             }
         } catch (PDOException $e) {
