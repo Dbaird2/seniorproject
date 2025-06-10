@@ -10,6 +10,7 @@ function fill(Value) {
      $("#search").keyup(function() {
         //Assigning search box value to javascript variable named as "name".
          var name = $('#search').val();
+         var offset = $('#offset').val();
         //Validating, if "name" is empty.
          if (name == "") {
             //Assigning empty value to "display" div in "search.php" file.
@@ -25,6 +26,7 @@ function fill(Value) {
                  url: "Ajax.php",
                 //Data, that will be sent to "ajax.php".
                  data: {
+                     offset: name
                     //Assigning value of "name" into "search" variable.
                      search: name
                  },

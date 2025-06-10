@@ -75,13 +75,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $dept_id_array]))) {
                 $dept_stmt->execute([$full_name, $dept_id_array]);
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                    $_SESSION['email'] = $email;
-                    $_SESSION['role'] = $role;
-                }
             }
         } catch (PDOException $e) {
+            echo '<pre>';
+            var_dump($dept_id_array);
+            echo '</pre>';
             error_log($e->getMessage());
         }
         

@@ -74,7 +74,7 @@ error_reporting(0);
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
     $tag = isset($_POST['search']) ? $_POST['search'] : $_GET['search'];
-    $offset = isset($_GET['search']) ? $_GET['search'] : 1;
+    $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
     $result = [];
     if (isset($_SESSION['role'])) {
         $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";

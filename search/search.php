@@ -83,9 +83,14 @@ include_once("../navbar.php");
     }
 </style>
 <body>
+<?php
+$search = isset($_GET['search']) ? $_GET['search'] : NULL;
+$offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
+?>
 <!-- Search box. -->
 <div class="asset-search">
-            <input class="search-input" type="text" name="search" id="search" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+<input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
+<input class="search-input" type="text" name="search" id="search" value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
             <select class="filter-select" name="categories" id="categories">
                 <option value="all">All Categories</option>
                 <option value="electronics">Electronics</option>
