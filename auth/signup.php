@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
     if (!empty($deptid)) {
-        $placeholder = implode(',', array_fill(0, count($dept_id_array), '?');
+        $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
         $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
         $stmt = $dbh->prepare($stmt);
         $stmt->execute([$dept_id_array]);

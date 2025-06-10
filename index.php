@@ -6,7 +6,7 @@ if (isset($_SESSION['role'])) {
     $query = "SELECT * FROM asset_info NATURAL JOIN room_table
         ORDER BY date_added DESC LIMIT 10";
 
-    $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as last_login FROM user_table ORDER BY last_login ASC LIMIT 5";
+    $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as last_login FROM user_table ORDER BY last_login DESC LIMIT 5";
 
     $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 

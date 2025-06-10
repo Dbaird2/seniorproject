@@ -72,16 +72,16 @@ error_reporting(0);
         }
         </style>
 <?php
-if (isset($_POST['search'])) {
-    $tag = $_POST['search'];
+if (isset($_POST['search']) || isset($_GET['search']) {
+    $tag = isset($_POST['search']) ? $_POST['search'] : $_GET['search'];
+    $offset = isset($_GET['search'] ? $_GET['search'] : 1;
     $result = [];
     if (isset($_SESSION['role'])) {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag LIMIT 50 OFFSET 0";
-    } else if ($_SESSION['role'] === 'custodian' || $_SESSION['role'] === 'user') {
+        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
     }
-
+    
     $exec_query = $dbh->prepare($query);
-    $exec_query->execute(['tag' => "%$tag%"]);
+    $exec_query->execute(['tag' => "%$tag%",'offset'=>$offset-1]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
     if ($result) {
         $row_number = 1;
@@ -201,6 +201,40 @@ if (isset($_POST['search'])) {
         }
         echo "</div></div>";
         echo "</section>";
+        ?>
+        <nav aria-label="Page navigation example">
+  <ul class="pagination d-flex justify-content-center">
+    <?php
+    if ($offset === '1' || $offset === 1) {
+  ?>
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Previous</a>
+    </li>
+    <li class="page-item active">
+      <span class="page-link">
+        <?=$offset?>
+        <span class="sr-only">(current)</span>
+      </span>
+    </li>
+    <li class="page-item"><a class="page-link" href="dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($search)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+2?>&search=<?=urlencode($search)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($search)?>">Next</a></li>
+
+<?php
+} else {
+    ?>
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset-1?>&search=<?=urlencode($search)?>">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset-1?>&search=<?=urlencode($search)?>"><?=$offset-1?></a></li>
+    <li class="page-item active">
+      <span class="page-link">
+        <?=$offset?>
+        <span class="sr-only">(current)</span>
+      </span>
+    </li>   
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($search)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($search)?>">Next</a></li>
+    <?php
+}
 
     }
 }
