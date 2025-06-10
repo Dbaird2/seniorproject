@@ -686,7 +686,6 @@ if (isset($filePath)) {
                 if (!is_null($cell_array['Location'])) {
                     echo "<div class='excel-info'><strong>Location</strong> </div>";
                 }
-                
                 if (!is_null($cell_array['Dept'])) {
                     echo "<div class='excel-info'><strong>Dept ID</strong> </div>";
                 }

@@ -47,7 +47,7 @@ error_reporting(0);
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 10vw;
+            min-width: 9vw;
             max-width: 15vw;
             flex: 1;
             justify-content: center;
