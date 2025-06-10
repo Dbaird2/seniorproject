@@ -26,7 +26,7 @@ function fill(Value) {
                  url: "Ajax.php",
                 //Data, that will be sent to "ajax.php".
                  data: {
-                     offset: name
+                     offset: offset,
                     //Assigning value of "name" into "search" variable.
                      search: name
                  },
