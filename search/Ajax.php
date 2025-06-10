@@ -216,23 +216,23 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
 
 <?php
 } else {
     ?>
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
     </li>   
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
-    <li class="page-item"><a class="page-link" href="test.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/Ajax.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
     <?php
 }
 

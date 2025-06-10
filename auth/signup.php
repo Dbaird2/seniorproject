@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['pw'] ?? '';
     $con_password = $_POST['cpw'] ?? '';
     $deptid = $_POST['deptid'] ?? '';
-    $dept_id_array = array_filter(explode(',', $deptid), fn($v) => trim($v) !== '');
+    $dept_id_array = array_values(array_filter(explode(',', $deptid), fn($v) => trim($v) !== ''));
     $role = $_POST['role'] ?? ''; 
 
     if (!empty($username)) {
