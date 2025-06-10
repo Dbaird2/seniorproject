@@ -1,6 +1,6 @@
 <?php
 require_once ("../config.php");
-error_reporting(E_ALL);
+error_reporting(0);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -47,7 +47,7 @@ error_reporting(E_ALL);
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 8vw;
+            min-width: 10vw;
             max-width: 15vw;
             flex: 1;
             justify-content: center;
@@ -75,8 +75,8 @@ error_reporting(E_ALL);
 if (isset($_POST['search'])) {
     $tag = $_POST['search'];
     $result = [];
-    if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag";
+    if (isset($_SESSION['role'])) {
+        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag LIMIT 50 OFFSET 0";
     } else if ($_SESSION['role'] === 'custodian' || $_SESSION['role'] === 'user') {
     }
 
