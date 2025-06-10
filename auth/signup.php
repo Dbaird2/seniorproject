@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
         $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
         $stmt = $dbh->prepare($stmt);
-        $stmt->execute([$dept_id_array]);
+        $stmt->execute($dept_id_array);
         if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
             $dept_err = "Department does not exist";
             $err = 1;
