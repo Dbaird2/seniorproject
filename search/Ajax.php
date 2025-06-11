@@ -136,7 +136,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                 <strong>
-                    <?php$row_num++ . " " . ?><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
+                    <?= $row_num++ . " "?><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
                 </strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>

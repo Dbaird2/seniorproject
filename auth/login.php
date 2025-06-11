@@ -10,9 +10,9 @@ if (isset($_SESSION['email'])) {
         $pw = $_POST['pw'] ?? "";
         if (!empty($email) && !empty($pw)) {
             
-            $stmt = "SELECT email, pw, id, u_role, dept_id FROM user_table WHERE email = ?";
+            $stmt = "SELECT email, pw, id, u_role, dept_id FROM user_table WHERE email = :email OR username = :email";
             $stmt = $dbh->prepare($stmt);
-            if (!($stmt->execute([$email]))) {
+            if (!($stmt->execute(['email' => $email]))) {
                 $err = "Error getting info" . $stmt->errorInfo()[2];
             } else {
                 $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
