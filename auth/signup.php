@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dept_id_array = array_map('trim', $dept_id_array);
         $dept_pg_array = '{' . implode(',', array_map(function($val) {
             return '"' . addslashes($val) . '"';
-        |, $dept_id_array)) . '}';
+        }, $dept_id_array)) . '}';
         try {
             if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
                 ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($role === 'custodian') {
                     $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
                     $dept_stmt = $dbh->prepare($dept_cust);
-                    $dept_stmt->execute([$full_name, $dept_id_array);
+                    $dept_stmt->execute([$full_name, $dept_id_array]);
                 }
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
             }
