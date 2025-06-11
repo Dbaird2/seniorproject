@@ -47,7 +47,7 @@ error_reporting(0);
         .excel-info {
             min-height: 4vh;
             max-height: 4vh;
-            min-width: 9vw;
+            min-width: 8vw;
             max-width: 15vw;
             flex: 1;
             justify-content: center;
@@ -91,14 +91,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $exec_query->execute(['tag' => "%$tag%",
                           'offset' => $query_offset ]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
-    echo "<p>$offset</p>";
+    $row_num = isset($query_offset) ? $query_offset + 1 : 1;
+    $row_count = count($result);
     if ($result) {
-        $row_number = 1;
-        $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
+        $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
         echo "<section id='showExcel'>";
         echo "<div class='row'>";
         echo "<div id='showExcel'  class='search-results'>";
 ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$row_num\")'>
+                    <strong>Row</strong>
+                </div>
         <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                     <strong>Asset Tag</strong>
                 </div>
@@ -122,7 +125,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 </div>
 <?php
         foreach ($result as $row) {
-            $row_num = isset($query_offset) ? $query_offset + 1 : 1;
             $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
 
             // Escape values for safety
@@ -134,9 +136,14 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
             $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
 ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
+                    <strong>
+                    <?= $row_num++ ?>
+                    </strong>
+                </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                 <strong>
-                    <?= $row_num++ . " "?><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
+                    <button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
                 </strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
@@ -214,6 +221,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <nav aria-label="Page navigation example">
   <ul class="pagination d-flex justify-content-center">
     <?php
+        $total_pages = $row_count / 50;
     if ($offset === '1' || $offset === 1) {
   ?>
     <li class="page-item disabled">
