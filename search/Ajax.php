@@ -88,14 +88,25 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             OR serial_num LIKE :tag 
             OR CAST(po as CHAR) LIKE :tag 
             OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
+        $query_count = "SELECT COUNT(*) as Rows
+            WHERE asset_tag LIKE :tag 
+            OR asset_name LIKE :tag 
+            OR serial_num LIKE :tag 
+            OR CAST(po as CHAR) LIKE :tag 
+            OR dept_id LIKE :tag";
     }
     
     $exec_query = $dbh->prepare($query);
     $exec_query->execute(['tag' => "%$tag%",
                           'offset' => $query_offset ]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
+
+    $exec_count = $dbh->prepare($query);
+    $exec_count->execute(['tag' => "%$tag%"]);
+    $total_rows = $exec_count->fetchAll(PDO::FETCH_ASSOC);
+    $row_count = $total_rows['Rows'];
     $row_num = isset($query_offset) ? $query_offset + 1 : 1;
-    $row_count = count($result);
+
     if ($result) {
         $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
         echo "<section id='showExcel'>";
@@ -265,7 +276,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     </li>   
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
     <?php
-} else {
+} else if ($total_pages > 1) {
     ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
