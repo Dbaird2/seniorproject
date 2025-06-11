@@ -247,8 +247,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             WHERE CAST(bldg_id as CHAR) like :search OR
             bldg_name like :search OR
             room_loc like :search OR
-            room_tag like :search
-            ORDER BY bldg_id";
+            CAST(room_tag as CHAR) like :search
+            ";
         $bldg_e = $dbh->prepare($bldg_q);
         $bldg_e->execute(['search' => "%$tag%",
             'offset' => $query_offset ]);
