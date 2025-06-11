@@ -77,12 +77,19 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $result = [];
     if (isset($_SESSION['role'])) {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, a.po, a.room_tag, a.dept_id FROM asset_info as a WHERE asset_tag LIKE :tag OR asset_name LIKE :tag OR serial_num LIKE :tag OR CAST(po as CHAR) LIKE :tag OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
+        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, 
+            a.po, a.room_tag, a.dept_id FROM asset_info as a 
+            WHERE asset_tag LIKE :tag 
+            OR asset_name LIKE :tag 
+            OR serial_num LIKE :tag 
+            OR CAST(po as CHAR) LIKE :tag 
+            OR dept_id LIKE :tag LIMIT 50 OFFSET ". max(0, (int)($offset - 1));
     }
     
     $exec_query = $dbh->prepare($query);
-    $exec_query->execute(['tag' => "%$tag%",'offset'=>$offset-1]);
+    $exec_query->execute(['tag' => "%$tag%"]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
+    echo "<p>$offset</p>";
     if ($result) {
         $row_number = 1;
         $color_class = ($row_number % 2 === 0) ? 'row-odd' : 'row-even';
