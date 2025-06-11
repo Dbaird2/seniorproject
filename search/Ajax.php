@@ -106,6 +106,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $exec_count->execute(['tag' => "%$tag%"]);
     $total_rows = $exec_count->fetchAll(PDO::FETCH_ASSOC);
     $row_count = (int)$total_rows['Rows'];
+    echo $row_count;
 
     $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
@@ -238,6 +239,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
   <ul class="pagination d-flex justify-content-center">
     <?php
         $total_pages = $row_count / 50;
+        echo $total_pages;
     if (($offset === '1' || $offset === 1) && $total_pages > 1) {
   ?>
 <li class="page-item disabled">
