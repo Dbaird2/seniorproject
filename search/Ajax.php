@@ -105,7 +105,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $exec_count = $dbh->prepare($query_count);
     $exec_count->execute(['tag' => "%$tag%"]);
     $total_rows = $exec_count->fetchAll(PDO::FETCH_ASSOC);
-    $row_count = $total_rows['Rows'];
+    $row_count = (int)$total_rows['Rows'];
 
     $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
