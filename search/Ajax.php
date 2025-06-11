@@ -89,6 +89,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             OR CAST(po as CHAR) LIKE :tag 
             OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
         $query_count = "SELECT COUNT(*) as Rows
+            FROM asset_info
             WHERE asset_tag LIKE :tag 
             OR asset_name LIKE :tag 
             OR serial_num LIKE :tag 
