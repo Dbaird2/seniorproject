@@ -70,4 +70,7 @@ function fill(Value) {
              });
          }
      });
+       $('#search').on('input', function() {
+           $('#offset').val(1);
+       });
    });
