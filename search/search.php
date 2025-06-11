@@ -93,7 +93,7 @@ if ($search === NULL) {
 <!-- Search box. -->
 <div class="asset-search">
 <input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
-<input class="search-input" type="text" name="search" id="search" onchange=<?php $offset=1?> value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+<input class="search-input" type="text" name="search" id="search" onblur="<?=$offset=1?> value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
             <select class="filter-select" name="categories" id="categories">
                 <option value="all">All Categories</option>
                 <option value="electronics">Electronics</option>
