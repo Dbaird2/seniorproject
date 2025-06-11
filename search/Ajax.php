@@ -239,7 +239,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             WHERE CAST(bldg_id as CHAR) like :search OR
             bldg_name like :search OR
             room_loc like :search OR
-            room_tag like :search
+            CAST(room_tag as CHAR) like :search
             ORDER BY bldg_id
             LIMIT 50 OFFSET :offset";
         $bldg_count = "SELECT COUNT(*) as Rows
