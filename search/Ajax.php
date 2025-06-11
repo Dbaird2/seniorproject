@@ -73,6 +73,9 @@ error_reporting(0);
         </style>
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
+    if (isset($tag)) {
+        echo "<h1>$tag</h1>";
+    }
     $tag = $_POST['search'];
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $query_offset = max(0, (int)($offset - 1)) * 50;
@@ -125,7 +128,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 </div>
 <?php
         foreach ($result as $row) {
-            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
+            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
             // Escape values for safety
             $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
@@ -222,7 +225,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
   <ul class="pagination d-flex justify-content-center">
     <?php
         $total_pages = $row_count / 50;
-    if ($offset === '1' || $offset === 1) {
+    if (($offset === '1' || $offset === 1) && $total_pages > 1) {
   ?>
     <li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Previous</a>
@@ -234,10 +237,34 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
       </span>
     </li>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+<?php if ($total_pages > 2) { ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
+<?php } 
+ if ($total_pages > 3) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>"><?=$offset+3?></a></li>
+<?php }
+      if ($total_pages <= 2) { ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+<?php } else { ?>
 
-<?php
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Next</a>
+    </li>
+<?php } 
+
+} else if ($total_pages === $offset){
+    ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
+    <li class="page-item active">
+      <span class="page-link">
+        <?=$offset?>
+        <span class="sr-only">(current)</span>
+      </span>
+    </li>   
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+    <?php
 } else {
     ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
@@ -251,8 +278,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
     <?php
-}
 
     }
+}
 }
 ?>
