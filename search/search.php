@@ -86,6 +86,9 @@ include_once("../navbar.php");
 <?php
 $search = isset($_GET['search']) ? $_GET['search'] : NULL;
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
+if ($search === NULL) {
+    $offset = 1;
+}
 ?>
 <!-- Search box. -->
 <div class="asset-search">
