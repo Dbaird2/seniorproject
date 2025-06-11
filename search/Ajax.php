@@ -233,7 +233,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             echo "</div></div>";
             echo "</section>";
         }
-    } else if ($categories === 'buildings') {
+    } else if ($category === 'buildings') {
         $bldg_q = "SELECT bldg_id, bldg_name, room_loc, room_tag 
             FROM bldg_table NATURAL JOIN room_table 
             WHERE CAST(bldg_id as CHAR) like :search OR
@@ -248,8 +248,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             bldg_name like :search OR
             room_loc like :search OR
             room_tag like :search
-            ORDER BY bldg_id
-            LIMIT 50 OFFSET :offset";
+            ORDER BY bldg_id";
         $bldg_e = $dbh->prepare($bldg_q);
         $bldg_e->execute(['search' => "%$tag%",
             'offset' => $query_offset ]);
