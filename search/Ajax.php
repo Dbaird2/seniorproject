@@ -5,7 +5,6 @@ error_reporting(0);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modals with PHP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
@@ -78,9 +77,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     }
     $tag = $_POST['search'];
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
+    $category = $_POST['categories'];
+    $status = $_POST['statusFilter'];
     $query_offset = max(0, (int)($offset - 1)) * 50;
     $result = [];
-    if (isset($_SESSION['role'])) {
+    if ($category === 'assets') {
         $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, 
             a.po, a.room_tag, a.dept_id FROM asset_info as a 
             WHERE asset_tag LIKE :tag 
@@ -95,25 +96,23 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             OR serial_num LIKE :tag 
             OR CAST(po as CHAR) LIKE :tag 
             OR dept_id LIKE :tag";
-    }
-    
-    $exec_query = $dbh->prepare($query);
-    $exec_query->execute(['tag' => "%$tag%",
-                          'offset' => $query_offset ]);
-    $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
+        $exec_query = $dbh->prepare($query);
+        $exec_query->execute(['tag' => "%$tag%",
+            'offset' => $query_offset ]);
+        $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
-    $exec_count = $dbh->prepare($query_count);
-    $exec_count->execute(['tag' => "%$tag%"]);
-    $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
-    $row_count = (int)$total_rows['rows'];
+        $exec_count = $dbh->prepare($query_count);
+        $exec_count->execute(['tag' => "%$tag%"]);
+        $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+        $row_count = (int)$total_rows['rows'];
 
-    $row_num = isset($query_offset) ? $query_offset + 1 : 1;
+        $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
-    if ($result) {
-        $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
-        echo "<section id='showExcel'>";
-        echo "<div class='row'>";
-        echo "<div id='showExcel'  class='search-results'>";
+        if ($result) {
+            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
+            echo "<section id='showExcel'>";
+            echo "<div class='row'>";
+            echo "<div id='showExcel'  class='search-results'>";
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$row_num\")'>
                     <strong>Row</strong>
@@ -140,17 +139,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                    <strong> Purchase Order</strong>
                 </div>
 <?php
-        foreach ($result as $row) {
-            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+            foreach ($result as $row) {
+                $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
-            // Escape values for safety
-            $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
-            $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
-            $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);    
-            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);  
-            $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
-            $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
-            $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
+                // Escape values for safety
+                $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
+                $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
+                $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);    
+                $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);  
+                $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
+                $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
+                $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <strong>
@@ -230,16 +229,136 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 </div> 
             </div>
 <?php
+            }
+            echo "</div></div>";
+            echo "</section>";
         }
-        echo "</div></div>";
-        echo "</section>";
-        ?>
+    } else if ($categories === 'buildings') {
+        $bldg_q = "SELECT bldg_id, bldg_name, room_loc, room_tag 
+            FROM bldg_table NATURAL JOIN room_table 
+            WHERE CAST(bldg_id as CHAR) like :search OR
+            bldg_name like :search OR
+            room_loc like :search OR
+            room_tag like :search
+            ORDER BY bldg_id
+            LIMIT 50 OFFSET :offset";
+        $bldg_count = "SELECT COUNT(*) as Rows
+            FROM bldg_table NATURAL JOIN room_table 
+            WHERE CAST(bldg_id as CHAR) like :search OR
+            bldg_name like :search OR
+            room_loc like :search OR
+            room_tag like :search
+            ORDER BY bldg_id
+            LIMIT 50 OFFSET :offset";
+        $bldg_e = $dbh->prepare($bldg_q);
+        $bldg_e->execute(['search' => "%$tag%",
+            'offset' => $query_offset ]);
+        $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
+
+        $exec_count = $dbh->prepare($bldg_count);
+        $exec_count->execute(['search' => "%$tag%"]);
+        $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+        $row_count = (int)$total_rows['rows'];
+
+        $row_num = isset($query_offset) ? $query_offset + 1 : 1;
+
+        if ($result) {
+            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
+            echo "<section id='showExcel'>";
+            echo "<div class='row'>";
+            echo "<div id='showExcel'  class='search-results'>";
+?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$row_num\")'>
+                    <strong>Row</strong>
+                </div>
+        <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
+                    <strong>Building ID</strong>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
+                    <strong>Building Name</strong>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
+                    <strong>Room Number/Name</strong>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
+                   <strong>Room Tag Number</strong>
+                </div>
+<?php
+            foreach ($result as $row) {
+                $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+
+                // Escape values for safety
+                $bldg_id = htmlspecialchars($row['bldg_id'], ENT_QUOTES);
+                $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
+                $room_num = htmlspecialchars($row['room_loc'], ENT_QUOTES);    
+                $room_tag = htmlspecialchars($row['room_tag'], ENT_QUOTES);  
+?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
+                    <strong>
+                    <?= $row_num++ ?>
+                    </strong>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
+                <strong>
+                    <button  data-toggle="modal" data-target="#modal<?= $bldg_id?>"><?= $bldg_id?></button>
+                </strong>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
+                    <?= $bldg_name ?>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
+                    <?= $room_num ?>
+                </div>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
+                    <?= $room_tag ?>
+                </div>
+<div id="modal<?=$room_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
+                <!-- Modal content -->
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLabel<?= $room_tag; ?>">Room Details for <?= $room_tag ?></h5>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="change_asset_info.php" method="post">
+                                <label for="asset_tag">Building ID:</label>
+                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $bldg_id ?>" >
+                                <br>
+                                <label for="name">Building Name:</label>
+                                <input type="text" id="name" name="name" value="<?= $bldg_name ?>" >
+                                <br>
+
+                                <label for="room_loc">Room Number/Name:</label>
+                                <input type="text" id="room_loc" name="room_loc" value="<?= $room_num ?>" >
+                                <br>
+                                <label for="location">Room Tag:</label>
+                                <input type="text" id="location" name="location" value="<?= $room_tag ?>" >
+                                <br>
+                                <button type="submit">Update Room</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+<?php
+            }
+            echo "</div></div>";
+            echo "</section>";
+        }
+?>
+
         <nav aria-label="Page navigation example">
   <ul class="pagination d-flex justify-content-center">
-    <?php
+<?php
         $total_pages = $row_count / 50;
-    if (($offset === '1' || $offset === 1) && $total_pages > 1) {
-  ?>
+        if (($offset === '1' || $offset === 1) && $total_pages > 1) {
+?>
 <li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Previous</a>
     </li>
@@ -249,36 +368,36 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>"><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+2?></a></li>
 <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>"><?=$offset+3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+3?></a></li>
 <?php }
 if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>"><?=$offset+4?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+4?></a></li>
 <?php }
 if ($total_pages <= 2 & $offset = 2)  { ?>
-    
+
 <?php } else { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Next</a></li>
 
 <?php }
 
-} else if ($total_pages < $offset && $total_pages > 1) {
-    ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+        } else if ($total_pages < $offset && $total_pages > 1) {
+?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Previous</a></li>
     <?php if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>"><?=$offset-4?></a></li>
-    <?php }
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-4?></a></li>
+<?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>"><?=$offset-3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-3?></a></li>
 <?php }
 if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-2?></a></li>
 <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
@@ -287,27 +406,27 @@ if ($total_pages > 2) { ?>
     </li>
     <li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Next</a>
-    </li>    <?php
-} else if ($total_pages > 1) {
-    ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+      </li>    <?php
+        } else if ($total_pages > 1) {
+?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Previous</a></li>
     <?php if ($offset > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+1?></a></li>
     <?php if ($total_pages > $offset + 1) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-6b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Next</a></li>
 <?php
-}
+        }
 ?>
   </ul>
 </nav>

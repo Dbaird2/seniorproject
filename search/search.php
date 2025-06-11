@@ -86,6 +86,8 @@ include_once("../navbar.php");
 <?php
 $search = isset($_GET['search']) ? $_GET['search'] : NULL;
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
+$category = isset($_GET['categories']) ? $_GET['categories'] : 'buildings';
+$status = isset($_GET['statusFilter']) ? $_GET['statusFilter'] : 'In Service';
 if ($search === NULL) {
     $offset = 1;
 }
@@ -95,15 +97,14 @@ if ($search === NULL) {
 <input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
 <input class="search-input" type="text" name="search" id="search" value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
             <select class="filter-select" name="categories" id="categories">
-                <option value="all">All Categories</option>
-                <option value="electronics">Electronics</option>
-                <option value="vehicles">Vehicles</option>
-                <option value="equipment">Equipment</option>
+                <option value="assets">Assets</option>
+                <option value="buildings">Buildings</option>
+                <option value="departments">Departments</option>
             </select>
             <select class="filter-select" id="statusFilter">
-                    <option value="">All Status</option>
-                    <option value="service">In Service</option>
-                    <option value="disposed">Disposed</option>
+                    <option value="All">All Status</option>
+                    <option value="In Service">In Service</option>
+                    <option value="Disposed">Disposed</option>
                 </select>
             <button class="search-button" onclick="performSearch()">Search</button>
         </div>
