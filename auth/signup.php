@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $deptid = $_POST['deptid'] ?? '';
     $dept_id_array = array_values(array_filter(explode(',', $deptid), fn($v) => trim($v) !== ''));
     $role = $_POST['role'] ?? ''; 
+    $role = strtolower($role);
 
     if (!empty($username)) {
          
@@ -68,14 +69,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
         VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[]);";
         $stmt = $dbh->prepare($stmt);
-        $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
-        $dept_stmt = $dbh->prepare($dept_cust);
         $full_name = $f_name . " " . $l_name;
+        $dept_id_array = array_map('trim', $dept_id_array);
+        $dept_pg_array = '{' . implode(',', array_map(function($val) {
+            return '"' . addslashes($val) . '"';
+        |, $dept_id_array)) . '}';
         try {
             if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
                 ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
-                ':dept'=>$dept_id_array])) {
-                $dept_stmt->execute([$full_name], $dept_id_array);
+                ':dept'=>$dept_pg_array])) {
+                if ($role === 'custodian') {
+                    $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
+                    $dept_stmt = $dbh->prepare($dept_cust);
+                    $dept_stmt->execute([$full_name, $dept_id_array);
+                }
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
             }
         } catch (PDOException $e) {

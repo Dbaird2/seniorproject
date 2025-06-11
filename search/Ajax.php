@@ -75,6 +75,8 @@ error_reporting(0);
 if (isset($_POST['search']) || isset($_GET['search'])) {
     $tag = $_POST['search'];
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
+    $query_offset = max(0, (int)($offset - 1));
+    $row_num = ($offset * 50) - 49;
     $result = [];
     if (isset($_SESSION['role'])) {
         $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, 
@@ -83,11 +85,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             OR asset_name LIKE :tag 
             OR serial_num LIKE :tag 
             OR CAST(po as CHAR) LIKE :tag 
-            OR dept_id LIKE :tag LIMIT 50 OFFSET ". max(0, (int)($offset - 1));
+            OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
     }
     
     $exec_query = $dbh->prepare($query);
-    $exec_query->execute(['tag' => "%$tag%"]);
+    $exec_query->execute(['tag' => "%$tag%",
+                          'offset' => $query_offset ]);
     $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
     echo "<p>$offset</p>";
     if ($result) {
@@ -134,7 +137,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                 <strong>
-                    <button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
+                    <?php$row_num++ . " " . ?><button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
                 </strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
