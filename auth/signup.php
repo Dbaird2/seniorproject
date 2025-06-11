@@ -66,13 +66,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!$err) {
         
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?);";
+        VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[]);";
         $stmt = $dbh->prepare($stmt);
         $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
         $dept_stmt = $dbh->prepare($dept_cust);
         $full_name = $f_name . " " . $l_name;
         try {
-            if ($stmt->execute([$username, $password, $email, $role, $f_name, $l_name, $dept_id_array])) {
+            if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
+                ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
+                ':dept'=>$dept_id_array])) {
                 $dept_stmt->execute([$full_name], $dept_id_array);
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
             }
