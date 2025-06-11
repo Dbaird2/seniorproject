@@ -240,7 +240,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $total_pages = $row_count / 50;
     if (($offset === '1' || $offset === 1) && $total_pages > 1) {
   ?>
-    <li class="page-item disabled">
+<li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Previous</a>
     </li>
     <li class="page-item active">
@@ -252,47 +252,65 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
-<?php } 
- if ($total_pages > 3) { ?>
+<?php }
+if ($total_pages > 3) { ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>"><?=$offset+3?></a></li>
 <?php }
-      if ($total_pages <= 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
+if ($total_pages > 4) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>"><?=$offset+4?></a></li>
+<?php }
+if ($total_pages <= 2 & $offset = 2)  { ?>
+    
 <?php } else { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
 
-    <li class="page-item disabled">
-      <a class="page-link" href="#" tabindex="-1">Next</a>
-    </li>
-<?php } 
+<?php }
 
-} else if ($total_pages === $offset){
+} else if ($total_pages < $offset && $total_pages > 1) {
     ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+    <?php if ($total_pages > 4) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>"><?=$offset-4?></a></li>
+    <?php }
+if ($total_pages > 3) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>"><?=$offset-3?></a></li>
+<?php }
+if ($total_pages > 2) { ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>"><?=$offset-2?></a></li>
+<?php } ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
-    </li>   
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
-    <?php
+    </li>
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Next</a>
+    </li>    <?php
 } else if ($total_pages > 1) {
     ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>">Previous</a></li>
+    <?php if ($offset > 2) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>"><?=$offset-2?></a></li>
+    <?php } ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
-    </li>   
+    </li>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>"><?=$offset+1?></a></li>
+    <?php if ($total_pages > $offset + 1) { ?>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>"><?=$offset+2?></a></li>
+    <?php } ?>
     <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>">Next</a></li>
-    <?php
-
-    }
+<?php
 }
+?>
+  </ul>
+</nav>
+<?php }
 }
 ?>
