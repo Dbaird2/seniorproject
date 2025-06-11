@@ -1,6 +1,6 @@
 <?php
 require_once ("../config.php");
-error_reporting(0);
+error_reporting(E_ALL);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -351,6 +351,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             echo "</div></div>";
             echo "</section>";
         }
+    }
 ?>
 
         <nav aria-label="Page navigation example">
@@ -430,6 +431,6 @@ if ($total_pages > 2) { ?>
 ?>
   </ul>
 </nav>
-<?php }
+<?php 
 }
 ?>
