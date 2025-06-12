@@ -1,6 +1,6 @@
 <?php
 require_once ("../config.php");
-error_reporting(E_ALL);
+error_reporting(0);
 ?>
 <head>
     <meta charset="UTF-8">
@@ -433,3 +433,20 @@ if ($total_pages > 2) { ?>
 <?php 
 }
 ?>
+<script> 
+function changeBoxSize(box_size) {
+    var resize = document.querySelectorAll('.excel-info');
+
+    resize.forEach(el => {
+        el.style.minWidth = box_size;
+    });
+}
+</script>
+<?php 
+if ($category === 'assets') {
+    echo "<script>changeBoxSize('8vw');</script>";
+} else if ($category === 'buildings') {
+    echo "<script>changeBoxSize('5vw');</script>";
+} else if ($category === 'assets') {
+    echo "<script>changeBoxSize('9vw');</script>";
+}
