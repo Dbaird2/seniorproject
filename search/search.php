@@ -106,7 +106,7 @@ if ($search === NULL) {
                     <option value="In Service">In Service</option>
                     <option value="Disposed">Disposed</option>
                 </select>
-            <button class="search-button" onclick="performSearch()">Search</button>
+            <button class="search-button" id="search-btn">Search</button>
         </div>
   <br>
   <br />

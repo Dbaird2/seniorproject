@@ -446,7 +446,7 @@ function changeBoxSize(box_size) {
 if ($category === 'assets') {
     echo "<script>changeBoxSize('8vw');</script>";
 } else if ($category === 'buildings') {
-    echo "<script>changeBoxSize('10vw');</script>";
+    echo "<script>changeBoxSize('11vw');</script>";
 } else if ($category === 'assets') {
     echo "<script>changeBoxSize('8vw');</script>";
 }
