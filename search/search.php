@@ -1,5 +1,9 @@
 <?php
 include_once("../config.php");
+if (!isset($_SESSION['role'])) {
+    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
+    exit();
+}
 include_once("../navbar.php");
 ?>
 <!DOCTYPE html>
@@ -107,6 +111,17 @@ if ($search === NULL) {
                     <option value="Disposed">Disposed</option>
                 </select>
             <button class="search-button" id="search-btn">Search</button>
+<br>
+            <label for="asset_name" id="asset_name_label">Asset Name<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> </label>
+            <label for="dept_id" id="dept_id_label">Department ID<input type="checkbox" id="dept_id" value="dept_id" name="dept_id"> </label>
+            <label for="room_tag" id="room_tag_label">Room Tag<input type="checkbox" id="room_tag" value="room_tag" name="room_tag"> </label>
+            <label for="room_loc" id="room_loc_label">Room Number<input type="checkbox" id="room_loc" value="room_loc" name="room_loc"> </label>
+            <label for="asset_sn" id="asset_sn_label">Serial Number<input type="checkbox" id="asset_sn" value="asset_sn" name="asset_sn"> </label>
+            <label for="asset_price" id="asset_price_label">Cost<input type="checkbox" id="asset_price" value="asset_price" name="asset_price"> </label>
+            <label for="asset_po" id="asset_po_label">Purchase Order<input type="checkbox" id="asset_po" value="asset_po" name="asset_po"> </label>
+
+            <label for="bldg_id" id="bldg_id_label">Purchase Order<input type="checkbox" id="bldg_id" value="bldg_id" name="bldg_id"> </label>
+            <label for="bldg_name" id="bldg_name_label">Purchase Order<input type="checkbox" id="bldg_name" value="bldg_name" name="bldg_name"> </label>
         </div>
   <br>
   <br />
