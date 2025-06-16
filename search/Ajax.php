@@ -332,12 +332,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $column_array[] = 'room_loc';
             $where_array[] = 'room_loc LIKE :search';
         }
-        if ($room_tag === 'true') {
-            $join = " NATURAL JOIN room_table ";
-            $header_true['room_tag'] = 'true';
-            $column_array[] = 'room_tag';
-            $where_array[] = 'room_tag LIKE :search';
-        }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
