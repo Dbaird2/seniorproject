@@ -548,4 +548,4 @@ function changeBoxSize(box_size) {
 </script>
 <?php 
 $page_size = $page_size . "vw";
-echo "<script>changeBoxSize('8vw');</script>";
+echo "<script>changeBoxSize($page_size);</script>";
