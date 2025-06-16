@@ -88,7 +88,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
-    $page_size = '15';
     
 
     $query_offset = max(0, (int)($offset - 1)) * 50;
@@ -96,7 +95,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
     $query_start = "SELECT ";
     $query_asset_from = " FROM asset_info AS a ";
-    $query_bldg_from = " FROM bldg_table NATURAL JOIN ";
+    $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
     $query_end = " LIMIT 50 OFFSET :offset";
 
     $header_true = [];
@@ -104,8 +103,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $where_array = [];
 
     if ($room_tag === 'true') {
-        $page_size = $page_size - '1';
+        // Might be wasted, potentially will get rid of
         $header_true['room_tag'] = 'true';
+        // FOR QUERYING
         $column_array[] = 'a.room_tag';
         $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
     }
@@ -114,31 +114,26 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = 'a.asset_tag';
         $where_array[] = 'asset_tag LIKE :search';
         if ($box_name === 'true') {
-            $page_size = $page_size - '1';
             $header_true['asset_name'] = 'true';
             $column_array[] = 'a.asset_name';
             $where_array[] = 'asset_name LIKE :search';
         } 
         if ($asset_sn === 'true') {
-            $page_size = $page_size - '1';
             $header_true['asset_sn'] = 'true';
             $column_array[] = 'a.serial_num';
             $where_array[] = 'serial_num LIKE :search';
         } 
         if ($asset_price === 'true') {
-            $page_size = $page_size - '1';
             $header_true['asset_price'] = 'true';
             $column_array[] = 'a.asset_price';
             $where_array[] = 'CAST(asset_price AS CHAR) LIKE :search';
         } 
         if ($asset_po === 'true') {
-            $page_size = $page_size - '1';
             $header_true['asset_po'] = 'true';
             $column_array[] = 'a.po';
             $where_array[] = 'CAST(po AS CHAR) LIKE :search';
         }
         if ($dept_id === 'true') {
-            $page_size = $page_size - '1';
             $header_true['dept_id'] = 'true';
             $column_array[] = 'a.dept_id';
             $where_array[] = 'dept_id LIKE :search';
@@ -322,13 +317,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = 'bldg_id';
         $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
         if ($bldg_name === 'true') {
-            $page_size = $page_size - '1';
             $header_true['bldg_name'] = 'true';
             $column_array[] = 'bldg_name';
             $where_array[] = 'bldg_name LIKE :search';
         }
         if ($room_loc === 'true') {
-            $page_size = $page_size - '1';
             $header_true['room_loc'] = 'true';
             $column_array[] = 'room_loc';
             $where_array[] = 'room_loc LIKE :search';
@@ -471,15 +464,15 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
- <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+1?></a></li>
+ <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+2?></a></li>
 <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+3?></a></li>
 <?php }
 if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+4?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+4?></a></li>
 
 <?php }
 if ($total_pages <= 2 & $offset = 2)  { ?>
@@ -491,17 +484,17 @@ if ($total_pages <= 2 & $offset = 2)  { ?>
 
         } else if ($total_pages < $offset && $total_pages > 1) {
 ?>
-<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Previous</a></li>
+<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>">Previous</a></li>
     <?php if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-4?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-4?></a></li>
     <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-3?></a></li>
 <?php }
 if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-2?></a></li>
 <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
@@ -513,22 +506,22 @@ if ($total_pages > 2) { ?>
       </li>    <?php
         } else if ($total_pages > 1) {
 ?>
-<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Previous</a></li>
+<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>">Previous</a></li>
     <?php if ($offset > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+1?></a></li>
     <?php if ($total_pages > $offset + 1) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>"><?=$offset+2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Next</a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>">Next</a></li>
     <?php
         }
 ?>
@@ -547,5 +540,18 @@ function changeBoxSize(box_size) {
 }
 </script>
 <?php 
-$page_size = $page_size . 'vw';
-echo "<script>changeBoxSize($page_size);</script>";
+$page_size = '0vw';
+$column_count = 2;
+foreach ($header_true as $count) {
+    $column_count++;
+}
+if ($column_count === 8) {$page_size = '7.5vw';}
+if ($column_count === 7) {$page_size = '8vw';}
+if ($column_count === 6) {$page_size = '10vw';}
+if ($column_count === 5) {$page_size = '12vw';}
+if ($column_count === 4) {$page_size = '15vw';}
+if ($column_count === 3) {$page_size = '20vw';}
+if ($column_count === 2)  {$page_size = '25vw';}
+
+# 2 columns = 25vw, 3 = 20, 4 = 15, 5 = 12, 6 = 10, 7 = 8, 8 = 7.5
+echo "<script>changeBoxSize('$page_size');</script>";

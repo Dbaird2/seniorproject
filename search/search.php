@@ -120,7 +120,6 @@ if ($search === NULL) {
             <label for="asset_price" id="asset_price_label">Cost<input type="checkbox" id="asset_price" value="asset_price" name="asset_price"> </label>
             <label for="asset_po" id="asset_po_label">Purchase Order<input type="checkbox" id="asset_po" value="asset_po" name="asset_po"> </label>
 
-            <label for="bldg_id" id="bldg_id_label">Building ID<input type="checkbox" id="bldg_id" value="bldg_id" name="bldg_id"> </label>
             <label for="bldg_name" id="bldg_name_label">Building Name<input type="checkbox" id="bldg_name" value="bldg_name" name="bldg_name"> </label>
         </div>
   <br>
