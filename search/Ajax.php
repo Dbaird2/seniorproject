@@ -79,16 +79,58 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
     $status = $_POST['statusFilter'];
+    $dept_id = $_POST['dept_id'] ;
+    $room_tag = $_POST['room_tag'] ;
+    $room_loc = $_POST['room_loc'] ;
+    $asset_sn = $_POST['asset_sn'] ;
+    $asset_price = $_POST['asset_price'] ;
+    $asset_po = $_POST['asset_po'] ;
+    $bldg_id = $_POST['bldg_id'] ;
+    $bldg_name = $_POST['bldg_name'] ;
+    $box_name = $_POST['box_name'] ;
+
     $query_offset = max(0, (int)($offset - 1)) * 50;
     $result = [];
+
+    $query_start = "SELECT ";
+    $query_asset_from = " FROM asset_info AS a ";
+    $query_bldg_from = " FROM bldg_table NATURAL JOIN ";
+    $query_end = " LIMIT 50 OFFSET :offset";
+    $column_array = [];
+    $where_array = [];
     if ($category === 'assets') {
-        $query = "SELECT a.asset_tag, a.asset_name, a.serial_num, a.asset_price, 
-            a.po, a.room_tag, a.dept_id FROM asset_info as a 
-            WHERE asset_tag LIKE :tag 
-            OR asset_name LIKE :tag 
-            OR serial_num LIKE :tag 
-            OR CAST(po as CHAR) LIKE :tag 
-            OR dept_id LIKE :tag LIMIT 50 OFFSET :offset";
+        $column_array[] = 'a.asset_tag';
+        $where_array[] = 'asset_tag LIKE :tag';
+        if ($box_name === 'true') {
+            $column_array[] = 'a.asset_name';
+            $where_array[] = 'asset_name LIKE :tag';
+        }if ($asset_sn === 'true') {
+            $column_array[] = 'a.asset_sn';
+            $where_array[] = 'asset_sn LIKE :tag';
+        }if ($asset_price === 'true') {
+            $column_array[] = 'a.asset_price';
+            $where_array[] = 'asset_price LIKE :tag';
+        }if ($asset_po === 'true') {
+            $column_array[] = 'a.asset_po';
+            $where_array[] = 'asset_po LIKE :tag';
+        }if ($dept_id === 'true') {
+            $column_array[] = 'a.dept_id';
+            $where_array[] = 'dept_id LIKE :tag';
+        }
+        $column_array = implode(', ', $column_array);
+        $where_array = implode(', ', $where_array);
+        $query = $query_start . $column_array . ' ' . $query_asset_from . ' WHERE ' . $where_array . $query_end;
+        echo "<script>addCheckboxes('asset_name_label','#asset_name');</script>";
+        echo "<script>addCheckboxes('dept_id_label','#dept_id');</script>";
+        echo "<script>addCheckboxes('room_tag_label','#room_tag');</script>";
+        echo "<script>addCheckboxes('room_loc_label','#room_loc');</script>";
+        echo "<script>addCheckboxes('asset_sn_label','#asset_sn');</script>";
+        echo "<script>addCheckboxes('asset_price_label','#asset_price');</script>";
+        echo "<script>addCheckboxes('asset_po_label','#asset_po');</script>";
+
+        echo "<script>removeCheckbox('#bldg_id', '#bldg_id_label');</script>";
+        echo "<script>removeCheckbox('#bldg_name', '#bldg_name_label');</script>";
+
         $query_count = "SELECT COUNT(*) as Rows
             FROM asset_info
             WHERE asset_tag LIKE :tag 
@@ -234,14 +276,28 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             echo "</section>";
         }
     } else if ($category === 'buildings') {
-        $bldg_q = "SELECT bldg_id, bldg_name, room_loc, room_tag 
-            FROM bldg_table NATURAL JOIN room_table 
-            WHERE CAST(bldg_id as CHAR) like :search OR
-            bldg_name like :search OR
-            room_loc like :search OR
-            CAST(room_tag as CHAR) like :search
-            ORDER BY bldg_id
-            LIMIT 50 OFFSET :offset";
+        if ($bldg_id === 'true') {
+            $column_array[] = 'bldg_id';
+            $where_array[] = 'bldg_id LIKE :tag';
+        }if ($bldg_name === 'true') {
+            $column_array[] = 'bldg_name';
+            $where_array[] = 'bldg_name LIKE :tag';
+        }if ($room_loc === 'true') {
+            $column_array[] = 'room_loc';
+            $where_array[] = 'room_loc LIKE :tag';
+        }
+        $column_array = implode(', ', $column_array);
+        $where_array = implode(', ', $where_array);
+        $query = $query_start . $column_array . ' ' . $query_bldg_from . ' WHERE ' . $where_array . $query_end;
+
+        echo "<script>addCheckboxes('bldg_id_label','#bldg_id');</script>";
+        echo "<script>addCheckboxes('bldg_name_label','#bldg_name');</script>";
+
+        echo "<script>removeCheckbox('#asset_name', '#asset_name_label');</script>";
+        echo "<script>removeCheckbox('#dept_id', '#dept_id_label');</script>";
+        echo "<script>removeCheckbox('#asset_sn', '#asset_sn_label');</script>";
+        echo "<script>removeCheckbox('#asset_price', '#asset_price_label');</script>";
+        echo "<script>removeCheckbox('#asset_po', '#asset_po_label');</script>";
         $bldg_count = "SELECT COUNT(*) as Rows
             FROM bldg_table NATURAL JOIN room_table 
             WHERE CAST(bldg_id as CHAR) like :search OR
@@ -249,7 +305,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             room_loc like :search OR
             CAST(room_tag as CHAR) like :search
             ";
-        $bldg_e = $dbh->prepare($bldg_q);
+        $bldg_e = $dbh->prepare($query);
         $bldg_e->execute(['search' => "%$tag%",
             'offset' => $query_offset ]);
         $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
@@ -299,7 +355,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                 <strong>
-                    <button  data-toggle="modal" data-target="#modal<?= $bldg_id?>"><?= $bldg_id?></button>
+                    <button  data-toggle="modal" data-target="#modal<?= $room_tag?>"><?= $bldg_id?></button>
                 </strong>
                 </div>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
@@ -368,15 +424,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>"><?=$offset+1?></a></li>
+ <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+2?></a></li>
 <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+3?></a></li>
 <?php }
 if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+4?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+4?></a></li>
+
 <?php }
 if ($total_pages <= 2 & $offset = 2)  { ?>
 
@@ -387,17 +444,17 @@ if ($total_pages <= 2 & $offset = 2)  { ?>
 
         } else if ($total_pages < $offset && $total_pages > 1) {
 ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Previous</a></li>
+<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Previous</a></li>
     <?php if ($total_pages > 4) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-4?></a></li>
-<?php }
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-4?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-4?></a></li>
+    <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-3?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-3?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-3?></a></li>
 <?php }
 if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-2?></a></li>
 <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
@@ -409,23 +466,23 @@ if ($total_pages > 2) { ?>
       </li>    <?php
         } else if ($total_pages > 1) {
 ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Previous</a></li>
+<li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Previous</a></li>
     <?php if ($offset > 2) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset-1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset-1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset-1?></a></li>
     <li class="page-item active">
       <span class="page-link">
         <?=$offset?>
         <span class="sr-only">(current)</span>
       </span>
     </li>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+1?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+1?></a></li>
     <?php if ($total_pages > $offset + 1) { ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-6b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+2?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>"><?=$offset+2?></a></li>
     <?php } ?>
-    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&st    atusFilter=<?=urlencode($status)?>">Next</a></li>
-<?php
+    <li class="page-item"><a class="page-link" href="https://dataworks-7b7x.onrender.com/search/search.php?offset=<?=$offset+1?>&search=<?=urlencode($tag)?>&categories=<?=urlencode($category)?>&statusFilter=<?=urlencode($status)?>&box_name=<?= urlencode($box_name)?>&dept_id=<?= urlencode($dept_id)?>&room_tag=<?= urlencode($room_tag)?>&room_loc=<?=urlencode($room_loc)?>&asset_sn=<?=urlencode($asset_sn)?>&bldg_name=<?=urlencode($bldg_name)?>&asset_price=<?=urlencode($asset_price)?>&asset_po=<?=urlencode($asset_po)?>&bldg_id=<?=urlencode($bldg_id)?>">Next</a></li>
+    <?php
         }
 ?>
   </ul>
