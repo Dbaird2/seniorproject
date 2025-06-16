@@ -411,7 +411,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                     <button data-toggle="modal" data-target="#modal<?= $room_tag?>"><?= $room_tag?></button>
                 </strong>
                 </div>
-<?php }
+<?php 
  if (array_key_exists('bldg_name', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $bldg_name ?>
@@ -548,7 +548,7 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
-//}
+}
 ?>
 <script> 
 function changeBoxSize(box_size) {
