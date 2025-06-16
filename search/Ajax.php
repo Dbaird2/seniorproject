@@ -124,7 +124,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($asset_price === 'true') {
             $header_true[] = ['asset_price' => 'true'];
             $column_array[] = 'a.asset_price';
-            $where_array[] = 'asset_price LIKE :search';
+            $where_array[] = 'CAST(asset_price AS CHAR) LIKE :search';
         } 
         if ($asset_po === 'true') {
             $header_true[] = ['asset_po' => 'true'];

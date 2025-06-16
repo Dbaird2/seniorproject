@@ -90,7 +90,7 @@ include_once("../navbar.php");
 <?php
 $search = isset($_GET['search']) ? $_GET['search'] : NULL;
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
-$category = isset($_GET['categories']) ? $_GET['categories'] : 'buildings';
+$category = isset($_GET['categories']) ? $_GET['categories'] : 'assets';
 $status = isset($_GET['statusFilter']) ? $_GET['statusFilter'] : 'In Service';
 if ($search === NULL) {
     $offset = 1;
