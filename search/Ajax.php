@@ -96,30 +96,50 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $query_asset_from = " FROM asset_info AS a ";
     $query_bldg_from = " FROM bldg_table NATURAL JOIN ";
     $query_end = " LIMIT 50 OFFSET :offset";
+
+    $header_true = [];
     $column_array = [];
     $where_array = [];
+
+    if ($room_tag === 'true') {
+        $header_true[] = ['room_tag' => 'true'];
+        $column_array[] = 'a.room_tag';
+        $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
+    }
+
     if ($category === 'assets') {
+        $header_true[] = ['room_tag' => 'true'];
         $column_array[] = 'a.asset_tag';
-        $where_array[] = 'asset_tag LIKE :tag';
+        $where_array[] = 'asset_tag LIKE :search';
         if ($box_name === 'true') {
+            $header_true[] = ['asset_name' => 'true'];
             $column_array[] = 'a.asset_name';
-            $where_array[] = 'asset_name LIKE :tag';
-        }if ($asset_sn === 'true') {
+            $where_array[] = 'asset_name LIKE :search';
+        } 
+        if ($asset_sn === 'true') {
+            $header_true[] = ['asset_sn' => 'true'];
             $column_array[] = 'a.asset_sn';
-            $where_array[] = 'asset_sn LIKE :tag';
-        }if ($asset_price === 'true') {
+            $where_array[] = 'asset_sn LIKE :search';
+        } 
+        if ($asset_price === 'true') {
+            $header_true[] = ['asset_price' => 'true'];
             $column_array[] = 'a.asset_price';
-            $where_array[] = 'asset_price LIKE :tag';
-        }if ($asset_po === 'true') {
+            $where_array[] = 'asset_price LIKE :search';
+        } 
+        if ($asset_po === 'true') {
+            $header_true[] = ['asset_po' => 'true'];
             $column_array[] = 'a.asset_po';
-            $where_array[] = 'CAST(asset_po AS CHAR) LIKE :tag';
-        }if ($dept_id === 'true') {
+            $where_array[] = 'CAST(asset_po AS CHAR) LIKE :search';
+        }
+        if ($dept_id === 'true') {
+            $header_true[] = ['dept_id' => 'true'];
             $column_array[] = 'a.dept_id';
-            $where_array[] = 'dept_id LIKE :tag';
+            $where_array[] = 'dept_id LIKE :search';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query = $query_start . $column_array . ' ' . $query_asset_from . 'WHERE ' . $where_array . $query_end;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE " . $where_array;
         echo "<script>addCheckboxes('asset_name_label','#asset_name');</script>";
         echo "<script>addCheckboxes('dept_id_label','#dept_id');</script>";
         echo "<script>addCheckboxes('room_tag_label','#room_tag');</script>";
@@ -131,20 +151,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('#bldg_id', '#bldg_id_label');</script>";
         echo "<script>removeCheckbox('#bldg_name', '#bldg_name_label');</script>";
 
-        $query_count = "SELECT COUNT(*) as Rows
-            FROM asset_info
-            WHERE asset_tag LIKE :tag 
-            OR asset_name LIKE :tag 
-            OR serial_num LIKE :tag 
-            OR CAST(po as CHAR) LIKE :tag 
-            OR dept_id LIKE :tag";
         $exec_query = $dbh->prepare($query);
-        $exec_query->execute(['tag' => "%$tag%",
+        $exec_query->execute(['search' => "%$tag%",
             'offset' => $query_offset ]);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
         $exec_count = $dbh->prepare($query_count);
-        $exec_count->execute(['tag' => "%$tag%"]);
+        $exec_count->execute(['search' => "%$tag%"]);
         $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         $row_count = (int)$total_rows['rows'];
 
@@ -162,25 +175,36 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
                     <strong>Asset Tag</strong>
                 </div>
+<?php if (array_key_exists('asset_name', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <strong>Asset Name</strong>
                 </div>
+<?php } 
+ if (array_key_exists('dept_id', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
                     <strong>Department ID</strong>
                 </div>
+<?php } 
+ if (array_key_exists('room_tag', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                    <strong> Room Tag</strong>
                 </div>
+<?php } 
+ if (array_key_exists('asset_sn', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                    <strong> Serial Number</strong>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+<?php } 
+ if (array_key_exists('asset_price', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_price\")'>
                     <strong>Price</strong>
                 </div>
+<?php } 
+ if (array_key_exists('asset_po', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
                    <strong> Purchase Order</strong>
                 </div>
-<?php
+<?php } 
             foreach ($result as $row) {
                 $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -203,24 +227,36 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                     <button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
                 </strong>
                 </div>
+<?php if (array_key_exists('asset_name', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <?= $safe_name ?>
                 </div>
+<?php }
+ if (array_key_exists('dept_id', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
                     <?= $safe_deptid ?>
                 </div>
+<?php }
+ if (array_key_exists('room_tag', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                     <?= $safe_room ?>
                 </div>
+<?php }
+ if (array_key_exists('asset_sn', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_serial ?>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+<?php }
+ if (array_key_exists('asset_price', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_price\")'>
                     $<?= $safe_price ?>
                 </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+<?php }
+ if (array_key_exists('asset_po', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
                     <?= $safe_po ?>
                 </div>
+<?php } ?>
 <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                 <!-- Modal content -->
                 <div class="modal-dialog" role="document">
