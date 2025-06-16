@@ -112,14 +112,14 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_array[] = 'asset_price LIKE :tag';
         }if ($asset_po === 'true') {
             $column_array[] = 'a.asset_po';
-            $where_array[] = 'asset_po LIKE :tag';
+            $where_array[] = 'CAST(asset_po AS CHAR) LIKE :tag';
         }if ($dept_id === 'true') {
             $column_array[] = 'a.dept_id';
             $where_array[] = 'dept_id LIKE :tag';
         }
         $column_array = implode(', ', $column_array);
-        $where_array = implode(', ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_asset_from . ' WHERE ' . $where_array . $query_end;
+        $where_array = implode(' OR ', $where_array);
+        $query = $query_start . $column_array . ' ' . $query_asset_from . 'WHERE ' . $where_array . $query_end;
         echo "<script>addCheckboxes('asset_name_label','#asset_name');</script>";
         echo "<script>addCheckboxes('dept_id_label','#dept_id');</script>";
         echo "<script>addCheckboxes('room_tag_label','#room_tag');</script>";
@@ -276,15 +276,14 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             echo "</section>";
         }
     } else if ($category === 'buildings') {
-        if ($bldg_id === 'true') {
-            $column_array[] = 'bldg_id';
-            $where_array[] = 'bldg_id LIKE :tag';
-        }if ($bldg_name === 'true') {
+        $column_array[] = 'bldg_id';
+        $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
+        if ($bldg_name === 'true') {
             $column_array[] = 'bldg_name';
-            $where_array[] = 'bldg_name LIKE :tag';
+            $where_array[] = 'bldg_name LIKE :search';
         }if ($room_loc === 'true') {
             $column_array[] = 'room_loc';
-            $where_array[] = 'room_loc LIKE :tag';
+            $where_array[] = 'room_loc LIKE :search';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(', ', $where_array);
