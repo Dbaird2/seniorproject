@@ -95,24 +95,23 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
     $query_start = "SELECT ";
     $query_asset_from = " FROM asset_info AS a ";
-    $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
     $query_end = " LIMIT 50 OFFSET :offset";
 
     $header_true = [];
     $column_array = [];
     $where_array = [];
 
-    if ($room_tag === 'true') {
-        // Might be wasted, potentially will get rid of
-        $header_true['room_tag'] = 'true';
-        // FOR QUERYING
-        $column_array[] = 'a.room_tag';
-        $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
-    }
 
     if ($category === 'assets') {
         $column_array[] = 'a.asset_tag';
         $where_array[] = 'asset_tag LIKE :search';
+        if ($room_tag === 'true') {
+            // Might be wasted, potentially will get rid of
+            $header_true['room_tag'] = 'true';
+            // FOR QUERYING
+            $column_array[] = 'a.room_tag';
+            $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
+        }
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
             $column_array[] = 'a.asset_name';
@@ -316,6 +315,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     } else if ($category === 'buildings') {
         $column_array[] = 'bldg_id';
         $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
+        if ($room_tag === 'true') {
+            // Might be wasted, potentially will get rid of
+            $header_true['room_tag'] = 'true';
+            // FOR QUERYING
+            $column_array[] = 'room_tag';
+            $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
+        }
         if ($bldg_name === 'true') {
             $header_true['bldg_name'] = 'true';
             $column_array[] = 'bldg_name';
@@ -326,9 +332,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $column_array[] = 'room_loc';
             $where_array[] = 'room_loc LIKE :search';
         }
+        if ($room_tag === 'true') {
+            $join = " NATURAL JOIN room_table ";
+            $header_true['room_tag'] = 'true';
+            $column_array[] = 'room_tag';
+            $where_array[] = 'room_tag LIKE :search';
+        }
         $column_array = implode(', ', $column_array);
-        $where_array = implode(', ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_bldg_from . ' WHERE ' . $where_array . $query_end;
+        $where_array = implode(' OR ', $where_array);
+        $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
+        $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE ' . $where_array . $query_end;
 
         echo "<script>addCheckboxes('bldg_id_label','#bldg_id');</script>";
         echo "<script>addCheckboxes('bldg_name_label','#bldg_name');</script>";
@@ -546,7 +559,7 @@ foreach ($header_true as $count) {
     $column_count++;
 }
 if ($column_count === 8) {$page_size = '7.5vw';}
-if ($column_count === 7) {$page_size = '8vw';}
+if ($column_count === 7) {$page_size = '9vw';}
 if ($column_count === 6) {$page_size = '10vw';}
 if ($column_count === 5) {$page_size = '12vw';}
 if ($column_count === 4) {$page_size = '15vw';}
