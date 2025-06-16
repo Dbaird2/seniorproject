@@ -118,8 +118,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } 
         if ($asset_sn === 'true') {
             $header_true[] = ['asset_sn' => 'true'];
-            $column_array[] = 'a.asset_sn';
-            $where_array[] = 'asset_sn LIKE :search';
+            $column_array[] = 'a.serial_num';
+            $where_array[] = 'serial_num LIKE :search';
         } 
         if ($asset_price === 'true') {
             $header_true[] = ['asset_price' => 'true'];
