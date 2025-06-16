@@ -548,7 +548,7 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
-}
+//}
 ?>
 <script> 
 function changeBoxSize(box_size) {
