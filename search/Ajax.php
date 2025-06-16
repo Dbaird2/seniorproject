@@ -88,7 +88,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
-    $page_size = "15";
+    $page_size = '15';
     
 
     $query_offset = max(0, (int)($offset - 1)) * 50;
@@ -104,7 +104,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $where_array = [];
 
     if ($room_tag === 'true') {
-        $page_size = $page_size - "1";
+        $page_size = $page_size - '1';
         $header_true['room_tag'] = 'true';
         $column_array[] = 'a.room_tag';
         $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
@@ -114,31 +114,31 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = 'a.asset_tag';
         $where_array[] = 'asset_tag LIKE :search';
         if ($box_name === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['asset_name'] = 'true';
             $column_array[] = 'a.asset_name';
             $where_array[] = 'asset_name LIKE :search';
         } 
         if ($asset_sn === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['asset_sn'] = 'true';
             $column_array[] = 'a.serial_num';
             $where_array[] = 'serial_num LIKE :search';
         } 
         if ($asset_price === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['asset_price'] = 'true';
             $column_array[] = 'a.asset_price';
             $where_array[] = 'CAST(asset_price AS CHAR) LIKE :search';
         } 
         if ($asset_po === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['asset_po'] = 'true';
-            $column_array[] = 'a.asset_po';
-            $where_array[] = 'CAST(asset_po AS CHAR) LIKE :search';
+            $column_array[] = 'a.po';
+            $where_array[] = 'CAST(po AS CHAR) LIKE :search';
         }
         if ($dept_id === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['dept_id'] = 'true';
             $column_array[] = 'a.dept_id';
             $where_array[] = 'dept_id LIKE :search';
@@ -322,13 +322,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = 'bldg_id';
         $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
         if ($bldg_name === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['bldg_name'] = 'true';
             $column_array[] = 'bldg_name';
             $where_array[] = 'bldg_name LIKE :search';
         }
         if ($room_loc === 'true') {
-            $page_size = $page_size - "1";
+            $page_size = $page_size - '1';
             $header_true['room_loc'] = 'true';
             $column_array[] = 'room_loc';
             $where_array[] = 'room_loc LIKE :search';
@@ -547,5 +547,5 @@ function changeBoxSize(box_size) {
 }
 </script>
 <?php 
-$page_size = $page_size . "vw";
+$page_size = $page_size . 'vw';
 echo "<script>changeBoxSize($page_size);</script>";
