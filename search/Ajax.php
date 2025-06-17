@@ -161,7 +161,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $count++;
-            $where_dept = ' AND dept_id = ' . $dept_id_search;
+            $where_dept = ' AND dept_id = ' . strtoupper($dept_id_search);
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);

@@ -55,6 +55,7 @@ include_once("../navbar.php");
         border-color: #3b82f6;
         background: white;
     }
+    #dept_id_search,
     #bldg-id-search,
     #status-filter,
     #price-value,
