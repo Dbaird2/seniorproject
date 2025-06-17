@@ -119,6 +119,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
 
     if ($category === 'assets') {
+        $count = 0;
         $where_price = $where_dept = '';
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
@@ -142,7 +143,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_array[] = 'serial_num LIKE :search';
         } 
         if (isset($asset_price_operation)) {
-            $where_price = ' AND asset_price ' . $asset_price_operation . ' :price';
+            $count++;
+            $where_price = ' AND asset_price ' . $asset_price_operation . $asset_price;
         }
         if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
@@ -158,7 +160,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $column_array[] = 'a.dept_id';
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
-            $where_dept = ' AND dept_id = :dept_id';
+            $count++;
+            $where_dept = ' AND dept_id = ' . $dept_id_search;
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
@@ -176,7 +179,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $exec_query = $dbh->prepare($query);
         $exec_query->execute(['search' => "%$tag%",
-            'offset' => $query_offset, 'price' => $asset_price]);
+            'offset' => $query_offset]);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
         $exec_count = $dbh->prepare($query_count);
