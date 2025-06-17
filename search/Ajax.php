@@ -86,7 +86,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $room_tag = $_POST['room_tag'] ;
     $room_loc = $_POST['room_loc'] ;
     $asset_sn = $_POST['asset_sn'] ;
-    $asset_price = $_POST['asset_price'] ;
+    $asset_price = ($_POST['asset_price'] !== '') ? $_POST['asset_price'] : -1;
+    $asset_price_check = $_POST['asset_price_check'];
+    $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
@@ -140,7 +142,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if (isset($asset_price_operation)) {
             $where_price = ' AND asset_price ' . $asset_price_operation . ' ' . $asset_price;
         }
-        if ($asset_price === 'true') {
+        if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
             $column_array[] = 'a.asset_price';
         } 
