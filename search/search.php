@@ -28,6 +28,7 @@ include_once("../navbar.php");
             position: absolute;
             top: 8vh;
     }
+
     .asset-search {
         margin-top: 2vh;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -54,6 +55,10 @@ include_once("../navbar.php");
         border-color: #3b82f6;
         background: white;
     }
+    #bldg-id-search,
+    #status-filter,
+    #price-value,
+    #price-filter,
     .filter-select {
         font-size: calc(1.0vh + 0.4vw);
         padding: 12px 16px;
@@ -62,7 +67,8 @@ include_once("../navbar.php");
         background: #f8fafc;
         cursor: pointer;
     }
-
+    #price-filter:focus,
+    #status-filter:focus,
     .filter-select:focus {
         outline: none;
         border-color: #3b82f6;
@@ -100,28 +106,40 @@ if ($search === NULL) {
 <div class="asset-search">
 <input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
 <input class="search-input" type="text" name="search" id="search" value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-            <select class="filter-select" name="categories" id="categories">
+ <select class="filter-select"  name="categories" id="categories">
                 <option value="assets">Assets</option>
                 <option value="buildings">Buildings</option>
                 <option value="departments">Departments</option>
             </select>
-            <select class="filter-select" id="statusFilter">
-                    <option value="All">All Status</option>
-                    <option value="In Service">In Service</option>
-                    <option value="Disposed">Disposed</option>
+            <br>
+            <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" />
+
+            <select class="filter-assets" name="statusFilter" id="status-filter">
+                    <option value="all">All Status</option>
+                    <option value="service">In Service</option>
+                    <option value="disposed">Disposed</option>
                 </select>
+
+            <select class="filter-assets" name="price-operator" id="price-filter">
+                <option value=">">&gt;</option>
+                <option value="<">&lt;</option>
+                <option value="=">=</option>
+                <option value=">=">&ge;</option>
+                <option value="<=">&le;</option>
+            </select>
+            <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
             <button class="search-button" id="search-btn">Search</button>
 <br>
-            <label for="asset_name" id="asset_name_label">Asset Name<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> </label>
-            <label for="dept_id" id="dept_id_label">Department ID<input type="checkbox" id="dept_id" value="dept_id" name="dept_id"> </label>
-            <label for="room_tag" id="room_tag_label">Room Tag<input type="checkbox" id="room_tag" value="room_tag" name="room_tag"> </label>
+<label for="asset_name" class="filter-assets" id="asset_name_label">Asset Name<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> </label>
+            <label for="dept_id" class="filter-assets" id="dept_id_label">Department ID<input type="checkbox" id="dept_id" value="dept_id" name="dept_id"> </label>
+            <label for="room_tag"class="filter-assets"  id="room_tag_label">Room Tag<input type="checkbox" id="room_tag" value="room_tag" name="room_tag"> </label>
             <label for="room_loc" id="room_loc_label">Room Number<input type="checkbox" id="room_loc" value="room_loc" name="room_loc"> </label>
-            <label for="asset_sn" id="asset_sn_label">Serial Number<input type="checkbox" id="asset_sn" value="asset_sn" name="asset_sn"> </label>
-            <label for="asset_price" id="asset_price_label">Cost<input type="checkbox" id="asset_price" value="asset_price" name="asset_price"> </label>
-            <label for="asset_po" id="asset_po_label">Purchase Order<input type="checkbox" id="asset_po" value="asset_po" name="asset_po"> </label>
+            <label for="asset_sn" class="filter-assets" id="asset_sn_label">Serial Number<input type="checkbox" id="asset_sn" value="asset_sn" name="asset_sn"> </label>
+            <label for="asset_price" class="filter-assets" id="asset_price_label">Cost<input type="checkbox" id="asset_price" value="asset_price" name="asset_price"> </label>
+            <label for="asset_po" class="filter-assets" id="asset_po_label">Purchase Order<input type="checkbox" id="asset_po" value="asset_po" name="asset_po"> </label>
 
-            <label for="bldg_name" id="bldg_name_label">Building Name<input type="checkbox" id="bldg_name" value="bldg_name" name="bldg_name"> </label>
-            <label for="bldg_id" id="bldg_id_label">Building ID<input type="checkbox" id="bldg_id" value="bldg_id" name="bldg_id"> </label>
+            <label for="bldg_id" class="filter-bldg" id="bldg_id_label">Building ID<input type="checkbox" id="bldg_id" value="bldg_id" name="bldg_id"> </label>
+            <label for="bldg_name" class="filter-bldg" id="bldg_name_label">Building Name<input type="checkbox" id="bldg_name" value="bldg_name" name="bldg_name"> </label>
         </div>
   <br>
   <br />

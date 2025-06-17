@@ -75,6 +75,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     if (isset($tag)) {
         echo "<h1>$tag</h1>";
     }
+
+//-------------------------------------------------------------------------
+//  POST TO GET FROM SCRIPT.JS SEARCH FORM
     $tag = $_POST['search'];
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
@@ -88,21 +91,33 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
+//-------------------------------------------------------------------------
     
 
+//-------------------------------------------------------------------------
+//  GET QUERY OFFSET
     $query_offset = max(0, (int)($offset - 1)) * 50;
     $result = [];
+//-------------------------------------------------------------------------
 
+//-------------------------------------------------------------------------
+//  DYNAMIC SQL QUERIES
     $query_start = "SELECT ";
     $query_asset_from = " FROM asset_info AS a ";
     $query_end = " LIMIT 50 OFFSET :offset";
+//-------------------------------------------------------------------------
 
+//-------------------------------------------------------------------------
+//  RESET ARRAYS
     $header_true = [];
     $column_array = [];
     $where_array = [];
+//-------------------------------------------------------------------------
 
 
     if ($category === 'assets') {
+//-------------------------------------------------------------------------
+//      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = 'a.asset_tag';
         $where_array[] = 'asset_tag LIKE :search';
         if ($room_tag === 'true') {
@@ -122,10 +137,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $column_array[] = 'a.serial_num';
             $where_array[] = 'serial_num LIKE :search';
         } 
+        if (isset($asset_price_operation)) {
+            $where_price = ' AND asset_price ' . $asset_price_operation . ' ' . $asset_price;
+        }
         if ($asset_price === 'true') {
             $header_true['asset_price'] = 'true';
             $column_array[] = 'a.asset_price';
-            $where_array[] = 'CAST(asset_price AS CHAR) LIKE :search';
         } 
         if ($asset_po === 'true') {
             $header_true['asset_po'] = 'true';
@@ -139,18 +156,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_asset_from . 'WHERE ' . $where_array . $query_end;
+        $query = $query_start . $column_array . ' ' . $query_from . ' WHERE ' . $where_array . $where_price . $query_end;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE " . $where_array;
-        echo "<script>addCheckboxes('asset_name_label','#asset_name');</script>";
-        echo "<script>addCheckboxes('dept_id_label','#dept_id');</script>";
-        echo "<script>addCheckboxes('room_tag_label','#room_tag');</script>";
-        echo "<script>addCheckboxes('room_loc_label','#room_loc');</script>";
-        echo "<script>addCheckboxes('asset_sn_label','#asset_sn');</script>";
-        echo "<script>addCheckboxes('asset_price_label','#asset_price');</script>";
-        echo "<script>addCheckboxes('asset_po_label','#asset_po');</script>";
+//-------------------------------------------------------------------------
 
-        echo "<script>removeCheckbox('#bldg_id', '#bldg_id_label');</script>";
-        echo "<script>removeCheckbox('#bldg_name', '#bldg_name_label');</script>";
+//-------------------------------------------------------------------------
+//      SHOW CHECKBOXES & INPUT FOR ASSET FILTER
+        echo "<script>addCheckboxes('.filter-assets');</script>";
+
+//-------------------------------------------------------------------------
+//      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
+        echo "<script>removeCheckbox('.filter-bldg');</script>";
 
         $exec_query = $dbh->prepare($query);
         $exec_query->execute(['search' => "%$tag%",
@@ -313,12 +329,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             echo "</section>";
         }
     } else if ($category === 'buildings') {
+//-------------------------------------------------------------------------
+//      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = 'room_tag';
         $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
         if ($bldg_id === 'true') {
-            // Might be wasted, potentially will get rid of
             $header_true['bldg_id'] = 'true';
-            // FOR QUERYING
             $column_array[] = 'bldg_id';
             $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
         }
@@ -336,15 +352,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $where_array = implode(' OR ', $where_array);
         $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
         $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE ' . $where_array . $query_end;
+//-------------------------------------------------------------------------
 
-        echo "<script>addCheckboxes('bldg_id_label','#bldg_id');</script>";
-        echo "<script>addCheckboxes('bldg_name_label','#bldg_name');</script>";
+//-------------------------------------------------------------------------
+//      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
+        echo "<script>addCheckboxes('.filter-bldg');</script>";
 
-        echo "<script>removeCheckbox('#asset_name', '#asset_name_label');</script>";
-        echo "<script>removeCheckbox('#dept_id', '#dept_id_label');</script>";
-        echo "<script>removeCheckbox('#asset_sn', '#asset_sn_label');</script>";
-        echo "<script>removeCheckbox('#asset_price', '#asset_price_label');</script>";
-        echo "<script>removeCheckbox('#asset_po', '#asset_po_label');</script>";
+//-------------------------------------------------------------------------
+//      HIDE CHECKBOXES & INPUT FOR ASSET FILTER
+        echo "<script>removeCheckbox('.filter-assets');</script>";
+
         $bldg_count = "SELECT COUNT(*) as Rows
             FROM bldg_table NATURAL JOIN room_table 
             WHERE CAST(bldg_id as CHAR) like :search OR

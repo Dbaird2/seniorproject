@@ -11,6 +11,8 @@ function searchTrigger() {
     var offset = $('#offset').val();
     var categories = $('#categories').val();
     var statusFilter = $('#statusFilter').val();
+    var price = $('#price-value').val();
+    var price_operation = $('#price-filter').val();
     var box_name = $('#asset_name').prop('checked');
     var dept_id = $('#dept_id').prop('checked');
     var room_tag = $('#room_tag').prop('checked');
@@ -40,11 +42,13 @@ function searchTrigger() {
                 categories: categories,
                 statusFilter: statusFilter,
                 box_name: box_name,
+                asset_price: price,
+                price_operation: price_operation,
                 dept_id: dept_id,
                 room_tag: room_tag,
                 room_loc: room_loc,
                 asset_sn: asset_sn,
-                asset_price: asset_price,
+                asset_price_check: asset_price,
                 asset_po: asset_po,
                 bldg_id: bldg_id,
                 bldg_name: bldg_name,
@@ -84,6 +88,22 @@ $(document).ready(function() {
     $('#categories').on('change', function () {
         localStorage.setItem('categories', $(this).val());
     });
+    const price = localStorage.getItem('price-value');  
+    if (price) {
+        $('#price-value').val(category);
+    }
+
+    $('#price-value').on('change', function () {
+        localStorage.setItem('price-value', $(this).val());
+    });
+    const price_operation = localStorage.getItem('price-filter');  
+    if (price_operation) {
+        $('#price-filter').val(category);
+    }
+
+    $('#price-filter').on('change', function () {
+        localStorage.setItem('price-filter', $(this).val());
+    });
 
     keepCheckboxValues('asset_name', '#asset_name');
     keepCheckboxValues('dept_id', '#dept_id');
@@ -110,11 +130,10 @@ $(document).ready(function() {
         $('#offset').val(1);
     });
 });
-function addCheckboxes(label_id, jasset_id) {
-    const search = document.querySelector('.asset-search');
-    
-    $(jasset_id).show();
-    $('#' + label_id).show();
+function addCheckboxes(jasset_class) {   
+    console.log("Showing:", jasset_class, $(jasset_class).length); // debug
+ 
+    $(jasset_class).show();
 }
 function keepCheckboxValues(asset_name, jasset_id) {
     const asset = localStorage.getItem(asset_name);
@@ -125,9 +144,8 @@ function keepCheckboxValues(asset_name, jasset_id) {
         localStorage.setItem(asset_name, $(this).is(':checked'));
     });
 }
-function removeCheckbox(asset_id,label_id) {
-    $(asset_id).hide();
-    $(label_id).hide();
+function removeCheckbox(jasset_class) {
+    $(jasset_class).hide();
 }
 function getCheckboxValue(asset_id) {
     searchTrigger();
