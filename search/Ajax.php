@@ -83,6 +83,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $category = $_POST['categories'];
     $status = $_POST['statusFilter'];
     $dept_id = $_POST['dept_id'] ;
+    $dept_id_search = $_POST['dept_id_search'];
     $room_tag = $_POST['room_tag'] ;
     $room_loc = $_POST['room_loc'] ;
     $asset_sn = $_POST['asset_sn'] ;
@@ -118,6 +119,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
 
     if ($category === 'assets') {
+        $where_price = $where_dept = '';
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = 'a.asset_tag';
@@ -127,7 +129,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $header_true['room_tag'] = 'true';
             // FOR QUERYING
             $column_array[] = 'a.room_tag';
-            $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
+            $where_array[] = 'CAST(room_tag AS TEXT) LIKE :search';
         }
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
@@ -140,7 +142,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_array[] = 'serial_num LIKE :search';
         } 
         if (isset($asset_price_operation)) {
-            $where_price = ' AND asset_price ' . $asset_price_operation . ' ' . $asset_price;
+            $where_price = ' AND asset_price ' . $asset_price_operation . ' :price';
         }
         if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
@@ -149,16 +151,18 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($asset_po === 'true') {
             $header_true['asset_po'] = 'true';
             $column_array[] = 'a.po';
-            $where_array[] = 'CAST(po AS CHAR) LIKE :search';
+            $where_array[] = 'CAST(po AS TEXT) LIKE :search';
         }
         if ($dept_id === 'true') {
             $header_true['dept_id'] = 'true';
             $column_array[] = 'a.dept_id';
-            $where_array[] = 'dept_id LIKE :search';
+        }
+        if (isset($dept_id_search) && $dept_id_search !== '') {
+            $where_dept = ' AND dept_id = :dept_id';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_asset_from . ' WHERE (' . $where_array . ') ' . $where_price . $query_end;
+        $query = $query_start . $column_array . ' ' . $query_from . ' WHERE (' . $where_array . ') ' . $where_dept . $where_price . $query_end;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ') ' . $where_price;
 //-------------------------------------------------------------------------
 
@@ -172,7 +176,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $exec_query = $dbh->prepare($query);
         $exec_query->execute(['search' => "%$tag%",
-            'offset' => $query_offset ]);
+            'offset' => $query_offset, 'price' => $asset_price]);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
         $exec_count = $dbh->prepare($query_count);
@@ -334,11 +338,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = 'room_tag';
-        $where_array[] = 'CAST(room_tag AS CHAR) LIKE :search';
+        $where_array[] = 'CAST(room_tag AS TEXT) LIKE :search';
         if ($bldg_id === 'true') {
             $header_true['bldg_id'] = 'true';
             $column_array[] = 'bldg_id';
-            $where_array[] = 'CAST(bldg_id AS CHAR) LIKE :search';
+            $where_array[] = 'CAST(bldg_id AS TEXT) LIKE :search';
         }
         if ($bldg_name === 'true') {
             $header_true['bldg_name'] = 'true';
@@ -366,10 +370,10 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $bldg_count = "SELECT COUNT(*) as Rows
             FROM bldg_table NATURAL JOIN room_table 
-            WHERE CAST(bldg_id as CHAR) like :search OR
+            WHERE CAST(bldg_id AS TEXT) like :search OR
             bldg_name like :search OR
             room_loc like :search OR
-            CAST(room_tag as CHAR) like :search
+            CAST(room_tag as TEXT) like :search
             ";
         $bldg_e = $dbh->prepare($query);
         $bldg_e->execute(['search' => "%$tag%",
