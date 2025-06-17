@@ -90,7 +90,7 @@ $(document).ready(function() {
     });
     const price = localStorage.getItem('price-value');  
     if (price) {
-        $('#price-value').val(category);
+        $('#price-value').val(price);
     }
 
     $('#price-value').on('change', function () {
@@ -98,7 +98,7 @@ $(document).ready(function() {
     });
     const price_operation = localStorage.getItem('price-filter');  
     if (price_operation) {
-        $('#price-filter').val(category);
+        $('#price-filter').val(price_operation);
     }
 
     $('#price-filter').on('change', function () {

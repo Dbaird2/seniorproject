@@ -86,7 +86,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $room_tag = $_POST['room_tag'] ;
     $room_loc = $_POST['room_loc'] ;
     $asset_sn = $_POST['asset_sn'] ;
-    $asset_price = ($_POST['asset_price'] !== '') ? $_POST['asset_price'] : -1;
+    $asset_price = ($_POST['asset_price'] !== '') ? (int)$_POST['asset_price'] : -1;
     $asset_price_check = $_POST['asset_price_check'];
     $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
