@@ -15,6 +15,7 @@ function searchTrigger() {
     var price_operation = $('#price-filter').val();
     var box_name = $('#asset_name').prop('checked');
     var dept_id = $('#dept_id').prop('checked');
+    var dept_id_search = $('#dept-id-search').val();
     var room_tag = $('#room_tag').prop('checked');
     var room_loc = $('#room_loc').prop('checked');
     var asset_sn = $('#asset_sn').prop('checked');
@@ -45,6 +46,7 @@ function searchTrigger() {
                 asset_price: price,
                 price_operation: price_operation,
                 dept_id: dept_id,
+                dept_id_search: dept_id_search,
                 room_tag: room_tag,
                 room_loc: room_loc,
                 asset_sn: asset_sn,
@@ -69,6 +71,7 @@ $(document).ready(function() {
     $("#search").keyup(searchTrigger);
     $("#search").ready(searchTrigger); 
     $("#categories").change(searchTrigger);
+    $("#categories").ready(searchTrigger);
     $('#search-btn').click(searchTrigger);
 
     const status = localStorage.getItem('statusFilter');
@@ -103,6 +106,14 @@ $(document).ready(function() {
 
     $('#price-filter').on('change', function () {
         localStorage.setItem('price-filter', $(this).val());
+    });
+    const dept_id_search = localStorage.getItem('dept-id-search');
+    if (dept_id_search) {
+        $('#dept-id-search').val(dept_id_search);
+    }
+
+    $('#dept-id-search').on('change', function () {
+        localStorage.setItem('dept-id-search', $(this).val());
     });
 
     keepCheckboxValues('asset_name', '#asset_name');

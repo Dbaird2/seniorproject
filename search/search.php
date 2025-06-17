@@ -128,6 +128,7 @@ if ($search === NULL) {
                 <option value="<=">&le;</option>
             </select>
             <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
+            <input type="text" class="filter-assets" id="dept-id-search" name="dept-id-search" placeholder="Enter Department ID" />
             <button class="search-button" id="search-btn">Search</button>
 <br>
 <label for="asset_name" class="filter-assets" id="asset_name_label">Asset Name<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> </label>
