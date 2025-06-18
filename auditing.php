@@ -15,6 +15,7 @@ if (isset($_POST['create'])) {
     # it will then create a excel sheet, save it to the sheet, then
     # encode it for file transfering to download
     try {
+        $assets = json_decode($_POST['assets'], true);
         $filePath = __DIR__ . $_POST['filePath'];
 
         $saveDir = __DIR__ . '/exports/';
@@ -33,17 +34,17 @@ if (isset($_POST['create'])) {
         $row_index = 2;
 
         # GET POST DATA
-        $previous_times = $_POST['previousTime'] ?? NULL;
-        $previous_notes = $_POST['previousNote'] ?? NULL;
-        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
-        $headers = $_POST['headers'];
-        $loc = $_POST['loc'];
-        $sn = $_POST['serial'];
-        $po = $_POST['po_num'];
-        $old_tags = $_POST['old_tag'];
-        $desc = $_POST['description'];
-        $cost = $_POST['cost'];
-        $dept = $_POST['dept'];
+        $previous_times = $assets['previousTime'] ?? NULL;
+        $previous_notes = $assets['previousNote'] ?? NULL;
+        $previous_inputs = $assets['previousInputContainer'] ?? NULL;
+        $headers = $assets['headers'];
+        $loc = $assets['loc'];
+        $sn = $assets['serial'];
+        $po = $assets['po_num'];
+        $old_tags = $assets['old_tag'];
+        $desc = $assets['description'];
+        $cost = $assets['cost'];
+        $dept = $assets['dept'];
 
         # GET DOWNLOAD PATH READY
         $fileNameOnly = basename($filePath);
@@ -504,14 +505,15 @@ if (isset($filePath)) {
     }
 
     // Load the spreadsheet
-    if (isset($_POST['dynamicInput'])) {
-        $previous_times = $_POST['previousTime'] ?? NULL;
-        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
-        $previous_notes = $_POST['previousNote'] ?? NULL;
+    $assets = json_decode($_POST['assets'], true);
+    if (isset($assets['dynamicInput'])) {
+        $previous_times = $assets['previousTime'] ?? NULL;
+        $previous_inputs = $assets['previousInputContainer'] ?? NULL;
+        $previous_notes = $assets['previousNote'] ?? NULL;
 
-        $inputs = $_POST['dynamicInput'];
-        $timeInputs = $_POST['dynamicTime'];
-        $noteInputs = $_POST['dynamicNote'];
+        $inputs = $assets['dynamicInput'];
+        $timeInputs = $assets['dynamicTime'];
+        $noteInputs = $assets['dynamicNote'];
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
@@ -769,11 +771,8 @@ if (isset($filePath)) {
         $i++;
     }
     echo "</ul>";
-    ?>
-    <div class='formId'>
-    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
-<?php
 
+#-----------------------------------------------------------------------------------------------------
     foreach ($array as $value) {
         echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
     }
@@ -807,6 +806,12 @@ if (isset($filePath)) {
     foreach ($dept_arr as $dept) {
         echo "<input type='hidden' name='dept[]' value='" . htmlspecialchars($dept) . "'>";
     }
+#-----------------------------------------------------------------------------------------------------
+    ?>
+    <div class='formId'>
+    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
+<?php
+    echo "<input type='hidden' name='assets' id='assets'>";
 
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
@@ -815,17 +820,7 @@ if (isset($filePath)) {
 </div>
 <?php
     echo "</div>";
-?>
-    <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-        <div id="inputContainer">
-            <!-- Input fields will appear here -->
-            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
-        </div>
-<?php
-
-
+#-----------------------------------------------------------------------------------------------------
     foreach ($array as $value) {
         echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
     }
@@ -835,6 +830,18 @@ if (isset($filePath)) {
     foreach ($note_array as $note) {
         echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
     }
+#-----------------------------------------------------------------------------------------------------
+?>
+    <div id="additionalInputs"></div>
+    <form class="dyncamic-form" id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+        <div id="inputContainer">
+            <!-- Input fields will appear here -->
+            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
+        </div>
+<?php
+
+
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
 
@@ -852,6 +859,62 @@ if (isset($filePath)) {
 
 ?>
    <script>
+document.querySelect('.dyncamic-form').addEventListener('submit', function(e) {
+
+    const assets = [];
+
+    // however you're storing the parallel arrays:
+    const previousInputContainer = document.getElementsByName('previousInputContainer[]');
+    const previousTime = document.getElementsByName('previousTime[]');
+    const previousNote = document.getElementsByName('previousNote[]');
+    for (let i = 0; i < tags.length; i++) {
+        assets.push({
+            previousInputContainer: previousInputContainer[i].value,
+            previousTime: previousTime[i].value,
+            previousNote: previousNote[i].value,
+        });
+    }
+
+    // Convert to JSON and set the hidden input
+    document.getElementById('assets').value = JSON.stringify({ assets: assets });
+});
+document.querySelect('.create-form').addEventListener('submit', function(e) {
+    const assets = [];
+
+    // however you're storing the parallel arrays:
+    const previousInputContainer = document.getElementsByName('previousInputContainer[]');
+    const old_tag = document.getElementsByName('old_tag[]');
+    const previousTime = document.getElementsByName('previousTime[]');
+    const previousNote = document.getElementsByName('previousNote[]');
+    const headers = document.getElementsByName('headers[]');
+    const description = document.getElementsByName('description[]');
+    const serial = document.getElementsByName('serial[]');
+    const po_num = document.getElementsByName('po_num[]');
+    const loc = document.getElementsByName('loc[]');
+    const cost = document.getElementsByName('cost[]');
+    const dept = document.getElementsByName('dept[]');
+
+
+    for (let i = 0; i < tags.length; i++) {
+        assets.push({
+            previousInputContainer: previousInputContainer[i].value,
+            old_tag: old_tag[i].value,
+            previousTime: previousTime[i].value,
+            previousNote: previousNote[i].value,
+            headers: headers[i].value,
+            description: description[i].value,
+            serial: serial[i].value,
+            po_num: po_num[i].value,
+            loc: loc[i].value,
+            cost: cost[i].value,
+            dept: dept[i].value
+        });
+    }
+
+    // Convert to JSON and set the hidden input
+    document.getElementById('assets').value = JSON.stringify({ assets: assets });
+
+});
 
 function addNewInput() {
     // Create the div and input
