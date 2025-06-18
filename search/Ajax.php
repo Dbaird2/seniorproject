@@ -95,6 +95,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
     $params = ['search'=>"%$tag%"];
+    $params2 = ['search'=>"%$tag%"];
 //-------------------------------------------------------------------------
     
 
@@ -145,6 +146,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } 
         if (isset($asset_price_operation)) {
             $params['price'] = $asset_price;
+            $params2['price'] = $asset_price;
             $where_price = ' AND asset_price ' . $asset_price_operation . ' :price';
         }
         if ($asset_price_check === 'true') {
@@ -162,12 +164,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $params['dept_id'] = $dept_id_search;
+            $params2['dept_id'] = $dept_id_search;
             $where_dept = ' AND dept_id = ' . ' :dept_id';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query = $query_start . $column_array . ' ' . $query_asset_from . ' WHERE (' . $where_array . ') ' . $where_dept . $where_price . $query_end;
-        $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ') ' . $where_price;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ') ' . $where_dept . $where_price;
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -180,11 +183,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;
+        echo var_dump($params);
         $exec_query->execute($params);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
         $exec_count = $dbh->prepare($query_count);
-        $exec_count->execute(['search' => "%$tag%"]);
+        $exec_count->execute($params2);
         $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         $row_count = (int)$total_rows['rows'];
 
