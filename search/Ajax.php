@@ -94,6 +94,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
+    $params = ['search'=>"%$tag%"];
 //-------------------------------------------------------------------------
     
 
@@ -178,7 +179,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-bldg');</script>";
 
         $exec_query = $dbh->prepare($query);
-        $params['search'] = "%$tag%";
         $params['offset'] = $query_offset;
         $exec_query->execute($params);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
