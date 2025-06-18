@@ -862,7 +862,7 @@ if (isset($filePath)) {
 
 ?>
    <script>
-document.querySelect('.dyncamic-form').addEventListener('submit', function(e) {
+document.querySelector('.dyncamic-form').addEventListener('submit', function(e) {
 
     const assets = [];
 
@@ -881,7 +881,7 @@ document.querySelect('.dyncamic-form').addEventListener('submit', function(e) {
     // Convert to JSON and set the hidden input
     document.getElementById('assets').value = JSON.stringify({ assets: assets });
 });
-document.querySelect('.create-form').addEventListener('submit', function(e) {
+document.querySelector('.create-form').addEventListener('submit', function(e) {
     const assets = [];
 
     // however you're storing the parallel arrays:
