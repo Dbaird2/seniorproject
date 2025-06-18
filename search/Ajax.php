@@ -183,7 +183,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;
-        echo var_dump($params);
         $exec_query->execute($params);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 

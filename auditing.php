@@ -505,6 +505,7 @@ if (isset($filePath)) {
     }
 
     // Load the spreadsheet
+    $assets = '';
     $assets = json_decode($_POST['assets'], true);
     var_dump($assets);
     if (isset($assets['dynamicInput'])) {
@@ -842,11 +843,12 @@ if (isset($filePath)) {
         </div>
 <?php
 
+    echo "<input type='hidden' name='assets' id='assets'>";
 
     echo "<input type='hidden' name='filePath' value='$filePath'>";
 ?>
 
-        <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
+        <button type="button" id="addInputButton">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
 <?php
