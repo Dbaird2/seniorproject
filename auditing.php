@@ -16,6 +16,8 @@ if (isset($_POST['create'])) {
     # encode it for file transfering to download
     try {
         $assets = json_decode($_POST['assets'], true);
+        var_dump($assets);
+
         $filePath = __DIR__ . $_POST['filePath'];
 
         $saveDir = __DIR__ . '/exports/';
@@ -506,6 +508,7 @@ if (isset($filePath)) {
 
     // Load the spreadsheet
     $assets = json_decode($_POST['assets'], true);
+    var_dump($assets);
     if (isset($assets['dynamicInput'])) {
         $previous_times = $assets['previousTime'] ?? NULL;
         $previous_inputs = $assets['previousInputContainer'] ?? NULL;
