@@ -144,7 +144,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } 
         if (isset($asset_price_operation)) {
             $params['price'] = $asset_price;
-            $where_price = ' AND asset_price ' . $asset_price_operation . $asset_price;
+            $where_price = ' AND asset_price ' . $asset_price_operation . ' :price';
         }
         if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
@@ -161,7 +161,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $params['dept_id'] = $dept_id_search;
-            $where_dept = ' AND dept_id = ' . strtoupper($dept_id_search);
+            $where_dept = ' AND dept_id = ' . ' :dept_id';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
