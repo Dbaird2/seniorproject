@@ -863,6 +863,7 @@ if (isset($filePath)) {
 ?>
    <script>
 document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
+    e.preventDefault();
 
     const assets = [];
 
@@ -882,8 +883,11 @@ document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
 
     // Convert to JSON and set the hidden input
     document.getElementById('assets').value = JSON.stringify({ assets: assets });
+
+    this.submit();
 });
 document.querySelector('.create-form').addEventListener('submit', function(e) {
+    e.preventDefault();
     const assets = [];
 
     // however you're storing the parallel arrays:
@@ -920,6 +924,7 @@ document.querySelector('.create-form').addEventListener('submit', function(e) {
     // Convert to JSON and set the hidden input
     document.getElementById('assets').value = JSON.stringify({ assets: assets });
 
+    this.submit();
 });
 
 function addNewInput() {
