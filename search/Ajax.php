@@ -83,7 +83,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $category = $_POST['categories'];
     $status = $_POST['statusFilter'];
     $dept_id = $_POST['dept_id'] ;
-    $dept_id_search = $_POST['dept_id_search'];
+    $dept_id_search = strtoupper($_POST['dept_id_search']);
     $room_tag = $_POST['room_tag'] ;
     $room_loc = $_POST['room_loc'] ;
     $asset_sn = $_POST['asset_sn'] ;
