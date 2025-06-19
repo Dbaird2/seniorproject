@@ -872,7 +872,7 @@ document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
     const previousTime = document.getElementsByName('previousTime[]');
     const previousNote = document.getElementsByName('previousNote[]');
 
-    for (let i = 0; i < previousInputContainer.length; i++) {
+    for (let i = 0; i < tags.length; i++) {
         console.log(previousInputContainer[i], previousTime[i], previousNote[i]);
         assets.push({
             previousInputContainer: previousInputContainer[i].value,
@@ -882,14 +882,14 @@ document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
     }
 
     // Convert to JSON and set the hidden input
-    document.getElementById('assets').value = JSON.stringify({ assets });
+    document.getElementById('assets').value = JSON.stringify({ assets: assets });
 
     this.submit();
 });
 document.querySelector('.create-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const assets = [];
-    var higher_count = 0;
+
     // however you're storing the parallel arrays:
     const previousInputContainer = document.getElementsByName('previousInputContainer[]');
     const old_tag = document.getElementsByName('old_tag[]');
@@ -902,13 +902,9 @@ document.querySelector('.create-form').addEventListener('submit', function(e) {
     const loc = document.getElementsByName('loc[]');
     const cost = document.getElementsByName('cost[]');
     const dept = document.getElementsByName('dept[]');
-    if (previousInputContainer.length > old_tag.length) {
-        higher_count = previousInputContainer.length;
-    } else {
-        higher_count = old_tag.length;
-    }
 
-    for (let i = 0; i < higher_count; i++) {
+
+    for (let i = 0; i < tags.length; i++) {
         console.log(previousInputContainer[i], old_tag[i], previousTime[i], previousNote[i], headers[i], description[i], serial[i], po_num[i], loc[i], cost[i], dept[i]);
         assets.push({
             previousInputContainer: previousInputContainer[i].value,
@@ -926,7 +922,7 @@ document.querySelector('.create-form').addEventListener('submit', function(e) {
     }
 
     // Convert to JSON and set the hidden input
-    document.getElementById('assets').value = JSON.stringify({ assets });
+    document.getElementById('assets').value = JSON.stringify({ assets: assets });
 
     this.submit();
 });
