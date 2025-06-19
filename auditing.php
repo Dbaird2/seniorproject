@@ -899,7 +899,6 @@ document.querySelect('.create-form').addEventListener('submit', function(e) {
 
 
     for (let i = 0; i < tags.length; i++) {
-        console.log(previousInputContainer, old_tag, previousTime, previousNote, headers, description, serial, po_num, loc, cost, dept);
         assets.push({
             previousInputContainer: previousInputContainer[i].value,
             old_tag: old_tag[i].value,
