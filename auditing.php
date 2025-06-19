@@ -428,9 +428,11 @@ include_once("navbar.php");
 </head>
 <?php
 
+/*
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
+ */
 $worksheet = NULL;
 ?>
 <body>
@@ -810,7 +812,7 @@ if (isset($filePath)) {
 #-----------------------------------------------------------------------------------------------------
     ?>
     <div class='formId'>
-    <form class="create-form" id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
+    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 <?php
     echo "<input type='hidden' name='assets' id='assets'>";
 
@@ -834,7 +836,7 @@ if (isset($filePath)) {
 #-----------------------------------------------------------------------------------------------------
 ?>
     <div id="additionalInputs"></div>
-    <form class="dynamic-form" id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+    <form class="dyncamic-form" id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
         <div id="inputContainer">
             <!-- Input fields will appear here -->
             <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
@@ -860,7 +862,7 @@ if (isset($filePath)) {
 
 ?>
    <script>
-document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
+document.querySelector('.dyncamic-form').addEventListener('submit', function(e) {
 
     const assets = [];
 
@@ -868,9 +870,7 @@ document.querySelector('.dynamic-form').addEventListener('submit', function(e) {
     const previousInputContainer = document.getElementsByName('previousInputContainer[]');
     const previousTime = document.getElementsByName('previousTime[]');
     const previousNote = document.getElementsByName('previousNote[]');
-
     for (let i = 0; i < tags.length; i++) {
-        console.log(previousInputContainer[i], previousTime[i], previousNote[i]);
         assets.push({
             previousInputContainer: previousInputContainer[i].value,
             previousTime: previousTime[i].value,
@@ -899,7 +899,7 @@ document.querySelector('.create-form').addEventListener('submit', function(e) {
 
 
     for (let i = 0; i < tags.length; i++) {
-        console.log(previousInputContainer[i], old_tag[i], previousTime[i], previousNote[i], headers[i], description[i], serial[i], po_num[i], loc[i], cost[i], dept[i]);
+        console.log(previousInputContainer, old_tag, previousTime, previousNote, headers, description, serial, po_num, loc, cost, dept);
         assets.push({
             previousInputContainer: previousInputContainer[i].value,
             old_tag: old_tag[i].value,
