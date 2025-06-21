@@ -526,13 +526,6 @@ if (isset($filePath)) {
 
     // Load the spreadsheet
     if (isset($_POST['dynamicInput'])) {
-        $previous_times = $_POST['previousTime'] ?? NULL;
-        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
-        $previous_notes = $_POST['previousNote'] ?? NULL;
-
-        $inputs = $_POST['dynamicInput'];
-        $timeInputs = $_POST['dynamicTime'];
-        $noteInputs = $_POST['dynamicNote'];
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
