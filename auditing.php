@@ -15,7 +15,21 @@ if (isset($_POST['create'])) {
     # it will then create a excel sheet, save it to the sheet, then
     # encode it for file transfering to download
     try {
-        $filePath = __DIR__ . $_POST['filePath'];
+        $download_data = $_POST['download'];
+        list($sn, $po, $loc, $cost, $dept, $headers, $old_tags, $desc, $previous_inputs, $previous_notes, $previous_times, $filePath) = explode('|', $download_data);
+        $sn = explode('`', $sn);
+        $po = explode('`', $po);
+        $loc = explode('`', $loc);
+        $cost = explode('`', $cost);
+        $dept = explode('`', $dept);
+        $headers = explode('`', $headers);
+        $old_tags = explode('`', $old_tags);
+        $desc = explode('`', $desc);
+
+        $previous_inputs = explode('`', $previous_inputs);
+        $previous_times = explode('`', $previous_times);
+        $previous_notes = explode('`', $previous_notes);
+        $filePath = __DIR__ . $filePath;
 
         $saveDir = __DIR__ . '/exports/';
         if (!file_exists($saveDir)) {
@@ -32,18 +46,6 @@ if (isset($_POST['create'])) {
         $column_letters = ['A1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1'];
         $row_index = 2;
 
-        # GET POST DATA
-        $previous_times = $_POST['previousTime'] ?? NULL;
-        $previous_notes = $_POST['previousNote'] ?? NULL;
-        $previous_inputs = $_POST['previousInputContainer'] ?? NULL;
-        $headers = $_POST['headers'];
-        $loc = $_POST['loc'];
-        $sn = $_POST['serial'];
-        $po = $_POST['po_num'];
-        $old_tags = $_POST['old_tag'];
-        $desc = $_POST['description'];
-        $cost = $_POST['cost'];
-        $dept = $_POST['dept'];
 
         # GET DOWNLOAD PATH READY
         $fileNameOnly = basename($filePath);
@@ -135,7 +137,7 @@ include_once("navbar.php");
         body {
             margin: 0;
             height: 100vh;
-            font-size: calc(0.5vw + 0.4vh);
+            font-size: calc(0.6vw + 0.4vh);
             width: 100%;
             position: absolute;
             top: 8vh;
@@ -305,6 +307,7 @@ include_once("navbar.php");
             display: flex;
             position: fixed;
             flex-wrap: wrap;
+            text-align:center;
             justify-content: center;
             left: 0vw;
             top: calc(15rem);
@@ -314,7 +317,7 @@ include_once("navbar.php");
             padding: 1vh 0vw;
             border-radius: 8px;
             max-width: 18%;
-            width:15rem;
+            width:10rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .show-tags::-webkit-scrollbar {
@@ -365,6 +368,16 @@ include_once("navbar.php");
             display: flex;
             justify-content: center;
 
+        }
+        #insert-tags-div {
+            position: fixed;
+            max-height: 70vh;
+            top: 3rem;
+            right:0;
+            padding: 10px;
+            background-color: white;
+            border:1px solid white;
+            overflow-y:auto;
         }
 
         #dynamicForm {
@@ -471,8 +484,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "Error uploading file.";
     }
 } 
-if (isset($_POST['filePath'])) {
-    $filePath = $_POST['filePath'];
+if (isset($_POST['data'])) {
+    $packed = $_POST['data'];
+
+    list($previous_inputs, $previous_notes, $previous_times, $inputs, $noteInputs, $timeInputs, $filePath) = explode('|', $packed);
+    $inputs = explode('`', $inputs);
+    $timeInputs = explode('`', $timeInputs);
+    $noteInputs = explode('`', $noteInputs);
+    $previous_inputs = explode('`', $previous_inputs);
+    $previous_times = explode('`', $previous_times);
+    $previous_notes = explode('`', $previous_notes);
 }
 
 if (isset($filePath)) {
@@ -765,14 +786,10 @@ if (isset($filePath)) {
     foreach ($array as $row) {
         $match2 = in_array($row, $tag_array) ? 1 : 0;
         $colorClass = $match2 ? "tag-match" : "tag-miss";
-        echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$note_array[$i]} <br> {$time_array[$i]}  </li>";
+        echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$note_array[$i]} </li>";
         $i++;
     }
     echo "</ul>";
-    ?>
-    <div class='formId'>
-    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
-<?php
 
     foreach ($array as $value) {
         echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
@@ -808,51 +825,113 @@ if (isset($filePath)) {
         echo "<input type='hidden' name='dept[]' value='" . htmlspecialchars($dept) . "'>";
     }
 
-    echo "<input type='hidden' name='filePath' value='$filePath'>";
-?>
+    echo "<input type='hidden' id='filePath2' name='filePath' value='$filePath'>";
+
+    ?>
+    <div class='formId'>
+    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
+
+        <input type="hidden" name="download" id="download">
+
         <button type='submit' id='create' name='create'>Export Excel</button>
     </form>
 </div>
 <?php
     echo "</div>";
 ?>
-    <div id="additionalInputs"></div>
-    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+<div id="insert-tags-div">
         <div id="inputContainer">
             <!-- Input fields will appear here -->
             <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
             <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
         </div>
-<?php
-
-
-    foreach ($array as $value) {
-        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
-    }
-    foreach ($time_array as $time) {
-        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time) . "'>";
-    }
-    foreach ($note_array as $note) {
-        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note) . "'>";
-    }
-    echo "<input type='hidden' name='filePath' value='$filePath'>";
-?>
+    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
-<?php
-?>
-
-
+</div>
 <?php
 }
 ?>
-<?php
+<script>
 
-?>
-   <script>
+document.addEventListener('DOMContentLoaded', () => {
+const form = document.getElementById('makeSheet');
+if (!form) {
+    console.error("Form with ID 'dynamicForm' not found!");
+    return;
+}
+document.getElementById('makeSheet').addEventListener('submit', (e)=> {
 
+e.preventDefault();
+const previousInputContainer = Array.from(document.getElementsByName('previousInputContainer[]')).map(i=>i.value);
+const previousTime = Array.from(document.getElementsByName('previousTime[]')).map(i=>i.value);
+const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i=>i.value);
+const serial = Array.from(document.getElementsByName('serial[]')).map(i=>i.value);
+const po_num = Array.from(document.getElementsByName('po_num[]')).map(i=>i.value);
+const loc = Array.from(document.getElementsByName('loc[]')).map(i=>i.value);
+const cost = Array.from(document.getElementsByName('cost[]')).map(i=>i.value);
+const dept = Array.from(document.getElementsByName('dept[]')).map(i=>i.value);
+const old_tag = Array.from(document.getElementsByName('old_tag[]')).map(i=>i.value);
+const headers = Array.from(document.getElementsByName('headers[]')).map(i=>i.value);
+const description = Array.from(document.getElementsByName('description[]')).map(i=>i.value);
+
+const filePath = document.getElementById('filePath2').value;
+
+console.log(filePath, previousInputContainer, old_tag, filePath);
+
+
+const download = [
+    serial.join('`'),
+    po_num.join('`'),
+    loc.join('`'),
+    cost.join('`'),
+    dept.join('`'),
+    headers.join('`'),
+    old_tag.join('`'),
+    description.join('`'),
+    previousInputContainer.join('`'),
+    previousNote.join('`'),
+    previousTime.join('`'),
+    filePath
+].join('|');
+document.querySelector('input[name="download"]').value = download;
+document.getElementById('makeSheet').submit();
+});
+document.getElementById('dynamicForm').addEventListener('submit', (e)=> {
+e.preventDefault();
+const dynamicInputs = Array.from(document.getElementsByName('dynamicInput[]')).map(i=>i.value);
+const dynamicNotes = Array.from(document.getElementsByName('dynamicNote[]')).map(i=>i.value);
+const dynamicTimes = Array.from(document.getElementsByName('dynamicTime[]')).map(i=>i.value);
+const previousInputContainer = Array.from(document.getElementsByName('previousInputContainer[]')).map(i=>i.value);
+const previousTime = Array.from(document.getElementsByName('previousTime[]')).map(i=>i.value);
+const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i=>i.value);
+
+
+
+const filePath = document.getElementById('filePath2').value;
+dynamicInputs.forEach(function(tag, index) {
+    if (tag === '') {
+        dynamicInputs.splice(index, 1); // Remove 1 element starting from 'index'
+        dynamicNotes.splice(index, 1); // Remove 1 element starting from 'index'
+    }
+})
+
+    console.log(dynamicInputs, dynamicNotes, dynamicTimes,previousInputContainer,previousTime,previousNote);
+const data = [
+    dynamicInputs.join('`'),
+    dynamicNotes.join('`'),
+    dynamicTimes.join('`'),
+    previousInputContainer.join('`'),
+    previousNote.join('`'),
+    previousTime.join('`'),
+    filePath
+].join('|');
+document.querySelector('input[name="data"]').value = data;
+document.getElementById('dynamicForm').submit();
+});
+});
 function addNewInput() {
     // Create the div and input
     const inputDiv = document.createElement('div');
@@ -917,27 +996,10 @@ function getFormattedDateTime() {
     // Combine date and time
     let formattedDateTime = `${formattedDate} ${formattedTime}`;
 
+
     return formattedDateTime;
 }
 
-
-
-function doNotReload(event) {
-    event.preventDefault();
-
-    var filePath = $('filePath').val();
-
-    $.ajax({
-    url: 'index.php',
-        type: 'POST',
-        data: {
-        filePath: filePath,
-            array: array,
-            time_array: time_array
-    }
-
-    })
-}
 function changeBoxSize(box_size) {
     var resize = document.querySelectorAll('.excel-info');
     console.log(box_size, resize.length);
