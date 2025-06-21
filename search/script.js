@@ -66,6 +66,57 @@ function searchTrigger() {
         });
     }
 }
+function auditTrigger() {
+    var name = $('#search').val();
+    var offset = $('#offset').val();
+    var categories = $('#categories').val();
+    var statusFilter = $('#statusFilter').val();
+    var price = $('#price-value').val();
+    var price_operation = $('#price-filter').val();
+    var box_name = $('#asset_name').prop('checked');
+    var dept_id = $('#dept_id').prop('checked');
+    var dept_id_search = $('#dept-id-search').val();
+    var room_tag = $('#room_tag').prop('checked');
+    var room_loc = $('#room_loc').prop('checked');
+    var asset_sn = $('#asset_sn').prop('checked');
+    var asset_price = $('#asset_price').prop('checked');
+    var asset_po = $('#asset_po').prop('checked');
+    var bldg_id = $('#bldg_id').prop('checked');
+    var bldg_name = $('#bldg_name').prop('checked');
+    var audit = true;
+
+    $.ajax({
+        type: "POST",
+        url: "Ajax.php",
+        data: {
+            offset: offset,
+            categories: categories,
+            statusFilter: statusFilter,
+            box_name: box_name,
+            asset_price: price,
+            price_operation: price_operation,
+            dept_id: dept_id,
+            dept_id_search: dept_id_search,
+            room_tag: room_tag,
+            room_loc: room_loc,
+            asset_sn: asset_sn,
+            asset_price_check: asset_price,
+            asset_po: asset_po,
+            bldg_id: bldg_id,
+            bldg_name: bldg_name,
+            audit: audit,
+
+            search: name
+        },
+        dataType: 'json',  
+        success: function(data) {
+            const jsonString = encodeURIComponent(JSON.stringify(data));
+
+            window.location.href = "http://localhost:3000/audit_data.php";
+        }
+    });
+}
+
 $(document).ready(function() {
     //On pressing a key on "Search box" in "search.php" file. This function will be called.
     $("#search").keyup(searchTrigger);
@@ -73,6 +124,9 @@ $(document).ready(function() {
     $("#categories").change(searchTrigger);
     $("#categories").ready(searchTrigger);
     $('#search-btn').click(searchTrigger);
+
+    $('#audit-btn').click(auditTrigger);
+
 
     const status = localStorage.getItem('statusFilter');
     if (status) {

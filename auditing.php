@@ -317,7 +317,7 @@ include_once("navbar.php");
             padding: 1vh 0vw;
             border-radius: 8px;
             max-width: 18%;
-            width:10rem;
+            width:8rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .show-tags::-webkit-scrollbar {
@@ -774,7 +774,7 @@ if (isset($filePath)) {
 
     $i = 0;
     echo "<div class='show-tags'>";
-    echo "<h4 >Tags Scanned</h4>";
+    echo "<h3>Tags Scanned</h3>";
     echo "<ul>";
     foreach ($array as $row) {
         $match2 = in_array($row, $tag_array) ? 1 : 0;

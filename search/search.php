@@ -131,6 +131,8 @@ if ($search === NULL) {
             <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
             <input type="text" class="filter-assets" id="dept-id-search" name="dept-id-search" placeholder="Enter Department ID" />
             <button class="search-button" id="search-btn">Search</button>
+            <button class="filter-assets search-button" id="audit-btn">Audit</button>
+
 <br>
 <label for="asset_name" class="filter-assets" id="asset_name_label">Asset Name<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> </label>
             <label for="dept_id" class="filter-assets" id="dept_id_label">Department ID<input type="checkbox" id="dept_id" value="dept_id" name="dept_id"> </label>

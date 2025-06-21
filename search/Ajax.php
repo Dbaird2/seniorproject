@@ -1,7 +1,34 @@
 <?php
 require_once ("../config.php");
 error_reporting(0);
+if (isset($_POST['audit'])) {
+    $where_dept = $where_price = '';
+    if ($_POST['dept_id_search'] !== '') {
+        $params['dept_id'] = $_POST['dept_id_search'];
+        $where_dept = ' AND dept_id = :dept_id ';
+    }
+    if ($_POST['asset_price' !== '']) {
+        $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
+    }
+    $search = $_POST['search'];
+    $params = ['search'=>"%$$search%"];
+    $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
+        a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
+        JOIN room_table AS r ON a.room_tag = r.room_tag 
+        JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
+        WHERE (asset_tag LIKE :search OR serial_num LIKE :search OR asset_name LIKE :search 
+        OR CAST(po AS TEXT) LIKE :search) " . $where_dept . $where_price;
+    $stmt = $dbh->prepare($audit_query);
+    $stmt->execute($params);
+    $data_from_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = json_encode($data_from_db);
+    $_SESSION['audit_data'] = $data_from_db;
+    header('Content-Type: application/json');
+    exit;
+}
 ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
