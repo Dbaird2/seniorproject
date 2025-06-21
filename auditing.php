@@ -525,7 +525,7 @@ if (isset($filePath)) {
     }
 
     // Load the spreadsheet
-    if (isset($_POST['dynamicInput'])) {
+    if (isset($inputs)) {
 
         # CHECK FOR DUPES IN NEW TAG INPUTS
         $seen = [];
