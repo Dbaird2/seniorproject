@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-if (isset($_POST['create'])) {
+if (isset($_POST['download'])) {
 
     # This if statement will get the current directory +appended filename,
     # current direct + appended export directory, create the export directory
@@ -847,6 +847,7 @@ if (isset($filePath)) {
         </div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
+        <input type="hidden" name="data" id="data">
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
@@ -899,6 +900,7 @@ const download = [
 document.querySelector('input[name="download"]').value = download;
 document.getElementById('makeSheet').submit();
 });
+
 document.getElementById('dynamicForm').addEventListener('submit', (e)=> {
 e.preventDefault();
 const dynamicInputs = Array.from(document.getElementsByName('dynamicInput[]')).map(i=>i.value);
@@ -1002,11 +1004,9 @@ function getFormattedDateTime() {
 
 function changeBoxSize(box_size) {
     var resize = document.querySelectorAll('.excel-info');
-    console.log(box_size, resize.length);
 
     resize.forEach(el => {
         el.style.minWidth = box_size;
-        console.log(el, "sefaef", box_size)
     });
 }
 /*
