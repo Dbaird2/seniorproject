@@ -216,6 +216,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         if ($tag === 'all') {
             $where = '';
+            echo $where;
             $where_dept = $where_price = '';
             if ($_POST['dept_id_search'] !== '') {
                 $where = " WHERE ";
