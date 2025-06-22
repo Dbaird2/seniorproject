@@ -107,9 +107,6 @@ error_reporting(E_ALL);
         </style>
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
-    if (isset($tag)) {
-        echo "<h1>$tag</h1>";
-    }
 
 //-------------------------------------------------------------------------
 //  POST TO GET FROM SCRIPT.JS SEARCH FORM
@@ -211,7 +208,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price . $query_end;
-        echo $query;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price;
 //-------------------------------------------------------------------------
 
@@ -242,7 +238,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;
-        echo var_dump($params);
         $exec_query->execute($params);
         $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -677,6 +672,8 @@ $column_count = 2;
 foreach ($header_true as $count) {
     $column_count++;
 }
+echo $column_count;
+if ($column_count === 10) {$page_size = '5vw';}
 if ($column_count === 8) {$page_size = '7.5vw';}
 if ($column_count === 7) {$page_size = '9vw';}
 if ($column_count === 6) {$page_size = '10vw';}
