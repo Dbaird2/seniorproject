@@ -129,8 +129,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $bldg_id = $_POST['bldg_id'] ;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
-    $params = ['search'=>"%$tag%"];
-    $params2 = ['search'=>"%$tag%"];
+    $params = [':search'=>"%$tag%"];
+    $params2 = [':search'=>"%$tag%"];
 //-------------------------------------------------------------------------
     
 
@@ -180,8 +180,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_array[] = "a.serial_num LIKE :search";
         } 
         if (isset($asset_price_operation)) {
-            $params['price'] = $asset_price;
-            $params2['price'] = $asset_price;
+            $params[':price'] = $asset_price;
+            $params2[':price'] = $asset_price;
             $where_price = " AND a.asset_price " . $asset_price_operation . " :price";
         }
         if ($asset_price_check === 'true') {
@@ -198,8 +198,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $column_array[] = "a.dept_id";
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
-            $params['dept_id'] = $dept_id_search;
-            $params2['dept_id'] = $dept_id_search;
+            $params[':dept_id'] = $dept_id_search;
+            $params2[':dept_id'] = $dept_id_search;
             $where_dept = " AND a.dept_id =  :dept_id";
         }
         if ($room_loc === 'true') {
@@ -222,7 +222,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
-
+/*
         if ($tag === 'all' || $tag === '') {
             $where = '';
             $where_dept = $where_price = '';
@@ -238,7 +238,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " .
                 $where . $where_dept . $where_price . $query_end;
         }
-
+ */
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;

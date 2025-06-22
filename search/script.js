@@ -27,7 +27,9 @@ function searchTrigger() {
     //Validating, if "name" is empty.
     if (name == "") {
         //Assigning empty value to "display" div in "search.php" file.
-        name = "all";
+       // name = "all";
+        $("#display").html("");
+
     }
     //If name is not empty.
     else {
