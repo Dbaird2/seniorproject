@@ -172,17 +172,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
             $column_array[] = 'a.asset_name';
-            $where_array[] = 'asset_name LIKE :search';
+            $where_array[] = 'a.asset_name LIKE :search';
         } 
         if ($asset_sn === 'true') {
             $header_true['asset_sn'] = 'true';
             $column_array[] = 'a.serial_num';
-            $where_array[] = 'serial_num LIKE :search';
+            $where_array[] = 'a.serial_num LIKE :search';
         } 
         if (isset($asset_price_operation)) {
             $params['price'] = $asset_price;
             $params2['price'] = $asset_price;
-            $where_price = ' AND asset_price ' . $asset_price_operation . ' :price';
+            $where_price = ' AND a.asset_price ' . $asset_price_operation . ' :price';
         }
         if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
@@ -191,7 +191,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($asset_po === 'true') {
             $header_true['asset_po'] = 'true';
             $column_array[] = 'a.po';
-            $where_array[] = 'CAST(po AS TEXT) LIKE :search';
+            $where_array[] = 'CAST(a.po AS TEXT) LIKE :search';
         }
         if ($dept_id === 'true') {
             $header_true['dept_id'] = 'true';
@@ -200,7 +200,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $params['dept_id'] = $dept_id_search;
             $params2['dept_id'] = $dept_id_search;
-            $where_dept = ' AND dept_id = ' . ' :dept_id';
+            $where_dept = ' AND a.dept_id = ' . ' :dept_id';
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
