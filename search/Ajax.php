@@ -19,7 +19,7 @@ if (isset($_POST['audit'])) {
         $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
     }
     $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
-        a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
+        a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
         JOIN room_table AS r ON a.room_tag = r.room_tag 
         JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
         WHERE (asset_tag LIKE :search OR serial_num LIKE :search OR asset_name LIKE :search 
