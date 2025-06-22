@@ -8,15 +8,16 @@ error_reporting(E_ALL);
 //
 if (isset($_POST['audit'])) {
     $where_dept = $where_price = '';
+    $search = $_POST['search'];
+    $params = ['search'=>"%$search%"];
     if ($_POST['dept_id_search'] !== '') {
         $params['dept_id'] = $_POST['dept_id_search'];
         $where_dept = ' AND dept_id = :dept_id ';
     }
     if ($_POST['asset_price' !== '']) {
+        $params['price'] = $_POST['asset_price'];
         $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
     }
-    $search = $_POST['search'];
-    $params = ['search'=>"%$search%"];
     $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
         a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
         JOIN room_table AS r ON a.room_tag = r.room_tag 
