@@ -167,7 +167,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $header_true['room_tag'] = 'true';
             // FOR QUERYING
             $column_array[] = 'a.room_tag';
-            $where_array[] = 'CAST(room_tag AS TEXT) LIKE :search';
+            $where_array[] = 'CAST(a.room_tag AS TEXT) LIKE :search';
         }
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
