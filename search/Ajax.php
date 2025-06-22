@@ -160,58 +160,58 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $where_price = $where_dept = $location = '';
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
-        $column_array[] = 'a.asset_tag';
-        $where_array[] = 'asset_tag LIKE :search';
+        $column_array[] = "a.asset_tag";
+        $where_array[] = "a.asset_tag LIKE :search";
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of
             $header_true['room_tag'] = 'true';
             // FOR QUERYING
-            $column_array[] = 'a.room_tag';
-            $where_array[] = 'CAST(a.room_tag AS TEXT) LIKE :search';
+            $column_array[] = "a.room_tag";
+            $where_array[] = "CAST(a.room_tag AS TEXT) LIKE :search";
         }
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
-            $column_array[] = 'a.asset_name';
-            $where_array[] = 'a.asset_name LIKE :search';
+            $column_array[] = "a.asset_name";
+            $where_array[] = "a.asset_name LIKE :search";
         } 
         if ($asset_sn === 'true') {
             $header_true['asset_sn'] = 'true';
-            $column_array[] = 'a.serial_num';
-            $where_array[] = 'a.serial_num LIKE :search';
+            $column_array[] = "a.serial_num";
+            $where_array[] = "a.serial_num LIKE :search";
         } 
         if (isset($asset_price_operation)) {
             $params['price'] = $asset_price;
             $params2['price'] = $asset_price;
-            $where_price = ' AND a.asset_price ' . $asset_price_operation . ' :price';
+            $where_price = " AND a.asset_price " . $asset_price_operation . " :price";
         }
         if ($asset_price_check === 'true') {
             $header_true['asset_price'] = 'true';
-            $column_array[] = 'a.asset_price';
+            $column_array[] = "a.asset_price";
         } 
         if ($asset_po === 'true') {
             $header_true['asset_po'] = 'true';
             $column_array[] = 'a.po';
-            $where_array[] = 'CAST(a.po AS TEXT) LIKE :search';
+            $where_array[] = "CAST(a.po AS TEXT) LIKE :search";
         }
         if ($dept_id === 'true') {
             $header_true['dept_id'] = 'true';
-            $column_array[] = 'a.dept_id';
+            $column_array[] = "a.dept_id";
         }
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $params['dept_id'] = $dept_id_search;
             $params2['dept_id'] = $dept_id_search;
-            $where_dept = ' AND a.dept_id = ' . ' :dept_id';
+            $where_dept = " AND a.dept_id =  :dept_id";
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
-            $location_from = ' JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ';
-            $column_array[] = 'b.bldg_name';
-            $column_array[] = 'r.room_loc';
+            $location_from = " JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ";
+            $column_array[] = "b.bldg_name";
+            $column_array[] = "r.room_loc";
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_asset_from . $location_from . ' WHERE (' . $where_array . ') ' . $where_dept . $where_price . $query_end;
-        $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ') ' . $where_dept . $where_price;
+        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price . $query_end;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ") " . $where_dept . $where_price;
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -232,7 +232,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $where = " WHERE ";
             }
             $exec_query = "SELECT a.asset_tag, a.serial_num, a.po, 
-                a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
+                a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
                 JOIN room_table AS r ON a.room_tag = r.room_tag 
                 JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " .
                 $where . $where_dept . $where_price . $query_end;
