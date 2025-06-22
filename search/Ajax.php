@@ -224,7 +224,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
                 JOIN room_table AS r ON a.room_tag = r.room_tag 
                 JOIN bldg_table AS b ON r.bldg_id = b.bldg_id "
-                $where . $where_dept . $where_price;
+                $where . $where_dept . $where_price . $query_end;
         }
 
 
