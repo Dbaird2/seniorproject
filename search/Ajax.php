@@ -25,6 +25,7 @@ if (isset($_POST['audit'])) {
     $data = json_encode($data_from_db);
     $_SESSION['audit_data'] = $data_from_db;
     header('Content-Type: application/json');
+    echo $data;
     exit;
 }
 ?>
