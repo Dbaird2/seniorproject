@@ -155,7 +155,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
     if ($category === 'assets') {
         $dept_id_search_active = $price_search_active = 0;
-        $where_price = $where_dept = '';
+        $where_price = $where_dept = $location = '';
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = 'a.asset_tag';
@@ -200,9 +200,14 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $params2['dept_id'] = $dept_id_search;
             $where_dept = ' AND dept_id = ' . ' :dept_id';
         }
+        if ($room_loc === 'true') {
+            $location_from = ' JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ';
+            $column_array[] = 'b.bldg_name';
+            $column_array[] = 'r.room_loc';
+        }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . ' ' . $query_asset_from . ' WHERE (' . $where_array . ') ' . $where_dept . $where_price . $query_end;
+        $query = $query_start . $column_array . ' ' . $query_asset_from . $location_from . ' WHERE (' . $where_array . ') ' . $where_dept . $where_price . $query_end;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ') ' . $where_dept . $where_price;
 //-------------------------------------------------------------------------
 
