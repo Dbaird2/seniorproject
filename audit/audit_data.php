@@ -10,9 +10,6 @@ $contentType = $_SERVER["CONTENT_TYPE"] ?? '';
 $data = json_decode($input, true);
 
 
-
-$_SESSION['audit_data'] = $data;
-
 header("Location: https://dataworks-7b7x.onrender.come/audit/db_audit.php");
 echo json_encode(['status' => 'success']);
 

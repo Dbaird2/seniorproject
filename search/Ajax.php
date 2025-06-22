@@ -1,6 +1,8 @@
 <?php
 require_once ("../config.php");
-error_reporting(0);
+
+//error_reporting(0);
+//
 if (isset($_POST['audit'])) {
     $where_dept = $where_price = '';
     if ($_POST['dept_id_search'] !== '') {
@@ -11,7 +13,7 @@ if (isset($_POST['audit'])) {
         $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
     }
     $search = $_POST['search'];
-    $params = ['search'=>"%$$search%"];
+    $params = ['search'=>"%$search%"];
     $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
         a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
         JOIN room_table AS r ON a.room_tag = r.room_tag 
@@ -208,6 +210,23 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
+
+        if ($tag === 'all') {
+            $where = '';
+            $where_dept = $where_price = '';
+            if ($_POST['dept_id_search'] !== '') {
+                $where = " WHERE ";
+            }
+            if ($_POST['asset_price' !== '']) {
+                $where = " WHERE ";
+            }
+            $exec_query = "SELECT a.asset_tag, a.serial_num, a.po, 
+                a.asset_name, a.asset_price, a.room_tag, a.dept_id, d.bldg_name, r.room_loc FROM asset_info AS a 
+                JOIN room_table AS r ON a.room_tag = r.room_tag 
+                JOIN bldg_table AS b ON r.bldg_id = b.bldg_id "
+                $where . $where_dept . $where_price;
+        }
+
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;

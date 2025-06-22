@@ -28,6 +28,7 @@ function searchTrigger() {
     if (name == "") {
         //Assigning empty value to "display" div in "search.php" file.
         $("#display").html("");
+        name = 'all';
     }
     //If name is not empty.
     else {
@@ -112,7 +113,7 @@ function auditTrigger() {
         success: function(data) {
             const jsonString = encodeURIComponent(JSON.stringify(data));
 
-            window.location.href = "http://localhost:3000/audit_data.php";
+            window.location.href = "https://dataworks-7b7x.onrender.com/audit/audit_data.php";
         }
     });
 }
