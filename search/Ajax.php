@@ -201,6 +201,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_dept = ' AND dept_id = ' . ' :dept_id';
         }
         if ($room_loc === 'true') {
+            $header_true['room_loc'] = 'true';
             $location_from = ' JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ';
             $column_array[] = 'b.bldg_name';
             $column_array[] = 'r.room_loc';
@@ -219,7 +220,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
 
-        if ($tag === 'all') {
+        if ($tag === 'all' || $tag === '') {
             $where = '';
             $where_dept = $where_price = '';
             if ($_POST['dept_id_search'] !== '') {
@@ -273,7 +274,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 <?php } 
  if (array_key_exists('room_tag', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                   <strong> Room Tag</strong>
+                   <strong>Room Tag</strong>
+                </div>
+<?php } 
+ if (array_key_exists('room_loc', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
+                   <strong>Room Number</strong>
+                </div>
+<?php } 
+ if (array_key_exists('room_loc', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
+                   <strong>Building Name</strong>
                 </div>
 <?php } 
  if (array_key_exists('asset_sn', $header_true)) { ?>
@@ -302,6 +313,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
                 $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
                 $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
+                $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
+                $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES);
 ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
                     <strong>
@@ -331,6 +344,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
  if (array_key_exists('asset_sn', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_serial ?>
+                </div>
+<?php }
+ if (array_key_exists('room_loc', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+                    <?= $room_loc ?>
+                </div>
+<?php }
+ if (array_key_exists('bldg_name', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+                    <?= $bldg_name ?>
                 </div>
 <?php }
  if (array_key_exists('asset_price', $header_true)) { ?>
