@@ -1,11 +1,7 @@
 <?php
 require_once ("../config.php");
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-//error_reporting(0);
-//
+error_reporting(0);
 if (isset($_POST['audit'])) {
     $where_dept = $where_price = '';
     $search = $_POST['search'];
@@ -14,7 +10,7 @@ if (isset($_POST['audit'])) {
         $params['dept_id'] = $_POST['dept_id_search'];
         $where_dept = ' AND dept_id = :dept_id ';
     }
-    if ($_POST['asset_price' !== '']) {
+    if ($_POST['asset_price'] !== '') {
         $params['price'] = $_POST['asset_price'];
         $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
     }
@@ -34,6 +30,9 @@ if (isset($_POST['audit'])) {
     echo $data;
     exit;
 }
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
 
 <head>
