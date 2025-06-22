@@ -211,6 +211,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price . $query_end;
+        echo $query;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info WHERE (" . $where_array . ") " . $where_dept . $where_price;
 //-------------------------------------------------------------------------
 
