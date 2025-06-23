@@ -159,10 +159,7 @@ include_once("navbar.php");
             flex-wrap: wrap;
             text-align: center;
         }
-
-
         #showExcel {
-
             margin:auto;
             text-align:center;
             justify-content: left;
@@ -170,8 +167,8 @@ include_once("navbar.php");
         }
 
         .excel-info {
-            min-height: 4vh;
-            max-height: 4vh;
+            min-height: 4.5vh;
+            max-height: 4.5vh;
             min-width: 7vw;
             max-width: 20vw;
             flex: 1;
@@ -317,7 +314,7 @@ include_once("navbar.php");
             padding: 1vh 0vw;
             border-radius: 8px;
             max-width: 20%;
-            width:8vw;
+            width: 9rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .show-tags::-webkit-scrollbar {
@@ -428,9 +425,6 @@ include_once("navbar.php");
             display: flex;
             flex-wrap: wrap;
             text-align: center;
-        }
-        .row-4rols {
-
         }
     </style>
 
@@ -833,17 +827,17 @@ if (isset($filePath)) {
     echo "</div>";
 ?>
 <div id="insert-tags-div">
-        <div id="inputContainer">
-            <!-- Input fields will appear here -->
-            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
-        </div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
         <input type="hidden" name="data" id="data">
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
+        <div id="inputContainer">
+            <!-- Input fields will appear here -->
+            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
+        </div>
 </div>
 <?php
 }
