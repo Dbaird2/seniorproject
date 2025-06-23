@@ -271,6 +271,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                     <strong>Department ID</strong>
                 </div>
 <?php } 
+ if (array_key_exists('asset_sn', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
+                   <strong> Serial Number</strong>
+                </div>
+<?php } 
  if (array_key_exists('room_tag', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                    <strong>Room Tag</strong>
@@ -284,11 +289,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
  if (array_key_exists('bldg_name', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                    <strong>Building Name</strong>
-                </div>
-<?php } 
- if (array_key_exists('asset_sn', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                   <strong> Serial Number</strong>
                 </div>
 <?php } 
  if (array_key_exists('asset_price', $header_true)) { ?>
@@ -335,14 +335,14 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                     <?= $safe_deptid ?>
                 </div>
 <?php }
- if (array_key_exists('room_tag', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                    <?= $safe_room ?>
-                </div>
-<?php }
  if (array_key_exists('asset_sn', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
                     <?= $safe_serial ?>
+                </div>
+<?php }
+ if (array_key_exists('room_tag', $header_true)) { ?>
+                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
+                    <?= $safe_room ?>
                 </div>
 <?php }
  if (array_key_exists('room_loc', $header_true)) { ?>
