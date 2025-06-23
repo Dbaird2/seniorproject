@@ -368,8 +368,10 @@ include_once("navbar.php");
         }
         #insert-tags-div {
             position: fixed;
+            display: flex;
+            flex-direction: column;
             max-height: 70vh;
-            top: 3rem;
+            top: 5.5rem;
             right:0;
             padding: 10px;
             background-color: white;
@@ -410,13 +412,11 @@ include_once("navbar.php");
 
         .dynamicId::placeholder {
             font-size: calc(0.5vw + 0.4vh);
-
             color: #777;
         }
 
         .dynamicId:focus::placeholder {
             font-size: calc(0.5vw + 0.4vh);
-
             opacity: 0;
             transition: opacity .3s;
         }

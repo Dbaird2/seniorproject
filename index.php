@@ -12,7 +12,7 @@ if (isset($_SESSION['role'])) {
 
     $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
 
-    $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view";
+    $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
     try {
         $stmt = $dbh->prepare($query);
         $stmt_user = $dbh->prepare($user_query);
