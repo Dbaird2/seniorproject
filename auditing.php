@@ -827,17 +827,17 @@ if (isset($filePath)) {
     echo "</div>";
 ?>
 <div id="insert-tags-div">
+        <div id="inputContainer">
+            <!-- Input fields will appear here -->
+            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
+            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
+        </div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
         <input type="hidden" name="data" id="data">
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
     </form>
-        <div id="inputContainer">
-            <!-- Input fields will appear here -->
-            <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
-        </div>
 </div>
 <?php
 }

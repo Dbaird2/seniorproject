@@ -674,7 +674,7 @@ foreach ($header_true as $count) {
     $column_count++;
 }
 if ($column_count === 10) {$page_size = '6.5vw';}
-if ($column_count === 10) {$page_size = '7vw';}
+if ($column_count === 9) {$page_size = '7vw';}
 if ($column_count === 8) {$page_size = '7.5vw';}
 if ($column_count === 7) {$page_size = '9vw';}
 if ($column_count === 6) {$page_size = '10vw';}
