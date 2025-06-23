@@ -1,7 +1,7 @@
 services:
   - type: web
     name: seniorproject
-    env: static
+    env: docker
     plan: free
     buildCommand: composer install
-    startCommand: php -S 0.0.0.0:10000 -t public
+    startCommand: php -S 0.0.0.0:$PORT -t public
