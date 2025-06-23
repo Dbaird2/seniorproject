@@ -316,8 +316,8 @@ include_once("navbar.php");
             margin-left: 0vw;
             padding: 1vh 0vw;
             border-radius: 8px;
-            max-width: 18%;
-            width:8rem;
+            max-width: 20%;
+            width:8vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .show-tags::-webkit-scrollbar {

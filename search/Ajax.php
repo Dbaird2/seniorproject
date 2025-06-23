@@ -201,6 +201,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
+            $header_true['bldg_name'] = 'true';
             $location_from = " JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ";
             $column_array[] = "b.bldg_name";
             $column_array[] = "r.room_loc";
@@ -280,7 +281,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                    <strong>Room Number</strong>
                 </div>
 <?php } 
- if (array_key_exists('room_loc', $header_true)) { ?>
+ if (array_key_exists('bldg_name', $header_true)) { ?>
                 <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
                    <strong>Building Name</strong>
                 </div>
@@ -673,7 +674,7 @@ foreach ($header_true as $count) {
     $column_count++;
 }
 echo $column_count;
-if ($column_count === 9) {$page_size = '5vw';}
+if ($column_count === 9) {$page_size = '7vw';}
 if ($column_count === 8) {$page_size = '7.5vw';}
 if ($column_count === 7) {$page_size = '9vw';}
 if ($column_count === 6) {$page_size = '10vw';}
