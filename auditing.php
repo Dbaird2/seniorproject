@@ -237,7 +237,7 @@ include_once("navbar.php");
         #sheet {
             position: fixed;
             float: left;
-            top: 4.5rem;
+            top: 6vh;
             background-color: #ffffff;
             padding: 0.6vw 1vw;
             border-radius: 1vw;
@@ -301,20 +301,19 @@ include_once("navbar.php");
         .show-tags {
             max-height: 65vh;
             overflow-y: auto;
-            display: flex;
+            display: column;
             position: fixed;
             flex-wrap: wrap;
             text-align:center;
             justify-content: center;
             left: 0vw;
-            top: calc(15rem);
+            top: 20vh;
             background-color: #ffffff;
             margin-top: 0vh;
             margin-left: 0vw;
             padding: 1vh 0vw;
             border-radius: 8px;
-            max-width: 20%;
-            width: 9rem;
+            max-width: 15vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .show-tags::-webkit-scrollbar {
@@ -331,14 +330,11 @@ include_once("navbar.php");
         }
 
         .show-tags h4 {
-            color: #003366;
-            margin-top: 1vh;
-            font-size: calc(0.5vw + 0.5vh);
+            margin-top: 0.5vh;
+            font-size: calc(0.9vw + 1.2vh);
         }
 
         .show-tags ul {
-            display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             list-style-type: none;
             padding-left: 0;
@@ -350,6 +346,7 @@ include_once("navbar.php");
         .show-tags li {
             margin-bottom: 0.5vw;
             font-size: calc(0.5vw + 0.4vh);
+            text-align:left;
         }
 
         .tag-match {
@@ -768,11 +765,10 @@ if (isset($filePath)) {
 
     $i = 0;
     echo "<div class='show-tags'>";
-    echo "<h3>Tags Scanned</h3>";
+    echo "<h4>Tags Scanned</h4>";
     echo "<ul>";
     foreach ($array as $row) {
-        $match2 = in_array($row, $tag_array) ? 1 : 0;
-        $colorClass = $match2 ? "tag-match" : "tag-miss";
+        $colorClass = in_array($row, $tag_array) ? "tag-match" : "tag-miss";
         echo "<li class='$colorClass'><strong>$row</strong> &mdash; {$note_array[$i]} </li>";
         $i++;
     }
