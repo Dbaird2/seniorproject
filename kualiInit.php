@@ -20,4 +20,16 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 $data = '{"query": "mutation" ($appId: ID!) { InitializeWorkflow(args: {id:
 $appId}) {actionId}}", "variables": {
 	"appId": ""
-}};
+}}';
+
+curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+//debug
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+$resp = curl_exec($curl);
+curl_close($curl);
+var_dump($resp);
+
+
