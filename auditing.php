@@ -239,10 +239,10 @@ include_once("navbar.php");
             float: left;
             top: 6vh;
             background-color: #ffffff;
-            padding: 0.6vw 1vw;
             border-radius: 1vw;
+            padding: 0.5vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 12vw;
+            max-width: 19.2vw;
         }
 
         #dynamicForm label,
@@ -255,34 +255,6 @@ include_once("navbar.php");
 
         #sheet input[type="file"] {
             font-size: calc(0.5vw + 0.4vh);
-
-            width: 80%;
-            margin-bottom: 1vh;
-            padding: 0.3vw;
-            border: 1px solid #cce0ff;
-            border-radius: 1vw;
-            background-color: #f0f8ff;
-        }
-
-        #makeSheet button {
-            font-size: calc(0.5vw + 0.4vh);
-
-            width: 6vw;
-            background-color: #007BFF;
-            color: #fff;
-            padding: 0.2vw 0.3vh;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        #dynamicForm button,
-        #sheet button {
-            font-size: calc(0.5vw + 0.4vh);
-
-            width: 4vw;
             background-color: #007BFF;
             color: #fff;
             padding: 0.2vw 0.3vw;
@@ -307,7 +279,7 @@ include_once("navbar.php");
             text-align:center;
             justify-content: center;
             left: 0vw;
-            top: 20vh;
+            top: 30vh;
             background-color: #ffffff;
             margin-top: 0vh;
             margin-left: 0vw;
@@ -331,7 +303,7 @@ include_once("navbar.php");
 
         .show-tags h4 {
             margin-top: 0.5vh;
-            font-size: calc(0.9vw + 1.2vh);
+            font-size: calc(0.8vw + 1.0vh);
         }
 
         .show-tags ul {
@@ -552,18 +524,14 @@ if (isset($filePath)) {
             foreach ($newInputs as $input) {
                 $newInputSet[$input] = true;
             }
-
-            foreach ($previous_inputs as $key => $input) {
-                if (isset($newInputSet[$input])) {
-                    unset($pNewInputs[$key]);
-                    unset($pNewTimes[$key]);
-                    unset($pNewNotes[$key]);
+            foreach ($pNewInputs as $key => $input) {
+                $new_key = array_search($input, $newInputs);
+                if ($new_key !== FALSE) {
+                    unset($newInputs[$new_key]);
+                    unset($newTimes[$new_key]);
+                    unset($newNotes[$new_key]);
                 }
             }
-
-            $pNewInputs = array_values($pNewInputs);
-            $pNewTimes = array_values($pNewTimes);
-            $pNewNotes = array_values($pNewNotes);
         }
 
         # GET OLD TAGS READY
@@ -894,14 +862,19 @@ const previousTime = Array.from(document.getElementsByName('previousTime[]')).ma
 const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i=>i.value);
 
 
-
+let empty_tag = [];
 const filePath = document.getElementById('filePath2').value;
 dynamicInputs.forEach(function(tag, index) {
+    dynamicNotes[index] = dynamicNotes[index] === '' ? 'No Notes' :dynamicNotes[index];
     if (tag === '') {
-        dynamicInputs.splice(index, 1); // Remove 1 element starting from 'index'
-        dynamicNotes.splice(index, 1); // Remove 1 element starting from 'index'
+        empty_tag.push(index);
     }
 })
+    empty_tag.reverse().forEach(function(value) {
+        dynamicInputs.splice(value, 1);
+        dynamicNotes.splice(value, 1);
+        dynamicTimes.splice(value, 1);
+    });
 
     console.log(dynamicInputs, dynamicNotes, dynamicTimes,previousInputContainer,previousTime,previousNote);
 const data = [
@@ -946,7 +919,6 @@ function addNewInput() {
     const noteInput = document.createElement('input');
     noteInput.type = 'text';
     noteInput.name = 'dynamicNote[]';
-    noteInput.value = 'none';
     noteInput.placeholder = 'Notes';
     // Append input to the div and the div to the container
     inputDiv.appendChild(noteInput);
