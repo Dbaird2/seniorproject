@@ -235,6 +235,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $where . $where_dept . $where_price . $query_end;
         }
 
+        echo $exec_query;
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;
         $exec_query->execute($params);

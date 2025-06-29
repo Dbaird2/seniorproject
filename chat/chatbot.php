@@ -25,7 +25,7 @@ $botman->hears('help', fn($bot) => $bot->reply('Try asking me about adding asset
 $botman->hears(['.*add.*asset.*'], function ($bot) {
     $bot->reply('Adding an asset is currently not implemented');
 });
-$botman->hears(['.*how.*audit.*', function ($bot) {
+$botman->hears(['.*how.*audit.*'], function ($bot) {
     $bot->reply('To perform an audit, navigate to Start an Audit at the top left and enter a valid excel file.');
     $bot->reply('On the right you should see an input field saying Enter Tags. Simply enter a tag then click submit.');
     $bot->reply('You can change the room number, and notes after you submit the tag.');
