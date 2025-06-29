@@ -193,6 +193,9 @@ include_once("../navbar.php");
 <body>
 <?php
 $search = isset($_GET['search']) ? $_GET['search'] : NULL;
+if (isset($_GET['query'])) {
+        $search = $_GET['query'];
+}
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
 $category = isset($_GET['categories']) ? $_GET['categories'] : 'assets';
 $status = isset($_GET['statusFilter']) ? $_GET['statusFilter'] : 'In Service';
@@ -233,24 +236,24 @@ if ($search === NULL) {
 <br>
             <div class='checkbox-wrapper-13'>
 <label for="asset_name" class="filter-assets" id="asset_name_label">Asset Name</label>
-<input type="checkbox" id="asset_name" value="asset_name" name="asset_name"> 
+<input type="checkbox"class="filter-assets" id="asset_name" value="asset_name" name="asset_name"> 
             <label for="dept_id" class="filter-assets" id="dept_id_label">Department ID</label>
-<input type="checkbox" id="dept_id" value="dept_id" name="dept_id"> 
+<input type="checkbox"class="filter-assets" id="dept_id" value="dept_id" name="dept_id"> 
             <label for="room_tag"class="filter-assets"  id="room_tag_label">Room Tag</label>
-<input type="checkbox" id="room_tag" value="room_tag" name="room_tag"> 
+<input type="checkbox"class="filter-assets" id="room_tag" value="room_tag" name="room_tag"> 
             <label for="room_loc" id="room_loc_label">Room Number</label>
 <input type="checkbox" id="room_loc" value="room_loc" name="room_loc">
             <label for="asset_sn" class="filter-assets" id="asset_sn_label">Serial Number</label>
-<input type="checkbox" id="asset_sn" value="asset_sn" name="asset_sn"> 
+<input type="checkbox"class="filter-assets" id="asset_sn" value="asset_sn" name="asset_sn"> 
             <label for="asset_price" class="filter-assets" id="asset_price_label">Cost</label>
-<input type="checkbox" id="asset_price" value="asset_price" name="asset_price">
+<input type="checkbox"class="filter-assets" id="asset_price" value="asset_price" name="asset_price">
             <label for="asset_po" class="filter-assets" id="asset_po_label">Purchase Order</label>
-<input type="checkbox" id="asset_po" value="asset_po" name="asset_po">
+<input type="checkbox"class="filter-assets" id="asset_po" value="asset_po" name="asset_po">
 
             <label for="bldg_id" class="filter-bldg" id="bldg_id_label">Building ID</label>
-<input type="checkbox" id="bldg_id" value="bldg_id" name="bldg_id"> 
+<input type="checkbox" class="filter-bldg" id="bldg_id" value="bldg_id" name="bldg_id"> 
             <label for="bldg_name" class="filter-bldg" id="bldg_name_label">Building Name</label>
-<input type="checkbox" id="bldg_name" value="bldg_name" name="bldg_name">
+<input type="checkbox" class="filter-bldg" id="bldg_name" value="bldg_name" name="bldg_name">
 </div>
 
         </div>

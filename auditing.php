@@ -263,7 +263,23 @@ include_once("navbar.php");
             font-weight: bold;
             cursor: pointer;
         }
+        #complete-audit,
+        #dynamicForm button,
+        #sheet button,
+        #makeSheet button {
+            font-size: calc(0.4vw + 0.7vh);
 
+            width: 6.5vw;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 0.2vw 0.3vh;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        #complete-audit:hover,
         #dynamicForm button:hover,
         #makeSheet button:hover,
         #sheet button:hover {
@@ -350,6 +366,7 @@ include_once("navbar.php");
 
         #dynamicForm {
             position: fixed;
+            z-index:-1;
             top: 3rem;
             right:0;
             padding: 10px;
@@ -409,12 +426,14 @@ include_once("navbar.php");
 $worksheet = NULL;
 ?>
 <body>
+<?php if (!isset($_POST['data']) || !isset($_POST['download'])) { ?>
 <form id="sheet" name="form" action="auditing.php" method="POST" enctype="multipart/form-data">
             <label for="file">Enter File:</label>
             <input type="file" name="file" id="filePath">
             <button type="submit">Submit</button>
         </form>
 <?php
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     // Get file info
@@ -794,13 +813,14 @@ if (isset($filePath)) {
         <div id="inputContainer">
             <!-- Input fields will appear here -->
             <input class="dynamicId" type="text" name="dynamicInput[]" placeholder="Enter Tag" onchange="addNewInput()">
-            <input class="dynamicId" type="text" name="dynamicNote[]" value="none" placeholder="Notes">
+            <input class="dynamicId" type="text" name="dynamicNote[]" placeholder="Notes">
         </div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
         <input type="hidden" name="data" id="data">
         <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
+        <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
     </form>
 </div>
 <?php

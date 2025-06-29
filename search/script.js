@@ -197,6 +197,12 @@ $(document).ready(function() {
         $('#offset').val(1);
     });
 });
+function removeItemsFromLocalStorage() {
+        localStorage.removeItem('price-value');
+        localStorage.removeItem('price-filter');
+        localStorage.removeItem('dept_id');
+        localStorage.removeItem('asset_price');
+}
 function addCheckboxes(jasset_class) {   
     console.log("Showing:", jasset_class, $(jasset_class).length); // debug
  

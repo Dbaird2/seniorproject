@@ -279,8 +279,21 @@ if (isset($_SESSION['role'])) {
 
 </body>
 </html>
+    <script>
+    var botmanWidget = {
+    frameEndpoint: '/botman-widget.html', // Make sure this is correct
+        chatServer: '/chatbot.php',
+        introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+        title: "Chatbot",
+        mainColor: "#ADD8E6",
+        bubbleBackground: "#ADD8E6",
+        placeholderText: "Type your question here..."
+    };
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>}
 <?php
 } else {
     header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit();
-}
+?>
