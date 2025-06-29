@@ -281,8 +281,8 @@ if (isset($_SESSION['role'])) {
 </html>
     <script>
     var botmanWidget = {
-    frameEndpoint: '/botman-widget.html', // Make sure this is correct
-        chatServer: '/chatbot.php',
+        frameEndpoint: '/chat/botman-widget.html', // Make sure this is correct
+        chatServer: '/chat/chatbot.php',
         introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
         title: "Chatbot",
         mainColor: "#ADD8E6",

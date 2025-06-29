@@ -192,9 +192,9 @@ include_once("../navbar.php");
 </style>
 <body>
 <?php
-$search = isset($_GET['search']) ? $_GET['search'] : NULL;
+$search = isset($_GET['search']) ? $_GET['search'] : 'all';
 if (isset($_GET['query'])) {
-        $search = $_GET['query'];
+    $search = $_GET['query'];
 }
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
 $category = isset($_GET['categories']) ? $_GET['categories'] : 'assets';

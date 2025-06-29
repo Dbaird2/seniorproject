@@ -219,7 +219,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
-/*
         if ($tag === 'all' || $tag === '') {
             $where = '';
             $where_dept = $where_price = '';
@@ -235,7 +234,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " .
                 $where . $where_dept . $where_price . $query_end;
         }
- */
 
         $exec_query = $dbh->prepare($query);
         $params['offset'] = $query_offset;
