@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL & ~E_DEPRECATED);
 file_put_contents('botman.log', "Request received: " . json_encode($_POST) . "\n", FILE_APPEND);
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\BotManFactory;
