@@ -16,6 +16,11 @@ include_once("navbar.php");
 ?>
 <style>
 </style>
+<form id="sheet" name="form" action="auditing.php" method="POST" enctype="multipart/form-data">
+    <label for="file">Enter File:</label>
+    <input type="file" name="file" id="filePath">
+    <button type="submit">Submit</button>
+</form>
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {

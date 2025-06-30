@@ -228,23 +228,30 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             if ($_POST['asset_price' !== '']) {
                 $where = " WHERE ";
             }
-            $exec_query = "SELECT a.asset_tag, a.serial_num, a.po, 
-                a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
-                JOIN room_table AS r ON a.room_tag = r.room_tag 
-                JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " .
-                $where . $where_dept . $where_price . $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $query_end;
+
+            $query_count = "SELECT COUNT(*) FROM asset_info JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
+
+            $exec_query = $dbh->prepare($query);
+            $exec_query->execute([':offset'=>$query_offset);
+            $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
+
+            $exec_count = $dbh->prepare($query_count);
+            $exec_count->execute();
+            $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         }
 
-        echo $exec_query;
-        $exec_query = $dbh->prepare($query);
-        $params['offset'] = $query_offset;
-        $exec_query->execute($params);
-        $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
+        if ($tag !== 'all' || $tag !== '') {
+            $exec_query = $dbh->prepare($query);
+            $params['offset'] = $query_offset;
+            $exec_query->execute($params);
+            $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
-        $exec_count = $dbh->prepare($query_count);
-        $exec_count->execute($params2);
-        $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
-        $row_count = (int)$total_rows['rows'];
+            $exec_count = $dbh->prepare($query_count);
+            $exec_count->execute($params2);
+            $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+            $row_count = (int)$total_rows['rows'];
+        )
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
