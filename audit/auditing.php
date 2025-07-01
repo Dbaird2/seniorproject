@@ -131,8 +131,12 @@ if (isset($_POST['download'])) {
 include_once("../navbar.php");
 
 ?>
-
-<link rel="stylesheet" href="auditing.css">
+ <style>
+  body { font-family: sans-serif; margin: 0; }
+  .show-tags { background: #fff; padding: 1rem; font-size: 1rem; }
+  .row, .clusterize-scroll { max-height: 100vh; overflow-y: auto; }
+</style>
+<link rel="stylesheet" href="auditing.css" media="print" onload="this.media='all'">
     <title>Asset Management Excel</title>
 </head>
 <?php
@@ -316,7 +320,7 @@ if (isset($filePath)) {
     <section id='showExcel'>
     <div class='row'>
 <div class="clusterize">
-  <div id="scrollArea" class="clusterize-scroll" style="max-height: 100vh; overflow-y: auto;">
+  <div id="scrollArea" class="clusterize-scroll">
     <table>
         <thead>
       <tr>
@@ -324,6 +328,29 @@ if (isset($filePath)) {
       </tr>
     </thead>
       <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
+<?php
+for ($i = $header_row + 1; $i < $header_row + 11; $i++) {
+      $rowNum = $i - $header_row;
+      $tag = htmlspecialchars($data[$i][$tag_col]);
+      $descr = htmlspecialchars($data[$i][$descr_col]);
+      $serial = htmlspecialchars($data[$i][$serial_col]);
+      $location = htmlspecialchars($data[$i][$location_col]);
+      $department = htmlspecialchars($data[$i][$dept_col]);
+      $cost = htmlspecialchars($data[$i][$cost_col]);
+      $po = htmlspecialchars($data[$i][$po_col]);
+
+      echo "<tr>
+              <td>$rowNum</td>
+              <td>$tag</td>
+              <td>$descr</td>
+              <td>$serial</td>
+              <td>$location</td>
+              <td>$department</td>
+              <td>$cost</td>
+              <td>$po</td>
+            </tr>";
+  }
+  ?>
         <tr class="clusterize-no-data">
           <td>Loading data…</td>
         </tr>
@@ -334,13 +361,17 @@ if (isset($filePath)) {
 </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.js"></script>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.js">
+<script src="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.js" defer></script>
 <?php 
+
 $rows = [];
+$flipped_array = array_flip(array_filter($data, 'is_string'));
 for ($i = $header_row + 1; $i < $highest_row; $i++) {
     $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
     $j++;
-    $match = in_array($data[$i][$tag_col], $array) ? "match-tag" : "miss-tag";
+    //$match = in_array($data[$i][$tag_col], $array) ? "match-tag" : "miss-tag";
+    $match = isset($flipped_array[$data[$i][$tag_col]]) ? "match-tag" : "miss-tag";
     $tag = htmlspecialchars($data[$i][$tag_col]);
     $descr = htmlspecialchars($data[$i][$descr_col]);
     $serial = htmlspecialchars($data[$i][$serial_col]);
@@ -355,6 +386,13 @@ for ($i = $header_row + 1; $i < $highest_row; $i++) {
     $dept_arr[] = $data[$i][$dept_col];
     $cost_arr[] = $data[$i][$cost_col];            
     $po_arr[] = $data[$i][$po_col];
+    echo "<input type='hidden' name='old_tag[]' value='" . htmlspecialchars($tag_array[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='description[]' value='" . htmlspecialchars($disc_arr[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='serial[]' value='" . htmlspecialchars($sn_arr[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='po_num[]' value='" . htmlspecialchars($po_arr[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($loc_arr[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='cost[]' value='" . htmlspecialchars($cost_arr[$i-$header_row-1]) . "'>";
+    echo "<input type='hidden' name='dept[]' value='" . htmlspecialchars($dept_arr[$i-$header_row-1]) . "'>";
     $rows[] = "<tr class='{$color_class}'>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
@@ -370,12 +408,12 @@ for ($i = $header_row + 1; $i < $highest_row; $i++) {
 <script>
 
     const rows = <?php echo json_encode($rows, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-
-var clusterize = new Clusterize({
+window.requestIdleCallback(() => {
+  clusterize = new Clusterize({
     rows: rows,
     scrollId: 'scrollArea',
-    contentId: 'contentArea',
-    no_data_text: 'No data found'
+    contentId: 'contentArea'
+  });
 });
     </script>
     <?php
@@ -413,17 +451,6 @@ echo "</div>";
         echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time_array[$i]) . "'>";
         echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note_array[$i]) . "'>";
         echo "<input type='hidden' name='previousRms[]' value='" . htmlspecialchars($room_array[$i]) . "'>";
-        $i++;
-    }
-    $i = 0;
-    foreach ($tag_array as $old_tag) {
-        echo "<input type='hidden' name='old_tag[]' value='" . htmlspecialchars($old_tag) . "'>";
-        echo "<input type='hidden' name='description[]' value='" . htmlspecialchars($disc_arr[$i]) . "'>";
-        echo "<input type='hidden' name='serial[]' value='" . htmlspecialchars($sn_arr[$i]) . "'>";
-        echo "<input type='hidden' name='po_num[]' value='" . htmlspecialchars($po_arr[$i]) . "'>";
-        echo "<input type='hidden' name='loc[]' value='" . htmlspecialchars($loc_arr[$i]) . "'>";
-        echo "<input type='hidden' name='cost[]' value='" . htmlspecialchars($cost_arr[$i]) . "'>";
-        echo "<input type='hidden' name='dept[]' value='" . htmlspecialchars($dept_arr[$i]) . "'>";
         $i++;
     }
     foreach ($column_headers as $header) {
