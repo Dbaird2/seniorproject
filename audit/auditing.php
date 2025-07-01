@@ -390,7 +390,8 @@ var clusterize = new Clusterize({
         $colorClass = isset($tag_lookup[$row]) ? "tag-match" : "tag-miss";
         echo "<li class='$colorClass'>
         <strong>$row</strong> &mdash; 
-        Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "'> - <br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'></li>";
+        <br>Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "'>
+        <br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'></li>";
         $i++;
     }
 ?> 
