@@ -29,7 +29,6 @@ if (isset($_POST['download'])) {
         $previous_times = explode('`', $previous_times);
         $previous_notes = explode('`', $previous_notes);
         $previous_rooms = explode('`', $previous_rooms);
-        $filePath = __DIR__ . $filePath;
 
         $saveDir = __DIR__ . '/exports/';
         if (!file_exists($saveDir)) {
@@ -46,7 +45,7 @@ if (isset($_POST['download'])) {
 
 
         $fileNameOnly = basename($filePath);
-        $filePath = $saveDir . $fileNameOnly;
+        $filePath = $fileNameOnly;
 
         $empty_scan = is_null($previous_inputs[0]) ? true : false;
         $file_empty = is_null($old_tags[0]) ? true : false;
