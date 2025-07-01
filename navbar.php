@@ -37,7 +37,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
 ?>
    </div>
   <div id="navDemo" class="w3-sidebar w3-hover-cobalt w3-light-gray w3-hide w3-hide-small w3-bar-block w3-hide-small w3-small w3-animate-right" style="height:7vh;width:6vw;right:0">
-    <a href="https://dataworks-7b7x.onrender.com/auditing.php" class="w3-bar-item w3-button w3-padding-small">Start an Audit</a>
+    <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="w3-bar-item w3-button w3-padding-small">Start an Audit</a>
     <a href="https://dataworks-7b7x.onrender.com/help.php" class="w3-bar-item w3-button w3-padding-small">Help</a>
   </div>
 </div>
