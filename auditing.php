@@ -1,6 +1,8 @@
+
 <?php
 error_reporting(0);
 include_once("config.php");
+
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -8,12 +10,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if (isset($_POST['download'])) {
 
-    # This if statement will get the current directory +appended filename,
-    # current direct + appended export directory, create the export directory
-    # if it does not exist. Get all the info that was sent in array.
-    # Format it according to how it is wanted for PHPSpreadsheet Excel
-    # it will then create a excel sheet, save it to the sheet, then
-    # encode it for file transfering to download
+   
     try {
         $download_data = $_POST['download'];
         list($sn, $po, $loc, $cost, $dept, $headers, $old_tags, $desc, $previous_inputs, $previous_notes, $previous_times, $previous_rooms, $filePath) = explode('|', $download_data);
@@ -56,9 +53,15 @@ if (isset($_POST['download'])) {
         $filePath = str_replace(".xls", "_AUDIT", $filePath);
         $filePath = $filePath . ".xlsx";
 
-        for ($i = 0; $i < count($column_letters); $i++) {
-            $sheet->setCellValue($column_letters[$i], $headers[$i]);
-        }
+        $sheet->setCellValue($column_letters[0], 'Tag Number');
+        $sheet->setCellValue($column_letters[1], 'Description');
+        $sheet->setCellValue($column_letters[2], 'Serial ID');
+        $sheet->setCellValue($column_letters[3], 'Location');
+        $sheet->setCellValue($column_letters[4], 'Department');
+        $sheet->setCellValue($column_letters[5], 'Cost');
+        $sheet->setCellValue($column_letters[6], 'Purchase Order');
+        
+        
         $sheet->setCellValue('B1', 'Tags Found');
         $sheet->setCellValue('C1', 'Found in Room');
         $sheet->setCellValue('D1', 'Notes');
@@ -155,19 +158,13 @@ include_once("navbar.php");
             text-align: center;
         }
         #showExcel {
-            margin:auto;
             text-align:center;
             justify-content: left;
-            max-width: 55%;
-            max-height:90vh;
-            overflow-y: auto;
+            align-items: center;
         }
 
         .excel-info {
-            min-height: 4.5vh;
-            max-height: 4.5vh;
-            min-width: 7vw;
-            max-width: 20vw;
+            
             flex: 1;
             border: 0.1vh solid #cce0ff;
             text-align: center;
@@ -237,7 +234,6 @@ include_once("navbar.php");
             padding: 0.6vw 1vw;
             border-radius: 1vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            max-width: 12vw;
         }
 
         #dynamicForm label,
@@ -407,6 +403,27 @@ include_once("navbar.php");
             display: flex;
             flex-wrap: wrap;
             text-align: center;
+            width: 50%;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .clusterize-content tr {
+            height: 4vh; /* adjust to match your actual row height */
+        }
+        .clusterize-scroll {
+            overflow-y: auto;
+            max-height: 90vh; /* adjust to your needs */
+        }
+        .clusterize-content {
+            will-change: transform;
+        }
+        .clusterize-no-data {
+            display: none;
         }
     </style>
 
@@ -496,12 +513,13 @@ if (!isset($filePath) && $filePath !== '') { ?>
 if (isset($filePath)) {
     try {
         $spreadsheet = IOFactory::load($filePath);
-
         $worksheet = $spreadsheet->getActiveSheet();
-        $data = $worksheet->toArray();
+        //$data = $worksheet->toArray();
+        $data = $worksheet->rangeToArray('A1:AB5000');
+        $highest_row= $worksheet->getHighestRow();
+        $highest_col = $worksheet->getHighestColumn();
 
         $row_number = 1;
-        $array = [];
         $old_tags = [];
         $disc_arr = [];
         $sn_arr = [];
@@ -590,7 +608,7 @@ if (isset($filePath)) {
 
     $highest_row = $worksheet->getHighestRow();
     $highest_col = $worksheet->getHighestColumn();
-
+/*
     echo "<section id='showExcel'>";
     echo "<div class='row'>";
     $color_class = 'row-even';
@@ -618,7 +636,9 @@ if (isset($filePath)) {
     if ($po_col >= 0) {
         echo "<div class='excel-info $color_class'><strong>Purchase Order</strong> </div>";
     }
+        */
     $j = 1;
+    /*
     for ($i = $header_row+1; $i<$highest_row; $i++) {
         if ($tag_col >= 0) {
             $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
@@ -654,10 +674,76 @@ if (isset($filePath)) {
         }
 
     }
+        */
      echo "</div></section>";
+    ?>
+    <section id='showExcel'>
+    <div class='row'>
+<div class="clusterize">
+  <div id="scrollArea" class="clusterize-scroll" style="max-height: 100vh; overflow-y: auto;">
+    <table>
+        <thead>
+      <tr>
+        <th>Row</th><th>Tags</th><th>Descriptions</th><th>Serial IDs</th><th>Locations</th><th>Departments</th><th>Costs</th><th>Purchase Orders</th>
+      </tr>
+    </thead>
+      <tbody id="contentArea" class="clusterize-content">
+        <tr class="clusterize-no-data">
+          <td>Loading data…</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+</section>
 
+<script src="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.js"></script>
+<?php 
+$rows = [];
+for ($i = $header_row + 1; $i < $highest_row; $i++) {
+    $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
 
+    $match = in_array($data[$i][$tag_col], $array) ? "match-tag" : "miss-tag";
+    $tag = htmlspecialchars($data[$i][$tag_col]);
+    $descr = htmlspecialchars($data[$i][$descr_col]);
+    $serial = htmlspecialchars($data[$i][$serial_col]);
+    $location = htmlspecialchars($data[$i][$location_col]);
+    $department = htmlspecialchars($data[$i][$dept_col]);
+    $cost = htmlspecialchars($data[$i][$cost_col]);
+    $po = htmlspecialchars($data[$i][$po_col]);
+    $tag_array[] = $data[$i][$tag_col];
+    $disc_arr[] = $data[$i][$descr_col];
+    $sn_arr[] = $data[$i][$serial_col];
+    $loc_arr[] = $data[$i][$location_col];
+    $dept_arr[] = $data[$i][$dept_col];
+    $cost_arr[] = $data[$i][$cost_col];            
+    $po_arr[] = $data[$i][$po_col];
+    $rows[] = "<tr class='{$color_class}'>
+        <td class='{$match}'> {$i}. </td>
+        <td class='{$match}'> {$tag}</td>
+        <td>{$descr}</td>
+        <td>{$serial}</td>
+        <td>{$location}</td>
+        <td>{$department}</td>
+        <td>{$cost}</td>
+        <td>{$po}</td>
+    </tr>";
+}
+?>
+<script>
 
+    const rows = <?php echo json_encode($rows, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
+var clusterize = new Clusterize({
+    rows: rows,
+    scrollId: 'scrollArea',
+    contentId: 'contentArea',
+    no_data_text: 'No data found'
+});
+    </script>
+    <?php
+    
 
     $i = 0;
 
@@ -669,7 +755,9 @@ if (isset($filePath)) {
         echo "<li class='$colorClass'><strong>$row</strong> &mdash; Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "' - <br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'<li>";
         $i++;
     }
+    
     echo "</ul>";
+    
     $i = 0;
     foreach ($array as $value) {
         echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
@@ -704,6 +792,7 @@ if (isset($filePath)) {
     </form>
 </div>
 </div>
+
 <div id="insert-tags-div">
         <div id="inputContainer"></div>
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
@@ -715,12 +804,17 @@ if (isset($filePath)) {
 
     </form>
 </div>
+
 <?php
 }
+
 ?>
+
 <script>
 
+
 document.addEventListener('DOMContentLoaded', () => {
+    
     addNewInput();
     addNewInput();
 
@@ -815,7 +909,7 @@ function addNewInput() {
     const newInput = document.createElement('input');
     newInput.type = 'text';
     newInput.name = 'dynamicInput[]';
-
+    newInput.autocomplete = "off";
     newInput.placeholder = 'Enter tag';
     inputDiv.appendChild(newInput);
 
