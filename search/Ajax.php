@@ -233,7 +233,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $query_count = "SELECT COUNT(*) FROM asset_info JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
 
             $exec_query = $dbh->prepare($query);
-            $exec_query->execute([':offset'=>$query_offset);
+            $exec_query->execute([':offset'=>$query_offset]);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($query_count);
@@ -251,7 +251,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_count->execute($params2);
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
             $row_count = (int)$total_rows['rows'];
-        )
+        }
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
