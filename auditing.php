@@ -294,6 +294,10 @@ include_once("navbar.php");
             width: 15vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
+        #showTags {
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+        }
         .show-tags::-webkit-scrollbar {
             width: 1em;
         }
@@ -327,6 +331,12 @@ include_once("navbar.php");
             font-size: calc(0.5vw + 0.5vh);
             margin-bottom:0.5vw;
             text-align:left;
+        }
+        .show-tags input {
+            width: 80%;
+            padding: 0.3em;
+            box-sizing: border-box;
+            font-size: inherit;
         }
 
         .tag-match {
@@ -608,74 +618,7 @@ if (isset($filePath)) {
 
     $highest_row = $worksheet->getHighestRow();
     $highest_col = $worksheet->getHighestColumn();
-/*
-    echo "<section id='showExcel'>";
-    echo "<div class='row'>";
-    $color_class = 'row-even';
-    if ($tag_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Tag Number</strong> </div>";
-    }
-    if ($descr_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Description</strong> </div>";
-
-    }
-    if ($serial_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Serial ID</strong> </div>";
-
-    }
-    if ($location_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Location</strong> </div>";
-    }
-    if ($dept_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Department</strong> </div>";
-
-    }
-    if ($cost_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Cost</strong> </div>";
-    }
-    if ($po_col >= 0) {
-        echo "<div class='excel-info $color_class'><strong>Purchase Order</strong> </div>";
-    }
-        */
-    $j = 1;
-    /*
-    for ($i = $header_row+1; $i<$highest_row; $i++) {
-        if ($tag_col >= 0) {
-            $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
-            $tag_array[] = $data[$i][$tag_col];
-            $match = (in_array($data[$i][$tag_col], $array)) ? "match-tag" : "miss-tag";
-            echo "<div class='$match excel-info $color_class'><strong>" . $j++ . " . &nbsp; " . $data[$i][$tag_col] . "</strong></div>";
-
-        }
-        if ($descr_col >= 0) {
-            echo "<div class='$match excel-info $color_class'><strong>" . $data[$i][$descr_col] . "</strong> </div>";
-            $disc_arr[] = $data[$i][$descr_col];
-        }
-        if ($serial_col >= 0) {
-            echo "<div class='excel-info $color_class'><strong>" . $data[$i][$serial_col] . "</strong> </div>";
-            $sn_arr[] = $data[$i][$serial_col];
-
-        }
-        if ($location_col >= 0) {
-            echo "<div class='excel-info $color_class'><strong>" . $data[$i][$location_col] . "</strong> </div>";
-            $loc_arr[] = $data[$i][$location_col];
-        }
-        if ($dept_col >= 0) {
-            echo "<div class='excel-info $color_class'><strong>" . $data[$i][$dept_col] . "</strong> </div>";
-            $dept_arr[] = $data[$i][$dept_col];
-        }
-        if ($cost_col >= 0) {
-            echo "<div class='excel-info $color_class'><strong>" . $data[$i][$cost_col] . "</strong> </div>";
-            $cost_arr[] = $data[$i][$cost_col];
-        }
-        if ($po_col >= 0) {
-            echo "<div class='excel-info $color_class'><strong>" . $data[$i][$po_col] . "</strong> </div>";
-            $po_arr[] = $data[$i][$po_col];
-        }
-
-    }
-        */
-     echo "</div></section>";
+    $j = 0;
     ?>
     <section id='showExcel'>
     <div class='row'>
@@ -687,7 +630,7 @@ if (isset($filePath)) {
         <th>Row</th><th>Tags</th><th>Descriptions</th><th>Serial IDs</th><th>Locations</th><th>Departments</th><th>Costs</th><th>Purchase Orders</th>
       </tr>
     </thead>
-      <tbody id="contentArea" class="clusterize-content">
+      <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
         <tr class="clusterize-no-data">
           <td>Loading data…</td>
         </tr>
@@ -703,7 +646,7 @@ if (isset($filePath)) {
 $rows = [];
 for ($i = $header_row + 1; $i < $highest_row; $i++) {
     $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
-
+    $j++;
     $match = in_array($data[$i][$tag_col], $array) ? "match-tag" : "miss-tag";
     $tag = htmlspecialchars($data[$i][$tag_col]);
     $descr = htmlspecialchars($data[$i][$descr_col]);
@@ -720,7 +663,7 @@ for ($i = $header_row + 1; $i < $highest_row; $i++) {
     $cost_arr[] = $data[$i][$cost_col];            
     $po_arr[] = $data[$i][$po_col];
     $rows[] = "<tr class='{$color_class}'>
-        <td class='{$match}'> {$i}. </td>
+        <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
         <td>{$descr}</td>
         <td>{$serial}</td>
@@ -746,13 +689,15 @@ var clusterize = new Clusterize({
     
 
     $i = 0;
-
-    echo "<div class='show-tags'>";
+    $tag_lookup = array_flip($tag_array);
+    echo "<div class='show-tags' id='showTags'>";
     echo "<h4>Tags Scanned</h4>";
     echo "<ul>";
     foreach ($array as $row) {
-        $colorClass = in_array($row, $tag_array) ? "tag-match" : "tag-miss";
-        echo "<li class='$colorClass'><strong>$row</strong> &mdash; Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "' - <br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'<li>";
+        $colorClass = isset($tag_lookup[$row]) ? "tag-match" : "tag-miss";
+        echo "<li class='$colorClass'>
+        <strong>$row</strong> &mdash; 
+        Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "'> - <br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'></li>";
         $i++;
     }
     
@@ -811,13 +756,14 @@ var clusterize = new Clusterize({
 ?>
 
 <script>
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    addNewInput();
-    addNewInput();
-
+window.requestIdleCallback(() => {
+  addNewInput();
+  addNewInput();
+});
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("showTags").style.opacity = "1";
+});
+//document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('makeSheet').addEventListener('submit', (e)=> {
         e.preventDefault();
         const previousInputContainer = Array.from(document.getElementsByName('previousInputContainer[]')).map(i=>i.value);
@@ -901,7 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('input[name="data"]').value = data;
         document.getElementById('dynamicForm').submit();
     });
-});
+//});
 function addNewInput() {
     const inputDiv = document.createElement('div');
     inputDiv.classList.add('input-container');
