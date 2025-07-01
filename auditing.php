@@ -1,9 +1,9 @@
 
 <?php
 error_reporting(0);
+include_once("config.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include_once("config.php");
 
 require __DIR__ . '/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -118,7 +118,7 @@ if (isset($_POST['download'])) {
 
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        //header('Location: download.php?file=' . urlencode($filePath));
+        header('Location: download.php?file=' . urlencode($filePath));
         error_reporting(1);
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
