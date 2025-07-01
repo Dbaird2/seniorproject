@@ -612,9 +612,6 @@ if (isset($filePath)) {
         }
     }
 
-    $first_char = substr($string, 0, 1);
-
-
     $colors = ['lightblue', 'white'];
     $empty = false;
 
@@ -745,7 +742,6 @@ var clusterize = new Clusterize({
     <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
         <input type="hidden" name="data" id="data">
-        <button type="button" id="addInputButton" onClick="addNewInput()" onLoad="addNewInput()">Add Field</button>
         <button type="submit" id='dynamicSubmit'>Submit</button>
         <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
 
