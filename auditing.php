@@ -1,6 +1,8 @@
 
 <?php
 error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once("config.php");
 
 require __DIR__ . '/vendor/autoload.php';
@@ -116,7 +118,7 @@ if (isset($_POST['download'])) {
 
         $writer = new Xlsx($spreadsheet);
         $writer->save($filePath);
-        header('Location: download.php?file=' . urlencode($filePath));
+        //header('Location: download.php?file=' . urlencode($filePath));
         error_reporting(1);
     } catch (Exception $e) {
         echo "Something went wrong trying to parse before downloading ". $e;
@@ -285,7 +287,7 @@ include_once("navbar.php");
             position: fixed;
             text-align:center;
             left: 0vw;
-            top: calc(8vh);
+            top: 8vh;
             background-color: #ffffff;
             margin-top: 0vh;
             margin-left: 0vw;
