@@ -1,11 +1,11 @@
 <?php
 $filePath = $count = NULL;
 error_reporting(0);
-include_once("config.php");
+include_once("../config.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require __DIR__ . '/vendor/autoload.php';
+require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -129,7 +129,7 @@ if (isset($_POST['download'])) {
 <html>
 <head>
 <?php
-include_once("navbar.php");
+include_once("../navbar.php");
 
 ?>
 
