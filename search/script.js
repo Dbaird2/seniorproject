@@ -31,42 +31,39 @@ function searchTrigger() {
         //$("#display").html("");
 
     }
-    //If name is not empty.
-    else {
-        //AJAX is called.
-        $.ajax({
-            //AJAX type is "Post".
-            type: "POST",
-            //Data will be sent to "ajax.php".
-            url: "Ajax.php",
-            //Data, that will be sent to "ajax.php".
-            data: {
-                offset: offset,
-                categories: categories,
-                statusFilter: statusFilter,
-                box_name: box_name,
-                asset_price: price,
-                price_operation: price_operation,
-                dept_id: dept_id,
-                dept_id_search: dept_id_search,
-                room_tag: room_tag,
-                room_loc: room_loc,
-                asset_sn: asset_sn,
-                asset_price_check: asset_price,
-                asset_po: asset_po,
-                bldg_id: bldg_id,
-                bldg_name: bldg_name,
+    //AJAX is called.
+    $.ajax({
+        //AJAX type is "Post".
+        type: "POST",
+        //Data will be sent to "ajax.php".
+        url: "Ajax.php",
+        //Data, that will be sent to "ajax.php".
+        data: {
+            offset: offset,
+            categories: categories,
+            statusFilter: statusFilter,
+            box_name: box_name,
+            asset_price: price,
+            price_operation: price_operation,
+            dept_id: dept_id,
+            dept_id_search: dept_id_search,
+            room_tag: room_tag,
+            room_loc: room_loc,
+            asset_sn: asset_sn,
+            asset_price_check: asset_price,
+            asset_po: asset_po,
+            bldg_id: bldg_id,
+            bldg_name: bldg_name,
 
-                //Assigning value of "name" into "search" variable.
-                search: name
-            },
-            //If result found, this funtion will be called.
-            success: function(html) {
-                //Assigning result to "display" div in "search.php" file.
-                $("#display").html(html).show();
-            }
-        });
-    }
+            //Assigning value of "name" into "search" variable.
+            search: name
+        },
+        //If result found, this funtion will be called.
+        success: function(html) {
+            //Assigning result to "display" div in "search.php" file.
+            $("#display").html(html).show();
+        }
+    });
 }
 function auditTrigger() {
     var name = $('#search').val();
