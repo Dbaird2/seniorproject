@@ -254,7 +254,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             }
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $query_end;
 
-            $query_count = "SELECT COUNT(*) FROM asset_info JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
+            $query_count = "SELECT COUNT(*) FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
 
             $exec_query = $dbh->prepare($query);
             $exec_query->execute([':offset'=>$query_offset]);
