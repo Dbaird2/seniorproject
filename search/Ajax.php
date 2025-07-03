@@ -294,7 +294,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $q_all_params[':price'] = $asset_price;
                 $q_c_params[':price'] = $asset_price;
                 $where_price = " AND a.asset_price " . $asset_price_operation . " :price ";
-                count++;
+                $count++;
             }
             $and = ($count == 2) ? ' AND ' : '';
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept $query_end;
