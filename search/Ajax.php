@@ -104,12 +104,36 @@ error_reporting(E_ALL);
         .row-odd {
             background-color: #ffffff;
         }
+.asset-table {
+            width: 100%;
+            margin: auto; border: 1px solid #c0d6e4;
+            border-collapse: collapse;
+        }
+        th {
+            color:#2c3e50;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        td {
+            font-weight: 500;
+            color:#2c3e50;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+
+        }
+        .table-div {
+            display:flex;
+            justify-content: center;
+        }
         </style>
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
 
 //-------------------------------------------------------------------------
 //  POST TO GET FROM SCRIPT.JS SEARCH FORM
+    $location_from = '';
     $tag = $_POST['search'];
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
@@ -239,9 +263,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_count = $dbh->prepare($query_count);
             $exec_count->execute();
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
-        }
-
-        if ($tag !== 'all' || $tag !== '') {
+        } else {
             $exec_query = $dbh->prepare($query);
             $params['offset'] = $query_offset;
             $exec_query->execute($params);
@@ -257,121 +279,54 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
         if ($result) {
             $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
-            echo "<section id='showExcel'>";
-            echo "<div class='row'>";
-            echo "<div id='showExcel'  class='search-results'>";
 ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$row_num\")'>
-                    <strong>Row</strong>
-                </div>
-        <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                    <strong>Asset Tag</strong>
-                </div>
-<?php if (array_key_exists('asset_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <strong>Asset Name</strong>
-                </div>
-<?php } 
- if (array_key_exists('dept_id', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <strong>Department ID</strong>
-                </div>
-<?php } 
- if (array_key_exists('asset_sn', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                   <strong> Serial Number</strong>
-                </div>
-<?php } 
- if (array_key_exists('room_tag', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                   <strong>Room Tag</strong>
-                </div>
-<?php } 
- if (array_key_exists('room_loc', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                   <strong>Room Number</strong>
-                </div>
-<?php } 
- if (array_key_exists('bldg_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                   <strong>Building Name</strong>
-                </div>
-<?php } 
- if (array_key_exists('asset_price', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_price\")'>
-                    <strong>Price</strong>
-                </div>
-<?php } 
- if (array_key_exists('asset_po', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
-                   <strong> Purchase Order</strong>
-                </div>
-<?php } 
-            foreach ($result as $row) {
-                $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+<div class="table-div">
+  <table id="asset-table">
+    <thead>
+        <tr>
+            <th class='row-even'>Row</th>
+        <th class='row-even'>Asset Tag</th>
+        <?php if(array_key_exists('asset_name', $header_true)){echo "<th class='row-even'>Description</th>";}
+        if(array_key_exists('dept_id', $header_true)) {echo "<th class='row-even'>Department</th>";} 
+        if(array_key_exists('room_tag', $header_true)) {echo "<th class='row-even'>Room Tag</th>";}
+        if(array_key_exists('room_loc', $header_true)) {echo "<th class='row-even'>Room Number</th>";}
+        if(array_key_exists('room_loc', $header_true)) {echo "<th class='row-even'>Building Name</th>";}
+        if(array_key_exists('asset_sn', $header_true)) {echo "<th class='row-even'>Serial Number</th>";}
+        if(array_key_exists('asset_price', $header_true)) {echo "<th class='row-even'>Price</th>";}
+        if(array_key_exists('asset_po', $header_true)) {echo "<th class='row-even'>Purchase Order</th>";}?>
+        </tr>
 
-                // Escape values for safety
-                $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
-                $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
-                $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);    
-                $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);  
-                $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
-                $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
-                $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
-                $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
-                $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES);
-?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <strong>
-                    <?= $row_num++ ?>
-                    </strong>
-                </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                <strong>
+    </thead>
+    <tbody><?php 
+        foreach ($result as $row) {
+            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+
+            // Escape values for safety
+            $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
+            $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
+            $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);
+            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);
+            $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
+            $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
+            $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
+            $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
+            $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES);
+            
+            ?>
+            <td class=<?=$color_class?>><?=$row_num++?></td>
+            <td class=<?=$color_class?>>
                     <button  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
-                </strong>
-                </div>
-<?php if (array_key_exists('asset_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <?= $safe_name ?>
-                </div>
-<?php }
- if (array_key_exists('dept_id', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <?= $safe_deptid ?>
-                </div>
-<?php }
- if (array_key_exists('asset_sn', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                    <?= $safe_serial ?>
-                </div>
-<?php }
- if (array_key_exists('room_tag', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                    <?= $safe_room ?>
-                </div>
-<?php }
- if (array_key_exists('room_loc', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                    <?= $room_loc ?>
-                </div>
-<?php }
- if (array_key_exists('bldg_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_serial\")'>
-                    <?= $bldg_name ?>
-                </div>
-<?php }
- if (array_key_exists('asset_price', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_price\")'>
-                    $<?= $safe_price ?>
-                </div>
-<?php }
- if (array_key_exists('asset_po', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_po\")'>
-                    <?= $safe_po ?>
-                </div>
-<?php } ?>
-<div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
+                </td>
+                <?php if(array_key_exists('asset_name', $header_true)) {echo "<td class=".$color_class.">".$safe_name."</td>";}?>
+                <?php if(array_key_exists('dept_id', $header_true)) {echo "<td class=".$color_class.">".$safe_deptid."</td>";}?>
+                <?php if(array_key_exists('room_tag', $header_true)) {echo "<td class=".$color_class.">".$safe_room."</td>";}?>
+                <?php if(array_key_exists('room_loc', $header_true)) {echo "<td class=".$color_class.">".$room_loc."</td>";}?>
+                <?php if(array_key_exists('room_loc', $header_true)) {echo "<td class=".$color_class.">".$bldg_name."</td>";}?>
+                <?php if(array_key_exists('asset_sn', $header_true)) {echo "<td class=".$color_class.">".$safe_serial."</td>";}?>
+                <?php if(array_key_exists('asset_price', $header_true)) {echo "<td class=".$color_class.">".$safe_price."</td>";}?>
+                <?php if(array_key_exists('asset_po', $header_true)) {echo "<td class=".$color_class.">".$safe_po."</td>";}?>
+            </tbody>
+            <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                 <!-- Modal content -->
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -418,12 +373,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
-<?php
-            }
-            echo "</div></div>";
-            echo "</section>";
+            <?php } ?>
+  </table>
+  </div>
+  <?php
         }
     } else if ($category === 'buildings') {
 //-------------------------------------------------------------------------
