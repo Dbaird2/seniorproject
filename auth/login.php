@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     error_log("Error updating last_login");
                 } else {
                     header("location: https://dataworks-7b7x.onrender.com/index.php");
+                }
             }
         }
         $stmt = NULL;
