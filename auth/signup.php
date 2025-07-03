@@ -2,8 +2,8 @@
 require_once("../config.php");
 
 if (!isset($_SESSION['role']) && $_SESSION['role'] !== 'admin') {
-    //header("Location: https://dataworks-7b7x.onrender.com/login");
-    //exit();
+    header("Location: https://dataworks-7b7x.onrender.com/login");
+    exit();
 }
 
 ini_set('display_error', '1');

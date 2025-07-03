@@ -1,6 +1,6 @@
 <?php
 include_once("../navbar.php");
-#include_once("../config.php");
+include_once("../config.php");
 
 $email_err = $pw_err = $err = "";
 
