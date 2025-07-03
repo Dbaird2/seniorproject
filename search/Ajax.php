@@ -222,10 +222,10 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($tag === 'all' || $tag === '') {
             $where = '';
             $where_dept = $where_price = '';
-            if ($_POST['dept_id_search'] !== '') {
+            if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
                 $where = " WHERE ";
             }
-            if ($_POST['asset_price' !== '']) {
+            if (isset($_POST['asset_price']) && $_POST['asset_price'] !== '') {
                 $where = " WHERE ";
             }
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $query_end;
