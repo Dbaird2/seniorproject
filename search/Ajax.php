@@ -186,6 +186,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $box_name = $_POST['box_name'] ;
     $params = [':search'=>"%$tag%"];
     $params2 = [':search'=>"%$tag%"];
+    $q_all_params = [];
 //-------------------------------------------------------------------------
     
 
@@ -255,7 +256,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if (isset($dept_id_search) && $dept_id_search !== '') {
             $params[':dept_id'] = $dept_id_search;
             $params2[':dept_id'] = $dept_id_search;
-            $where_dept = " AND a.dept_id =  :dept_id";
+            $where_dept = " AND a.dept_id = :dept_id";
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
@@ -280,22 +281,33 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($tag === 'all' || $tag === '') {
             $where = '';
             $where_dept = $where_price = '';
+            $count = 0;
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
                 $where = " WHERE ";
+                $where_dept = " AND a.dept_id = :dept_id ";
+                $q_all_params[':dept_id'] = $dept_id_search;
+                $q_c_params[':dept_id'] = $dept_id_search;
+                $count++;
             }
             if (isset($_POST['asset_price']) && $_POST['asset_price'] !== '') {
                 $where = " WHERE ";
+                $q_all_params[':price'] = $asset_price;
+                $q_c_params[':price'] = $asset_price;
+                $where_price = " AND a.asset_price " . $asset_price_operation . " :price ";
+                count++;
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $query_end;
+            $and = ($count == 2) ? ' AND ' : '';
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept $query_end;
 
-            $query_count = "SELECT COUNT(*) FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
+            $query_count = "SELECT COUNT(*) FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept;
+            $q_all_params['offset'] = $query_offset;
 
             $exec_query = $dbh->prepare($query);
-            $exec_query->execute([':offset'=>$query_offset]);
+            $exec_query->execute($q_all_params);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($query_count);
-            $exec_count->execute();
+            $exec_count->execute($q_c_params);
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         } else {
             $exec_query = $dbh->prepare($query);
@@ -306,8 +318,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_count = $dbh->prepare($query_count);
             $exec_count->execute($params2);
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
-            $row_count = (int)$total_rows['rows'];
         }
+        $row_count = (int)$total_rows['rows'];
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
