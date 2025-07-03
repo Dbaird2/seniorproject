@@ -1,6 +1,5 @@
 <?php
 include_once("../config.php");
-include_once("../navbar.php");
 
 $email_err = $pw_err = $err = "";
 
@@ -34,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $err = "Invalid email or password";
     }
 }
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>
