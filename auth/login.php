@@ -1,227 +1,453 @@
 <?php
-error_reporting(0);
-include_once("../config.php");
-if (isset($_SESSION['email'])) {
-    header("location: https://dataworks-7b7x.onrender.com/index.php");
-}
- $email_err = $pw_err = $err = "";
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $email = $_POST['email'] ?? "";
-        $pw = $_POST['pw'] ?? "";
-        if (!empty($email) && !empty($pw)) {
-            
-            $stmt = "SELECT email, pw, id, u_role, dept_id FROM user_table WHERE email = :email OR username = :email";
-            $stmt = $dbh->prepare($stmt);
-            if (!($stmt->execute(['email' => $email]))) {
-                $err = "Error getting info" . $stmt->errorInfo()[2];
-            } else {
-                $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($user_check && password_verify($pw, $user_check['pw'])) {
-                    $_SESSION['id'] = $user_check['id'];
-                    $_SESSION['email'] = $user_check['email'];
-                    $_SESSION['role'] = $user_check['u_role'];
-                    $_SESSION['deptid'] = $user_check['dept_id'];
+include_once("../navbar.php");
+#include_once("../config.php");
 
-                    $query = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
-                    $stmt2 = $dbh->prepare($query);
-                    if ($stmt2->execute([$_SESSION['id']])) {
-                        header("location: https://dataworks-7b7x.onrender.com/index.php");
-                    } else {
-                        error_log("Error updating last_login" . $stmt->errorInfo());
-                    }
+$email_err = $pw_err = $err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'] ?? "";
+    $pw = $_POST['pw'] ?? "";
+
+    if (!empty($email) && !empty($pw)) {
+        $stmt = "SELECT email, pw, id, role FROM user_table WHERE email = ?";
+        $stmt = $dbh->prepare($stmt);
+        if (!($stmt->execute([$email]))) {
+            $err = "Error getting info" . $stmt->errorInfo()[2];
+        } else {
+            $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user_check && password_verify($pw, $user_check['pw'])) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['id'] = $user_check['id'];
+                $_SESSION['role'] = $user_check['role'];
+                $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
+                $stmt = $dbh->prepare($stmt);
+                if ($stmt->execute([$id])) {
+                    error_log("Error updating last_login");
                 }
             }
-            $stmt = NULL;
-            $stmt2 = NULL;
-        } else {
-            $err = "Invalid email or password";
         }
-
+        $stmt = NULL;
+    } else {
+        $err = "Invalid email or password";
     }
-include_once("../navbar.php");
- ?>
+}
+?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - CSUB Portal</title>
     <style>
-        body {
-  font-family: "Lato", sans-serif;
-            display: flex;
-            flex-direction: column; 
-            justify-content: space-between; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .container {
-            width:30rem;
-            display: flex;
-            flex-direction: column; 
-            margin: auto;
-            border: 1px solid black;
-            border-radius: 15px;    
-            box-shadow: 2px 2px 2px #003594;
-
-        }
-        #form-label {
-            margin-bottom:0.5em;
-            margin-left:0.5rem;
-            color: black;
-            font-weight:bold;
-            font-size: max(1.5vh, 0.8rem);        }
-        .header {
-            background-color: #003594;
-            color: #FFC72C;
-            text-align: center;
-            border-top-left-radius: 15px;    
-            border-top-right-radius: 15px;    
-        }
-        .formAtt {
-            margin-bottom:1rem;
-            width:100%;
-            color: rgb(36, 35, 42);
-            font-size: calc(1vh + 0.3vw);
-            line-height: 20px;
-            min-height: 5vh;
-            border-radius: 4px;
-            padding: 8px 16px;
-            border: 2px solid transparent;
-            box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
-            background: rgb(251, 251, 251);
-            transition: all 0.1s ease 0s;
-            :focus{
-                border: 2px solid #003594;
-            }
-        }
-        .footer {
-            text-align: center;
-            font-size: max(1.5vh, 0.8rem);
-        }
-       .button-58 {
-            width: 50%;
-            align-items: center;
-            background-color: #003594;
-            border: 2px solid #06f;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            color: #FFC72C;
-            cursor: pointer;
-            display: inline-flex;
-            fill: #000;
-            font-size: max(1.5vh, 0.8rem);
-            font-weight: 600;
-            height: calc(3vh + 1.2vw);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            letter-spacing: -.8px;
-            line-height: 24px;
-            min-width: 140px;
-            outline: 0;
-            padding: 0 17px;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(33, 150, 243, 0.15);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+            border: 1px solid #e3f2fd;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            color: white;
             text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-body {
+            padding: 40px 30px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e3f2fd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #90a4ae;
+            font-size: 14px;
+        }
+
+        .form-input.error {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .error-message::before {
+            content: '⚠';
+            font-size: 14px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 24px;
+        }
+
+        .forgot-password a {
+            color: #2196f3;
             text-decoration: none;
-            transition: all .3s;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            border-radius: 30px;
-            -ms-transform: translate(50%, 50%);
-            transform: translate(50%, 50%);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        .button-58:focus {
-            color: #171e29;
-        }
-
-        .button-58:hover {
-            background-color: #3385ff;
-            border-color: #3385ff;
-            fill: #06f;
-        }
-
-        .button-58:active {
-            background-color: #3385ff;
-            border-color: #3385ff;
-            fill: #06f;
-        }
-
-        @media (min-width: 768px) {
-            .button-58 {
-                min-width: 170px;
-            }
-        }
-        .forgot-pass {
-            text-align:right;
-            display:block;
-            margin-right:1.5rem;
-            text-decoration: none;
-            
-        }
-        a:hover {
+        .forgot-password a:hover {
+            color: #1976d2;
             text-decoration: underline;
         }
-        a:visited  {
-            text-decoration: none;
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
         }
-        
-     
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-button:hover::before {
+            left: 100%;
+        }
+
+        .login-button:hover {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            background: #bbdefb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-button:disabled::before {
+            display: none;
+        }
+
+        .server-error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #f44336;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .server-error::before {
+            content: '❌';
+            font-size: 16px;
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fcff;
+            border-top: 1px solid #e3f2fd;
+            font-size: 14px;
+            color: #64b5f6;
+        }
+
+        /* Loading state */
+        .login-button.loading {
+            pointer-events: none;
+        }
+
+        .login-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 10px;
+                max-width: none;
+            }
+            
+            .login-body {
+                padding: 30px 20px 20px;
+            }
+            
+            .login-header {
+                padding: 25px 20px;
+            }
+            
+            .login-header h2 {
+                font-size: 24px;
+            }
+        }
+
+        /* Animation for form appearance */
+        .login-container {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Focus ring for accessibility */
+        .form-input:focus-visible,
+        .login-button:focus-visible,
+        .forgot-password a:focus-visible {
+            outline: 2px solid #2196f3;
+            outline-offset: 2px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2 style="font-size:calc(2vh + 1.1vw);">Welcome Back</h2>
-    </div>
-            <div class="body">
-                <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return validateForm()">
-                    <label id="form-label" for="email">Email Address</label>
-                    <input class="formAtt" type="text" name="email" id="email" placeholder="example@csub.edu" onblur="validateEmail()" required>
-                    <div id="err_email" style="color:red;"><?php $err?></div>
+    <div class="login-container">
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your CSUB account</p>
+        </div>
 
-                    <br>
-                    <label id="form-label" for="pw">Password</label>
-                    <input class="formAtt" type="password" name="pw" id="pw" placeholder="Enter Password" required>
-                    <?php echo "<label style='color:red; text-align: center;'> $err </label>"; ?>
-                    <br>
-                    <a class="forgot-pass" href="forgot-password.php" >Forgot password?</a>
-              
-
-                    <button id="btn" class="button-58" role="button">Log in</button>
-                </form>
-                <div class="footer">
-                    <br>
-                    <p></p> 
+        <div class="login-body">
+            <?php if (!empty($err)): ?>
+                <div class="server-error">
+                    <?php echo htmlspecialchars($err); ?>
                 </div>
+            <?php endif; ?>
+
+            <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        class="form-input" 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        placeholder="example@csub.edu" 
+                        onblur="validateEmail()" 
+                        required
+                        autocomplete="email"
+                    >
+                    <div id="err_email" class="error-message" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pw">Password</label>
+                    <input 
+                        class="form-input" 
+                        type="password" 
+                        name="pw" 
+                        id="pw" 
+                        placeholder="Enter your password" 
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="forgot-password">
+                    <a href="forgot-password.php">Forgot your password?</a>
+                </div>
+
+                <button id="btn" class="login-button" type="submit" disabled>
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <p>Secure CSUB Portal Access</p>
         </div>
     </div>
+
     <script>
-        function validateEmail () {
-            var email = document.getElementById("email").value;
-            var err_email = document.getElementById("err_email");
-
-            const email_check = email.slice(-9);
-
-            if (email_check !== '@csub.edu') {
-                err_email.textContent = "CSUB email only";
+        function validateEmail() {
+            const email = document.getElementById("email").value;
+            const emailInput = document.getElementById("email");
+            const errEmail = document.getElementById("err_email");
+            
+            if (email.length === 0) {
+                emailInput.classList.remove('error');
+                errEmail.style.display = 'none';
                 return false;
             }
-
-            err_email.textContent = "";
+            
+            const emailCheck = email.slice(-9);
+            if (emailCheck !== '@csub.edu') {
+                emailInput.classList.add('error');
+                errEmail.textContent = "Please use your CSUB email address";
+                errEmail.style.display = 'block';
+                return false;
+            }
+            
+            emailInput.classList.remove('error');
+            errEmail.style.display = 'none';
             return true;
         }
 
         function validateForm() {
+            const isEmailValid = validateEmail();
+            const password = document.getElementById("pw").value;
+            const btn = document.getElementById("btn");
+            
+            const isFormValid = isEmailValid && password.length > 0;
+            
+            btn.disabled = !isFormValid;
+            
+            return isFormValid;
+        }
 
-            var isEmailValid = validateEmail();
-
-            var btn = document.getElementById("btn");
-
-            if (!isEmailValid) {
-
-                btn.style.display="none";
-                return false
+        function handleSubmit(event) {
+            const btn = document.getElementById("btn");
+            
+            if (!validateForm()) {
+                event.preventDefault();
+                return false;
             }
-            btn.style.display="inline-flex";
+            
+            // Add loading state
+            btn.classList.add('loading');
+            btn.textContent = 'Signing In...';
+            
             return true;
         }
-    </script>                                                                                                       
+
+        // Initialize form validation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            validateForm();
+            
+            // Add real-time validation
+            document.getElementById('email').addEventListener('input', validateForm);
+            document.getElementById('pw').addEventListener('input', validateForm);
+        });
+    </script>
 </body>
 </html>

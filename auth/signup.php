@@ -1,18 +1,19 @@
 <?php
 require_once("../config.php");
-if (!isset($_SESSION['role'] && $_SESSION['role'] !== 'admin')) {
-    header("Location: https://dataworks-7b7x.onrender.com/login");
-    exit();
+
+if (!isset($_SESSION['role']) && $_SESSION['role'] !== 'admin') {
+    //header("Location: https://dataworks-7b7x.onrender.com/login");
+    //exit();
 }
 
 ini_set('display_error', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-
 $err = 0;
 $user_err = $email_err = $f_name_err = $l_name_err = '';
 $pw_err = $cpw_err = $dept_err = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
     $email_err = (($email = $_POST['email'] ?? '') != '') ? "" : "Empty Email Field";
@@ -26,28 +27,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = strtolower($role);
 
     if (!empty($username)) {
-         
-            $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
-            $stmt = $dbh->prepare($stmt);
-            if (!($stmt->execute([$username, $email]))) {
-                echo "<p> Error with database </p>";
-                $err = 1;
-            } else {
-                $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($user_check > 0) {
-                    if ($user_check['username'] === $username) {
-                        $user_err = "Username or Email already exists";
-                        $err = 1;
-                    } 
-                    if ($user_check['email'] === $email) {
-                        $user_err = "Username or Email already exists";
-                        $err = 1;
-                    } 
+        $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
+        $stmt = $dbh->prepare($stmt);
+        if (!($stmt->execute([$username, $email]))) {
+            echo "<p> Error with database </p>";
+            $err = 1;
+        } else {
+            $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user_check > 0) {
+                if ($user_check['username'] === $username) {
+                    $user_err = "Username or Email already exists";
+                    $err = 1;
                 } 
-            }
-                
+                if ($user_check['email'] === $email) {
+                    $user_err = "Username or Email already exists";
+                    $err = 1;
+                } 
+            } 
+        }
     } 
-
 
     if (!empty($con_password)) {
         if ($con_password === $password) {
@@ -57,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $err = 1;
         }
     }
+
     if (!empty($deptid)) {
         $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
         $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
@@ -66,10 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $dept_err = "Department does not exist";
             $err = 1;
         }
-
     }
+
     if (!$err) {
-        
         $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
         VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[]);";
         $stmt = $dbh->prepare($stmt);
@@ -78,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dept_pg_array = '{' . implode(',', array_map(function($val) {
             return '"' . addslashes($val) . '"';
         }, $dept_id_array)) . '}';
+
         try {
             if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
                 ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
@@ -95,360 +94,684 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '</pre>';
             error_log($e->getMessage());
         }
-        
     }
-
 }
-include_once("../navbar.php");
 
+include_once("../navbar.php");
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
+    <title>Create Account - CSUB Portal</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-font-family: "Lato", sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column; 
-            justify-content: space-between; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .container {
-            position: relative;
-            top: 40px;
-            width:24vw;
-            display: flex;
-            flex-direction: column; 
-            margin: auto;
-            border: 1px solid black;
-            border-radius: 15px;    
-            box-shadow: 2px 2px 2px #003594;
-
-        }
-        #form-label {
-            margin-bottom:0.5em;
-            margin-left:0.5rem;
-            color: black;
-            font-weight:bold;
-            font-size: max(1.5vh, 0.8rem);
-        }
-        .header {
-            font-size: max(1.5vh, 0.8rem);
-            background-color: #003594;
-            color: #FFC72C;
-            text-align: center;
-            border-top-left-radius: 15px;    
-            border-top-right-radius: 15px;    
-        }
-        .formAtt {
-            margin-bottom:1vh;
-            width: 100%;
-            height: 1.3vh;
-            color: rgb(36, 35, 42);
-            font-size: calc(1vh + 0.3vw);
-            line-height: 20px;
-            min-height: 5vh;
-            border-radius: 4px;
-            padding: 8px 16px;
-            border: 2px solid transparent;
-            box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
-            background: rgb(251, 251, 251);
-            transition: all 0.1s ease 0s;
-            :focus{
-                border: 2px solid #003594;
-            }
-        }
-        .footer {
-            text-align: center;
-            font-size: max(1.5vh, 0.8rem);
-              
-        }
-        .button-58 {
-            width: 50%;
-            align-items: center;
-            background-color: #003594;
-            border: 2px solid #06f;
-            box-sizing: border-box;
-            color: #FFC72C;
-            cursor: pointer;
-            display: inline-block;
-            fill: #000;
-            font-size: calc(0.6vh + 0.4vw);
-            font-weight: 600;
-            height: calc(4vh + 1.2vw);
+            flex-direction: column;
             justify-content: center;
-            letter-spacing: -.8px;
-            line-height: 24px;
-            min-width:  2vw;
-            outline: 0;
-            padding: 0 17px;
+            align-items: center;
+            padding: 20px 0 1px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(33, 150, 243, 0.15);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            border: 1px solid #e3f2fd;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-header {
+            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            color: white;
             text-align: center;
-            text-decoration: none;
-            transition: all .3s;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-            border-radius: 30px;
-            -ms-transform: translate(50%, 50%);
-            transform: translate(5.7vw, 1vh);
+            padding: 30px 20px;
+            position: relative;
         }
 
-        .button-58:focus {
-            color: #171e29;
+        .signup-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
         }
 
-        .button-58:hover {
-            background-color: #3385ff;
-            border-color: #3385ff;
-            fill: #06f;
+        .signup-header h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
         }
 
-        .button-58:active {
-            background-color: #3385ff;
-            border-color: #3385ff;
-            fill: #06f;
+        .signup-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
-        @media (min-width: 2vw) {
-            .button-58 {
-                min-width: 1vw;
-            }
+        .signup-body {
+            padding: 40px 30px 30px;
+            max-height: 70vh;
+            overflow-y: auto;
         }
 
-        .select {
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1976d2;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-select {
             width: 100%;
-            min-width: 15ch;
-            max-width: 30ch;
-            border: 1px solid var(--select-border);
-            border-radius: 0.25em;
-            padding: 0.25em 0.5em;
-            font-size: max(1.5vh, 0.8rem);
-            cursor: pointer;
-            line-height: 1.1;
-            background-color: #fff;
-            background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
-              grid-template-areas: "select";
+            padding: 14px 16px;
+            border: 2px solid #e3f2fd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+            color: #333;
+        }
 
-        }   
-     
-        select{
-            font-size: 0.8rem;
-            appearance: base-select;
-            color: #71717a;
-            background-color: transparent;
-            width: 180px;
-            box-sizing: border-box;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #e4e4e7;
-            border-radius: calc(0.5rem - 2px);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2196f3;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #90a4ae;
+            font-size: 14px;
+        }
+
+        .form-input.error, .form-select.error {
+            border-color: #f44336;
+            background-color: #ffebee;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .form-input.valid, .form-select.valid {
+            border-color: #4caf50;
+            background-color: #f1f8e9;
+        }
+
+        .form-select {
             cursor: pointer;
-        }     
-        select > button {
+            appearance: none;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23666" d="M6 8L2 4h8z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
             display: flex;
+            align-items: center;
+            gap: 4px;
+            min-height: 18px;
+        }
+
+        .error-message:not(:empty)::before {
+            content: '⚠';
+            font-size: 14px;
+        }
+
+        .server-error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid #f44336;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .server-error::before {
+            content: '❌';
+            font-size: 16px;
+        }
+
+        .password-requirements {
+            background: #f8fcff;
+            border: 1px solid #e3f2fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #546e7a;
+        }
+
+        .password-requirements ul {
+            margin: 8px 0 0 16px;
+        }
+
+        .password-requirements li {
+            margin: 4px 0;
+        }
+
+        .signup-button {
             width: 100%;
-            color: currentColor;
-        }  
-        select::picker(select) {
-            font-size: 1rem;
-            appearance: base-select;
-            border: 1px solid #e4e4e7;
-            padding: 0.25rem;
-            margin-top: 0.25rem;
-            border-radius: calc(0.5rem - 2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            cursor: default;
-            transition: opacity 225ms ease-in-out, transform 225ms ease-in-out;
-            transform-origin: top;
-            transform: translateY(0);
-            opacity: 1;
+            padding: 16px;
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
 
-            @starting-style {
-            transform: translateY(-0.25rem) scale(0.95);
-            opacity: 0;
+        .signup-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .signup-button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+
+        .signup-button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .signup-button:disabled {
+            background: #bbdefb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            color: #90a4ae;
+        }
+
+        .signup-button:disabled::before {
+            display: none;
+        }
+
+        .signup-footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fcff;
+            border-top: 1px solid #e3f2fd;
+            font-size: 14px;
+            color: #64b5f6;
+        }
+
+        .signup-footer a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-footer p {
+            margin: 8px 0;
+        }
+
+        /* Loading state */
+        .signup-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .signup-container {
+                margin: 10px;
+                max-width: none;
+            }
+            
+            .signup-body {
+                padding: 30px 20px 20px;
+                max-height: none;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .signup-header {
+                padding: 25px 20px;
+            }
+            
+            .signup-header h2 {
+                font-size: 24px;
             }
         }
-        select:focus-visible {
-            outline: 2px solid #a1a1aa;
-            outline-offset: -1px;
+
+        /* Focus ring for accessibility */
+        .form-input:focus-visible,
+        .form-select:focus-visible,
+        .signup-button:focus-visible {
+            outline: 2px solid #2196f3;
+            outline-offset: 2px;
         }
 
-        select:has(option:not([hidden]):checked) {
-            color: #18181b;
-        }
-        select option::after {
-            content: "";
-            width: 1rem;
-            height: 1rem;
-            margin-left: auto;
-            opacity: 0;
-            background: center / contain no-repeat
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'%3E%3C/path%3E%3C/svg%3E");
+        /* Custom scrollbar for form body */
+        .signup-body::-webkit-scrollbar {
+            width: 6px;
         }
 
+        .signup-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
 
+        .signup-body::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .signup-body::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
     </style>
-    <script>
-        function validateEmail () {
-            var email = document.getElementById("email").value;
-            var err_email = document.getElementById("err_email");
-
-            const email_check = email.slice(-9);
-
-            if (email === "") {
-                err_email.textContent = "";
-                return false;
-            }
-
-            if (email_check !== '@csub.edu') {
-                err_email.textContent = "CSUB Only Emails";
-                return false;
-            }
-
-            err_email.textContent = "";
-            return true;
-        }
-        function validateDept() {
-            var dept = document.getElementById("deptid").value;
-            var err_dept = document.getElementById("dept_err");
-
-            var dept_regex = /^[D]\d{5}$/;
-
-            if (dept === "") {
-                err_dept.textContent = "";
-                return false;
-            }
-
-            if (!dept_regex.test(dept.trim())) {
-                err_dept.textContent = "Department must start with D and have 5 numbers";
-                return false;
-            } 
-            err_dept.textContent = "";
-            return true;
-            
-        }
-        function validatePassword() {
-            var pw = document.getElementById("pw").value;
-            var cpw = document.getElementById("cpw").value;
-            var error_message = document.getElementById("err_msg");
-            var err_pw = document.getElementById("err_pw");
-
-            var passwordRegex = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$/;
-
-            if (pw === "" && cpw === "") {
-                error_message.textContent = "";
-                return false;
-            }
-
-            if (!passwordRegex.test(pw)) {
-                err_pw.textContent = "Passwords must be at least 8 characters long, contain one capital letter, and one special character";
-                return false;
-            } else {
-                err_pw.textContent = "";
-            }
-
-            
-            if (pw !== cpw) {
-                error_message.textContent = "Passwords do not match";
-                return false;
-            }
-
-            
-            err_pw.textContent = "";
-            error_message.textContent = "";
-            return true;
-        }
-        function validateUsername() {
-            var username = document.getElementById("username").value;
-            var err_user = document.getElementById("err_user");
-
-            const user_regex = /^[0-9A-Za-z]{4,16}$/;
-
-            if (!user_regex.test(username)) {
-                err_user.textContent = "Username must be at least 4 characters"
-                return false;
-            }
-            err_user.textContent = "";
-            return true;
-
-        }
-        function validateForm() {
-            var isDeptValid = validateDept();
-            var isEmailValid = validateEmail();
-            var isPasswordValid = validatePassword();
-            var isUsernameValid = validateUsername();
-            var btn = document.getElementById("btn");
-
-            if (!isDeptValid || !isEmailValid || !isPasswordValid || !isUsernameValid) {
-
-                btn.style.display="none";
-                return false
-            }
-            btn.style.display="inline-flex";
-            return true;
-        }
-    </script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2 style="font-size:calc(2vh + 1vw);">Create an Account</h2>
-            <p style="font-size:calc(0.8vh + 0.3vw);"> Please fill in the form to create an account</p>
+    <div class="signup-container">
+        <div class="signup-header">
+            <h2>Create Account</h2>
+            <p>Please fill in the form to create your CSUB account</p>
         </div>
-            <div class="body">
-                <form id="singup-form" method="post" action="signup.php" oninput="validateForm()" onblur="return validateForm()" >
-                    <label id="form-label" for="username">Username</label>
-                    <input class="formAtt" type="text" name="username" id="username" placeholder="Choose a username" onblur="validateUsername()" required>
-                    <?php echo "<label style='color:red; text-align: center;'>". $user_err ."</label>"; ?>
-                    <div id="err_user" style="color:red;font-size:1.1vh;"></div>
 
-                    <label id="form-label" for="email">Email Address</label>
-                    <input class="formAtt" type="text" name="email" id="email" placeholder="example@csub.edu" onblur="validateEmail()" required>
-                    <?php echo "<label style='color:red; text-align: center;'>". $user_err ."</label>"; ?>
-                    <div id="err_email" style="color:red;"></div>
-
-
-                    <label id="form-label" for="f_name">First Name</label>
-                    <input class="formAtt" type="text" name="f_name" id="f_name" placeholder="Jim" required>
-
-                    <label id="form-label" for="l_name">Last Name</label>
-                    <input class="formAtt" type="text" name="l_name" id="l_name" placeholder="Bob" required>
-
-                    <label id="form-label" for="pw">Password </label>
-                    <input class="formAtt" type="password" name="pw" id="pw" placeholder="Create a password" onblur="validatePassword()" required>
-                    <div id="err_pw" style="color:red;"></div>
-
-                    <label id="form-label" for="pw">Confirm Password</label>
-                    <input class="formAtt" type="password" name="cpw" id="cpw" placeholder="Confirm your password" onblur="validatePassword()" required>
-                    <div id="err_msg" style="color:red;"></div>
-
-                    <label id="form-label" for="deptid">Department ID</label>
-                    <input class="formAtt" type="text" name="deptid" id="deptid" placeholder="Ex: D20106" onblur="validateDept()" required>
-                    <?php echo "<label style='color:red; text-align: center;'> $dept_err </label>"; ?>
-                    <div id="dept_err" style="color:red;"></div>
-
-                    <label id="form-label" for="role">User Role</label>
-             
-                    <select class="select" name="role" id="role">
-                        <option value="user">User</option>
-                        <option value="custodian">Custodian</option>
-                        <option value="management">Management</option>
-                        <option value="admin">Admin</option>
-                    </select>
-
-                    <button id="btn" class="button-58" type="submit" role="button" oninput="validateForm()">Create Account</button>
-                </form>
-                <div class="footer">
-                  
-                    <p style="padding-top:2vh;font-size:calc(1.0vh +0.5vw);">Already have an account? <a href="login.php">Login Here</a></p> 
-                
-                    <p style="font-size:calc(1.0vh +0.5vw);">By signing up, you agree to our Terms of Service and Privacy Policy</p>
+        <div class="signup-body">
+            <?php if (!empty($user_err) || !empty($dept_err)): ?>
+                <div class="server-error">
+                    <?php echo htmlspecialchars($user_err ?: $dept_err); ?>
                 </div>
+            <?php endif; ?>
+
+            <form id="signup-form" method="post" action="signup.php" oninput="validateForm()" onsubmit="return handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input 
+                        class="form-input" 
+                        type="text" 
+                        name="username" 
+                        id="username" 
+                        placeholder="Choose a username (4-16 characters)"
+                        onblur="validateUsername()" 
+                        required
+                        autocomplete="username"
+                    >
+                    <div id="err_user" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        class="form-input" 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        placeholder="example@csub.edu"
+                        onblur="validateEmail()" 
+                        required
+                        autocomplete="email"
+                    >
+                    <div id="err_email" class="error-message"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="f_name">First Name</label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="f_name" 
+                            id="f_name" 
+                            placeholder="First name"
+                            required
+                            autocomplete="given-name"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="l_name">Last Name</label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="l_name" 
+                            id="l_name" 
+                            placeholder="Last name"
+                            required
+                            autocomplete="family-name"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pw">Password</label>
+                    <input 
+                        class="form-input" 
+                        type="password" 
+                        name="pw" 
+                        id="pw" 
+                        placeholder="Create a strong password"
+                        onblur="validatePassword()" 
+                        required
+                        autocomplete="new-password"
+                    >
+                    <div class="password-requirements">
+                        <strong>Password Requirements:</strong>
+                        <ul>
+                            <li>At least 8 characters long</li>
+                            <li>One uppercase letter (A-Z)</li>
+                            <li>One lowercase letter (a-z)</li>
+                            <li>One number (0-9)</li>
+                            <li>One special character (!@#$%^&*)</li>
+                        </ul>
+                    </div>
+                    <div id="err_pw" class="error-message"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cpw">Confirm Password</label>
+                    <input 
+                        class="form-input" 
+                        type="password" 
+                        name="cpw" 
+                        id="cpw" 
+                        placeholder="Confirm your password"
+                        onblur="validatePassword()" 
+                        required
+                        autocomplete="new-password"
+                    >
+                    <div id="err_msg" class="error-message"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="deptid">Department ID</label>
+                        <input 
+                            class="form-input" 
+                            type="text" 
+                            name="deptid" 
+                            id="deptid" 
+                            placeholder="Ex: D20106"
+                            onblur="validateDept()" 
+                            required
+                        >
+                        <div id="dept_err" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="role">User Role</label>
+                        <select class="form-select" name="role" id="role" required>
+                            <option value="user">User</option>
+                            <option value="custodian">Custodian</option>
+                            <option value="management">Management</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="btn" class="signup-button" type="submit" disabled>
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <div class="signup-footer">
+            <p>Already have an account? <a href="login.php">Sign in here</a></p>
+            <p>By signing up, you agree to our Terms of Service and Privacy Policy</p>
         </div>
     </div>
+
     <script>
-    </script>                                                                                                       
+        function validateEmail() {
+            const email = document.getElementById("email").value;
+            const emailInput = document.getElementById("email");
+            const errEmail = document.getElementById("err_email");
+            
+            if (email.length === 0) {
+                emailInput.classList.remove('error', 'valid');
+                errEmail.textContent = "";
+                return false;
+            }
+            
+            const emailCheck = email.slice(-9);
+            if (emailCheck !== '@csub.edu') {
+                emailInput.classList.add('error');
+                emailInput.classList.remove('valid');
+                errEmail.textContent = "Please use your CSUB email address";
+                return false;
+            }
+            
+            emailInput.classList.remove('error');
+            emailInput.classList.add('valid');
+            errEmail.textContent = "";
+            return true;
+        }
+
+        function validateDept() {
+            const dept = document.getElementById("deptid").value;
+            const deptInput = document.getElementById("deptid");
+            const errDept = document.getElementById("dept_err");
+            const deptRegex = /^[D]\d{5}$/;
+            
+            if (dept === "") {
+                deptInput.classList.remove('error', 'valid');
+                errDept.textContent = "";
+                return false;
+            }
+            
+            if (!deptRegex.test(dept.trim())) {
+                deptInput.classList.add('error');
+                deptInput.classList.remove('valid');
+                errDept.textContent = "Department must start with D and have 5 numbers";
+                return false;
+            }
+            
+            deptInput.classList.remove('error');
+            deptInput.classList.add('valid');
+            errDept.textContent = "";
+            return true;
+        }
+
+        function validatePassword() {
+            const pw = document.getElementById("pw").value;
+            const cpw = document.getElementById("cpw").value;
+            const pwInput = document.getElementById("pw");
+            const cpwInput = document.getElementById("cpw");
+            const errorMessage = document.getElementById("err_msg");
+            const errPw = document.getElementById("err_pw");
+            const passwordRegex = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$/;
+            
+            let isValid = true;
+            
+            if (pw === "" && cpw === "") {
+                pwInput.classList.remove('error', 'valid');
+                cpwInput.classList.remove('error', 'valid');
+                errorMessage.textContent = "";
+                errPw.textContent = "";
+                return false;
+            }
+            
+            if (pw !== "" && !passwordRegex.test(pw)) {
+                pwInput.classList.add('error');
+                pwInput.classList.remove('valid');
+                errPw.textContent = "Password must meet all requirements above";
+                isValid = false;
+            } else if (pw !== "") {
+                pwInput.classList.remove('error');
+                pwInput.classList.add('valid');
+                errPw.textContent = "";
+            }
+            
+            if (cpw !== "" && pw !== cpw) {
+                cpwInput.classList.add('error');
+                cpwInput.classList.remove('valid');
+                errorMessage.textContent = "Passwords do not match";
+                isValid = false;
+            } else if (cpw !== "" && pw === cpw && pw !== "") {
+                cpwInput.classList.remove('error');
+                cpwInput.classList.add('valid');
+                errorMessage.textContent = "";
+            }
+            
+            return isValid && pw !== "" && cpw !== "";
+        }
+
+        function validateUsername() {
+            const username = document.getElementById("username").value;
+            const usernameInput = document.getElementById("username");
+            const errUser = document.getElementById("err_user");
+            const userRegex = /^[0-9A-Za-z]{4,16}$/;
+            
+            if (username === "") {
+                usernameInput.classList.remove('error', 'valid');
+                errUser.textContent = "";
+                return false;
+            }
+            
+            if (!userRegex.test(username)) {
+                usernameInput.classList.add('error');
+                usernameInput.classList.remove('valid');
+                errUser.textContent = "Username must be 4-16 characters (letters and numbers only)";
+                return false;
+            }
+            
+            usernameInput.classList.remove('error');
+            usernameInput.classList.add('valid');
+            errUser.textContent = "";
+            return true;
+        }
+
+        function validateForm() {
+            const isDeptValid = validateDept();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isUsernameValid = validateUsername();
+            const firstName = document.getElementById("f_name").value.trim();
+            const lastName = document.getElementById("l_name").value.trim();
+            
+            const btn = document.getElementById("btn");
+            const isFormValid = isDeptValid && isEmailValid && isPasswordValid && isUsernameValid && firstName !== "" && lastName !== "";
+            
+            btn.disabled = !isFormValid;
+            return isFormValid;
+        }
+
+        function handleSubmit(event) {
+            const btn = document.getElementById("btn");
+            
+            if (!validateForm()) {
+                event.preventDefault();
+                return false;
+            }
+            
+            // Add loading state
+            btn.classList.add('loading');
+            btn.textContent = 'Creating Account...';
+            
+            return true;
+        }
+
+        // Initialize form validation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            validateForm();
+            
+            // Add real-time validation
+            const inputs = ['username', 'email', 'pw', 'cpw', 'deptid', 'f_name', 'l_name'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', validateForm);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
