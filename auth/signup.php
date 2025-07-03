@@ -1,5 +1,6 @@
 <?php
 require_once("../config.php");
+include_once("../navbar.php");
 
 if (!isset($_SESSION['role']) && $_SESSION['role'] !== 'admin') {
     header("Location: https://dataworks-7b7x.onrender.com/login");
