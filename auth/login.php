@@ -1,6 +1,11 @@
 <?php
 include_once("../navbar.php");
 include_once("../config.php");
+if (php_sapi_name() === 'cli') {
+    $_SERVER["REQUEST_METHOD"] = "POST";
+    $_POST['email'] = "test@example.com";
+    $_POST['pw'] = "password123";
+}
 
 $email_err = $pw_err = $err = "";
 
@@ -22,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['deptid'] = $user_check['dept_id'];
                 $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE id = ?";
                 $stmt = $dbh->prepare($stmt);
-                if ($stmt->execute([$id])) {
+                if ($stmt->execute([$user_check['id']])) {
                     error_log("Error updating last_login");
                 } else {
                     header("location: https://dataworks-7b7x.onrender.com/index.php");
