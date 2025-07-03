@@ -1,5 +1,4 @@
 <?php
-include_once("../navbar.php");
 require_once "../config.php";
 require '../vendor/autoload.php';
 
@@ -43,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $success = false;
     }
 }
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>

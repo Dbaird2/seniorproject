@@ -1,6 +1,5 @@
 <?php
 require_once "../config.php";
-include_once("../navbar.php");
 // Basic PHP form handling for password reset
 $message = '';
 $error = '';
@@ -27,6 +26,7 @@ if ($_POST) {
         $message = 'Your password has been successfully reset! You can now log in with your new password.';
     }
 }
+include_once("../navbar.php");
 ?>
 
 <!DOCTYPE html>
