@@ -283,20 +283,21 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_dept = $where_price = '';
             $count = 0;
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
-                $where = " WHERE ";
                 $where_dept = " a.dept_id = :dept_id ";
                 $q_all_params[':dept_id'] = $dept_id_search;
                 $q_c_params[':dept_id'] = $dept_id_search;
                 $count++;
             }
             if (isset($_POST['asset_price']) && $_POST['asset_price'] !== '') {
-                $where = " WHERE ";
                 $q_all_params[':price'] = $asset_price;
                 $q_c_params[':price'] = $asset_price;
                 $where_price = " a.asset_price " . $asset_price_operation . " :price ";
                 $count++;
             }
-            $and = ($count == 2) ? ' AND ' : '';
+            $where = ($count > 0) ? ' WHERE ' : '';
+            if ($where_dept && $where_price) {
+                $and = ' AND ';
+            }
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $query_end;
 
             $query_count = "SELECT COUNT(*) FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept;

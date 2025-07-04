@@ -1,4 +1,3 @@
-
 <?php
 error_reporting(0);
 include_once("../config.php");
@@ -9,7 +8,6 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 */
 $filePath = $count = NULL;
 $previous_inputs = [];
-include_once("../navbar.php");
 
 require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -212,6 +210,7 @@ if (isset($_POST['download'])) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
 }
+include_once("../navbar.php");
 ?>
 
 <html>
