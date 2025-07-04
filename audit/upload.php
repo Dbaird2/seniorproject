@@ -1,5 +1,5 @@
 <?php
-include_once("../navbar.php");
+include_once("../config.php");
 require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         
         
 }
+include_once("../navbar.php");
 ?>
 <br><br><br>
 <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">

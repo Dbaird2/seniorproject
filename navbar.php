@@ -19,7 +19,7 @@ body,h1,h2,h3,h4,h5,h6 {    font-family: -apple-system, BlinkMacSystemFont, "Seg
 <?php
 if (isset($_SESSION['id'])) {
 ?>
-    <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Start an Audit</a>
+    <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Start an Audit</a>
     <a href="https://dataworks-7b7x.onrender.com/search/search.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Search Assets</a>
     <a href="https://dataworks-7b7x.onrender.com/change_asset_tag.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Change Asset Tags</a>
     <a href="https://dataworks-7b7x.onrender.com/auth/logout.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Logout</a>
