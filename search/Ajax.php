@@ -284,7 +284,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count = 0;
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
                 $where = " WHERE ";
-                $where_dept = " AND a.dept_id = :dept_id ";
+                $where_dept = " a.dept_id = :dept_id ";
                 $q_all_params[':dept_id'] = $dept_id_search;
                 $q_c_params[':dept_id'] = $dept_id_search;
                 $count++;
@@ -293,7 +293,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $where = " WHERE ";
                 $q_all_params[':price'] = $asset_price;
                 $q_c_params[':price'] = $asset_price;
-                $where_price = " AND a.asset_price " . $asset_price_operation . " :price ";
+                $where_price = " a.asset_price " . $asset_price_operation . " :price ";
                 $count++;
             }
             $and = ($count == 2) ? ' AND ' : '';
