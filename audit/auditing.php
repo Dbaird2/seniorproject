@@ -1,11 +1,11 @@
 <?php
 error_reporting(0);
 include_once("../config.php");
-/*
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-*/
+
 $filePath = $count = NULL;
 $previous_inputs = [];
 
@@ -210,7 +210,6 @@ if (isset($_POST['download'])) {
         echo "Something went wrong trying to parse before downloading ". $e;
     }
 }
-include_once("../navbar.php");
 ?>
 
 <html>

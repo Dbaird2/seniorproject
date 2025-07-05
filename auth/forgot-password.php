@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'dasonbaird25@gmail.com';
-        $mail->Password   = 'dssi jlmu giqh bdts'; 
+        $mail->Password   = $app_pass; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
         $mail->isHTML(true);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $mail->send();
        
-        $add_token_q = "INSERT INTO user_table SET token = :token, token_date = CURRENT_TIMESTAMP WHERE email = :email";
+        $add_token_q = "INSERT INTO user_table SET token = :token, expiry = CURRENT_TIMESTAMP WHERE email = :email";
         $token_stmt = $dbh->prepare($add_token_q);
         $token_stmt->execute([':token'=>$token, ':email'=>$email]);
         
