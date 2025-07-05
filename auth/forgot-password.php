@@ -25,12 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->addAddress($email, 'User');
         $mail->Subject = 'Password Reset';
         $mail->Body    = '<h4>Click this link to reset your password...</h4><br>
-        <a href="https://dataworks-7b7x.onrender.com/auth/reset-password?token=' . $token . '&email='.$email.'">Reset Password</a>';
+        <a href="https://dataworks-7b7x.onrender.com/auth/reset-password.php?token=' . $token . '&email='.$email.'">Reset Password</a>';
         $mail->AltBody = 'Click this link to reset your password...';
 
         $mail->send();
        
-        $add_token_q = "INSERT INTO user_table SET token = :token, expiry = CURRENT_TIMESTAMP WHERE email = :email";
+        $add_token_q = "INSERT INTO user_table SET ver_code = :token, expiry = CURRENT_TIMESTAMP WHERE email = :email";
         $token_stmt = $dbh->prepare($add_token_q);
         $token_stmt->execute([':token'=>$token, ':email'=>$email]);
         
