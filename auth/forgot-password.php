@@ -7,7 +7,7 @@ $success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
-    $bytes = random_bytes(6);
+    $bytes = random_bytes(3);
     $token = bin2hex($bytes);
     
     try {
