@@ -1,9 +1,14 @@
-Make other user accounts in sql for different CRUD operations for base users
+FILES:
+auditing.php REFACTOR FOR INFINITE SCROLLING
+change_user.php FOR ADMIN TO CHANGE USER INFO: role
+add-asset.php
+add-dept.php
+mobile-api/insert.php, get-info.php, etc
 
-ALL FILES THAT NEED STRICT ACCESS
-    auditing.php
-    search_asset.php
-    change_asset_tag.php
-    
+FEATURES:
+audit save to database: only need last 2
+be able to keep going on audits
+
+
 
 

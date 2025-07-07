@@ -374,7 +374,7 @@ $rows = [];
     </script>
     <?php
     for ($i = $header_row; $i < $highest_row+1; $i++) {
-        if ($data[$i][$tag_col] === NULL && $data[$i][$descr_col] === NULL) { break;}
+        if (!isset($data[$i][$tag_col]) && $data[$i][$tag_col] === NULL && $data[$i][$descr_col] === NULL) { break;}
         $tag_array[] = $data[$i][$tag_col];
         $disc_arr[] = $data[$i][$descr_col];
         $sn_arr[] = $data[$i][$serial_col];
