@@ -21,8 +21,6 @@ if (isset($_SESSION['id'])) {
 ?>
     <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Start an Audit</a>
     <a href="https://dataworks-7b7x.onrender.com/search/search.php" class="w3-bar-item w3-button w3-hide-small w3-padding-small w3-hover-white  w3-left-align">Search Assets</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dept.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Add Departments</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-bldg.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Add Building/Rooms</a>
     <a href="https://dataworks-7b7x.onrender.com/auth/logout.php" class="w3-bar-item w3-button w3-padding-small w3-white w3-right-align w3-right">Logout</a>
 <?php
 } else {
@@ -33,6 +31,8 @@ if (isset($_SESSION['id'])) {
 if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
 ?>
     <a href="https://dataworks-7b7x.onrender.com/auth/signup.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Signup</a>
+    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dept.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Add Departments</a>
+    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-bldg.php" class="w3-bar-item w3-button w3-padding-small w3-right-align w3-right">Add Building/Rooms</a>
 <?php
   }
 ?>
