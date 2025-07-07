@@ -18,7 +18,7 @@ if (isset($_GET['bldg-id'])) {
     if (!$already_in_db) {
         $insert_bldg = "INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)";
         $statement = $dbh->prepare($insert_bldg);
-        $statemen->execute([":bldg_name"=>$bldg_name, ":bldg_id"=>$bldg_id]);
+        $statement->execute([":bldg_name"=>$bldg_name, ":bldg_id"=>$bldg_id]);
         $bldg_msg = "Building: " . $bldg_id . " ". $bldg_name . " inserted into database";
         $bldg_color = 'green';
 
