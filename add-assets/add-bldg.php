@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const option_val = document.getElementById("bldg-name2");
     option_val.addEventListener("change", function() {
         result.forEach((item,index) => {
+            console.log(item, index, result[index]['bldg_id']);
             if (item['bldg_name'] == option_val.value) {
                 bldg_id.value = result[index]['bldg_id'];
                 console.log(result[index]['bldg_id']);
