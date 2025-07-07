@@ -110,7 +110,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label class="form-label" for="bldg-name">Building Name<br></label>
                 <select class="form-input" name="bldg-name" id="bldg-name2" required>
 <?php foreach ($result as $row) {
-$bldg = $row['bldg_name'];
+$bldg = htmlspecialchars($row['bldg_name'], ENT_QUOTES, 'UTF-8');
 echo "<option value='$bldg'>".$bldg."</option>";
                 }
 ?>

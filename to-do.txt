@@ -8,6 +8,7 @@ mobile-api/insert.php, get-info.php, etc
 FEATURES:
 audit save to database: only need last 2
 be able to keep going on audits
+add more responses for chatbot
 
 
 
