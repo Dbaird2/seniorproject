@@ -73,7 +73,7 @@ if (isset($_GET['room-num'])) {
 include_once("../navbar.php");
 
 
-$select = "SELECT * FROM bldg_table";
+$select = "SELECT * FROM bldg_table ORDER BY bldg_name";
 $stmt = $dbh->prepare($select);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -134,11 +134,13 @@ echo "<option value='$bldg'>".$bldg."</option>";
             <button class="submit-btn" onclick="addNewRoom()">Add Another Room</button>
 
         <?php 
-        $color = '';
-        foreach ($room_msg as $msg) {
-            $color = $msg[0];
-            echo "<p style='color:$color;text-align:left;'>" . $msg[1] . "</p>";
-        }
+$color = '';
+if (isset($msg[0])) {
+    foreach ($room_msg as $msg) {
+        $color = $msg[0];
+        echo "<p style='color:$color;text-align:left;'>" . $msg[1] . "</p>";
+    }
+}
         ?>
         </div>
     </div>
@@ -152,6 +154,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
         result.forEach((item,index) => {
             if (item['bldg_name'] == option_val.value) {
                 bldg_id.value = result[index]['bldg_id'];
+                console.log(result[index]['bldg_id']);
                 return true;
             }
         });
