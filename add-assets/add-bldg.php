@@ -1,6 +1,6 @@
 <?php
 include_once("../config.php");
-if ($_SESSION['role'] !=='admin' || !isset($_SESSION['role'])) {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: https://dataworks-7b7x.onrender.com");
     exit;
 }
@@ -8,7 +8,7 @@ if ($_SESSION['role'] !=='admin' || !isset($_SESSION['role'])) {
 $bldg_msg = $bldg_color = '';
 $room_msg = [[]];
 if (isset($_GET['bldg-id'])) {
-    $bldg_name = strtoupper($_GET['bldg-name']) ?? "Something went wrong";
+    $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id'];
     $check_bldg_name = "SELECT bldg_name, bldg_id from bldg_table where bldg_name = :bldg_name OR bldg_id = :bldg_id";
 
@@ -18,7 +18,7 @@ if (isset($_GET['bldg-id'])) {
     if (!$already_in_db) {
         $insert_bldg = "INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)";
         $statement = $dbh->prepare($insert_bldg);
-        $statement->execute([":bldg_name"=>$bldg_name, ":bldg_id"=>$bldg_id]);
+        $statement->execute([$bldg_name, $bldg_id]);
         $bldg_msg = "Building: " . $bldg_id . " ". $bldg_name . " inserted into database";
         $bldg_color = 'green';
 
@@ -29,7 +29,7 @@ if (isset($_GET['bldg-id'])) {
 
 }
 if (isset($_GET['room-num'])) {
-    $bldg_name = strtoupper($_GET['bldg-name']) ?? "Soemthing went wrong";
+    $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
     $room_nums = $_GET['room-num'];
 
@@ -41,8 +41,8 @@ if (isset($_GET['room-num'])) {
             $new_room_nums[] = $room;
         }
     }
-    $check_room_avail = "SELECT * FROM room_table WHERE room_loc = :room_loc WHERE bldg_id = :bldg_id";
-    $insert_room = "INSERT INTO room_table SET room_loc = :room_loc WHERE bldg_id = :bldg_id";
+    $check_room_avail = "SELECT * FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
+    $insert_room = "INSERT INTO room_table (room_loc, bldg_id) VALUES (?, ?)";
     try {
         foreach ($new_room_nums as $index=>$room) {
 
@@ -51,7 +51,7 @@ if (isset($_GET['room-num'])) {
             $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
             if (!$room_check) {
                 $insert_stmt = $dbh->prepare($insert_room);
-                $insert_stmt->execute([":room_loc"=>$room, ":bldg_id"=>$bldg_id]);
+                $insert_stmt->execute([$room, $bldg_id]);
                 
                 $room_msg[$index][0] = 'green';
                 $room_msg[$index][1] = "Room number: " . $room . " successfully added."; 
