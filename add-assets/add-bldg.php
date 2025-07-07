@@ -1,15 +1,11 @@
 <?php
 include_once("../config.php");
 
-if ($_SESSION['role'] !== 'admin' || !isset($_SESSION['role'])) {
-    header("Location: https://dataworks-7b7x.onrender.com");
-    exit;
-}
-
 if ($_GET['bldg-id']) {
     $bldg_name = strtoupper($_GET['bldg-name']) ?? "Something went wrong";
     $bldg_id = (int)$_GET['bldg-id'];
     $check_bldg_name = "SELECT bldg_name, bldg_id from bldg_table where bldg_name = :bldg_name OR bldg_id = :bldg_id";
+
     $statement = $dbh->prepare($check_bldg_name);
     $statement->execute([":bldg_name"=>$bldg_name, ":bldg_id"=>$bldg_id]);
     $already_in_db = $statement->fecth(PDO::FETCH_ASSOC);
@@ -17,8 +13,9 @@ if ($_GET['bldg-id']) {
         $insert_bldg = "INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)";
         $statement = $dbh->prepare($insert_bldg);
         $statemen->execute([":bldg_name"=>$bldg_name, ":bldg_id"=>$bldg_id]);
+        $msg = "Building : " . $bldg_id . " ". $bldg_name . " inserted into database";
     }
-    $msg = "Building : " . $bldg_id . " ". $bldg_name . " inserted into database";
+
 } 
 if ($_GET['room-tag']) {
 
@@ -31,9 +28,9 @@ $select = "SELECT * FROM bldg_table";
 $stmt = $dbh->prepare($select);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-echo "<pre>";
-var_dump($result);
-echo "</pre>";
+
+
+
 ?>
 <link rel="stylesheet" href="bldg.css">
 <div class="body">
@@ -65,7 +62,8 @@ echo "</pre>";
                 <div class="form-group">
                 <label class="form-label" for="bldg-name">Building Name<br></label>
                 <select class="form-input" name="bldg-name" id="bldg-name2" required>
-<?php foreach ($result['bldg_name'] as $index=>$bldg) {
+<?php foreach ($result as $row) {
+$bldg = $row['bldg_name'];
 echo "<option value='$bldg'>".$bldg."</option>";
                 }
 ?>
@@ -97,22 +95,22 @@ echo "<option value='$bldg'>".$bldg."</option>";
 </div>
 <script>
 result = <?php echo json_encode($result); ?>;
-console.log(result['bldg_id'][1]);
 document.addEventListener("DOMContentLoaded", (e) => {
-    const bldg_id = document.getElementById("bldg-id2");
-    const option_val = document.getElementById("bldg-name2");
-    option_val.addEventListener("change", function() {
-        result["bldg_name"].forEach((item,index) => {
-            if (item == option_val.value) {
-                bldg_id.value = result['bldg_id'][index];
-            }
-        });
-    });
-    result["bldg_name"].forEach((item,index) => {
-        if (item == option_val.value) {
-            bldg_id.value = result['bldg_id'][index];
-        }
-    });
+const bldg_id = document.getElementById("bldg-id2");
+const option_val = document.getElementById("bldg-name2");
+option_val.addEventListener("change", function() {
+    result.forEach((item,index) => {
+    if (item['bldg_name'] == option_val.value) {
+        bldg_id.value = result[index]['bldg_id'];
+        return true;
+    }
+});
+});
+result.forEach((item,index) => {
+if (item['bldg_name'] == option_val.value) {
+    bldg_id.value = result[index]['bldg_id'];
+}
+});
 });
 
 function addNewRoom() {
