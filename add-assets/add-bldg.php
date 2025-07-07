@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 include_once("../config.php");
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: https://dataworks-7b7x.onrender.com");
@@ -135,12 +136,10 @@ echo "<option value='$bldg'>".$bldg."</option>";
 
         <?php 
 $color = '';
-if (isset($msg[0])) {
     foreach ($room_msg as $msg) {
         $color = $msg[0];
         echo "<p style='color:$color;text-align:left;'>" . $msg[1] . "</p>";
     }
-}
         ?>
         </div>
     </div>
@@ -152,10 +151,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const option_val = document.getElementById("bldg-name2");
     option_val.addEventListener("change", function() {
         result.forEach((item,index) => {
-            console.log(item, index, result[index]['bldg_id'], item['bldg_name']);
             if (item['bldg_name'] == option_val.value) {
                 bldg_id.value = result[index]['bldg_id'];
-                console.log(result[index]['bldg_id']);
                 return true;
             }
         });
