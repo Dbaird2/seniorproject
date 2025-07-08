@@ -172,7 +172,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $tag = strtoupper(htmlspecialchars($_POST['search']));
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
-    $status = $_POST['statusFilter'];
+    $status = $_POST['statusFilter'] ?? 'In Service';
     $dept_id = $_POST['dept_id'] ;
     $dept_id_search = strtoupper($_POST['dept_id_search']);
     $room_tag = $_POST['room_tag'] ;
@@ -281,7 +281,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
         if ($tag === 'all' || $tag === '') {
-            $where = '';
+            $where = $and = '';
             $where_dept = $where_price = '';
             $count = 0;
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
@@ -322,6 +322,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_count->execute($params2);
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         }
+            echo "<br>" . $query ."<br>";
         $row_count = (int)$total_rows['rows'];
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;
@@ -430,7 +431,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
   <?php
         }
     } else if ($category === 'buildings') {
-
+        $and = $bldg_id_where = '';
 //      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
         echo "<script>addCheckboxes('.filter-bldg');</script>";
 
@@ -481,8 +482,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             }
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         } else {
-            $params_bldg[":search"] = "%$search%";
-            $params_count[":search"] = "%$search%";
+            $params_bldg[":search"] = "%$tag%";
+            $params_count[":search"] = "%$tag%";
             $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE (' . $where_array .')'.$and.$bldg_id_where.$query_end;
 
             $bldg_count = "SELECT COUNT(*) as Rows
