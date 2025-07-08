@@ -497,7 +497,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($bldg_count);
-            if ($params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL) {
+            if (!isset($params_count) || $params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL) {
                 $exec_count->execute();
             } else {
                 $exec_count->execute($params_count);
