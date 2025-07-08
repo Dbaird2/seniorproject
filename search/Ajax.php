@@ -64,7 +64,7 @@ if (isset($_POST['audit'])) {
     $data_from_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $data = json_encode($data_from_db);
-    $_SESSION['audit_data'] = $data_from_db;
+    $_SESSION['data'] = $data_from_db;
     header('Content-Type: application/json');
     echo $data;
     exit;
@@ -491,7 +491,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
   <?php
         }
     } else if ($category === 'buildings') {
-        $and = $bldg_id_where = '';
+        $and = $bldg_id_where = $where = '';
 //      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
         echo "<script>addCheckboxes('.filter-bldg');</script>";
 
@@ -535,7 +535,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($bldg_count);
-            if (!isset($params_count) || $params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL) {
+            if (!isset($params_count[":bldg_id"]) && ($params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL)) {
                 $exec_count->execute();
             } else {
                 $exec_count->execute($params_count);
