@@ -280,10 +280,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
         echo "<script>removeCheckbox('.filter-bldg');</script>";
-        if ($tag === 'all' || $tag === '') {
+        if ($tag === 'ALL' || $tag === '') {
             $where = $and = '';
             $where_dept = $where_price = '';
             $count = 0;
+            $q_all_params = [':offset'=>$query_offset];
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
                 $where_dept = " a.dept_id = :dept_id ";
                 $q_all_params[':dept_id'] = $dept_id_search;
@@ -303,14 +304,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $query_end;
 
             $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept;
-            $q_all_params['offset'] = $query_offset;
 
             $exec_query = $dbh->prepare($query);
             $exec_query->execute($q_all_params);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($query_count);
-            $exec_count->execute($q_c_params);
+            if (isset($q_c_params)) {
+                $exec_count->execute($q_c_params);
+            } else  {
+                $exec_count->execute();
+            }
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         } else {
             $exec_query = $dbh->prepare($query);
@@ -466,7 +470,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
-        if ($tag === 'all' || $tag === '') {
+        if ($tag === 'ALL' || $tag === '') {
             $query = "SELECT " .$column_array.$query_bldg_from.$where.$bldg_id_where.$query_end;
             $bldg_count = "SELECT COUNT(*) as Rows ".$query_bldg_from.$where.$bldg_id_where;
 
