@@ -169,7 +169,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //  POST TO GET FROM SCRIPT.JS SEARCH FORM
     $location_from = '';
-    $tag = $_POST['search'];
+    $tag = strtoupper(htmlspecialchars($_POST['search']));
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
     $status = $_POST['statusFilter'];
@@ -183,6 +183,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
     $bldg_id = $_POST['bldg_id'] ;
+    $bldg_id_val = $_POST['bldg_id_val'];
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
     $params = [':search'=>"%$tag%"];
@@ -429,14 +430,27 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
   <?php
         }
     } else if ($category === 'buildings') {
-//-------------------------------------------------------------------------
-//      SET COLUMNS WITH WHERE CONDITIONING
+
+//      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
+        echo "<script>addCheckboxes('.filter-bldg');</script>";
+
+//      HIDE CHECKBOXES & INPUT FOR ASSET FILTER
+        echo "<script>removeCheckbox('.filter-assets');</script>";
+
+        $params_bldg = [":offset"=>$offset];
+        $params_count = [];
         $column_array[] = 'room_tag';
         $where_array[] = 'CAST(room_tag AS TEXT) LIKE :search';
+        if ($bldg_id_val !== NULL  && $bldg_id_val !== '') {
+            $params_bldg[":bldg_id"] = $bldg_id_val;
+            $params_count[":bldg_id"] = $bldg_id_val;
+            $and = ' AND ';
+            $where = ' WHERE ';
+            $bldg_id_where = 'bldg_id = :bldg_id';
+        }
         if ($bldg_id === 'true') {
             $header_true['bldg_id'] = 'true';
             $column_array[] = 'bldg_id';
-            $where_array[] = 'CAST(bldg_id AS TEXT) LIKE :search';
         }
         if ($bldg_name === 'true') {
             $header_true['bldg_name'] = 'true';
@@ -451,32 +465,40 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
         $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
-        $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE ' . $where_array . $query_end;
-//-------------------------------------------------------------------------
+        if ($tag === 'all' || $tag === '') {
+            $query = "SELECT " .$column_array.$query_bldg_from.$where.$bldg_id_where.$query_end;
+            $bldg_count = "SELECT COUNT(*) as Rows ".$query_bldg_from.$where.$bldg_id_where;
 
-//-------------------------------------------------------------------------
-//      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
-        echo "<script>addCheckboxes('.filter-bldg');</script>";
+            $bldg_e = $dbh->prepare($query);
+            $bldg_e->execute($params_bldg);
+            $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
-//-------------------------------------------------------------------------
-//      HIDE CHECKBOXES & INPUT FOR ASSET FILTER
-        echo "<script>removeCheckbox('.filter-assets');</script>";
+            $exec_count = $dbh->prepare($bldg_count);
+            if ($params_count[0] === '' || $params_count[0] === NULL) {
+                $exec_count->execute();
+            } else {
+                $exec_count->execute($params_count);
+            }
+            $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+        } else {
+            $params_bldg[":search"] = "%$search%";
+            $params_count[":search"] = "%$search%";
+            $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE (' . $where_array .')'.$and.$bldg_id_where.$query_end;
 
-        $bldg_count = "SELECT COUNT(*) as Rows
-            FROM bldg_table NATURAL JOIN room_table 
-            WHERE CAST(bldg_id AS TEXT) like :search OR
-            bldg_name like :search OR
-            room_loc like :search OR
-            CAST(room_tag as TEXT) like :search
-            ";
-        $bldg_e = $dbh->prepare($query);
-        $bldg_e->execute(['search' => "%$tag%",
-            'offset' => $query_offset ]);
-        $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
+            $bldg_count = "SELECT COUNT(*) as Rows
+                FROM bldg_table NATURAL JOIN room_table 
+                WHERE
+                (bldg_name like :search OR
+                room_loc like :search OR
+                CAST(room_tag as TEXT) like :search)".$and.$bldg_id_where;
+            $bldg_e = $dbh->prepare($query);
+            $bldg_e->execute($params_bldg);
+            $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
-        $exec_count = $dbh->prepare($bldg_count);
-        $exec_count->execute(['search' => "%$tag%"]);
-        $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+            $exec_count = $dbh->prepare($bldg_count);
+            $exec_count->execute($params_count);
+            $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+        }
         $row_count = (int)$total_rows['rows'];
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;

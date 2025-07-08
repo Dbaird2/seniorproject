@@ -72,6 +72,7 @@ function auditTrigger() {
     var statusFilter = $('#statusFilter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
+    var bldg_id_val = $('#bldg_id-search').val();
     var box_name = $('#asset_name').prop('checked');
     var dept_id = $('#dept_id').prop('checked');
     var dept_id_search = $('#dept-id-search').val();
@@ -104,7 +105,7 @@ function auditTrigger() {
             bldg_id: bldg_id,
             bldg_name: bldg_name,
             audit: audit,
-
+            bldg_id_val, bldg_id_val
             search: name
         },
         dataType: 'json',  
