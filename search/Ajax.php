@@ -169,7 +169,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //  POST TO GET FROM SCRIPT.JS SEARCH FORM
     $location_from = '';
-    $tag = strtoupper(htmlspecialchars($_POST['search']));
+    $tag = strtoupper(htmlspecialchars($_POST['search'], ENT_QUOTES));
     $offset = isset($_POST['offset']) ? (int)$_POST['offset'] : 1;
     $category = $_POST['categories'];
     $status = $_POST['statusFilter'] ?? 'In Service';
@@ -352,19 +352,22 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
     </thead>
     <tbody><?php 
+            echo "<br><pre>";
+            var_dump($result);
+            echo "</pre><br>";
         foreach ($result as $row) {
             $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
             // Escape values for safety
             $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
-            $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
-            $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);
-            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);
-            $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
-            $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
-            $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
-            $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
-            $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES);
+            $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES) ?? NULL;
+            $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES) ?? NULL;
+            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES) ?? NULL;
+            $safe_po = htmlspecialchars($row['po'], ENT_QUOTES) ?? NULL;
+            $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES) ?? NULL;
+            $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES)?? NULL;
+            $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES) ?? NULL;
+            $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES) ?? NULL;
             
             ?>
             <td class=<?=$color_class?>><?=$row_num++?></td>
