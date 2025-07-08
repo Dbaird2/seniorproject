@@ -327,6 +327,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         }
             echo "<br>" . $query ."<br>";
+        echo "<pre><br>";
+        echo "All params: ";
+        var_dump($q_all_params);
+        echo "All count params: ";
+        var_dump($q_c_params);
+        echo "Search params: ";
+        var_dump($params);
+        echo "Search count params: ";
+        var_dump($params2);
+        echo "<br></pre>";
         $row_count = (int)$total_rows['rows'];
 
         $row_num = isset($query_offset) ? $query_offset + 1 : 1;
@@ -353,6 +363,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     </thead>
     <tbody><?php 
             echo "<br><pre>";
+            echo "<h2> VAR DUMP ON RESULT: </h2>";
             var_dump($result);
             echo "</pre><br>";
         foreach ($result as $row) {
@@ -482,7 +493,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($bldg_count);
-            if ($params_count[0] === '' || $params_count[0] === NULL) {
+            if ($params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL) {
                 $exec_count->execute();
             } else {
                 $exec_count->execute($params_count);
