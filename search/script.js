@@ -7,7 +7,7 @@ function fill(Value) {
 }
 function searchTrigger() {
     //Assigning search box value to javascript variable named as "name".
-    var name = $('#search').val();
+    var search = $('#search').val();
     var offset = $('#offset').val();
     var categories = $('#categories').val();
     var statusFilter = $('#statusFilter').val();
@@ -23,6 +23,7 @@ function searchTrigger() {
     var asset_po = $('#asset_po').prop('checked');
     var bldg_id = $('#bldg_id').prop('checked');
     var bldg_name = $('#bldg_name').prop('checked');
+    var bldg_id_val = $('#bldg-id-search').val();
 
     //Validating, if "name" is empty.
     if (name == "") {
@@ -54,9 +55,10 @@ function searchTrigger() {
             asset_po: asset_po,
             bldg_id: bldg_id,
             bldg_name: bldg_name,
+            bldg_id_val: bldg_id_val,
 
             //Assigning value of "name" into "search" variable.
-            search: name
+            search: search
         },
         //If result found, this funtion will be called.
         success: function(html) {
@@ -66,13 +68,13 @@ function searchTrigger() {
     });
 }
 function auditTrigger() {
-    var name = $('#search').val();
+    var search = $('#search').val();
     var offset = $('#offset').val();
     var categories = $('#categories').val();
     var statusFilter = $('#statusFilter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
-    var bldg_id_val = $('#bldg_id-search').val();
+    var bldg_id_val = $('#bldg-id-search').val();
     var box_name = $('#asset_name').prop('checked');
     var dept_id = $('#dept_id').prop('checked');
     var dept_id_search = $('#dept-id-search').val();
@@ -105,8 +107,8 @@ function auditTrigger() {
             bldg_id: bldg_id,
             bldg_name: bldg_name,
             audit: audit,
-            bldg_id_val, bldg_id_val
-            search: name
+            bldg_id_val, bldg_id_val,
+            search: search
         },
         dataType: 'json',  
         success: function(data) {
