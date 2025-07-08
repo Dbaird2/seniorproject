@@ -3,10 +3,47 @@ require_once ("../config.php");
 
 error_reporting(0);
 if (isset($_POST['audit'])) {
+
+    $search = strtoupper(htmlspecialchars($_POST['search'] ?? '', ENT_QUOTES));
+    $status = $_POST['statusFilter'] ?? 'All Assets';
+    $dept_id = $_POST['dept_id'] ;
+    $dept_id_search = strtoupper($_POST['dept_id_search']);
+    $room_tag = $_POST['room_tag'] ;
+    $room_loc = $_POST['room_loc'] ;
+    $asset_sn = $_POST['asset_sn'] ;
+    $asset_price = ($_POST['asset_price'] !== '') ? (int)$_POST['asset_price'] : -1;
+    $asset_price_check = $_POST['asset_price_check'];
+    $asset_price_operation = $_POST['price_operation'] ;
+    $asset_po = $_POST['asset_po'] ;
+    $bldg_id = $_POST['bldg_id'] ;
+    $bldg_id_val = $_POST['bldg_id_val'];
+    $bldg_name = $_POST['bldg_name'] ;
+    $box_name = $_POST['box_name'] ;
+
+
     $where_dept = $where_price = '';
     $location_from = '';
-    $search = $_POST['search'];
+    $query_start = "SELECT ";
+    $query_asset_from = " FROM asset_info AS a ";
     $params = ['search'=>"%$search%"];
+
+    if ($room_tag === 'true') {
+        // FOR QUERYING
+        $where_array[] = "CAST(a.room_tag AS TEXT) ILIKE :search";
+    }
+    if ($box_name === 'true') {
+        $where_array[] = "a.asset_name ILIKE :search";
+    } 
+    if ($asset_sn === 'true') {
+        $where_array[] = "a.serial_num ILIKE :search";
+    } 
+    if ($asset_po === 'true') {
+        $where_array[] = "CAST(a.po AS TEXT) ILIKE :search";
+    }
+    if ($room_loc === 'true') {
+        $location_from = " JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ";
+    }
+
     if ($_POST['dept_id_search'] !== '') {
         $params['dept_id'] = $_POST['dept_id_search'];
         $where_dept = ' AND dept_id = :dept_id ';
@@ -15,12 +52,13 @@ if (isset($_POST['audit'])) {
         $params['price'] = $_POST['asset_price'];
         $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
     }
+    $where_array = implode(' OR ', $where_array);
+
     $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
         a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
         JOIN room_table AS r ON a.room_tag = r.room_tag 
         JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
-        WHERE (asset_tag LIKE :search OR serial_num LIKE :search OR asset_name LIKE :search 
-        OR CAST(po AS TEXT) LIKE :search) " . $where_dept . $where_price;
+        WHERE (". $where_array .") " . $where_dept . $where_price;
     $stmt = $dbh->prepare($audit_query);
     $stmt->execute($params);
     $data_from_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -225,17 +263,17 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $header_true['room_tag'] = 'true';
             // FOR QUERYING
             $column_array[] = "a.room_tag";
-            $where_array[] = "CAST(a.room_tag AS TEXT) LIKE :search";
+            $where_array[] = "CAST(a.room_tag AS TEXT) ILIKE :search";
         }
         if ($box_name === 'true') {
             $header_true['asset_name'] = 'true';
             $column_array[] = "a.asset_name";
-            $where_array[] = "a.asset_name LIKE :search";
+            $where_array[] = "a.asset_name ILIKE :search";
         } 
         if ($asset_sn === 'true') {
             $header_true['asset_sn'] = 'true';
             $column_array[] = "a.serial_num";
-            $where_array[] = "a.serial_num LIKE :search";
+            $where_array[] = "a.serial_num ILIKE :search";
         } 
         if (isset($asset_price_operation)) {
             $params[':price'] = $asset_price;
@@ -249,7 +287,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($asset_po === 'true') {
             $header_true['asset_po'] = 'true';
             $column_array[] = 'a.po';
-            $where_array[] = "CAST(a.po AS TEXT) LIKE :search";
+            $where_array[] = "CAST(a.po AS TEXT) ILIKE :search";
         }
         if ($dept_id === 'true') {
             $header_true['dept_id'] = 'true';
@@ -463,7 +501,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $params_bldg = [":offset"=>$offset];
         $params_count = [];
         $column_array[] = 'room_tag';
-        $where_array[] = 'CAST(room_tag AS TEXT) LIKE :search';
+        $where_array[] = 'CAST(room_tag AS TEXT) ILIKE :search';
         if ($bldg_id_val !== NULL  && $bldg_id_val !== '') {
             $params_bldg[":bldg_id"] = $bldg_id_val;
             $params_count[":bldg_id"] = $bldg_id_val;
@@ -478,12 +516,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($bldg_name === 'true') {
             $header_true['bldg_name'] = 'true';
             $column_array[] = 'bldg_name';
-            $where_array[] = 'bldg_name LIKE :search';
+            $where_array[] = 'bldg_name ILIKE :search';
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
             $column_array[] = 'room_loc';
-            $where_array[] = 'room_loc LIKE :search';
+            $where_array[] = 'room_loc ILIKE :search';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);

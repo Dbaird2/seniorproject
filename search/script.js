@@ -69,12 +69,9 @@ function searchTrigger() {
 }
 function auditTrigger() {
     var search = $('#search').val();
-    var offset = $('#offset').val();
-    var categories = $('#categories').val();
     var statusFilter = $('#statusFilter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
-    var bldg_id_val = $('#bldg-id-search').val();
     var box_name = $('#asset_name').prop('checked');
     var dept_id = $('#dept_id').prop('checked');
     var dept_id_search = $('#dept-id-search').val();
@@ -85,14 +82,13 @@ function auditTrigger() {
     var asset_po = $('#asset_po').prop('checked');
     var bldg_id = $('#bldg_id').prop('checked');
     var bldg_name = $('#bldg_name').prop('checked');
+    var bldg_id_val = $('#bldg-id-search').val();
     var audit = true;
 
     $.ajax({
         type: "POST",
         url: "Ajax.php",
         data: {
-            offset: offset,
-            categories: categories,
             statusFilter: statusFilter,
             box_name: box_name,
             asset_price: price,
