@@ -110,7 +110,7 @@ function auditTrigger() {
         success: function(data) {
             const jsonString = encodeURIComponent(JSON.stringify(data));
 
-            window.location.href = "https://dataworks-7b7x.onrender.com/audit/auditing.php";
+            window.location.href = "https://dataworks-7b7x.onrender.com/audit/db_audit.php";
         }
     });
 }
