@@ -1,16 +1,40 @@
+ORDER TO DO 1 = NOW, 5 = LATEST
+
 FILES:
-auditing.php REFACTOR FOR INFINITE SCROLLING
-change_user.php FOR ADMIN TO CHANGE USER INFO: role
-add-asset.php
-add-dept.php
-mobile-api/insert.php, get-info.php, etc
+1 add-asset.php                                           -- working on(finished?)
+
+1 add-dept.php                                            -- working on(finished?)
+
+5 mobile-api/insert.php, get-info.php, etc
+
+2 change_user.php 
 
 FEATURES:
-audit save to database: only need last 2
-be able to keep going on audits
-add more responses for chatbot
-fix buildings search
+2 audit save to database: only need last 2 audit per dept
 
+3 be able to keep going on audits
 
+3 add more responses for chatbot
+
+1 fix buildings search                                    -- working on at work
+
+2 add department values to db
+
+3 add searching by departments
+
+5 add csv support
+
+1 style navbar better                                     -- working on at work
+
+5 add python for ML (probably for department waste)
+
+2 complete bulk adding
+
+4 something with kuali
+
+2 make editing of dept,bldg,asset in Ajax a thing
+
+4 add column in database for kuali_title OR make another table with titles based
+    off form type
 
 
