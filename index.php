@@ -54,6 +54,7 @@ if (isset($_SESSION['role'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/tailwind/output.css" rel="stylesheet"> 
     <title>Asset Management System</title>
 </head>
 <style>
