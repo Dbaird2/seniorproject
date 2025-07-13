@@ -4,11 +4,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 if (!isset($_SESSION['role']) {
-    header("location: https://7b7x-dataworks.onrender.com/auth/login.php");
+    header("location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit;
 }
 if ($_SESSION['role'] !== 'admin') {
-    header("location: https://7b7x-dataworks.onrender.com/index.php");
+    header("location: https://dataworks-7b7x.onrender.com/index.php");
     exit;
 }
 include_once("../navbar.php");
