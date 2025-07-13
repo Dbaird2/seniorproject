@@ -5,7 +5,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
+?>
+<link href="https://dataworks-7b7x.onrender.com/tailwind/output.css" rel="stylesheet">
 
+<?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileTmpPath = $_FILES['file']['tmp_name'];
@@ -58,7 +61,9 @@ include_once("../navbar.php");
 ?>
 <br><br><br>
 <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-    <label for="file">Enter File:</label>
-    <input type="file" name="file" id="filePath">
-    <button type="submit">Submit</button>
+<label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file">Upload file</label>
+<input id="filePath" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" name="file">
+<button type="submit" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+  Submit
+</button>
 </form>
