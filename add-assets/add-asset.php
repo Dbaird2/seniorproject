@@ -40,8 +40,7 @@ foreach($result as $row) {
         top:8vh;
     }
     </style>
-  <script src="https://cdn.tailwindcss.com"></script>
-
+<link rel="stylesheet" href="https://dataworks-7b7x.onrender.com/tailwind/output.css">
   <div class=" border border-blue-200 rounded-xl shadow-sm p-6 ">
     <div class="flex justify-center rounded-xl ">
   <p class="antialiased text-base text-inherit font-bold mb-1 ">Asset Addition Form</p>
