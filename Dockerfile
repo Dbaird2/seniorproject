@@ -26,7 +26,9 @@ WORKDIR /app
 COPY . .
 
 # 
-RUN tailwindcss -i tailwind/input.css -o tailwind/output.css --minify
+RUN ls -la tailwind && \
+    tailwindcss -i tailwind/input.css -o tailwind/output.css --minify && \
+    ls -la tailwind
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader --verbose
 

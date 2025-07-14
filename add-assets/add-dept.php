@@ -27,7 +27,7 @@ if (isset($_GET['dept-name'])) {
         $get_id_stmt->execute([":f_name"=>$f_name, ":l_name"=>$l_name]);
         $id = $get_id_stmt->fetch(PDO::FETCH_ASSOC);
 
-        $uid = (isset($id['id'] && is_array[$id] && $id['id'] !== '') ? (int)$id['id'] :  -1;
+        $uid = (isset($id['id']) && is_array[$id] && $id['id'] !== '') ? (int)$id['id'] :  -1;
         $mailstop = ($mailstop !== '') ? (int)$mailstop : -1; 
 
         $check_stmt = $dbh->prepare($dept_availibility);
