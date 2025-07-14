@@ -16,10 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileSize = $_FILES['file']['size'];
     $fileType = $_FILES['file']['type'];
 
+    $excel_sheet = false;
+    $csv = false;
+
     $file_type_check = substr($fileName, strlen($fileName) - 4);
-    if ($file_type_check != 'xlsx' && $file_type_check != '.xls') {
-        echo "<h3'>File type not allowed</h3>";
-        return;
+    if ($file_type_check == 'xlsx' && $file_type_check == '.xls') {
+        echo "<h3'>Excel sheet entered</h3>";
+        $excel_sheet = true;
+    } 
+    if ($file_type_check == '.csv') {
+        echo "<h3'>Excel sheet entered</h3>";
+        $csv = true;
     }
 
     $uploadDir = 'uploads/';
@@ -30,10 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     $filePath = $uploadDir . basename($fileName);
 
+    /*
     if (move_uploaded_file($fileTmpPath, $filePath)) {
     } else {
         echo "Error uploading file.";
     }
+     */
+    if ($excel_sheet) {
         $spreadsheet = IOFactory::load($filePath);
         $worksheet = $spreadsheet->getActiveSheet();
         //$data = $worksheet->toArray();
@@ -54,7 +64,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             unset($_SESSION['max_rows']);
             echo "<h1>Blank File given</h1>";
         }
-        
+    } 
+    if ($csv) {
+        if (($handle = fopen($fileName, 'r')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                echo "<p> $num fields in line $row: <br /></p>\n";
+                $row++;
+                for ($c=0; $c < $num; $c++) {
+                    echo $data[$c] . "<br />\n";
+                }
+            }
+            fclose($handle);
+        }
+    }
+
         
 }
 include_once("../navbar.php");
