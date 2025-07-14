@@ -1,5 +1,5 @@
 module.exports = {
-    content: ["./**/*.php", "./**/*.html", "./**/*.js"],
+    content: ["./**/*.php","./navbar.php", "./**/*.html", "./**/*.js"],
     theme: {
         extend: {
             animation: {
