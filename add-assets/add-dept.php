@@ -17,7 +17,7 @@ if (isset($_GET['dept-name'])) {
 
     $check_cust_uid = "SELECT id FROM user_table WHERE f_name ILIKE :f_name AND l_name ILIKE :l_name";
     $dept_availibility = "SELECT * FROM department WHERE dept_name = :dept_name OR dept_id = :dept_id";
-    $dept_insert = "INSERT INTO deptartment (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)";
+    $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)";
     try {
         $get_id_stmt = $dbh->prepare($check_cust_uid);
         $get_id_stmt->execute([":f_name"=>$f_name, ":l_name"=>$l_name]);
