@@ -16,8 +16,8 @@ if (isset($_GET['dept-name'])) {
     $manager = $_GET['dept-mana-l']. ", " . $_GET['dept-mana-f'];
 
     $check_cust_uid = "SELECT id FROM user_table WHERE f_name ILIKE :f_name AND l_name ILIKE :l_name";
-    $dept_availibility = "SELECT * FROM dept_table WHERE dept_name = :dept_name OR dept_id = :dept_id";
-    $dept_insert = "INSERT INTO dept_table (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)";
+    $dept_availibility = "SELECT * FROM deptartment WHERE dept_name = :dept_name OR dept_id = :dept_id";
+    $dept_insert = "INSERT INTO deptartment (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)";
     try {
         $get_id_stmt = $dbh->prepare($check_cust_uid);
         $get_id_stmt->execute([":f_name"=>$f_name, ":l_name"=>$l_name]);
@@ -47,12 +47,14 @@ if (isset($_GET['dept-name'])) {
 }
 
 
-
-$select = "SELECT * FROM dept_table ORDER BY dept_name";
-$stmt = $dbh->prepare($select);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+try {
+    $select = "SELECT * FROM deptartment ORDER BY dept_name";
+    $stmt = $dbh->prepare($select);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo $e->getMessage();
+}
 ?>
 
 <style>
