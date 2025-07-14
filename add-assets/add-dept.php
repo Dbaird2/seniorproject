@@ -29,8 +29,8 @@ if (isset($_GET['dept-name'])) {
 
         $check_stmt = $dbh->prepare($dept_availibility);
         $check_stmt->execute([":dept_name"=>$dept_name, ":dept_id"=>$dept_id]);
-        $is_avail = $check_stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (!$is_not_avail) {
+        $is_avail = $check_stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$is_avail) {
             $insert_stmt = $dbh->prepare($dept_insert);
             $insert_tmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop, $uid]);
         }

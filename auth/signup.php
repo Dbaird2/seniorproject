@@ -579,7 +579,7 @@ include_once("../navbar.php");
                             type="text" 
                             name="deptid" 
                             id="deptid" 
-                            placeholder="Ex: D20106"
+                            placeholder="Ex: D20106,D21560"
                             onblur="validateDept()" 
                             required
                         >
