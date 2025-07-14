@@ -1,5 +1,5 @@
-modules.exports = {
-    content: ["./**/*.php", "./**/*.html"],
+module.exports = {
+    content: ["./**/*.php", "./**/*.html", "./**/*.js"],
     theme: {
         extend: {
             animation: {
