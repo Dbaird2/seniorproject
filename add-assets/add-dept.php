@@ -1,10 +1,14 @@
 <?php
 include_once("../config.php");
-include_once("../navbar.php");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $success = [];
+if (!isset($_SESSION['role']) && $_SESSION['role'] !== 'admin') {
+    header("Location: https://dataworks-7b7x.onrender.come");
+    exit;
+}
+include_once("../navbar.php");
 if (isset($_GET['dept-name'])) {
 
     $dept_name = strtoupper($_GET['dept-name']);
@@ -23,7 +27,7 @@ if (isset($_GET['dept-name'])) {
         $get_id_stmt->execute([":f_name"=>$f_name, ":l_name"=>$l_name]);
         $id = $get_id_stmt->fetch(PDO::FETCH_ASSOC);
 
-        $uid = ($id['id'] !== '') ? (int)$id['id'] :  -1;
+        $uid = (isset($id['id'] && is_array[$id] && $id['id'] !== '') ? (int)$id['id'] :  -1;
         $mailstop = ($mailstop !== '') ? (int)$mailstop : -1; 
 
         $check_stmt = $dbh->prepare($dept_availibility);
@@ -31,7 +35,7 @@ if (isset($_GET['dept-name'])) {
         $is_avail = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if (!$is_avail) {
             $insert_stmt = $dbh->prepare($dept_insert);
-            $insert_stmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop]);
+            $insert_stmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop, $uid]);
         }
 
 
@@ -95,10 +99,10 @@ if (isset($_GET['dept-name'])) {
                 <label class="form-label" for="dept-id">Manager's Name</label>
                 <div class="container">
                     <div class="form-left form-group">
-                    <input class="form-input" name="dept-mana-f" placeholder="First Name" type="text" required>
+                    <input class="form-input" name="dept-mana-f" placeholder="First Name" type="text">
                 </div>
                     <div class="form-right form-group">
-                    <input class="form-input"  name="dept-mana-l" placeholder="Last Name" type="text" required>
+                    <input class="form-input"  name="dept-mana-l" placeholder="Last Name" type="text">
                 </div>
 
                 </div>
