@@ -23,7 +23,6 @@ if (isset($_GET['dept-name'])) {
         $get_id_stmt->execute([":f_name"=>$f_name, ":l_name"=>$l_name]);
         $id = $get_id_stmt->fetch(PDO::FETCH_ASSOC);
 
-        $id['id'] = '';
         $uid = ($id['id'] !== '') ? (int)$id['id'] :  -1;
         $mailstop = ($mailstop !== '') ? (int)$mailstop : -1; 
 
@@ -32,7 +31,7 @@ if (isset($_GET['dept-name'])) {
         $is_avail = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if (!$is_avail) {
             $insert_stmt = $dbh->prepare($dept_insert);
-            $insert_tmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop, $uid]);
+            $insert_stmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop]);
         }
 
 
@@ -46,15 +45,6 @@ if (isset($_GET['dept-name'])) {
 
 }
 
-
-try {
-    $select = "SELECT * FROM department ORDER BY dept_name";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo $e->getMessage();
-}
 ?>
 
 <style>
