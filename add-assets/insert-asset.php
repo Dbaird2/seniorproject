@@ -17,30 +17,31 @@ $type = $data['type'];
 
 if (!is_null($tag) && !is_null($descr) && !is_null($po) && !is_null($dept_id) && 
     !is_null($bldg_name) && !is_null($room_name) && !is_null($acq_date)) {
-        $column = $params = [];
-        $question_marks = ['?','?','?','?','?','?'];
-        $column[] = "asset_tag";$column[] = "asset_name"; $column[] = "date_added";
-        $column[] = "dept_id"; $column[] = "po";
-        $params[] = $tag;$params[] = $descr;$params[] = $acq_date;
-        $params[] = $dept_id;$params[] = $po;
-        
-        if ($model !== '') {
-            $column[] = "model";
-            $params[] = $model;
-            $question_marks[] = '?';
-        } if ($sn !== '') {
-            $column[] = "serial_num";
-            $params[] = $sn;
-            $question_marks[] = '?';
+    $column = $params = [];
+    $question_marks = ['?','?','?','?','?','?'];
+    $column[] = "asset_tag";$column[] = "asset_name"; $column[] = "date_added";
+    $column[] = "dept_id"; $column[] = "po";
+    $params[] = $tag;$params[] = $descr;$params[] = $acq_date;
+    $params[] = $dept_id;$params[] = $po;
+
+    if ($model !== '') {
+        $column[] = "model";
+        $params[] = $model;
+        $question_marks[] = '?';
+    } if ($sn !== '') {
+    $column[] = "serial_num";
+    $params[] = $sn;
+    $question_marks[] = '?';
         } if ($type !== '') {
-            $column[] = "asset_type";
-            $params[] = $type;
-            $question_marks[] = '?';
-        } if ($notes !== '' ) {
-            $column[] = "asset_notes";
-            $params[] = $notes;
-            $question_marks[] = '?';
+        $column[] = "asset_type";
+        $params[] = $type;
+        $question_marks[] = '?';
+    } if ($notes !== '' ) {
+    $column[] = "asset_notes";
+    $params[] = $notes;
+    $question_marks[] = '?';
         }
+    try {
         $bldg_search[] = "bldg_name"; $bldg_search[] = "room_loc";
         $bldg_q = "SELECT room_tag FROM room_table r NATURAL JOIN bldg_table b WHERE r.room_loc = :room_loc AND b.bldg_name = :bldg_name";
         $b_stmt = $dbh->prepare($bldg_q);
@@ -69,8 +70,11 @@ if (!is_null($tag) && !is_null($descr) && !is_null($po) && !is_null($dept_id) &&
         } else {
             echo json_encode(["error" => "Asset tag already exists"]);
         }
-    } else {
-        echo json_encode(["error" => "Information missing"]);
-    }
+    } catch (PDOException e) {
+        echo json_encode(["status" => "fail"]);
+    } 
+} else {
+    echo json_encode(["error" => "Information missing"]);
+}
 
 

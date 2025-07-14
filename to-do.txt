@@ -7,7 +7,7 @@ FILES:
 
 5 mobile-api/insert.php, get-info.php, etc
 
-2 change_user.php 
+2 change_user.php                                         -- will work on at work
 
 FEATURES:
 2 audit save to database: only need last 2 audit per dept
@@ -28,13 +28,13 @@ FEATURES:
 
 5 add python for ML (probably for department waste)
 
-2 complete bulk adding
+2 complete bulk adding                                    -- work on at home
 
-4 something with kuali
+4 something with kuali                                    -- work on at work
 
-2 make editing of dept,bldg,asset in Ajax a thing
+3 make editing of dept,bldg,asset in Ajax a thing
 
 4 add column in database for kuali_title OR make another table with titles based
     off form type
 
-
+add delete features for cust,assets,bldgs
