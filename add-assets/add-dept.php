@@ -48,7 +48,7 @@ if (isset($_GET['dept-name'])) {
 
 
 try {
-    $select = "SELECT * FROM deptartment ORDER BY dept_name";
+    $select = "SELECT * FROM department ORDER BY dept_name";
     $stmt = $dbh->prepare($select);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
