@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 ?>
-<link href="https://dataworks-7b7x.onrender.com/tailwind/output.css" rel="stylesheet">
+<link href="https://dataworks-7b7x.onrender.com/tailwind/input.css" rel="stylesheet">
 
 <?php
 
