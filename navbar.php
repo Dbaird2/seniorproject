@@ -284,7 +284,7 @@ if ($_SESSION['role'] === 'admin') { ?>
 
     <script>
     // Hero Icons for smaller hamburger menu
-    <?php if ($_SESSION['role'] === 'admin') { ?>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') { ?>
     const up_hero = document.getElementById("up-hero");
 const down_hero = document.getElementById("down-hero");
 const dropdown1 = document.getElementById("dropdown1");
