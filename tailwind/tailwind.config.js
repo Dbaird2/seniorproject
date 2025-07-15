@@ -1,5 +1,5 @@
 module.exports = {
-    content: ["../**/*.php","../navbar.php", "../**/*.html", "../**/*.js"],
+    content: ["./**/*.php","./navbar.php", "./**/*.html", "./**/*.js","./*.php"],
     theme: {
         extend: {
             animation: {
@@ -25,7 +25,7 @@ module.exports = {
                     '0%, 100%': { transform: 'translateY(0)' },
                     '50%': { transform: 'translateY(-15px)' }
                 }
-            },
+            }
         }
     },
     plugins: [],
