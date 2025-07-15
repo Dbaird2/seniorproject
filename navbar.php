@@ -9,25 +9,6 @@ text {    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ox
 }
 
 </style>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-gradient {
-                background: linear-gradient(135deg, #0033A0, #FFD100);
-                -webkit-background-clip: text;
-                background-clip: text;
-                color: transparent;
-            }
-            .delay-100 {
-                animation-delay: 100ms;
-            }
-            .delay-200 {
-                animation-delay: 200ms;
-            }
-            .delay-300 {
-                animation-delay: 300ms;
-            }
-        }
-        </style>
     <html>
         </head>
         <body class=" aspect-[16/9] sm:aspect-[4/3] md:aspect-[1/1] min-h-screen">

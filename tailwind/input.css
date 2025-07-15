@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+        @layer utilities {
+            .text-gradient {
+                background: linear-gradient(135deg, #0033A0, #FFD100);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .delay-100 {
+                animation-delay: 100ms;
+            }
+            .delay-200 {
+                animation-delay: 200ms;
+            }
+            .delay-300 {
+                animation-delay: 300ms;
+            }
+        }
