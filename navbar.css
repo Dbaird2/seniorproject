@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
+
+* {
+    font-family:"Montserrat", sans-serif;
+}
+li, a, button {
+    font-weight: 500;
+    font-size: 13px;
+    color: #edf0f1;
+    text-decoration:none;
+}
+header{
+       box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #24252A;
+    border-radius:10px;
+    height:8vh;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding: 30px 10%;
+}
+
+.nav_links {
+    list-style:none;
+}
+.nav_links li {
+    display: inline-block;
+    padding: 0px 20px;
+    transition: all 0.3s ease 0s;
+}
+.nav_links li a {
+    transition: all 0.3s ease 0s;
+}
+.nav_links li a:hover {
+    color: #0088a9;
+}
+button {
+    margin-left: 20px;
+    padding: 9px 25px;
+    background-color: #003594;
+    border:none;
+    border-radius:5px;
+    color: #FFC72C;
+    cursor:pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover {
+    background-color:rgba(0,136,169,9,83);
+    translate: 0px -2px;
+}
+
+ .gradient-text {
+    cursor: pointer;
+    background: linear-gradient(135deg, #003594, #FFC72C);
+    -webkit-background-clip: text;  
+    background-clip: text;         
+    -webkit-text-fill-color: transparent;
+    color: transparent;           
+  }
+  .dropbtn {
+  color: white;
+  border: none;
+}
+
+.dropdown {
+    min-height: auto;
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: lightblue;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+ .dropbtn2 {
+  color: white;
+  border: none;
+}
+
+.dropdown2 {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content2 {
+  display: none;
+  background-color: lightgray;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content2 a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: flex;
+}
+
+
+.dropdown2:hover .dropdown-content2 {display: block;}
+
+img {
+    margin-top: -3vh;
+    margin: -3vh -0.7vw -1vh;
+}
+.dropdown h4 {
+    margin: -0.5vh 0 0;
+    padding: 5px 5px 5px;
+    text-align: center;
+}
