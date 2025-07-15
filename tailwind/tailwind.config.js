@@ -1,5 +1,21 @@
 module.exports = {
-    content: ["./**/*.php","./navbar.php", "./**/*.html", "./**/*.js","./*.php"],
+    content: [
+    "../app/**/*.php",
+    "../**/*.php",
+    "../**/*.html",
+    "../**/*.js"
+  ],
+    safelist: [
+        'animate-typewriter',
+        'animate-blink',
+        'animate-fadeIn',
+        'animate-float',
+        'w-[calc(0.4vh+0.7vw)]',
+        'text-gradient',
+        'aspect-[16/9]',
+        'aspect-[4/3]',
+        'aspect-[1/1]'
+    ],
     theme: {
         extend: {
             animation: {
@@ -28,5 +44,5 @@ module.exports = {
             }
         }
     },
-    plugins: [],
+    plugins: []
 }
