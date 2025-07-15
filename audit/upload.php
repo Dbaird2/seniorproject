@@ -4,11 +4,6 @@ require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
-?>
-
-<?php
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileTmpPath = $_FILES['file']['tmp_name'];
     $fileName = $_FILES['file']['name'];
@@ -36,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     if (move_uploaded_file($fileTmpPath, $filePath)) {
     } else {
-        echo "Error uploading file.";
     }
     if ($excel_sheet) {
         $spreadsheet = IOFactory::load($filePath);
