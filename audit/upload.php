@@ -20,11 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     $file_type_check = substr($fileName, strlen($fileName) - 4);
     if ($file_type_check == 'xlsx' || $file_type_check == '.xls') {
-        echo "<h3'>Excel sheet entered</h3>";
         $excel_sheet = true;
     } 
     if ($file_type_check == '.csv') {
-        echo "<h3'>Excel sheet entered</h3>";
         $csv = true;
     }
 
