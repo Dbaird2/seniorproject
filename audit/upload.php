@@ -37,12 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
     $filePath = $uploadDir . basename($fileName);
 
-    /*
     if (move_uploaded_file($fileTmpPath, $filePath)) {
     } else {
         echo "Error uploading file.";
     }
-     */
     if ($excel_sheet) {
         $spreadsheet = IOFactory::load($filePath);
         $worksheet = $spreadsheet->getActiveSheet();
