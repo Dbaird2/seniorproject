@@ -1,6 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-<link rel="stylesheet" href="/output.css">
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+
 
 <style>
 text {    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -9,6 +10,60 @@ text {    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ox
 }
 
 </style>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+animation: {
+'typewriter': 'typewriter 2s steps(11) forwards',
+    'blink': 'blink 1s steps(11) infinite',
+    'fade-in': 'fadeIn 1s ease-out forwards',
+    'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                    typewriter: {
+                    from: { width: '0' },
+                        to: { width: '11ch' }
+                        },
+                        blink: {
+                        from: { 'border-right-color': 'transparent' },
+                            to: { 'border-right-color': 'rgb(255, 255, 153)' }
+                        },
+                        fadeIn: {
+                        from: { opacity: '0' },
+                            to: { opacity: '1' }
+                        },
+                        float: {
+                        '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        }
+                    },
+                    fontFamily: {
+                    'mono': ['"Fira Code"', 'monospace']
+                        }
+                }
+            }
+        }
+</script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-gradient {
+                background: linear-gradient(135deg, #0033A0, #FFD100);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .delay-100 {
+                animation-delay: 100ms;
+            }
+            .delay-200 {
+                animation-delay: 200ms;
+            }
+            .delay-300 {
+                animation-delay: 300ms;
+            }
+        }
+        </style>
     <html>
         </head>
         <body class=" aspect-[16/9] sm:aspect-[4/3] md:aspect-[1/1] min-h-screen">
@@ -265,7 +320,7 @@ if ($_SESSION['role'] === 'admin') { ?>
 
     <script>
     // Hero Icons for smaller hamburger menu
-    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') { ?>
+    <?php if ($_SESSION['role'] === 'admin') { ?>
     const up_hero = document.getElementById("up-hero");
 const down_hero = document.getElementById("down-hero");
 const dropdown1 = document.getElementById("dropdown1");
@@ -301,9 +356,24 @@ spans[0].classList.toggle("opacity-0");
 spans[1].classList.toggle("opacity-0");
 spans[2].classList.toggle("rotate-45");
 });
+// Navbar scroll effect
+            /*
+                window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('nav');
+                if (window.scrollY > 20) {
+                    navbar.classList.add('bg-gray-900');
+                    navbar.classList.remove('bg-gray-900/80');
+                    navbar.classList.add('shadow-lg');
+                    } else {
+                        navbar.classList.add('bg-gray-900/80');
+                    navbar.classList.remove('bg-gray-900');
+                    navbar.classList.remove('shadow-lg');
+                    }
+                    });
+             */
 
 
-</script>
+                   </script>
 </body>
 </html>
 
