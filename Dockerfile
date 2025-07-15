@@ -27,7 +27,7 @@ COPY . .
 
 # 
 RUN ls -la tailwind && \
-    tailwindcss -i tailwind/input.css -o tailwind/output.css --minify && \
+    tailwindcss -i input.css -o output.css --minify && \
     ls -la tailwind
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader --verbose

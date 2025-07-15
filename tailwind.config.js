@@ -1,10 +1,10 @@
 module.exports = {
     content: [
-    "../app/**/*.php",
-    "../**/*.php",
-    "../**/*.html",
-    "../**/*.js"
-  ],
+        "./app/**/*.php",
+        "./**/*.php",
+        "./**/*.html",
+        "./**/*.js"
+    ],
     safelist: [
         'animate-typewriter',
         'animate-blink',
