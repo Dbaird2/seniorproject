@@ -54,19 +54,21 @@ if (isset($_SESSION['role'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/tailwind/output.css" rel="stylesheet"> 
     <title>Asset Management System</title>
 </head>
 <style>
-    li {
+    * {
+        margin:0;
+     }
+    .is-index li {
         list-style: none;
         margin: 0.5vh 0;
     }
-    a {
+    .is-index a {
         text-decoration: none;
         color: black;
     }
-    body {
+    .is-index {
         position: relative;
         top: 5vh;
         font-family: Arial, sans-serif;
@@ -203,6 +205,7 @@ if (isset($_SESSION['role'])) {
     }
 </style>
 <body>
+<div class="is-index">
     <section class="container">
         <div class="container-head">
             <div class="head-text">
@@ -277,7 +280,7 @@ if (isset($_SESSION['role'])) {
             </div>
         </div>
     </section>
-
+</div>
 </body>
 </html>
     <script>

@@ -85,20 +85,20 @@ error_reporting(E_ALL);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <style>
-body {
+.is-ajax {
             margin: 0;
             height: 100vh;
             font-size: calc(0.5vw + 0.4vh);
         }
-        body::-webkit-scrollbar {
+        .is-ajax::-webkit-scrollbar {
             width: 1em;
         }
 
-        body::-webkit-scrollbar-track {
+        .is-ajax::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
         }
 
-        body::-webkit-scrollbar-thumb {
+        .is-ajax::-webkit-scrollbar-thumb {
             background-color: darkgrey;
             outline: 1px solid slategrey;
         }
@@ -149,20 +149,20 @@ body {
             margin: auto; border: 1px solid #c0d6e4;
             border-collapse: collapse;
         }
-        th {
+        .is-ajax th {
             font-size: calc(0.7vw + 0.4vh);
             color:#2c3e50;
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
-        td {
+        .is-ajax td {
             font-size: calc(0.6vw + 0.4vh);
             font-weight: 500;
             color:#2c3e50;
-            padding: 10px;
+            padding: 0 5px 15px;
             border: 1px solid #ddd;
-            text-align: left;
+            text-align: center;
 
         }
         .table-div {
@@ -538,7 +538,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
 
             $exec_count = $dbh->prepare($bldg_count);
-            if (!isset($params_count[":bldg_id"]) && ($params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL)) {
+            if (!isset($params_count[":bldg_id"]) || ($params_count[":bldg_id"] === '' || $params_count[":bldg_id"] === NULL)) {
                 $exec_count->execute();
             } else {
                 $exec_count->execute($params_count);

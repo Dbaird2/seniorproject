@@ -1,3 +1,4 @@
+<?php include_once ("../config.php");?>
 <!DOCTYPE html>
 <html lang="en">
         <meta charset="UTF-8">
@@ -142,9 +143,6 @@
 }
 
 </style>
-<?php include_once ("../config.php");
-$dept_ids = ['D21560', 'D22306'];
-?>
 <body>
             <?php include_once ("../navbar.php"); ?>
 

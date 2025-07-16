@@ -20,7 +20,7 @@
   <line x1="3" y1="18" x2="21" y2="18"/>
 </svg>
 <div class="dropdown-content">
-  <a><img src="https://th.bing.com/th/id/OIP.jwU-GwZPqzDTyOxeKaZ2XgHaEz?w=247&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="CSUB Roadrunner" height="130" width="180">
+  <a href="https://dataworks-7b7x.onrender.come/index.php"><img src="https://th.bing.com/th/id/OIP.jwU-GwZPqzDTyOxeKaZ2XgHaEz?w=247&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="CSUB Roadrunner" height="130" width="180">
 </a>
 
 <a href="https://dataworks-7b7x.onrender.com/audit/upload.php">Audit</a>
@@ -54,7 +54,7 @@
 </div>
 <?php } ?>
     </span></a></span>
-    <h2 class="gradient-text">CSUB.</h2>
+    <a href="https://dataworks-7b7x.onrender.com/index.php"><h2 class="gradient-text">CSUB.</h2></a>
         <?php if(isset($_SESSION['role']) && $_SESSION['role'] !== '' && $_SESSION['role'] !== NULL) { ?>
 
     <nav id="nav_links">
@@ -72,7 +72,7 @@
 </a>
   <span class="dropdown-content">
     <a href="https://dataworks-7b7x.onrender.com/add-assets/add-asset.php" class="dropdown-element">Asset</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dpet.php" class="dropdown-element">Department</a>
+    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dept.php" class="dropdown-element">Department</a>
     <a href="https://dataworks-7b7x.onrender.com/add-assets/add-bldg.php" class="dropdown-element">Building/Rooms</a>
   </span>
 </span></li>

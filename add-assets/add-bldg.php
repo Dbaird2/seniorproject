@@ -81,7 +81,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <link rel="stylesheet" href="bldg.css">
-<div class="body">
+<body>
+<div class="is-bldg">
     <div class="sub-body">
         <div class="form1">
             <h2 class='form-header'>Building Addition Form</h2>
@@ -179,3 +180,4 @@ function addNewRoom() {
 
 }
 </script>
+</body>

@@ -52,6 +52,9 @@ if (isset($_GET['dept-name'])) {
 ?>
 
 <style>
+* {
+    margin:0;
+}
 .container {
   display: grid;
   grid-template-areas:
@@ -73,7 +76,8 @@ if (isset($_GET['dept-name'])) {
 
 </style>
 <link rel="stylesheet" href="bldg.css">
-<div class="body">
+<body>
+<div class="is-dept">
     <div class="sub-body">
         <div class="form1">
             <h2 class='form-header'>Department Addition Form</h2>
@@ -124,4 +128,5 @@ echo "<p style='color:green;'>Successfully added " . $name . "<br></p>";
         </div>
     </div>
 </div>
+</body>
 
