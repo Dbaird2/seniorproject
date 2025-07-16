@@ -5,9 +5,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] === '' || $_SESSION['role'] =
     header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit;
 }
+/*
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+ */
 $filePath = $count = NULL;
 $previous_inputs = [];
 
@@ -382,7 +384,7 @@ $rows = [];
     </script>
     <?php
     for ($i = $header_row; $i < $highest_row+1; $i++) {
-        if (!isset($data[$i][$tag_col]) && $data[$i][$tag_col] === NULL && $data[$i][$descr_col] === NULL) { break;}
+        if (!isset($data[$i][$tag_col]) || $data[$i][$tag_col] === NULL && $data[$i][$descr_col] === NULL) { break;}
         $tag_array[] = $data[$i][$tag_col];
         $disc_arr[] = $data[$i][$descr_col];
         $sn_arr[] = $data[$i][$serial_col];
