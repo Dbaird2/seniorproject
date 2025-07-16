@@ -1,15 +1,14 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:500');
 
-* {
+.has-navbar {
     font-family:"Montserrat", sans-serif;
 }
-li, a, button {
+.has-navbar li,.has-navbar a,.has-navbar button {
     font-weight: 500;
     font-size: 13px;
     color: #edf0f1;
     text-decoration:none;
 }
-header{
+.has-navbar header{
        box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -36,7 +35,7 @@ header{
 .nav_links li a:hover {
     color: #0088a9;
 }
-button {
+body .has-navbar button {
     margin-left: 20px;
     padding: 9px 25px;
     background-color: #003594;
@@ -47,12 +46,12 @@ button {
     transition: all 0.3s ease 0s;
 }
 
-button:hover {
+.has-navbar button:hover {
     background-color:rgba(0,136,169,9,83);
     translate: 0px -2px;
 }
 
- .gradient-text {
+.has-navbar .gradient-text {
     cursor: pointer;
     background: linear-gradient(135deg, #003594, #FFC72C);
     -webkit-background-clip: text;  
@@ -60,18 +59,18 @@ button:hover {
     -webkit-text-fill-color: transparent;
     color: transparent;           
   }
-  .dropbtn {
+ .has-navbar  .dropbtn {
   color: white;
   border: none;
 }
 
-.dropdown {
+.has-navbar .dropdown {
     min-height: auto;
   position: relative;
   display: inline-block;
 }
 
-.dropdown-content {
+.has-navbar .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -119,7 +118,7 @@ button:hover {
 
 .dropdown2:hover .dropdown-content2 {display: block;}
 
-img {
+.has-navbar img {
     margin-top: -3vh;
     margin: -3vh -0.7vw -1vh;
 }

@@ -113,7 +113,7 @@ include_once("../navbar.php");
             box-sizing: border-box;
         }
 
-        body {
+        .has-signup {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             min-height: 100vh;
@@ -459,6 +459,7 @@ include_once("../navbar.php");
     </style>
 </head>
 <body>
+<div class="has-signup">
     <div class="signup-container">
         <div class="signup-header">
             <h2>Create Account</h2>
@@ -604,7 +605,6 @@ include_once("../navbar.php");
         </div>
 
         <div class="signup-footer">
-            <p>Already have an account? <a href="login.php">Sign in here</a></p>
             <p>By signing up, you agree to our Terms of Service and Privacy Policy</p>
         </div>
     </div>
@@ -773,5 +773,6 @@ include_once("../navbar.php");
             });
         });
     </script>
+</div>
 </body>
 </html>

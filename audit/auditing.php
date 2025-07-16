@@ -232,6 +232,7 @@ include_once("../navbar.php");
 $worksheet = NULL;
 ?>
 <body>
+<div class="is-search">
 
 <?php
 $array = $time_array = $note_array = $room_array = [];
@@ -587,6 +588,7 @@ function changeBoxSize(box_size) {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
 
+</div>
 </body>
 
 

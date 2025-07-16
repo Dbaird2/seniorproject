@@ -43,13 +43,17 @@ include_once("../navbar.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CSUB Portal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+*  {
+                margin: 0;
+                padding: 0;
             box-sizing: border-box;
         }
 
-        body {
+
+        .has-login {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             min-height: 100vh;
@@ -332,6 +336,7 @@ include_once("../navbar.php");
     </style>
 </head>
 <body>
+<div class="has-login">
     <div class="login-container">
         <div class="login-header">
             <h2>Welcome Back</h2>
@@ -450,5 +455,6 @@ include_once("../navbar.php");
             document.getElementById('pw').addEventListener('input', validateForm);
         });
     </script>
+</div>
 </body>
 </html>

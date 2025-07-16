@@ -6,8 +6,8 @@
   <title>Navbar</title>
   <link rel="stylesheet" href="/navbar.css">
 </head>
-<?php $_SESSION['role'] = 'Management'; ?>
 <body>
+    <div class="has-navbar">
   <header>
     <?php if(isset($_SESSION['role']) && $_SESSION['role'] !== '' && $_SESSION['role'] !== NULL) { ?>
     <span class="dropdown">
@@ -97,6 +97,7 @@
     <?php } ?>
 
   </header>
+</div>
 </body>
 </html>
 <script>

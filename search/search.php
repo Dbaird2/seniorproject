@@ -191,6 +191,7 @@ include_once("../navbar.php");
   }
 </style>
 <body>
+<div class="has-search">
 <?php
 $search = isset($_GET['search']) ? $_GET['search'] : 'all';
 if (isset($_GET['query'])) {
@@ -261,5 +262,6 @@ if ($search === NULL) {
   <br />
   <!-- Suggestions will be displayed in below div. -->
   <div id="display"></div>
+</div>
 </body>
 </html>
