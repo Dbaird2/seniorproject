@@ -214,23 +214,19 @@ include_once("../navbar.php");
 
 ?>
 
-   <style>
-  body { font-family: sans-serif; margin: 0; }
-  .show-tags { background: #fff; padding: 1rem; font-size: 1rem; }
-  .row, .clusterize-scroll {  }
+<style>
 </style>
-<link rel="stylesheet" href="auditing.css" media="print" onload="this.media='all'">
-    <title>Asset Management Excel</title>
+<link rel="stylesheet" href="auditing.css" media="all">
+<title>Asset Management Excel</title>
 </head>
 <?php
 
 $worksheet = NULL;
 ?>
-<body>
-<div class="is-search">
 
 <?php
 $array = $time_array = $note_array = $room_array = [];
+
 if (count($_SESSION['saved_tags']) > 0) {
     foreach($_SESSION['saved_tags'] as $info) {
         $array[] = $info[0];
@@ -281,47 +277,47 @@ if (isset($_POST['data'])) {
             $_SESSION['saved_tags'] = array_map(null, $array, $note_array, $time_array, $room_array);
         }
     }
+
+
 }
 
-        $row_number = 1;
-        $old_tags = [];
-        $disc_arr = [];
-        $sn_arr = [];
-        $loc_arr = [];
-        $po_arr = [];
-        $cost_arr = [];
-        $dept_arr = [];
-        $column_headers = [];
 
-        $cell_array = [];
-        $headers = ['Tag Number','Descr', 'Serial ID', 'Location', 'Dept', 'COST Total Cost', 'PO No.'];
-        
-    
+$row_number = 1;
+$old_tags = [];
+$disc_arr = [];
+$sn_arr = [];
+$loc_arr = [];
+$po_arr = [];
+$cost_arr = [];
+$dept_arr = [];
 
-    $colors = ['lightblue', 'white'];
-    $empty = false;
+$cell_array = [];
+$headers = ['Tag Number','Descr', 'Serial ID', 'Location', 'Dept', 'COST Total Cost', 'PO No.'];
 
-    $j = 0;
-    ?>
-    <section id='showExcel'>
-    <div class='row'>
-<div class="clusterize">
-  <div id="scrollArea" class="clusterize-scroll" style="height: 90vh; overflow-y: auto;">
-    <table>
+
+
+$colors = ['lightblue', 'white'];
+$empty = false;
+
+$j = 0;
+?>
+ <body>
+    <div class="is-search">
+    <table class="table">
         <thead>
-      <tr>
-        <th>Row</th><th>Tags</th><th>Description</th><th>Serial ID</th><th>Location</th><th>Department</th><th>Cost</th><th>Purchase Order</th>
-      </tr>
-    </thead>
-      <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
-        <?php 
+            <tr>
+                <th>Row</th><th>Tags</th><th>Description</th><th>Serial ID</th><th>Location</th><th>Department</th><th>Cost</th><th>Purchase Order</th>
+            </tr>
+        </thead>
+        <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
+            <?php
 $max_rows = 5000;
 $total_rows = count($data);
 $j = 1;
 //$j = $_GET['index'];
 $data = array_slice($data, $j, $max_rows);
 for ($i = 0; $i < $highest_row; $i++) {
-    $color_class = ($i % 2 === 0) ? 'row_odd' : 'row-even';
+    $color_class = ($i % 2 === 0) ? 'row-odd' : 'row-even';
     if ((!isset($data[$i][$tag_col])) || ($data[$i][$tag_col] === '' || $data[$i][$tag_col] === NULL) && ($data[$i][$descr_col] === '' || $data[$i][$descr_col] === NULL)) { break;}
     if ($data[$i][$tag_col] == 'Tag Number'){ continue;}
     $row = $j;
@@ -334,9 +330,9 @@ for ($i = 0; $i < $highest_row; $i++) {
     $department = htmlspecialchars($data[$i][$dept_col]) ?? "";
     $cost = htmlspecialchars($data[$i][$cost_col]) ?? "";
     $po = htmlspecialchars($data[$i][$po_col]) ?? "";
-    
+    $match = in_array($tag, $array) ? 'found' : 'not-found';
     echo "<tr class='{$color_class}'>
-        <td class='{$match}'> {$row}. </td>
+    <td class='{$match}'> {$row}. </td>
         <td class='{$match}'> {$tag}</td>
         <td>{$descr}</td>
         <td>{$serial}</td>
@@ -344,43 +340,12 @@ for ($i = 0; $i < $highest_row; $i++) {
         <td>{$department}</td>
         <td>{$cost}</td>
         <td>{$po}</td>
-    </tr>";
-}
-  ?>
-        <tr class="clusterize-no-data">
-          <td>Loading data…</td>
-        </tr>
+        </tr>";
+    }
+    ?>
       </tbody>
     </table>
-  </div>
-</div>
-</div>
-</section>
 
-
-<?php 
-
-
-$rows = [];
-
-
-?>
-<script>
-
-    const rows = <?php echo json_encode($rows, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-    </script>
-    <script>
-         var botmanWidget = {
-        frameEndpoint: 'http://localhost:3000/chat/botman-widget.html',
-        chatServer: 'http://localhost:3000/chat/chatbot.php',
-        introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
-        title: "Chatbot",
-        mainColor: "#ADD8E6",
-        bubbleBackground: "#ADD8E6",
-        placeholderText: "Type your question here..."
-    };
-
-    </script>
     <?php
     for ($i = $header_row; $i < $highest_row+1; $i++) {
         if (!isset($data[$i][$tag_col]) || $data[$i][$tag_col] === NULL && $data[$i][$descr_col] === NULL) { break;}
@@ -389,65 +354,70 @@ $rows = [];
         $sn_arr[] = $data[$i][$serial_col];
         $loc_arr[] = $data[$i][$location_col];
         $dept_arr[] = $data[$i][$dept_col];
-        $cost_arr[] = (round((float)$data[$i][$cost_col], 2));            
+        $cost_arr[] = (round((float)$data[$i][$cost_col], 2));
         $po_arr[] = $data[$i][$po_col];
     }
 
 
     $i = 0;
     $tag_lookup = array_flip($tag_array);
-    echo "<div class='show-tags' id='showTags'>";
-    echo "<h4>Tags Scanned</h4>";
-    echo "<ul>";
+    ?>
+
+
+    <div id="insert-tags-div">
+        <div id="inputContainer"></div>
+        <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+
+            <input type="hidden" name="data" id="data">
+            <button type="submit" id='dynamicSubmit'>Submit</button>
+
+    </form>
+</div>
+
+<div class="wrapper">
+            <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
+
+    <div class='show-tags' id='showTags'>
+    <h3>Tags Scanned</h3>
+    <ul>
+        <?php
     foreach ($array as $row) {
         $colorClass = isset($tag_lookup[$row]) ? "tag-match" : "tag-miss";
         echo "<li class='$colorClass'>
-        <strong>$row</strong><br> 
+        <strong>$row</strong><br>
         Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "'><br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'></li>";
         $i++;
     }
-    
+
     echo "</ul>";
     ?>
+        </div>
     <div class='formId'>
-    <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
+        <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
 
-        <input type="hidden" name="download" id="download">
+            <input type="hidden" name="download" id="download">
 
-        <button type='submit' id='create' name='create'>Export Excel</button>
-    </form>
+            <button type='submit' id='create' name='create'>Export</button>
+        </form>
+    </div>
+    </div>
 </div>
 <?php
-    echo "</div>";
-    
-    $i = 0;
-    foreach ($array as $value) {
-        echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
-        echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time_array[$i]) . "'>";
-        echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note_array[$i]) . "'>";
-        echo "<input type='hidden' name='previousRms[]' value='" . htmlspecialchars($room_array[$i]) . "'>";
-        $i++;
-    }
-    $i = 0;
-    foreach ($column_headers as $header) {
-        echo "<input type='hidden' name='headers[]' value='" . htmlspecialchars($header) . "'>";
-    }
-    echo "<input type='hidden' id='filePath2' name='filePath' value='$filePath'>";
-
-    ?>
-    
-
-<div id="insert-tags-div">
-        <div id="inputContainer"></div>
-    <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-
-        <input type="hidden" name="data" id="data">
-        <button type="submit" id='dynamicSubmit'>Submit</button>
-        <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
-
-    </form>
-</div>
-
+$i = 0;
+foreach ($array as $value) {
+    echo "<input type='hidden' name='previousInputContainer[]' value='" . htmlspecialchars($value) . "'>";
+    echo "<input type='hidden' name='previousTime[]' value='" . htmlspecialchars($time_array[$i]) . "'>";
+    echo "<input type='hidden' name='previousNote[]' value='" . htmlspecialchars($note_array[$i]) . "'>";
+    echo "<input type='hidden' name='previousRms[]' value='" . htmlspecialchars($room_array[$i]) . "'>";
+    $i++;
+}
+$column_headers = [];
+$i = 0;
+foreach ($column_headers as $header) {
+    echo "<input type='hidden' name='headers[]' value='" . htmlspecialchars($header) . "'>";
+}
+echo "<input type='hidden' id='filePath2' name='filePath' value='$filePath'>";
+?>
 <script>
 window.requestIdleCallback(() => {
   addNewInput();
