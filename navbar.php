@@ -22,8 +22,15 @@
 <div class="dropdown-content">
   <a href="https://dataworks-7b7x.onrender.come/index.php"><img src="https://th.bing.com/th/id/OIP.jwU-GwZPqzDTyOxeKaZ2XgHaEz?w=247&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="CSUB Roadrunner" height="130" width="180">
 </a>
-
-<a href="https://dataworks-7b7x.onrender.com/audit/upload.php">Audit</a>
+<span class="dropdown2">
+        <a  href="#">Audit<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></a>
+        <span class="dropdown-content2">
+          <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="dropdown-element">Start</a>
+          <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="dropdown-element">Continue</a>
+        </span>
+      </span>  
 <a href="https://dataworks-7b7x.onrender.com/search/search.php">Search</a>
 <?php if ($_SESSION['role'] === 'admin') { ?>
   <span class="dropdown2">
@@ -59,8 +66,18 @@
 
     <nav id="nav_links">
       <ul  class="nav_links">
-        
-        <li><a href="https://dataworks-7b7x.onrender.com/audit/upload.php">Audit</a></li>
+        <li> 
+<span class="dropdown">
+  <a class="dropbtn">Audit<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+<span class="dropdown-content">
+  <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="dropdown-element">Start</a>
+  <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="dropdown-element">Continue</a>
+</span>
+</span>
+</li>
         <li><a href="https://dataworks-7b7x.onrender.com/search/search.php">Search</a></li>
 
 <?php if ($_SESSION['role'] === 'admin') { ?>
