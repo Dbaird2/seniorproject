@@ -4,7 +4,7 @@ require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-if (!isset($_SESSION['role']) {
+if (!isset($_SESSION['role'])) {
     header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
     exit;
 }
