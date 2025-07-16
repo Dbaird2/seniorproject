@@ -89,46 +89,198 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
  * {
     margin: 0;
 }
-.drop-container {
-  position: relative;
+.is-upload {
+    display:flex;
+    justify-content: center;
+    height:100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    min-height: 100vh;
+
+}
+.container {
+  --transition: 350ms;
+  --folder-W: 120px;
+  --folder-H: 80px;
   display: flex;
-  gap: 10px;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 200px;
-  padding: 20px;
+  justify-content: flex-end;
+  padding: 10px;
+  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  height: calc(var(--folder-H) * 1.7);
+  position: relative;
+  width:100%;
+}
+
+.folder {
+  position: absolute;
+  top: -25px;
+  left: calc(50% - 60px);
+  animation: float 2.5s infinite ease-in-out;
+  transition: transform var(--transition) ease;
+}
+
+.folder:hover {
+  transform: scale(1.05);
+}
+
+.folder .front-side,
+.folder .back-side {
+  position: absolute;
+  transition: transform var(--transition);
+  transform-origin: bottom center;
+}
+
+.folder .back-side::before,
+.folder .back-side::after {
+  content: "";
+  display: block;
+  background-color: white;
+  opacity: 0.5;
+  z-index: 0;
+  width: var(--folder-W);
+  height: var(--folder-H);
+  position: absolute;
+  transform-origin: bottom center;
+  border-radius: 15px;
+  transition: transform 350ms;
+  z-index: 0;
+}
+
+.container:hover .back-side::before {
+  transform: rotateX(-5deg) skewX(5deg);
+}
+.container:hover .back-side::after {
+  transform: rotateX(-15deg) skewX(12deg);
+}
+
+.folder .front-side {
+  z-index: 1;
+}
+
+.container:hover .front-side {
+  transform: rotateX(-40deg) skewX(15deg);
+}
+
+.folder .tip {
+  background: linear-gradient(135deg, #ff9a56, #ff6f56);
+  width: 80px;
+  height: 20px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -10px;
+  z-index: 2;
+}
+
+.folder .cover {
+  background: linear-gradient(135deg, #ffe563, #ffc663);
+  width: var(--folder-W);
+  height: var(--folder-H);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  border: 2px dashed #555;
-  color: #444;
-  cursor: pointer;
-  transition: background .2s ease-in-out, border .2s ease-in-out;
 }
 
-.drop-container:hover {
-  background: #eee;
-  border-color: #111;
-}
-
-.drop-container:hover .drop-title {
-  color: #222;
-}
-
-.drop-title {
-  color: #444;
-  font-size: 20px;
-  font-weight: bold;
+.custom-file-upload {
+  font-size: 1.1em;
+  color: #ffffff;
   text-align: center;
-  transition: color .2s ease-in-out;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background var(--transition) ease;
+  display: inline-block;
+  padding: 10px 35px;
+  position: relative;
 }
-<body>
+
+.custom-file-upload:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+/* CSS */
+.button-9 {
+  appearance: button;
+  backface-visibility: hidden;
+  background-color: #405cf5;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+  font-size: 100%;
+  height: 44px;
+  line-height: 1.15;
+  margin: 12px 0 0;
+  outline: none;
+  overflow: hidden;
+  padding: 0 25px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transform: translateZ(0);
+  transition: all .2s,box-shadow .08s ease-in;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 50%;
+}
+
+.button-9:disabled {
+  cursor: default;
+}
+
+.button-9:focus {
+  box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+}
+.is-upload .header {
+    margin-bottom: 100px;
+}
+</style>
 <?php include_once("../navbar.php"); ?>
-<form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-<label for="file" class="drop-container" id="dropcontiner">
-    <span class="drop-title" id="dropcontainer" class="drop-container">Drop file here</span>
-    or
-    <input type="file" name="file" id="filePath" accept="image/*">
-    <button type="submit">Submit</button>
-</label>
+<body>
+<div class="is-upload">
+    <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
+    <h2 class="header">Excel or CSV files only.</h2>
+<div class="container">
+  <div class="folder">
+    <div class="front-side">
+      <div class="tip"></div>
+      <div class="cover"></div>
+    </div>
+    <div class="back-side cover"></div>
+  </div>
+  <label class="custom-file-upload">
+    <input class="title" type="file" name="file" id="filePath"/>
+    Choose a file
+  </label>
+    <button class="button-9" type="submit" role="button">Submit</button>
+
+</div>
 </form>
+</div>
 </body>
