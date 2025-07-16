@@ -98,25 +98,31 @@
 
   </header>
 </div>
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+    //const width = window.screen.width;
+    //const height = window.screen.height;
+    const inner_width = window.innerWidth;
+    const nav_links = document.getElementById("nav_links");
+    window.addEventListener("resize", () => {
+      //const width = window.screen.width;
+      const inner_width = window.innerWidth;
+
+      //const height = window.screen.height;
+      console.log(width,inner_width,height);
+
+      if (inner_width <= 778) {
+        nav_links.hidden = true;
+      } else {
+        nav_links.hidden = false;
+      }
+    });
+    if (inner_width <= 778) {
+        nav_links.hidden = true;
+      } else {
+        nav_links.hidden = false;
+      }
+  });
+</script>
 </body>
 </html>
-<script>
- 
-  document.addEventListener("DOMContentLoaded", function () {
-    const width = window.screen.width;
-    const height = window.screen.height;
-    window.addEventListener("resize", () => {
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const nav_links = document.getElementById("nav_links");
-
-    
-    if (width <= 778) {
-      nav_links.hidden = true;
-    } else {
-      nav_links.hidden = false;
-    }
-  });
-
-});
-</script>

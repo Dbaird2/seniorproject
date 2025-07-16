@@ -4,6 +4,11 @@ require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+if (!isset($_SESSION['role']) {
+    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileTmpPath = $_FILES['file']['tmp_name'];
     $fileName = $_FILES['file']['name'];
@@ -73,6 +78,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit File Upload</title>
+</head>
 <style>
  * {
     margin: 0;
