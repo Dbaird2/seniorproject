@@ -19,8 +19,10 @@ include_once("../navbar.php");
   <script type="text/javascript" src="script.js"></script>
 </head>
 <style>
-
-    body {
+    * {
+        margin: 0;
+    }   
+    .is-search {
             margin: 0;
             height: 100vh;
             font-size: calc(0.5vw + 0.4vh);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Navbar</title>
+  <title>Dataworks</title>
   <link rel="stylesheet" href="/navbar.css">
 </head>
 <body>
@@ -91,9 +91,9 @@
 <?php } ?>
 </ul>
     </nav>
-    <a class="cta" href="https://dataworks-7b7x.onrender.com/auth/Logout.php"><button>Logout</button></a>
+    <a class="cta" href="https://dataworks-7b7x.onrender.com/auth/logout.php"><button>Logout</button></a>
     <?php } else { ?>
-    <a class="cta" href="https://dataworks-7b7x.onrender.com/auth/Login.php"><button>Login</button></a>
+    <a class="cta" href="https://dataworks-7b7x.onrender.com/auth/login.php"><button>Login</button></a>
     <?php } ?>
 
   </header>

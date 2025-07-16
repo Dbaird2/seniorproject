@@ -34,61 +34,43 @@ if ($highest_row > 4) {
 }
 
 $count = 0;
-$tag_col = $descr_col = $serial_col = $model_col = $vin_col = $custodian_col = $dept_col = $acq_date_col = $cost_col = $po_col = $location_col = $asset_type_col = $profile_id_col = -1;
-$column_headers = [];
-for ($i = $header_row; $i < count($data[$header_row]); $i++) {
-    if ($data[$header_row][$i] === 'Tag Number' || $data[$header_row][$i] === 'Tag') {
-        $column_headers[] = "Tag Number";
-        $tag_col = $i;
+$column_map = [
+    'tag_col'        => ['Tag Number', 'Tag'],
+    'descr_col'      => ['Description', 'Descr'],
+    'serial_col'     => ['Serial ID', 'SN'],
+    'vin_col'        => ['VIN', 'Vehicle ID'],
+    'custodian_col'  => ['Custodian', 'Custodian Name'],
+    'dept_col'       => ['Dept', 'Department'],
+    'acq_date_col'   => ['Acq Date', 'Acquisition Date'],
+    'cost_col'       => ['COST Total Cost', 'Price'],
+    'po_col'         => ['PO No.', 'Purchase Order'],
+    'location_col'   => ['Location'],
+    // 'model_col'      => ['Model', 'Model Number'],    // optional
+    // 'profile_id_col' => ['Profile ID', 'Profile'],    // optional
+    // 'asset_type_col' => ['Asset Type'],               // optional
+];
+
+// NOTE FOR $$key.
+// $key = 'tag_col'
+// $$key = -1 -> means $tag_col = -1
+// makes the value of the variable $key its own variable with the value of -1
+foreach (array_keys($column_map) as $key) {
+    $$key = -1;
+}
+
+$useless_columns = [];
+
+foreach ($data[$header_row] as $i => $header) {
+    $found = false;
+    foreach ($column_map as $varName => $aliases) {
+        if (in_array($header, $aliases, true)) {
+            $$varName = $i;
+            $found = true;
+            break;
+        }
     }
-    else if ($data[$header_row][$i] === 'Description' || $data[$header_row][$i] === 'Descr') {
-        $column_headers[] = "Description";
-        $descr_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'Serial ID' || $data[$header_row][$i] === 'SN') {
-        $column_headers[] = "Serial ID";
-        $serial_col = $i;
-    }
-    /*
-    else if ($data[$header_row][$i] === 'Model' || $data[$header_row][$i] === 'Model Number') {
-        $model_col = $i;
-    }*/
-    else if ($data[$header_row][$i] === 'VIN' || $data[$header_row][$i] === 'Vehicle ID') {
-        $vin_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'Custodian' || $data[$header_row][$i] === 'Custodian Name') {
-        $column_headers[] = "Custodian";
-        $custodian_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'Dept' || $data[$header_row][$i] === 'Department') {
-        $column_headers[] = "Department";
-        $dept_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'Acq Date' || $data[$header_row][$i] === 'Acquisition Date') {
-        $column_headers[] = "Acquisition Date";
-        $acq_date_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'COST Total Cost' || $data[$header_row][$i] === 'Price') {
-        $column_headers[] = "Cost";
-        $cost_col = $i;
-    }
-    else if ($data[$header_row][$i] === 'PO No.' || $data[$header_row][$i] === 'Purchase Order') {
-        $column_headers[] = "Purchase Order";
-        $po_col = $i;
-    }
-    /*
-    else if ($data[$header_row][$i] === 'Profile ID' || $data[$header_row][$i] === 'Profile') {
-        $profile_id_col =  $i;
-    }
-        */
-    else if ($data[$header_row][$i] === 'Location') {
-        $column_headers[] = "Location";
-        $location_col = $i;
-    }
-    /*
-    else if ($data[$header_row][$i] === 'Asset Type') {
-        $asset_type_col = $i;
-    } */else {
+
+    if (!$found) {
         $useless_columns[] = $i;
     }
 }
