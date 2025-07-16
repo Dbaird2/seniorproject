@@ -387,6 +387,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($result) {
             $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
 ?>
+<body>
+<div class="is-ajax">
 <div class="table-div">
   <table id="asset-table">
     <thead>
@@ -780,3 +782,6 @@ if ($column_count === 2)  {$page_size = '25vw';}
 
 # 2 columns = 25vw, 3 = 20, 4 = 15, 5 = 12, 6 = 10, 7 = 8, 8 = 7.5
 echo "<script>changeBoxSize('$page_size');</script>";
+?>
+</div>
+</body>

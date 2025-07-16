@@ -43,11 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             unset($data[0]);
         }
         if (count($data)>1) {
+            $_SESSION['saved_tags'] = [];
             $_SESSION['data'] = array_values($data);
             $_SESSION['info'] = [$highest_row, $highest_col, $filePath];
             header('Location: auditing.php');
             exit();
         } else {
+            unset($_SESSION['saved_tags']);
             unset($_SESSION['data']);
             unset($_SESSION['info']);
             unset($_SESSION['max_rows']);
@@ -71,11 +73,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         
 }
 ?>
+<style>
+ * {
+    margin: 0;
+}
+.drop-container {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px dashed #555;
+  color: #444;
+  cursor: pointer;
+  transition: background .2s ease-in-out, border .2s ease-in-out;
+}
+
+.drop-container:hover {
+  background: #eee;
+  border-color: #111;
+}
+
+.drop-container:hover .drop-title {
+  color: #222;
+}
+
+.drop-title {
+  color: #444;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: color .2s ease-in-out;
+}
 <body>
 <?php include_once("../navbar.php"); ?>
 <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-    <label for="file">Enter File:</label>
-    <input type="file" name="file" id="filePath">
+<label for="file" class="drop-container" id="dropcontiner">
+    <span class="drop-title" id="dropcontainer" class="drop-container">Drop file here</span>
+    or
+    <input type="file" name="file" id="filePath" accept="image/*">
     <button type="submit">Submit</button>
+</label>
 </form>
 </body>

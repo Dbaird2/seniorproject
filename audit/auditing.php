@@ -227,6 +227,14 @@ $worksheet = NULL;
 
 <?php
 $array = $time_array = $note_array = $room_array = [];
+if (count($_SESSION['saved_tags']) > 0) {
+    foreach($_SESSION['saved_tags'] as $info) {
+        $array[] = $info[0];
+        $note_array[] = $info[1];
+        $time_array[] = $info[2];
+        $room_array[] = $info[3];
+    }
+}
 if (isset($_POST['data'])) {
     $scanned_data = $_POST['data'];
     list($scanned_tags, $notes, $times, $rooms, $previous_tags, $previous_notes,$previous_times, $previous_rms, $filePath) = explode('|', $scanned_data);
@@ -260,10 +268,15 @@ if (isset($_POST['data'])) {
             $filtered_rooms[] = $scanned_rooms[$i];
         }
     }
-    $array = $filtered_tags;
-    $note_array = $filtered_notes;
-    $time_array = $filtered_times;
-    $room_array = $filtered_rooms;
+    if (count($filtered_tags) > 0) {
+        $array = $filtered_tags;
+        $note_array = $filtered_notes;
+        $time_array = $filtered_times;
+        $room_array = $filtered_rooms;
+        if (count($array) > 0) {
+            $_SESSION['saved_tags'] = array_map(null, $array, $note_array, $time_array, $room_array);
+        }
+    }
 }
 
         $row_number = 1;

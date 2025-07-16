@@ -37,8 +37,8 @@ include_once("../navbar.php");
         background-color: white;
         border: lightgray 1px solid;
         border-radius: 30px;
-        margin: 0 auto;
-        padding: 1vh 2vw;
+        margin: 20px auto auto;
+        padding: 2vh 2vw 10px 50px;
         width: 85vw;
     }
     #submit-btn:hover {
