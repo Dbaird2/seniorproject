@@ -21,10 +21,15 @@ $highest_row = (int)$_SESSION['info'][0];
 
 $header_row = 0;
 $header_row = in_array('Tag Number', $data[0]) ? 0 : $header_row;
-$header_row = in_array('Tag Number', $data[1]) ? 1 : $header_row;
-$header_row = in_array('Tag Number', $data[2]) ? 2 : $header_row;
-$header_row = in_array('Tag Number', $data[3]) ? 3 : $header_row;
-
+if ($highest_row > 2) {
+    $header_row = in_array('Tag Number', $data[1]) ? 1 : $header_row;
+}
+if ($highest_row > 3) {
+    $header_row = in_array('Tag Number', $data[2]) ? 2 : $header_row;
+}
+if ($highest_row > 4) {
+    $header_row = in_array('Tag Number', $data[3]) ? 3 : $header_row;
+}
 
 $count = 0;
 $tag_col = $descr_col = $serial_col = $model_col = $vin_col = $custodian_col = $dept_col = $acq_date_col = $cost_col = $po_col = $location_col = $asset_type_col = $profile_id_col = -1;
