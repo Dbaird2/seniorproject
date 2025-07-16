@@ -382,9 +382,9 @@ for ($i = 0; $i < $highest_row; $i++) {
     <ul>
         <?php
     foreach ($array as $row) {
-        $colorClass = isset($tag_lookup[$row]) ? "tag-match" : "tag-miss";
-        echo "<li class='$colorClass'>
-        <strong>$row</strong><br>
+        $color_class = isset($tag_lookup[$row]) ? "found" : "not-found";
+        echo "<li class='$color_class'>
+        <strong class='$color_class'>$row</strong><br>
         Room:<input name='previousRms[]' value='" .htmlspecialchars($room_array[$i]) . "'><br>Notes:<input name='previousNote[]' value='".htmlspecialchars($note_array[$i])."'></li>";
         $i++;
     }
