@@ -1,11 +1,7 @@
 <?php
 error_reporting(0);
 include_once("../config.php");
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: https://dataworks-7b7x.onrender.com");
-    exit;
-}
-
+check_auth('admin');
 $bldg_msg = $bldg_color = '';
 $room_msg = [[]];
 if (isset($_GET['bldg-id'])) {

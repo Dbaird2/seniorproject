@@ -1,4 +1,6 @@
-<?php include_once ("../config.php");?>
+<?php include_once ("../config.php");
+check_auth('admin');
+?>
 <!DOCTYPE html>
 <html lang="en">
         <meta charset="UTF-8">
@@ -222,8 +224,7 @@
                                                                                                                                                                                                                                                                                                                  </div>
                                                                                                                                                                                                                                                                                                                          <button>Submit</button>
                                                                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                                                                             </div>
-
+                                                   </div>
     </div>
 </body>
 </html>

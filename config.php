@@ -25,4 +25,21 @@ try {
 } catch (PDOException $e) {
     error_log($e->getMessage());
 } 
+function check_auth($level = 'low') {
+    $levels = [
+        'low' => ['user', 'custodian', 'admin', 'management'],
+        'medium' => ['custodian', 'admin', 'management'],
+        'high' => ['admin']
+    ];
+    if (!isset($_SESSION['role']) || $_SESSION['role'] === '') {
+        header('Location: https://dataworks-7b7x.onrender.com/auth/login.php');
+        exit;
+    }
+    $user_role = $_SESSION['role'];
+    if (!in_array($user_role, $levels[$level] ?? [])) {
+        header('Location: https://dataworks-7b7x.onrender.com/index.php');
+        exit;
+    }
+    return true;
+}
 ?>

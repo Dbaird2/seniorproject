@@ -4,10 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $success = [];
-if (!isset($_SESSION['role']) && $_SESSION['role'] !== 'admin') {
-    header("Location: https://dataworks-7b7x.onrender.come");
-    exit;
-}
+check_auth('admin');
 include_once("../navbar.php");
 if (isset($_GET['dept-name'])) {
 

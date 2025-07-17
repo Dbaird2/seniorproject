@@ -4,11 +4,7 @@ require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-if (!isset($_SESSION['role'])) {
-    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
-    exit;
-}
-
+check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileTmpPath = $_FILES['file']['tmp_name'];
     $fileName = $_FILES['file']['name'];

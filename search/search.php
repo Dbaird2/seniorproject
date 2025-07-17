@@ -1,9 +1,6 @@
 <?php
 include_once("../config.php");
-if (!isset($_SESSION['role'])) {
-    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
-    exit();
-}
+check_auth();
 include_once("../navbar.php");
 ?>
 <!DOCTYPE html>

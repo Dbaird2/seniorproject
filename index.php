@@ -1,53 +1,53 @@
 <?php
 error_reporting(0);
 require_once 'config.php';
-if (isset($_SESSION['role'])) {
-    include_once 'navbar.php';
-    $query = "SELECT * FROM asset_info NATURAL JOIN room_table
-        ORDER BY date_added DESC LIMIT 10";
+check_auth();
+include_once 'navbar.php';
+$query = "SELECT * FROM asset_info NATURAL JOIN room_table
+    ORDER BY date_added DESC LIMIT 10";
 
-    $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as recent_login FROM user_table ORDER BY last_login DESC LIMIT 5";
+$user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as recent_login FROM user_table ORDER BY last_login DESC LIMIT 5";
 
-    $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
+$asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
-    $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
+$weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
 
-    $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
-    try {
-        $stmt = $dbh->prepare($query);
-        $stmt_user = $dbh->prepare($user_query);
-        $stmt_asset_count = $dbh->prepare($asset_count);
-        $stmt_weekly_adds = $dbh->prepare($weekly_adds);
-        $stmt_weekly_changes = $dbh->prepare($weekly_changes);
+$weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
+try {
+    $stmt = $dbh->prepare($query);
+    $stmt_user = $dbh->prepare($user_query);
+    $stmt_asset_count = $dbh->prepare($asset_count);
+    $stmt_weekly_adds = $dbh->prepare($weekly_adds);
+    $stmt_weekly_changes = $dbh->prepare($weekly_changes);
 
-        if ($stmt->execute()) {
-            $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $assets = [];
-        }
-        if ($stmt_user->execute()) {
-            $users = $stmt_user->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $users = [];
-        }
-        if ($stmt_asset_count->execute()) {
-            $asset_count = $stmt_asset_count->fetch(PDO::FETCH_ASSOC);
-        } else {
-            $asset_count = ['total_assets' => 0];
-        }
-        if ($stmt_weekly_adds->execute()) {
-            $weekly_adds = $stmt_weekly_adds->fetch(PDO::FETCH_ASSOC);
-        } else {
-            $weekly_adds = ['weekly_adds' => 0];
-        }
-        if ($stmt_weekly_changes->execute()) {
-            $weekly_changes = $stmt_weekly_changes->fetch(PDO::FETCH_ASSOC);
-        } else {
-            $weekly_changes = ['weekly_changes' => 0];
-        }
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
+    if ($stmt->execute()) {
+        $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $assets = [];
     }
+    if ($stmt_user->execute()) {
+        $users = $stmt_user->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $users = [];
+    }
+    if ($stmt_asset_count->execute()) {
+        $asset_count = $stmt_asset_count->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $asset_count = ['total_assets' => 0];
+    }
+    if ($stmt_weekly_adds->execute()) {
+        $weekly_adds = $stmt_weekly_adds->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $weekly_adds = ['weekly_adds' => 0];
+    }
+    if ($stmt_weekly_changes->execute()) {
+        $weekly_changes = $stmt_weekly_changes->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $weekly_changes = ['weekly_changes' => 0];
+    }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,7 +95,7 @@ if (isset($_SESSION['role'])) {
 
                 </div>
 <?php
-        foreach ($assets as $key => $asset) {
+foreach ($assets as $key => $asset) {
 ?>
                 <div class="asset-item asset-odd">
                     <div class="asset-id"><?= $asset['asset_tag'] ?></div>
@@ -106,9 +106,9 @@ if (isset($_SESSION['role'])) {
                     <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
                 </div>
 <?php
-                }
+}
 ?>
-                
+
             </div>
             <div class="activity">
                 <div class="quick-actions">
@@ -121,13 +121,13 @@ if (isset($_SESSION['role'])) {
                 <div class="recent-activity">
                     <h3>Recent Activity</h3>               
 <?php
-    $row = 1;
-    foreach ($users as $key => $user) {
+$row = 1;
+foreach ($users as $key => $user) {
 ?>
                     <div class="login-activity"><?=$row?> . <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in at <?= $user['recent_login'] ?></div>                
 <?php
-        $row++;
-    }
+    $row++;
+}
 ?>
                 </div>
             </div>
@@ -136,22 +136,18 @@ if (isset($_SESSION['role'])) {
 </div>
 </body>
 </html>
-    <script>
-    var botmanWidget = {
-        frameEndpoint: '/chat/botman-widget.html', // Make sure this is correct
-        chatServer: '/chat/chatbot.php',
-        introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
-        title: "Chatbot",
-        mainColor: "#ADD8E6",
-        bubbleBackground: "#ADD8E6",
-        placeholderText: "Type your question here..."
-    };
-    </script>
+<script>
+var botmanWidget = {
+frameEndpoint: '/chat/botman-widget.html', // Make sure this is correct
+    chatServer: '/chat/chatbot.php',
+    introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+    title: "Chatbot",
+    mainColor: "#ADD8E6",
+    bubbleBackground: "#ADD8E6",
+    placeholderText: "Type your question here..."
+};
+</script>
 
-<script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>}
+<script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
 <?php
-} else {
-    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
-    exit();
-}
 ?>

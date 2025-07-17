@@ -1,10 +1,7 @@
 <?php
 error_reporting(0);
 include_once("../config.php");
-if (!isset($_SESSION['role']) || $_SESSION['role'] === '' || $_SESSION['role'] === NULL) {
-    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
-    exit;
-}
+check_auth();
 if (!isset($_SESSION['data']) && !isset($_POST)) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
     exit;

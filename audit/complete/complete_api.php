@@ -1,15 +1,62 @@
 <?php
-header("Access-Control-Allow-Headers: Content-Type");
-include_once("../../config.php");
+//header("Access-Control-Allow-Origin: http://localhost:3000");
+try {
+    header("Access-Control-Allow-Headers: Content-Type");
+    require_once "../../config.php";
 
-if (!isset($_SESSION['role'])) {
-    header("Location: https://dataworks-7b7x.onrender.com/auth/login.php");
-    exit;
+    check_auth('admin');
+
+    $result = json_decode(file_get_contents("php://input"), true);
+    $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
+    if (!is_string($result)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid input format']);
+        exit;
+    }
+    $audit_data = $_SESSION['data'];
+
+    [$tags, $notes, $times, $rooms, $dept] = explode("|", $result);
+
+    $tags = explode('`', $tags);
+    $notes = explode('`', $notes);
+    $times = explode('`', $times);
+    $rooms = explode('`', $rooms);
+    for ($i = 0; $i < count($tags); $i++) {
+        $found_assets[] = [
+            'Asset Tag' => $tags[$i] ?? '',
+            'Asset Note' => $notes[$i] ?? '',
+            'Time Scanned' => $times[$i] ?? '',
+            'Found Room' => $rooms[$i] ?? ''
+        ];
+    }
+    $found_assets_json = json_encode($found_assets);
+    $audited_asset_json = json_encode($audit_data);
+    $auditor = $_SESSION['user_name'];
+
+    try {
+        $check_recent_audits = "SELECT auditor, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
+        $check_stmt = $dbh->prepare($check_recent_audits);
+        $check_stmt->execute([$dept]);
+        $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            $audit_id = (int)$result['id'] ?? NULL;
+        }
+    } catch (PDOException $e ) {
+        echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
+    }
+    try {
+        $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audited_assets, found_assets) VALUES (?, ?, ?, ?, ?, ?)";
+        $insert_stmt = $dbh->prepare($insert_q);
+        $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
+    } catch (PDOException $e) {
+        echo json_encode(['status'=>'failed','Error on Insert'=>$e->getMessage(),]);
+    }
+} catch (Exception $e) {
+    echo json_encode(['status'=>'failed', 'Error'=>$e->getMessage()]);
 } 
-$result = file_get_contents("php://input");
-$content_type = $_SERVER["CONTENT_TYPE"] ?? '';
 
-$data = json_decode($result, true);
+echo json_encode([
+  'status' => 'success'
+]);
 
-echo json_encode(['status'=>'success']);
 exit;
