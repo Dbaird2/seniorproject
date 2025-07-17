@@ -32,7 +32,7 @@ try {
     $found_assets_json = json_encode($found_assets);
     $audited_asset_json = json_encode($audit_data);
     $auditor = $_SESSION['user_name'];
-
+    $audit_id = NULL;
     try {
         $check_recent_audits = "SELECT auditor, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
         $check_stmt = $dbh->prepare($check_recent_audits);
@@ -40,6 +40,16 @@ try {
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             $audit_id = (int)$result['id'] ?? NULL;
+        }
+        if ($audit_id === NULL) {
+            $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id ORDER BY finished_at";
+            $check_stmt = $dbh->prepare($get_audit_ids);
+            $check_stmt->execute([':dept_id'=>$dept]);
+            $id_results = $check_stmt->fetchAll(PDO::FETCH_ASSOC);
+            $audit_id = count($id_results) > 1
+                ? (int) $id_results[0]['audit_id']
+                : (($id_results[0]['audit_id'] ?? NULL) == 1 ? 2 : 1);
+
         }
     } catch (PDOException $e ) {
         echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
