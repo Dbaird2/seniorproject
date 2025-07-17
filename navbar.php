@@ -126,7 +126,6 @@
       const inner_width = window.innerWidth;
 
       //const height = window.screen.height;
-      console.log(width,inner_width,height);
 
       if (inner_width <= 778) {
         nav_links.hidden = true;
