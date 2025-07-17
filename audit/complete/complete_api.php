@@ -46,10 +46,14 @@ try {
             $check_stmt = $dbh->prepare($get_audit_ids);
             $check_stmt->execute([':dept_id'=>$dept]);
             $id_results = $check_stmt->fetchAll(PDO::FETCH_ASSOC);
-            $audit_id = count($id_results) > 1
-                ? (int) $id_results[0]['audit_id']
-                : (($id_results[0]['audit_id'] ?? NULL) == 1 ? 2 : 1);
-
+            // CHECK OLDEST AUDIT_ID
+            if (count($id_results) >1) {
+                $audit_id = (int)$id_results[0]['audit_id'];
+            } else if (count($id_results) > 0) {
+                $audit_id = $id_results[0]['audit_id'] == 1 ? 2 : 1;
+            } else {
+                $audit_id = 1;
+            }  
         }
     } catch (PDOException $e ) {
         echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
