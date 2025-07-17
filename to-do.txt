@@ -24,15 +24,15 @@ FEATURES:
 
 5 add csv support
 
-1 style navbar better                                     -- working on at work
+1 style navbar better                                     -- working on at work(finished?)
 
 5 add python for ML (probably for department waste)
 
 2 complete bulk adding                                    -- work on at home
 
-4 something with kuali                                    -- work on at work
+4 something with kuali                                   
 
-3 make editing of dept,bldg,asset in Ajax a thing
+3 make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
 
 4 add column in database for kuali_title OR make another table with titles based
     off form type

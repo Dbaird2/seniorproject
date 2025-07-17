@@ -303,6 +303,7 @@ $j = 0;
 ?>
  <body>
     <div class="is-search">
+        <div class="div-table">
     <table class="table">
         <thead>
             <tr>
@@ -362,7 +363,7 @@ for ($i = 0; $i < $highest_row; $i++) {
     $i = 0;
     $tag_lookup = array_flip($tag_array);
     ?>
-
+</div>
 
     <div id="insert-tags-div">
         <div id="inputContainer"></div>

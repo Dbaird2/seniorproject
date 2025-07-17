@@ -25,13 +25,32 @@
     background-color: #fafafa;
     color: #333;
 }
-.table {
-    display:relative;
+.div-table {
     width:80%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.table {
+    width:100%;
     text-align: center;
     padding:10px 10px;
     max-height:350px;
     table-layout: fixed;
+}
+.table td {
+    min-height:100px;
+    height:25px;
+}
+@media (max-width: 768px) {
+    .is-search {
+        flex-direction: column;
+    }
+    .div-table {
+        width:100%;
+    }
+    .is-search button {
+        width: 30%;
+    }
 }
 .found {
     color: green;
