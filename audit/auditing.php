@@ -9,6 +9,7 @@ if (!isset($_SESSION['data']) && !isset($_POST)) {
 if (empty($_SESSION['info'] && empty($_SESSION['data'])) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?msg=NoRecentAudit");
     exit;
+}
 
 /*
 ini_set('display_errors', '1');
