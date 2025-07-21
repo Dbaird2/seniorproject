@@ -424,6 +424,15 @@ foreach ($column_headers as $header) {
 echo "<input type='hidden' id='filePath2' name='filePath' value='$filePath'>";
 ?>
 <script>
+var botmanWidget = {
+            frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
+            chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
+            introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+            title: "Chatbot",
+            mainColor: "#ADD8E6",
+            bubbleBackground: "#ADD8E6",
+            placeholderText: "Type your question here..."
+        };
 window.requestIdleCallback(() => {
   addNewInput();
   addNewInput();
