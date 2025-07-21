@@ -34,13 +34,13 @@
 <a href="https://dataworks-7b7x.onrender.com/search/search.php">Search</a>
 <?php if ($_SESSION['role'] === 'admin') { ?>
   <span class="dropdown2">
-  <a  href="#">Add<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <a  href="#">Add/Remove<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg></a>
 <span class="dropdown-content2">
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-asset.php" class="dropdown-element">Asset</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dept.php" class="dropdown-element">Department</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-bldg.php" class="dropdown-element">Building/Rooms</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-asset.php" class="dropdown-element">Asset</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-dept.php" class="dropdown-element">Department</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-bldg.php" class="dropdown-element">Building/Rooms</a>
 </span>
 </span>
 <?php } ?>
@@ -88,9 +88,9 @@
 </svg>
 </a>
   <span class="dropdown-content">
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-asset.php" class="dropdown-element">Asset</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-dept.php" class="dropdown-element">Department</a>
-    <a href="https://dataworks-7b7x.onrender.com/add-assets/add-bldg.php" class="dropdown-element">Building/Rooms</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-asset.php" class="dropdown-element">Asset</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-dept.php" class="dropdown-element">Department</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/add-bldg.php" class="dropdown-element">Building/Rooms</a>
   </span>
 </span></li>
 
@@ -116,29 +116,6 @@
   </header>
 </div>
 <script>
- document.addEventListener("DOMContentLoaded", function () {
-    //const width = window.screen.width;
-    //const height = window.screen.height;
-    const inner_width = window.innerWidth;
-    const nav_links = document.getElementById("nav_links");
-    window.addEventListener("resize", () => {
-      //const width = window.screen.width;
-      const inner_width = window.innerWidth;
-
-      //const height = window.screen.height;
-
-      if (inner_width <= 778) {
-        nav_links.hidden = true;
-      } else {
-        nav_links.hidden = false;
-      }
-    });
-    if (inner_width <= 778) {
-        nav_links.hidden = true;
-      } else {
-        nav_links.hidden = false;
-      }
-  });
 </script>
 </body>
 </html>

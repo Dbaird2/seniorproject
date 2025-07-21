@@ -58,7 +58,7 @@ include_once("../navbar.php");
             box-sizing: border-box;
         }
 
-        body {
+        .is-forgot {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             min-height: 100vh;
@@ -70,7 +70,7 @@ include_once("../navbar.php");
             position: relative;
         }
 
-        body::before {
+        .is-forgot::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -444,6 +444,7 @@ include_once("../navbar.php");
     </style>
 </head>
 <body>
+<div class="is-forgot">
     <div class="forgot-container">
         <div class="forgot-header">
             <span class="icon">🔐</span>
@@ -556,5 +557,6 @@ include_once("../navbar.php");
             }
         });
     </script>
+</div>
 </body>
 </html>

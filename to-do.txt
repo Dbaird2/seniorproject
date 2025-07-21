@@ -1,40 +1,38 @@
-ORDER TO DO 1 = NOW, 5 = LATEST
-
 FILES:
-1 add-asset.php                                           -- working on(finished?)
+add-asset.php                                           -- working on(finished?)
 
-1 add-dept.php                                            -- working on(finished?)
+add-dept.php                                            -- working on(finished?)
 
-5 mobile-api/insert.php, get-info.php, etc
+mobile-api/insert.php, get-info.php, etc
 
-2 change_user.php                                         -- will work on at work
+change_user.php                                         -- will work on at work
 
 FEATURES:
-2 audit save to database: only need last 2 audit per dept
+audit save to database: only need last 2 audit per dept -- working on(finished?)
 
-3 be able to keep going on audits
+be able to keep going on audits
 
-3 add more responses for chatbot
+add more responses for chatbot
 
-1 fix buildings search                                    -- working on at work
+fix buildings search                                    -- working on at work
 
-2 add department values to db
+add department values to db
 
-3 add searching by departments
+add searching by departments
 
-5 add csv support
+add csv support
 
-1 style navbar better                                     -- working on at work(finished?)
+style navbar better                                     -- working on at work(finished?)
 
-5 add python for ML (probably for department waste)
+add python for ML (probably for department waste)
 
-2 complete bulk adding                                    -- work on at home
+complete bulk adding                                    -- work on at home
 
-4 something with kuali                                   
+something with kuali                                   
 
-3 make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
+make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
 
-4 add column in database for kuali_title OR make another table with titles based
+add column in database for kuali_title OR make another table with titles based
     off form type
 
-add delete features for cust,assets,bldgs
+add delete features for cust,assets                     --finished bldg/dept

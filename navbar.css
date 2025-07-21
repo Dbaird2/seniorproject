@@ -1,4 +1,9 @@
 
+@media (max-width:779px) {
+   #nav_links {
+       display:none;
+   }
+}
 .has-navbar {
     font-family:"Montserrat", sans-serif;
 }
