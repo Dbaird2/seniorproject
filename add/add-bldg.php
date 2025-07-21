@@ -5,7 +5,7 @@ check_auth('high');
 $bldg_msg = $bldg_color = '';
 $room_msg = [[]];
 if (isset($_GET['bldg-id'])) {
-    $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
+    $bldg_name = isset($_GET['bldg-name']) ? trim(strtoupper($_GET['bldg-name'])) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id'];
     $check_bldg_name = "SELECT bldg_name, bldg_id from bldg_table where bldg_name = :bldg_name OR bldg_id = :bldg_id";
 
@@ -26,9 +26,9 @@ if (isset($_GET['bldg-id'])) {
 
 }
 if (isset($_GET['room-num'])) {
-    $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
+    $bldg_name = isset($_GET['bldg-name']) ? trim(strtoupper($_GET['bldg-name'])) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
-    $room_nums = $_GET['room-num'];
+    $room_nums = trim($_GET['room-num']);
 
     $seen = [];
     $new_room_nums = [];

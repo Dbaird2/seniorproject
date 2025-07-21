@@ -10,7 +10,7 @@ change_user.php                                         -- will work on at work
 FEATURES:
 audit save to database: only need last 2 audit per dept -- working on(finished?)
 
-be able to keep going on audits
+be able to keep going on audits --done
 
 add more responses for chatbot
 

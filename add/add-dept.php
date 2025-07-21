@@ -8,13 +8,13 @@ check_auth('high');
 include_once("../navbar.php");
 if (isset($_GET['dept-name'])) {
 
-    $dept_name = strtoupper($_GET['dept-name']);
-    $dept_id = strtoupper($_GET['dept-id']);
+    $dept_name = trim(strtoupper($_GET['dept-name']));
+    $dept_id = trim(strtoupper($_GET['dept-id']));
     $mailstop = $_GET['dept-stop'];
-    $f_name = $_GET['dept-cust-f'];
-    $l_name = $_GET['dept-cust-l'];
+    $f_name = trim($_GET['dept-cust-f']);
+    $l_name = trim($_GET['dept-cust-l']);
     $custodian = $f_name . " " .$l_name;
-    $manager = $_GET['dept-mana-f']. " " . $_GET['dept-mana-l'];
+    $manager = trim($_GET['dept-mana-f']). " " . trim($_GET['dept-mana-l']);
 
     $check_cust_uid = "SELECT id FROM user_table WHERE f_name ILIKE :f_name AND l_name ILIKE :l_name";
     $dept_availibility = "SELECT * FROM department WHERE dept_name = :dept_name OR dept_id = :dept_id";

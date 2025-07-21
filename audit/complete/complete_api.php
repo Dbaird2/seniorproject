@@ -4,7 +4,7 @@ try {
     header("Access-Control-Allow-Headers: Content-Type");
     require_once "../../config.php";
 
-    check_auth('admin');
+    check_auth('high');
 
     $result = json_decode(file_get_contents("php://input"), true);
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';

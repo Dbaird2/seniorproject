@@ -6,6 +6,10 @@ if (!isset($_SESSION['data']) && !isset($_POST)) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
     exit;
 }
+if (empty($_SESSION['info'] && empty($_SESSION['data'])) {
+    header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?msg=NoRecentAudit");
+    exit;
+
 /*
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -373,7 +377,9 @@ for ($i = 0; $i < $highest_row; $i++) {
 </div>
 
 <div class="wrapper">
+<?php if ($_SESSION['role'] === 'admin') { ?>
             <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
+<?php } ?>
 
     <div class='show-tags' id='showTags'>
     <h3>Tags Scanned</h3>
