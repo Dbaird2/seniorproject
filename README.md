@@ -13,3 +13,5 @@ URL: https://dataworks-7b7x.onrender.com
 - Hosted by render.com
 ## 🚀 Usage Instructions
 We have made it so that only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
+
+**bold text** This is bold text
