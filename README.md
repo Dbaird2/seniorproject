@@ -14,4 +14,5 @@ URL: https://dataworks-7b7x.onrender.com
 ## 🚀 Usage Instructions
 We have made it so that only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
 
-**bold text** This is bold text
+![motion](<img width="658" height="664" alt="image" src="https://github.com/user-attachments/assets/74cc63f0-0833-4ad0-8921-0a4ccab0090c" />)
+
