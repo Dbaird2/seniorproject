@@ -1,6 +1,6 @@
 <?php
 //caroline contreras
-//testing pee pee poo poo
+//oh hell naw
 $subdomain = "subdomain";
 $apikey = "apikey";
 
