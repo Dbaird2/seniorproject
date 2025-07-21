@@ -115,14 +115,15 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <h2 class='form-header'>Building Form</h2>
                 <form action="add-bldg.php" id="add-bldg" method="get">
                     <div class="form-group">
-                        <label class="form-label" for="bldg-id">Building Number<br></label>
-                        <input class="form-input" name="bldg-id" type="number" required>
-                    </div>
-
-                    <div class="form-group">
                         <label class="form-label" for="bldg-name">Building Name<br></label>
                         <input class="form-input" name="bldg-name" type="text" required>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="bldg-id">Building ID<br></label>
+                        <input class="form-input" name="bldg-id" type="number" required>
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label" for="add-remove">Add or Remove<br></label>
                         <select class="form-input" name="add-remove" id="add-remove">
@@ -142,7 +143,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <form action="add-bldg.php" id="add-room" method="get">
                     <div class="form-group">
                         <label class="form-label" for="bldg-name">Building Name<br></label>
-                        <input class="form-input" type="search" name="bldg-name" id="bldg-name2" list="bldg-names">
+                        <input class="form-input" type="search" name="bldg-name" id="bldg-name2" list="bldg-names" autocomplete="off">
                         <datalist id="bldg-names">
                             <?php foreach ($result as $bldg) { ?>
                                 <option value="<?= $bldg["bldg_name"] ?>"><?= $bldg["bldg_name"] ?></option>
