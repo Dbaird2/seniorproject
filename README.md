@@ -14,6 +14,4 @@ URL: https://dataworks-7b7x.onrender.com
 ## 🚀 Usage Instructions
 We have made it so that only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
 
-- [x] Write the press release
-- [x] Update the website
-- [ ] Contact the media
+	I need to highlight these ==very important words==.
