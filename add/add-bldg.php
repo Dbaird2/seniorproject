@@ -175,9 +175,11 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <?php
                 $color = '';
-                foreach ($room_msg as $msg) {
-                    $color = $msg[0];
-                    echo "<p style='color:$color;text-align:left;'>" . $msg[1] . "</p>";
+                if (isset($room_msg[0][0])) {
+                    foreach ($room_msg as $msg) {
+                        $color = $msg[0];
+                        echo "<p style='color:$color;text-align:left;'>" . $msg[1] . "</p>";
+                    }
                 }
                 ?>
             </div>
