@@ -87,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $dept_stmt->execute([$full_name, $dept_id_array]);
                 }
                 header("Location: https://dataworks-7b7x.onrender.com/index.php");
+                exit;
             }
         } catch (PDOException $e) {
             echo '<pre>';

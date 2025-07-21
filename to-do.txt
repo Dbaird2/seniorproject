@@ -1,38 +1,27 @@
-FILES:
 add-asset.php                                           -- working on(finished?)
-
-add-dept.php                                            -- working on(finished?)
 
 mobile-api/insert.php, get-info.php, etc
 
-change_user.php                                         -- will work on at work
+change_user.php                       
 
-FEATURES:
 audit save to database: only need last 2 audit per dept -- working on(finished?)
-
-be able to keep going on audits --done
 
 add more responses for chatbot
 
-fix buildings search                                    -- working on at work
+fix buildings search                                   
 
-add department values to db
+add department values to db --working on
 
 add searching by departments
 
 add csv support
 
-style navbar better                                     -- working on at work(finished?)
-
 add python for ML (probably for department waste)
 
-complete bulk adding                                    -- work on at home
+complete bulk adding    --working on
 
 something with kuali                                   
 
 make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
 
-add column in database for kuali_title OR make another table with titles based
-    off form type
-
-add delete features for cust,assets                     --finished bldg/dept
+add delete features for assets --working on (bldg-department done)
