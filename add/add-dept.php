@@ -28,15 +28,22 @@ if (isset($_GET['dept-name'])) {
         $mailstop = ($mailstop !== '') ? (int)$mailstop : -1; 
 
         $check_stmt = $dbh->prepare($dept_availibility);
-        $check_stmt->execute([":dept_name"=>$dept_name, ":dept_id"=>$dept_id]);
+        $check_stmt->execute([":dept_name"=>$dept_name, ":dept_id"=>$dept_id, ":cust"=>$custodian]);
         $is_avail = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if (!$is_avail) {
             $insert_stmt = $dbh->prepare($dept_insert);
             $insert_stmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop, $uid]);
-        }
+            if ($insert_stmt) {
+                $msg = "Successfully added ". $dept_name;
+            } else {
+                $msg = "Failed to add " . $dept_name; 
+            }
+        } else {
+            $msg = "Department with Custodian " . $custodian . " already exists";
+        } 
 
 
-        $success[] = $dept_name;
+        $name = $dept_name;
 
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
@@ -119,9 +126,7 @@ if (isset($_GET['dept-name'])) {
 
                 <button class="submit-btn" type="submit" name="add" id="submit1">Submit</button>
             </form>
-<?php foreach ($success as $name) {
-echo "<p style='color:green;'>Successfully added " . $name . "<br></p>";
-} ?>
+            <p style='color:green;'>Successfully added <?=$name?><br></p>;
         </div>
     </div>
 </div>
