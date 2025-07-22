@@ -134,7 +134,6 @@ error_reporting(E_ALL);
         .inner-text {
             font-size: calc(0.5vw + 0.4vh);
             padding: 0.5vh 0.5vw;
-            font-family: Arial, sans-serif;
         }
          .row-even {
             background-color: #f0f8ff;
@@ -179,7 +178,6 @@ error_reporting(E_ALL);
             box-sizing: border-box;
             color: #fff;
             cursor: pointer;
-            font-family: -apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
             font-size: calc(0.6vw + 0.4vh);
             height: 44px;
             line-height: 1.15;

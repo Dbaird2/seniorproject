@@ -17,8 +17,7 @@ include_once("config.php");
             box-sizing: border-box;
         }
         
-        body {
-            font-family: 'Arial', sans-serif;
+        .is-help {
             line-height: 1.6;
             color: #333;
             background-color: #fff;
@@ -238,7 +237,7 @@ include_once("config.php");
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="is-help">
     <!-- Header -->
     <header>
         <div class="container">

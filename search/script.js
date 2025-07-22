@@ -32,6 +32,9 @@ function searchTrigger() {
         //$("#display").html("");
 
     }
+    if (name.length < 3) {
+        return;
+    }
     //AJAX is called.
     $.ajax({
         //AJAX type is "Post".

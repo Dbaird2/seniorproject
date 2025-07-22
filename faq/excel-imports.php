@@ -16,7 +16,6 @@ include_once("../navbar.php");
     }
 
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.6;
       color: #333;
       background-color: #f5f8ff;
