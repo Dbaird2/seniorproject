@@ -45,7 +45,7 @@
 </span>
 <?php } ?>
 <h4 class="">Management</h4>
-<a href="https://dataworks-7b7x.onrender.com/auth/settings.php">Settings</a>
+<a href="https://dataworks-7b7x.onrender.com/auth/settings/settings.php">Settings</a>
 <a href="https://dataworks-7b7x.onrender.com/auth/logout.php">Logout</a>
 <?php if ($_SESSION['role'] === 'admin') { ?>
 <span class="dropdown2">
