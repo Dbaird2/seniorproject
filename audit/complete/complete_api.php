@@ -31,7 +31,7 @@ try {
     }
     $found_assets_json = json_encode($found_assets);
     $audited_asset_json = json_encode($audit_data);
-    $auditor = $_SESSION['user_name'];
+    $auditor = $_SESSION['email'];
     $audit_id = NULL;
     try {
         $check_recent_audits = "SELECT auditor, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
