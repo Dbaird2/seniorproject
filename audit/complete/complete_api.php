@@ -59,7 +59,7 @@ try {
         echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
     }
     try {
-        $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audited_assets, found_assets) VALUES (?, ?, ?, ?, ?, ?)";
+        $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, found_data) VALUES (?, ?, ?, ?, ?, ?)";
         $insert_stmt = $dbh->prepare($insert_q);
         $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
     } catch (PDOException $e) {
