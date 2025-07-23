@@ -1,4 +1,4 @@
-    * {
+ * {
         margin: 0;
     }
 .is-search {
@@ -62,7 +62,7 @@
     background-color: #f0f8ff;
 }
 #inputContainer {
-    max-height:80vh;
+    max-height:70vh;
     overflow-y: auto;
 }
 .room-label {
@@ -85,7 +85,7 @@
     justify-content: center;
 }
 .show-tags {
-    max-height:75vh;
+    max-height:65vh;
     overflow-y: auto;
 }
 .is-search button {
