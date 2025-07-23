@@ -72,5 +72,11 @@ try {
     exit;
 } 
 
+?>
+<script>
+dept = <?= json_encode($dept) ?>;
+console.log(dept);
+</script>
+<?php
 echo json_encode(['status'=>'success']);
 exit;

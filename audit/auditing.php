@@ -448,6 +448,7 @@ const previousTime = Array.from(document.getElementsByName('previousTime[]')).ma
 const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i => i.value);
 const previousRm = Array.from(document.getElementsByName('previousRms[]')).map(i => i.value);
 const dept_to_save = <?= json_encode($filePath) ?>;
+console.log(dept_to_save);
 tag = [];
 room = [];
 time = [];
