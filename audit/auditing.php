@@ -441,6 +441,45 @@ window.requestIdleCallback(() => {
   addNewInput();
 });
 document.addEventListener("DOMContentLoaded", () => {
+const complete_audit_btn = document.getElementById('complete-audit');
+complete_audit_btn.addEventListener("click", (e) => {
+const previousInput = Array.from(document.getElementsByName('previousInputContainer[]')).map(i => i.value);
+const previousTime = Array.from(document.getElementsByName('previousTime[]')).map(i => i.value);
+const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i => i.value);
+const previousRm = Array.from(document.getElementsByName('previousRms[]')).map(i => i.value);
+const dept_to_save = <?= json_encode($filePath) ?>;
+tag = [];
+room = [];
+time = [];
+note = [];
+previousInput.forEach((value, index) => {
+tag.push(value);
+note.push(previousNote[index]);
+time.push(previousTime[index]);
+room.push(previousRm[index]);
+})
+
+    const complete_data = [
+        tag.join('`'),
+        note.join('`'),
+        time.join('`'),
+        room.join('`'),
+        dept_to_save
+    ].join('|');
+console.log(complete_data);
+url = "http://dataworks-7b7x.onrender.com/audit/complete/complete-api.php";
+fetch(url, {
+method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+},
+    body: JSON.stringify(
+        complete_data
+                        )
+})
+    .then(res => res.json())
+    .then(res => console.log(res))
+})
 });
 
 //document.addEventListener('DOMContentLoaded', () => {

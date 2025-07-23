@@ -20,8 +20,6 @@ add python for ML (probably for department waste)
 
 complete bulk adding    --working on
 
-something with kuali                                   
-
 make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
 
 add delete features for assets --working on (bldg-department done)
