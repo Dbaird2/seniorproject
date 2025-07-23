@@ -57,6 +57,7 @@ try {
         }
     } catch (PDOException $e ) {
         echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
+        exit;
     }
     try {
         $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, found_data) VALUES (?, ?, ?, ?, ?, ?)";
@@ -64,13 +65,12 @@ try {
         $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
     } catch (PDOException $e) {
         echo json_encode(['status'=>'failed','Error on Insert'=>$e->getMessage(),]);
+        exit;
     }
 } catch (Exception $e) {
     echo json_encode(['status'=>'failed', 'Error'=>$e->getMessage()]);
+    exit;
 } 
 
-echo json_encode([
-  'status' => 'success'
-]);
-
+echo json_encode(['status'=>'success']);
 exit;
