@@ -5,6 +5,12 @@ error_reporting(0);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+//-------------------------------------------------------------------------
+//  DYNAMIC SQL QUERIES
+    $query_start = "SELECT ";
+    $query_asset_from = " FROM asset_info AS a ";
+    $query_end = " LIMIT 50 OFFSET :offset";
+//-------------------------------------------------------------------------
 if (isset($_POST['audit'])) {
 
     $search = strtoupper(htmlspecialchars($_POST['search'] ?? '', ENT_QUOTES));
@@ -26,48 +32,61 @@ if (isset($_POST['audit'])) {
 
     $where_dept = $where_price = '';
     $location_from = '';
-    $query_start = "SELECT ";
-    $query_asset_from = " FROM asset_info AS a ";
-    $params = ['search'=>"%$search%"];
 
-    if ($room_tag === 'true') {
-        // FOR QUERYING
-        $where_array[] = "CAST(a.room_tag AS TEXT) ILIKE :search";
+    $where = $and = $and1 = $and2 = '';
+    $where_dept = $where_price = '';
+    $params = []; $where_array = [];
+    $count = 0;
+    if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
+        $where_dept = " a.dept_id = :dept_id ";
+        $params[':dept_id'] = $dept_id_search;
+        $and1 = ' AND ';
+        $count++;
     }
-    if ($box_name === 'true') {
-        $where_array[] = "a.asset_name ILIKE :search";
-    } 
-    if ($asset_sn === 'true') {
-        $where_array[] = "a.serial_num ILIKE :search";
-    } 
-    if ($asset_po === 'true') {
-        $where_array[] = "CAST(a.po AS TEXT) ILIKE :search";
+    if (isset($_POST['asset_price']) && $_POST['asset_price'] !== '') {
+        $params[':price'] = $asset_price;
+        $where_price = " a.asset_price " . $asset_price_operation . " :price ";
+        $and2 = ' AND ';
+        $count++;
     }
-    if ($room_loc === 'true') {
-        $location_from = " JOIN room_table AS r on a.room_tag = r.room_tag JOIN bldg_table AS b on r.bldg_id = b.bldg_id ";
+    $where = ($count > 0) ? ' WHERE ' : '';
+    if ($where_dept && $where_price) {
+        $and = ' AND ';
     }
 
-    if ($_POST['dept_id_search'] !== '') {
-        $params['dept_id'] = $_POST['dept_id_search'];
-        $where_dept = ' AND dept_id = :dept_id ';
-    }
-    if ($_POST['asset_price'] !== '') {
-        $params['price'] = $_POST['asset_price'];
-        $where_price = ' AND asset_price ' . $_POST['price_operation'] . ' :price ';
-    }
-    $where_array = implode(' OR ', $where_array);
+    if ($search === 'ALL') {
+        $audit_query = "SELECT a.asset_tag, a.serial_num, a.po,
+            a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a      
+             JOIN room_table AS r ON a.room_tag = r.room_tag                                                   
+             JOIN bldg_table AS b ON r.bldg_id = b.bldg_id ".$where.$where_price.$and.$where_dept;
+    } else {
+        $params[':search']="%$search%";
+        $where_array[] = "a.asset_tag ILIKE :search";
+        if ($room_tag === 'true') {
+            $where_array[] = "CAST(a.room_tag AS TEXT) ILIKE :search";
+        }
+        if ($box_name === 'true') {
+            $where_array[] = "a.asset_name ILIKE :search";
+        } 
+        if ($asset_sn === 'true') {
+            $where_array[] = "a.serial_num ILIKE :search";
+        } 
 
-    $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
-        a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
-        JOIN room_table AS r ON a.room_tag = r.room_tag 
-        JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
-        WHERE (". $where_array .") " . $where_dept . $where_price;
+        $where_array = implode(' OR ', $where_array);
+
+        $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
+            a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
+            JOIN room_table AS r ON a.room_tag = r.room_tag 
+            JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
+            WHERE (". $where_array .") " . $and1 . $where_dept .$and2 . $where_price;
+    }
     $stmt = $dbh->prepare($audit_query);
     $stmt->execute($params);
     $data_from_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $data = json_encode($data_from_db);
     $_SESSION['data'] = $data_from_db;
+    unset($_SESSION['saved_tags']);
     header('Content-Type: application/json');
     echo $data;
     exit;
@@ -237,12 +256,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $result = [];
 //-------------------------------------------------------------------------
 
-//-------------------------------------------------------------------------
-//  DYNAMIC SQL QUERIES
-    $query_start = "SELECT ";
-    $query_asset_from = " FROM asset_info AS a ";
-    $query_end = " LIMIT 50 OFFSET :offset";
-//-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
 //  RESET ARRAYS
