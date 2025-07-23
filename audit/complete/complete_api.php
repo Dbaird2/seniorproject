@@ -37,12 +37,13 @@ try {
     $auditor = $_SESSION['email'];
     $audit_id = NULL;
     try {
+        // GETS CURRENT YEAR audit_id
         $check_recent_audits = "SELECT auditor, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
         $check_stmt = $dbh->prepare($check_recent_audits);
         $check_stmt->execute([$dept]);
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
-            $audit_id = (int)$result['id'] ?? 1;
+            $audit_id = (int)$result['audit_id'] ?? 1;
         }
         if ($audit_id === NULL) {
             $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id ORDER BY finished_at";
@@ -57,6 +58,9 @@ try {
             } else {
                 $audit_id = 1;
             }  
+        }
+        if ($audit_id === '' || $audit_id === 0 || $audit_id === NULL) {
+            $audit_id = 1;
         }
     } catch (PDOException $e ) {
         echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
