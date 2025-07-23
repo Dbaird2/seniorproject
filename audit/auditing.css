@@ -65,6 +65,9 @@
     max-height:80vh;
     overflow-y: auto;
 }
+.room-label {
+  font-weight: bold;
+}
 .wrapper li{
     text-align:left;
     list-style-type: none;

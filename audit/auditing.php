@@ -368,6 +368,9 @@ for ($i = 0; $i < $highest_row; $i++) {
 </div>
 
     <div id="insert-tags-div">
+        <label for="room-tag" class="room-label">Room Tag<br></label>
+        <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag">
+        <label for="inputContainer" class="room-label">Asset Tags<br></label>
         <div id="inputContainer"></div>
         <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
 
@@ -466,6 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const dynamicNotes = Array.from(document.getElementsByName('dynamicNote[]')).map(i=>i.value);
         const dynamicTimes = Array.from(document.getElementsByName('dynamicTime[]')).map(i=>i.value);
         const dynamicRms = Array.from(document.getElementsByName('dynamicRm[]')).map(i=>i.value);
+        const room_tag = document.getElementById('room-tag').value;
 
         const previousInputs = Array.from(document.getElementsByName('previousInputContainer[]')).map(i=>i.value);
         const previousTimes = Array.from(document.getElementsByName('previousTime[]')).map(i=>i.value);
@@ -476,7 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const filePath = document.getElementById('filePath2').value;
         dynamicInputs.forEach(function(tag, index) {
             dynamicNotes[index] = dynamicNotes[index] === '' ? 'No Notes' :dynamicNotes[index];
-            dynamicRms[index] = dynamicRms[index] === '' ? '000' :dynamicRms[index];
+            dynamicRms[index] = room_tag === '' ? '000' : room_tag;
             if (tag === '') {
                 empty_tag.push(index);
             }
