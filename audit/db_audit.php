@@ -16,9 +16,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-echo "<pre>";
-var_dump($_SESSION);
-echo "</pre>";
+
 $filePath = $_SESSION['data'][0]['dept_id'] . '_AUDIT';
 $count = NULL;
 $previous_inputs = [];
