@@ -87,7 +87,7 @@ foreach ($data as &$row) {
     unset($row);
 }
 
-$filePath = $_SESSION['info'][2];
+$file_path = $_SESSION['info'][2];
 if (isset($_POST['download'])) {
 
    
@@ -122,7 +122,7 @@ if (isset($_POST['download'])) {
         $sizeofarray = count($excel_array[0]);
       
 
-        $fileNameOnly = basename($filePath);
+        $fileNameOnly = basename($file_path);
         $filePath = $fileNameOnly;
         $empty_scan = is_null($previous_inputs[0]) ? true : false;
         $file_empty = is_null($excel_array[$header_row+1][0]) ? true : false;
@@ -447,7 +447,7 @@ const previousInput = Array.from(document.getElementsByName('previousInputContai
 const previousTime = Array.from(document.getElementsByName('previousTime[]')).map(i => i.value);
 const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i => i.value);
 const previousRm = Array.from(document.getElementsByName('previousRms[]')).map(i => i.value);
-const dept_to_save = <?= json_encode($filePath) ?>;
+const dept_to_save = <?= json_encode($file_path) ?>;
 console.log(dept_to_save);
 tag = [];
 room = [];
