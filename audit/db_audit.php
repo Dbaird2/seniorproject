@@ -16,7 +16,9 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+echo "<pre>";
+var_dump($_SESSION);
+echo "</pre>";
 $filePath = $_SESSION['data'][0]['dept_id'] . '_AUDIT';
 $count = NULL;
 $previous_inputs = [];
@@ -390,8 +392,8 @@ $j = 0;
     ?>
     <script>
         var botmanWidget = {
-            frameEndpoint: 'http://localhost:3000/chat/botman-widget.html',
-            chatServer: 'http://localhost:3000/chat/chatbot.php',
+        frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
+            chatServer: 'http://dataworks-7b7x.onrender.com/chat/chatbot.php',
             introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
             title: "Chatbot",
             mainColor: "#ADD8E6",
@@ -434,7 +436,7 @@ $j = 0;
                     dept_to_save
                 ].join('|');
                 console.log(complete_data);
-                url = "http://localhost:3000/audit/complete-audit/complete-api.php";
+                url = "https://dataworks-7b7x.onrender.com/audit/complete/complete-api.php";
                 fetch(url, {
                         method: 'POST',
                         headers: {
