@@ -1,5 +1,8 @@
 <?php
-//header("Access-Control-Allow-Origin: http://localhost:3000");
+ini_set('display_errors', 0);      // Suppress HTML error output
+ini_set('log_errors', 1);          // Log errors instead
+error_reporting(E_ALL);            // (optional) report all errors in dev
+header("Content-Type: application/json"); 
 try {
     header("Access-Control-Allow-Headers: Content-Type");
     require_once "../../config.php";
