@@ -87,6 +87,7 @@ foreach ($data as &$row) {
     unset($row);
 }
 
+$filePath = $_SESSION['info'][2];
 if (isset($_POST['download'])) {
 
    
@@ -98,7 +99,6 @@ if (isset($_POST['download'])) {
         $previous_times = explode('`', $previous_times);
         $previous_notes = explode('`', $previous_notes);
         $previous_rooms = explode('`', $previous_rooms);
-        $filePath = $_SESSION['info'][2];
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
