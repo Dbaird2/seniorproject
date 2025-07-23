@@ -6,15 +6,15 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $fileTmpPath = $_FILES['file']['tmp_name'];
-    $fileName = $_FILES['file']['name'];
-    $fileSize = $_FILES['file']['size'];
-    $fileType = $_FILES['file']['type'];
+    $file_tmp_path = $_FILES['file']['tmp_name'];
+    $file_name = $_FILES['file']['name'];
+    $file_size = $_FILES['file']['size'];
+    $file_type = $_FILES['file']['type'];
 
     $excel_sheet = false;
     $csv = false;
 
-    $file_type_check = substr($fileName, strlen($fileName) - 4);
+    $file_type_check = substr($file_name, strlen($file_name) - 4);
     if ($file_type_check == 'xlsx' || $file_type_check == '.xls') {
         $excel_sheet = true;
     } 
@@ -22,19 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $csv = true;
     }
 
-    $uploadDir = 'uploads/';
+    $upload_dir = 'uploads/';
 
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
     }
 
-    $filePath = $uploadDir . basename($fileName);
+    $file_path = $upload_dir . basename($file_name);
 
-    if (move_uploaded_file($fileTmpPath, $filePath)) {
+    if (move_uploaded_file($file_tmp_path, $file_path)) {
     } else {
     }
     if ($excel_sheet) {
-        $spreadsheet = IOFactory::load($filePath);
+        $spreadsheet = IOFactory::load($file_path);
         $worksheet = $spreadsheet->getActiveSheet();
         //$data = $worksheet->toArray();
         $data = $worksheet->toArray();
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $_SESSION['saved_tags'] = [];
             unset($_SESSION['data']);
             $_SESSION['data'] = array_values($data);
-            $_SESSION['info'] = [$highest_row, $highest_col, $filePath];
+            $_SESSION['info'] = [$highest_row, $highest_col, $filePath, $file_name];
             header('Location: auditing.php');
             exit();
         } else {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
     } 
     if ($csv) {
-        if (($handle = fopen($fileName, 'r')) !== FALSE) {
+        if (($handle = fopen($file_name, 'r')) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                 $num = count($data);
                 echo "<p> $num fields in line $row: <br /></p>\n";

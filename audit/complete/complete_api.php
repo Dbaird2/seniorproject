@@ -39,7 +39,7 @@ try {
         $check_stmt->execute([$dept]);
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
-            $audit_id = (int)$result['id'] ?? NULL;
+            $audit_id = (int)$result['id'] ?? 1;
         }
         if ($audit_id === NULL) {
             $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id ORDER BY finished_at";

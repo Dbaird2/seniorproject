@@ -87,6 +87,7 @@ foreach ($data as &$row) {
     unset($row);
 }
 
+$file_name = $_SESSION['info'][3];
 $file_path = $_SESSION['info'][2];
 if (isset($_POST['download'])) {
 
@@ -447,7 +448,7 @@ const previousInput = Array.from(document.getElementsByName('previousInputContai
 const previousTime = Array.from(document.getElementsByName('previousTime[]')).map(i => i.value);
 const previousNote = Array.from(document.getElementsByName('previousNote[]')).map(i => i.value);
 const previousRm = Array.from(document.getElementsByName('previousRms[]')).map(i => i.value);
-const dept_to_save = <?= json_encode($file_path) ?>;
+const dept_to_save = <?= json_encode($file_name) ?>;
 console.log(dept_to_save);
 tag = [];
 room = [];
