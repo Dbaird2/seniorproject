@@ -83,6 +83,21 @@ function asset_layout($result, $header_true, $row_num)
                                 echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                             } ?>
                 </tbody>
+
+            <?php } ?>
+            </table>
+            <?php
+            foreach ($result as $row) {
+                $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+                $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
+                $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+                $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
+                $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
+                $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+                $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
+                $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+                $room_loc = htmlspecialchars($row['room_loc' ?? ''], ENT_QUOTES);
+            ?>
                 <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
@@ -132,8 +147,9 @@ function asset_layout($result, $header_true, $row_num)
                         </div>
                     </div>
                 </div>
-            <?php } ?>
-            </table>
+            <?php
+            }
+            ?>
         </div>
     </section>
 <?php
@@ -188,6 +204,15 @@ function bldg_layout($result, $header_true, $row_num)
                                 echo "<td class=" . $color_class . ">" . $bldg_id . "</td>";
                             } ?>
                 </tbody>
+
+            <?php } ?>
+            </table>
+            <?php foreach ($result as $row) {
+                $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
+                $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+                $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+                $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+            ?>
                 <div id="modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
@@ -222,8 +247,8 @@ function bldg_layout($result, $header_true, $row_num)
                         </div>
                     </div>
                 </div>
+
             <?php } ?>
-            </table>
         </div>
     </section>
 <?php
@@ -249,10 +274,10 @@ function dept_layout($result, $row_num)
                             $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
                             // Escape values for safety
-                            $dept_id = htmlspecialchars($row['dept_id'], ENT_QUOTES);
-                            $dept_name = htmlspecialchars($row['dept_name'], ENT_QUOTES);
-                            $custodian = htmlspecialchars($row['custodian'], ENT_QUOTES);
-                            $manager = htmlspecialchars($row['manager'], ENT_QUOTES);
+                            $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+                            $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
+                            $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+                            $manager = htmlspecialchars($row['manager'] ?? '', ENT_QUOTES);
 
                         ?>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
@@ -265,6 +290,17 @@ function dept_layout($result, $row_num)
                         <td class=<?= $color_class ?>><?= $custodian ?></td>
                         <td class=<?= $color_class ?>> <?= $manager ?></td>
                 </tbody>
+
+            <?php } ?>
+            </table>
+            <?php
+            foreach ($result as $row) {
+                // Escape values for safety
+                $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+                $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
+                $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+                $manager = htmlspecialchars($row['manager'] ?? '', ENT_QUOTES);
+            ?>
                 <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
@@ -300,7 +336,6 @@ function dept_layout($result, $row_num)
                     </div>
                 </div>
             <?php } ?>
-            </table>
         </div>
     </section>
 <?php
