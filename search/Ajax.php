@@ -267,7 +267,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
 
         if ($result) {
-            asset_layout($result, $header_true, $row_num);
         }
     } else if ($category === 'buildings') {
         $and = $bldg_id_where = $where = '';
@@ -343,27 +342,33 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
 
         if ($result) {
-            bldg_layout($result, $header_true, $row_num);
         }
     } else if ($category === 'departments') {
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
-        } else {
-            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
-            $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
-            $params[] =[":search"=>"%$tag%"];
             $count_stmt = $dbh->prepare($dept_count_query);
             $count_stmt->execute($params);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $params[] = [":offset"=>$offset];
+            $params[":offset"] = $query_offset;
+            $data_stmt = $dbh->prepare($dept_query);
+            $data_stmt->execute($params);
+            $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
+            $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
+            $params =[":search"=>"%$tag%"];
+            $count_stmt = $dbh->prepare($dept_count_query);
+            $count_stmt->execute($params);
+            $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
+
+            $params[":offset"] = $query_offset;
             $data_stmt = $dbh->prepare($dept_query);
             $data_stmt->execute($params);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         if ($result) {
-            dept_layout($result,$row_num);
         }
         $row_count = (int)$total_rows['rows'];
         
@@ -453,35 +458,14 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
-}
-?>
-<script> 
-function changeBoxSize(box_size) {
-    var resize = document.querySelectorAll('.excel-info');
-
-    resize.forEach(el => {
-        el.style.minWidth = box_size;
-    });
-}
-</script>
-<?php 
-$page_size = '0vw';
-$column_count = 2;
-foreach ($header_true as $count) {
-    $column_count++;
-}
-if ($column_count === 10) {$page_size = '6vw';}
-if ($column_count === 9) {$page_size = '7vw';}
-if ($column_count === 8) {$page_size = '7.5vw';}
-if ($column_count === 7) {$page_size = '9vw';}
-if ($column_count === 6) {$page_size = '10vw';}
-if ($column_count === 5) {$page_size = '12vw';}
-if ($column_count === 4) {$page_size = '15vw';}
-if ($column_count === 3) {$page_size = '20vw';}
-if ($column_count === 2)  {$page_size = '25vw';}
-
-# 2 columns = 25vw, 3 = 20, 4 = 15, 5 = 12, 6 = 10, 7 = 8, 8 = 7.5
-echo "<script>changeBoxSize('$page_size');</script>";
+        if ($category === 'assets') {
+            asset_layout($result, $header_true, $row_num);
+        } else if ($category === 'buildings') {
+            bldg_layout($result, $header_true, $row_num);
+        } else if ($category === 'departments') {
+            dept_layout($result,$row_num);
+        } else if ($category === 'users') {
+        }
 ?>
 </div>
 </body>

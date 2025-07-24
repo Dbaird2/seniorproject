@@ -92,7 +92,7 @@ function asset_layout($result, $header_true, $row_num)
                 $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
                 $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
                 $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
-                $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
+                $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
                 $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                 $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
                 $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
