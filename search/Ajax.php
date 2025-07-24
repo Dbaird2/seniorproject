@@ -354,7 +354,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
             $data_stmt = $dbh->prepare($dept_query);
-            $data_stmt->execute(":offset"=>$query_offset);
+            $data_stmt->execute([":offset"=>$query_offset]);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
@@ -381,7 +381,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
             $user_query = "SELECT username,email,last_login,f_name,l_name,unnest(dept_id) as dept_id FROM user_table LIMIT 50 OFFSET :offset";
             $data_stmt = $dbh->prepare($user_query);
-            $data_stmt->execute(":offset"=>$query_offset);
+            $data_stmt->execute([":offset"=>$query_offset]);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table, unnest(dept_id) as dept WHERE email ILIKE :search OR dept ILIKE :search";
