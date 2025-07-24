@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dataworks</title>
-  <link rel="stylesheet" href="/navbar.css">
+  <link rel="preload" href="/navbar.css" as="style">
 </head>
 <body>
     <div class="has-navbar">

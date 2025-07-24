@@ -18,7 +18,7 @@
     margin: 0;
     padding: 0;
     background-color: #24252A;
-    height:8vh;
+    height:64px;
     display:flex;
     justify-content: space-between;
     align-items:center;
@@ -81,6 +81,7 @@ body .has-navbar button {
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  min-height:50px;
 }
 
 .dropdown-content a {
@@ -109,6 +110,7 @@ body .has-navbar button {
   display: none;
   background-color: lightgray;
   min-width: 160px;
+  min-height:50px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   position: absolute;
@@ -127,8 +129,11 @@ body .has-navbar button {
 .dropdown2:hover .dropdown-content2 {display: block;}
 
 .has-navbar img {
-    margin-top: -3vh;
-    margin: -3vh -0.7vw -1vh;
+    height: 130px;
+    width: 180px;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
 }
 .dropdown h4 {
     margin: -0.5vh 0 0;
