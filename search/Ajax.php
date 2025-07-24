@@ -466,6 +466,6 @@ if ($total_pages > 2) { ?>
             dept_layout($result,$row_num);
         } else if ($category === 'users') {
         }
+}
 ?>
 </div>
-</body>
