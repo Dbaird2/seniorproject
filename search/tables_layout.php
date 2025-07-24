@@ -54,6 +54,7 @@ function asset_layout($result, $header_true, $row_num)
                             $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 
                         ?>
+<tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $safe_tag ?>"><?= $safe_tag ?></button>
@@ -82,9 +83,10 @@ function asset_layout($result, $header_true, $row_num)
                         <?php if (array_key_exists('asset_po', $header_true)) {
                                 echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                             } ?>
+</tr>
+            <?php } ?>
                 </tbody>
 
-            <?php } ?>
             </table>
             <?php
             foreach ($result as $row) {
@@ -190,6 +192,7 @@ function bldg_layout($result, $header_true, $row_num)
                             $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 
                         ?>
+<tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $room_tag ?>"><?= $room_tag ?></button>
@@ -203,9 +206,10 @@ function bldg_layout($result, $header_true, $row_num)
                         <?php if (array_key_exists('bldg_id', $header_true)) {
                                 echo "<td class=" . $color_class . ">" . $bldg_id . "</td>";
                             } ?>
+</tr>
+            <?php } ?>
                 </tbody>
 
-            <?php } ?>
             </table>
             <?php foreach ($result as $row) {
                 $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
@@ -280,6 +284,7 @@ function dept_layout($result, $row_num)
                             $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
                         ?>
+                       <tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $dept_id ?>"><?= $dept_id ?></button>
@@ -289,9 +294,10 @@ function dept_layout($result, $row_num)
 
                         <td class=<?= $color_class ?>><?= $custodian ?></td>
                         <td class=<?= $color_class ?>> <?= $manager ?></td>
+                    </tr>
+            <?php } ?>
                 </tbody>
 
-            <?php } ?>
             </table>
             <?php
             foreach ($result as $row) {
@@ -373,6 +379,7 @@ function user_layout($result, $row_num)
                             $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
                         ?>
+<tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $username ?>"><?= $username ?></button>
@@ -385,9 +392,10 @@ function user_layout($result, $row_num)
                         <td class=<?= $color_class ?>><?= $f_name ?></td>
                         <td class=<?= $color_class ?>><?= $l_name ?></td>
                         <td class=<?= $color_class ?>><?= $dept_id ?></td>
+</tr>
+            <?php } ?>
                 </tbody>
 
-            <?php } ?>
             </table>
             <?php
             foreach ($result as $row) {
