@@ -19,11 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['role'] = $user_check['u_role'];
                 $_SESSION['email'] = $user_check['email'];
                 $_SESSION['deptid'] = $user_check['dept_id'];
-?>
-                <script>
-                localStorage.removeItem('categories');
-                </script>
-<?php
                 $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE email = ?";
                 $stmt = $dbh->prepare($stmt);
                 if ($stmt->execute([$user_check['email']])) {
