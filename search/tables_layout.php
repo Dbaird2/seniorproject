@@ -340,4 +340,113 @@ function dept_layout($result, $row_num)
     </section>
 <?php
 }
+
+function user_layout($result, $row_num)
+{ ?>
+    <section class="is-ajax">
+        <div class="table-div">
+            <table id="asset-table">
+                <thead>
+                    <tr>
+                        <th class='row-even'>Row</th>
+                        <th class='row-even'>User Name</th>
+                        <th class='row-even'>Email</th>
+                        <th class='row-even'>Role</th>
+                        <th class='row-even'>Last Login</th>
+                        <th class='row-even'>First Name</th>
+                        <th class='row-even'>Last Name</th>
+                        <th class='row-even'>Department ID(s)</th>
+                    </tr>
+
+                </thead>
+                <tbody><?php
+                        foreach ($result as $row) {
+                            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+
+                            // Escape values for safety
+                            $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
+                            $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
+                            $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
+                            $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
+                            $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
+                            $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
+                            $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+
+                        ?>
+                        <td class=<?= $color_class ?>><?= $row_num++ ?></td>
+                        <td class=<?= $color_class ?>>
+                            <button id="button-9" data-toggle="modal" data-target="#modal<?= $username ?>"><?= $username ?></button>
+                        </td>
+
+                        <td class=<?= $color_class ?>><?= $email ?></td>
+
+                        <td class=<?= $color_class ?>><?= $u_role ?></td>
+                        <td class=<?= $color_class ?>> <?= $last_login ?></td>
+                        <td class=<?= $color_class ?>><?= $f_name ?></td>
+                        <td class=<?= $color_class ?>><?= $l_name ?></td>
+                        <td class=<?= $color_class ?>><?= $dept_id ?></td>
+                </tbody>
+
+            <?php } ?>
+            </table>
+            <?php
+            foreach ($result as $row) {
+                // Escape values for safety
+                $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
+                $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
+                $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
+                $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
+                $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
+                $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
+                $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+
+?>
+                <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
+                    <!-- Modal content -->
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel<?= $username; ?>">Department Details for <?= $username ?></h5>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="change_asset_info.php" method="post">
+                                    <label for="asset_tag">Username:</label>
+                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $username ?>">
+                                    <br>
+                                    <label for="name">Email:</label>
+                                    <input type="text" id="name" name="name" value="<?= $email ?>">
+                                    <br>
+
+                                    <label for="room_loc">User Role:</label>
+                                    <input type="text" id="room_loc" name="room_loc" value="<?= $u_role ?>">
+                                    <br>
+                                    <label for="location">Last Login:</label>
+                                    <input type="text" id="location" name="location" value="<?= $last_login ?>" readonly>
+                                    <br>
+                                    <label for="location">First Name:</label>
+                                    <input type="text" id="location" name="location" value="<?= $f_name ?>" readonly>
+                                    <br>
+                                    <label for="location">Last Name:</label>
+                                    <input type="text" id="location" name="location" value="<?= $l_name ?>" readonly>
+                                    <br>
+                                    <label for="location">Department ID(s):</label>
+                                    <input type="text" id="location" name="location" value="<?= $dept_id ?>" readonly>
+                                    <br>
+                                    <button type="submit">Update Room</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </section>
+<?php
+}
 ?>
