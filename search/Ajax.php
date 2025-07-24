@@ -361,84 +361,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $data_stmt = $dbh->prepare($dept_query);
             $data_stmt->execute($params);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
         if ($result) {
-            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
-?>
-<div class="table-div">
-  <table id="dept-table">
-    <thead>
-        <tr>
-            <th class='row-even'>Department ID</th>
-        <th class='row-even'>Department Name</th>
-         <th class='row-even'>Custodian</th>
-        <th class='row-even'>Manager</th> 
-        <th class='row-even'>Room Tag</th>
-        </tr>
-
-    </thead>
-    <tbody><?php 
-        foreach ($result as $row) {
-            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
-
-            // Escape values for safety
-            $dept_id = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
-            $dept_name = htmlspecialchars($row['asset_name']?? '', ENT_QUOTES);
-            $cust_name = htmlspecialchars($row['dept_id'] ??'', ENT_QUOTES);
-            $manager_name = htmlspecialchars($row['asset_price']??'', ENT_QUOTES);
-            $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
-            
-            ?>
-            <td class=<?=$color_class?>><?=$row_num++?></td>
-            <td class=<?=$color_class?>>
-                    <button id="button-9"  data-toggle="modal" data-target="#modal<?= $dept_id?>"><?= $dept_id?></button>
-                </td>
-                <td class=".$color_class.">".$safe_name."</td>
-                <td class=".$color_class.">".$safe_deptid."</td>
-                <td class=".$color_class.">".$safe_room."</td>
-                <td class=".$color_class.">".$room_loc."</td>
-                <td class=".$color_class.">".$bldg_name."</td>
-            </tbody>
-            <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
-                <!-- Modal content -->
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel<?= $safe_tag; ?>">Asset Details for <?= $safe_tag ?></h5>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="change_asset_info.php" method="post">
-                                <label for="asset_tag">Department ID:</label>
-                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $dept_id ?>" >
-                                <br>
-                                <label for="name">Department Name:</label>
-                                <input type="text" id="name" name="name" value="<?= $dept_name ?>" >
-                                <br>
-
-                                <label for="deptid">Custodian:</label>
-                                <input type="text" id="deptid" name="deptid" value="<?= $cust_name ?>" >
-                                <br>
-                                <label for="location">Manager Name:</label>
-                                <input type="text" id="location" name="location" value="<?= $manager_name ?>" >
-                                <br>
-                                <label for="serial">Serial Number:</label>
-                                <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
-                                <br>
-                                <button type="submit">Update Department</button>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
-  </table>
-  </div>
-  <?php
+            dept_layout($result,$row_num);
         }
         
 
