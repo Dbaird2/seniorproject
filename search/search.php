@@ -211,6 +211,7 @@ if ($search === NULL) {
                 <option value="assets">Assets</option>
                 <option value="buildings">Buildings</option>
                 <option value="departments">Departments</option>
+                <option value="users">Users</option>
             </select>
             <br>
             <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" />

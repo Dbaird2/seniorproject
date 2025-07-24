@@ -95,132 +95,15 @@ if (isset($_POST['audit'])) {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+include_once("tables_layout.php");
 ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="ajax.css">
 </head>
-<style>
-.is-ajax {
-            margin: 0;
-            height: 100vh;
-            font-size: calc(0.5vw + 0.4vh);
-        }
-        .is-ajax::-webkit-scrollbar {
-            width: 1em;
-        }
-
-        .is-ajax::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-        }
-
-        .is-ajax::-webkit-scrollbar-thumb {
-            background-color: darkgrey;
-            outline: 1px solid slategrey;
-        }
-        .row {
-            display: flex;
-            text-align: center;
-        }
-
-
-        #showExcel {
-            display: flex;
-            flex-wrap: wrap;
-            margin:auto;
-            text-align:center;
-            justify-content: left;
-            max-width: 80%;
-        }
-
-        .excel-info {
-            min-height: 4vh;
-            max-height: 4vh;
-            min-width: 8vw;
-            max-width: 15vw;
-            flex: 1;
-            justify-content: center;
-            border: 0.1vh solid #cce0ff;
-            text-align: center;
-            border-radius: 0px;
-            overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .inner-text {
-            font-size: calc(0.5vw + 0.4vh);
-            padding: 0.5vh 0.5vw;
-        }
-         .row-even {
-            background-color: #f0f8ff;
-        }
-
-        .row-odd {
-            background-color: #ffffff;
-        }
-        .asset-table {
-            font-size: calc(0.7vw + 0.4vh);
-
-            margin: auto; border: 1px solid #c0d6e4;
-            border-collapse: collapse;
-        }
-        .is-ajax th {
-            font-size: calc(0.7vw + 0.4vh);
-            color:#2c3e50;
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        .is-ajax td {
-            font-size: calc(0.6vw + 0.4vh);
-            font-weight: 500;
-            color:#2c3e50;
-            padding: 0 5px 15px;
-            border: 1px solid #ddd;
-            text-align: center;
-
-        }
-        .table-div {
-            display:flex;
-            justify-content: center;
-        }
-        #button-9 {
-            appearance: button;
-            backface-visibility: hidden;
-            background-color: #405cf5;
-            border-radius: 6px;
-            border-width: 0;
-            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
-            box-sizing: border-box;
-            color: #fff;
-            cursor: pointer;
-            font-size: calc(0.6vw + 0.4vh);
-            height: 44px;
-            line-height: 1.15;
-            margin: 12px 0 0;
-            outline: none;
-            overflow: hidden;
-            padding: 0 25px;
-            position: relative;
-            text-align: center;
-            text-transform: none;
-            transform: translateZ(0);
-            transition: all .2s,box-shadow .08s ease-in;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-
-        #button-9:disabled {
-            cursor: default;
-        }
-        #button-9:focus {
-            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
-        }
-        </style>
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
 
@@ -253,6 +136,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //  GET QUERY OFFSET
     $query_offset = max(0, (int)($offset - 1)) * 50;
+    $row_num = isset($query_offset) ? $query_offset + 1 : 1;
+
     $result = [];
 //-------------------------------------------------------------------------
 
@@ -378,133 +263,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_count->execute($params2);
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
         }
-        /*
-            echo "<br>" . $query ."<br>";
-        echo "<pre><br>";
-        echo "All params: ";
-        var_dump($q_all_params);
-        echo "All count params: ";
-        var_dump($q_c_params);
-        echo "Search params: ";
-        var_dump($params);
-        echo "Search count params: ";
-        var_dump($params2);
-        echo "<br></pre>";
-         */
         $row_count = (int)$total_rows['rows'];
 
-        $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
         if ($result) {
-            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
-?>
-<body>
-<div class="is-ajax">
-<div class="table-div">
-  <table id="asset-table">
-    <thead>
-        <tr>
-            <th class='row-even'>Row</th>
-        <th class='row-even'>Asset Tag</th>
-        <?php if(array_key_exists('asset_name', $header_true)){echo "<th class='row-even'>Description</th>";}
-        if(array_key_exists('dept_id', $header_true)) {echo "<th class='row-even'>Department</th>";} 
-        if(array_key_exists('room_tag', $header_true)) {echo "<th class='row-even'>Room Tag</th>";}
-        if(array_key_exists('room_loc', $header_true)) {echo "<th class='row-even'>Room Number</th>";}
-        if(array_key_exists('room_loc', $header_true)) {echo "<th class='row-even'>Building Name</th>";}
-        if(array_key_exists('asset_sn', $header_true)) {echo "<th class='row-even'>Serial Number</th>";}
-        if(array_key_exists('asset_price', $header_true)) {echo "<th class='row-even'>Price</th>";}
-        if(array_key_exists('asset_po', $header_true)) {echo "<th class='row-even'>Purchase Order</th>";}?>
-        </tr>
-
-    </thead>
-    <tbody><?php 
-/*
-            echo "<br><pre>";
-            echo "<h2> VAR DUMP ON RESULT: </h2>";
-            var_dump($result);
-            echo "</pre><br>";
- */
-        foreach ($result as $row) {
-            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
-
-            // Escape values for safety
-            $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
-            $safe_name = htmlspecialchars($row['asset_name']?? '', ENT_QUOTES);
-            $safe_deptid = htmlspecialchars($row['dept_id'] ??'', ENT_QUOTES);
-            $safe_price = htmlspecialchars($row['asset_price']??'', ENT_QUOTES);
-            $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
-            $safe_room = htmlspecialchars($row['room_tag'] ??'', ENT_QUOTES);
-            $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
-            $bldg_name = htmlspecialchars($row['bldg_name'] ??'', ENT_QUOTES);
-            $room_loc = htmlspecialchars($row['room_loc']??'', ENT_QUOTES);
-            
-            ?>
-            <td class=<?=$color_class?>><?=$row_num++?></td>
-            <td class=<?=$color_class?>>
-                    <button id="button-9"  data-toggle="modal" data-target="#modal<?= $safe_tag?>"><?= $safe_tag?></button>
-                </td>
-                <?php if(array_key_exists('asset_name', $header_true)) {echo "<td class=".$color_class.">".$safe_name."</td>";}?>
-                <?php if(array_key_exists('dept_id', $header_true)) {echo "<td class=".$color_class.">".$safe_deptid."</td>";}?>
-                <?php if(array_key_exists('room_tag', $header_true)) {echo "<td class=".$color_class.">".$safe_room."</td>";}?>
-                <?php if(array_key_exists('room_loc', $header_true)) {echo "<td class=".$color_class.">".$room_loc."</td>";}?>
-                <?php if(array_key_exists('room_loc', $header_true)) {echo "<td class=".$color_class.">".$bldg_name."</td>";}?>
-                <?php if(array_key_exists('asset_sn', $header_true)) {echo "<td class=".$color_class.">".$safe_serial."</td>";}?>
-                <?php if(array_key_exists('asset_price', $header_true)) {echo "<td class=".$color_class.">".$safe_price."</td>";}?>
-                <?php if(array_key_exists('asset_po', $header_true)) {echo "<td class=".$color_class.">".$safe_po."</td>";}?>
-            </tbody>
-            <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
-                <!-- Modal content -->
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel<?= $safe_tag; ?>">Asset Details for <?= $safe_tag ?></h5>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="change_asset_info.php" method="post">
-                                <label for="asset_tag">Asset Tag:</label>
-                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" >
-                                <br>
-                                <label for="name">Asset Name:</label>
-                                <input type="text" id="name" name="name" value="<?= $safe_name ?>" >
-                                <br>
-
-                                <label for="deptid">Department ID:</label>
-                                <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" >
-                                <br>
-                                <label for="location">Room Tag:</label>
-                                <input type="text" id="location" name="location" value="<?= $safe_room ?>" >
-                                <br>
-                                <label for="serial">Serial Number:</label>
-                                <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
-                                <br>
-                                <label for="price">Price:</label>
-                                <input type="number" id="price" name="price" value="<?= $safe_price ?>">
-                                <br>
-                                <label for="po">Purchase Order:</label>
-                                <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
-                                <br>
-                                <label for="status">Status:</label>
-                                <select id="status" name="status">
-                                    <option value="in_service">In Service</option>
-                                    <option value="disposed">Disposed</option>
-                                </select>
-                                <br>
-                                <button type="submit">Update Asset</button>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
-  </table>
-  </div>
-  <?php
+            asset_layout($result, $header_true, $row_num);
         }
     } else if ($category === 'buildings') {
         $and = $bldg_id_where = $where = '';
@@ -578,110 +341,110 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $row_count = (int)$total_rows['rows'];
 
-        $row_num = isset($query_offset) ? $query_offset + 1 : 1;
 
         if ($result) {
-            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
-            echo "<section id='showExcel'>";
-            echo "<div class='row'>";
-            echo "<div id='showExcel'  class='search-results'>";
-?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$row_num\")'>
-                    <strong>Row</strong>
-                </div>
-        <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                    <strong>Room Tag Number</strong>
-                </div>
-<?php if (array_key_exists('bldg_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <strong>Building Name</strong>
-                </div>
-<?php }
- if (array_key_exists('room_loc', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <strong>Room Number/Name</strong>
-                </div>
-<?php }
- if (array_key_exists('bldg_id', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                   <strong>Building ID</strong>
-                </div>
-<?php
- }
-            foreach ($result as $row) {
-                $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+            bldg_layout($result, $header_true, $row_num);
+        }
+    } else if ($categories === 'departments') {
+        if ($search === 'ALL') {
+            $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
+            $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
+        } else {
+            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
+            $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
+            $params[] =[":search"=>"%$search%"];
+            $count_stmt = $dbh->prepare($dept_count_query);
+            $count_stmt->execute($params);
+            $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Escape values for safety
-                $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
-                $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);    
-                $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);  
+            $params[] = [":offset"=>$offset];
+            $data_stmt = $dbh->prepare($dept_query);
+            $data_stmt->execute($params);
+            $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($result) {
+            $color_class = ($row_num % 2 === 0) ? 'row-odd' : 'row-even';
 ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <strong>
-                    <?= $row_num++ ?>
-                    </strong>
-                </div>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_tag\")'>
-                <strong>
-                    <button data-toggle="modal" data-target="#modal<?= $room_tag?>"><?= $room_tag?></button>
-                </strong>
-                </div>
-<?php 
- if (array_key_exists('bldg_name', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_name\")'>
-                    <?= $bldg_name ?>
-                </div>
-<?php }
- if (array_key_exists('room_loc', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_deptid\")'>
-                    <?= $room_num ?>
-                </div>
-<?php }
- if (array_key_exists('bldg_id', $header_true)) { ?>
-                <div class='<?=$color_class?> excel-info' onclick='fill(\"$safe_room\")'>
-                    <?= $bldg_id ?>
-                </div>
-<?php } ?>
-<div id="modal<?=$room_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
+<div class="table-div">
+  <table id="dept-table">
+    <thead>
+        <tr>
+            <th class='row-even'>Department ID</th>
+        <th class='row-even'>Department Name</th>
+         <th class='row-even'>Custodian</th>
+        <th class='row-even'>Manager</th> 
+        <th class='row-even'>Room Tag</th>
+        </tr>
+
+    </thead>
+    <tbody><?php 
+        foreach ($result as $row) {
+            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+
+            // Escape values for safety
+            $dept_id = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+            $dept_name = htmlspecialchars($row['asset_name']?? '', ENT_QUOTES);
+            $cust_name = htmlspecialchars($row['dept_id'] ??'', ENT_QUOTES);
+            $manager_name = htmlspecialchars($row['asset_price']??'', ENT_QUOTES);
+            $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
+            
+            ?>
+            <td class=<?=$color_class?>><?=$row_num++?></td>
+            <td class=<?=$color_class?>>
+                    <button id="button-9"  data-toggle="modal" data-target="#modal<?= $dept_id?>"><?= $dept_id?></button>
+                </td>
+                <td class=".$color_class.">".$safe_name."</td>
+                <td class=".$color_class.">".$safe_deptid."</td>
+                <td class=".$color_class.">".$safe_room."</td>
+                <td class=".$color_class.">".$room_loc."</td>
+                <td class=".$color_class.">".$bldg_name."</td>
+            </tbody>
+            <div id="modal<?=$safe_tag?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                 <!-- Modal content -->
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel<?= $room_tag; ?>">Room Details for <?= $room_tag ?></h5>
+                            <h5 class="modal-title" id="modalLabel<?= $safe_tag; ?>">Asset Details for <?= $safe_tag ?></h5>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <form action="change_asset_info.php" method="post">
-                                <label for="asset_tag">Building ID:</label>
-                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $bldg_id ?>" >
+                                <label for="asset_tag">Department ID:</label>
+                                <input type="text" id="asset_tag" name="asset_tag" value="<?= $dept_id ?>" >
                                 <br>
-                                <label for="name">Building Name:</label>
-                                <input type="text" id="name" name="name" value="<?= $bldg_name ?>" >
+                                <label for="name">Department Name:</label>
+                                <input type="text" id="name" name="name" value="<?= $dept_name ?>" >
                                 <br>
 
-                                <label for="room_loc">Room Number/Name:</label>
-                                <input type="text" id="room_loc" name="room_loc" value="<?= $room_num ?>" >
+                                <label for="deptid">Custodian:</label>
+                                <input type="text" id="deptid" name="deptid" value="<?= $cust_name ?>" >
                                 <br>
-                                <label for="location">Room Tag:</label>
-                                <input type="text" id="location" name="location" value="<?= $room_tag ?>" >
+                                <label for="location">Manager Name:</label>
+                                <input type="text" id="location" name="location" value="<?= $manager_name ?>" >
                                 <br>
-                                <button type="submit">Update Room</button>
+                                <label for="serial">Serial Number:</label>
+                                <input type="text" id="serial" name="serial" value="<?= $safe_serial ?>" >
+                                <br>
+                                <button type="submit">Update Department</button>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
-<?php
-            }
-            echo "</div></div>";
-            echo "</section>";
+            <?php } ?>
+  </table>
+  </div>
+  <?php
         }
+        
+
+
+    } else if ($categories === 'users') {
+
     }
 ?>
 

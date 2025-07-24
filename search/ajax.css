@@ -1,0 +1,107 @@
+.is-ajax {
+    margin: 0;
+    height: 100vh;
+    font-size: calc(0.5vw + 0.4vh);
+}
+.is-ajax::-webkit-scrollbar {
+    width: 1em;
+}
+
+.is-ajax::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.is-ajax::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+.row {
+    display: flex;
+    text-align: center;
+}
+
+.excel-info {
+    min-height: 4vh;
+    max-height: 4vh;
+    min-width: 8vw;
+    max-width: 15vw;
+    flex: 1;
+    justify-content: center;
+    border: 0.1vh solid #cce0ff;
+    text-align: center;
+    border-radius: 0px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.inner-text {
+    font-size: calc(0.5vw + 0.4vh);
+    padding: 0.5vh 0.5vw;
+}
+    .row-even {
+    background-color: #f0f8ff;
+}
+
+.row-odd {
+    background-color: #ffffff;
+}
+.asset-table {
+    font-size: calc(0.7vw + 0.4vh);
+
+    margin: auto; 
+    border: 1px solid #c0d6e4;
+    border-collapse: collapse;
+}
+.is-ajax th {
+    font-size: calc(0.7vw + 0.4vh);
+    color:#2c3e50;
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+.is-ajax td {
+    font-size: calc(0.6vw + 0.4vh);
+    font-weight: 500;
+    color:#2c3e50;
+    padding: 0 5px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+
+}
+.table-div {
+    display:flex;
+    justify-content: center;
+}
+#button-9 {
+    appearance: button;
+    backface-visibility: hidden;
+    background-color: #405cf5;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-size: calc(0.6vw + 0.4vh);
+    height: 44px;
+    line-height: 1.15;
+    margin: 12px 0 0;
+    outline: none;
+    overflow: hidden;
+    padding: 0 25px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transform: translateZ(0);
+    transition: all .2s,box-shadow .08s ease-in;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+#button-9:disabled {
+    cursor: default;
+}
+#button-9:focus {
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+}

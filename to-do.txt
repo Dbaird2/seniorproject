@@ -1,25 +1,19 @@
 add-asset.php                                           -- working on(finished?)
 
-mobile-api/insert.php, get-info.php, etc
-
-change_user.php                       
-
-audit save to database: only need last 2 audit per dept -- working on(finished?)
-
 add more responses for chatbot
 
 fix buildings search                                   
 
-add department values to db --working on
-
-add searching by departments
+add searching by departments 
 
 add csv support
 
-add python for ML (probably for department waste)
-
 complete bulk adding    --working on
 
-make editing of dept,bldg,asset in Ajax a thing, waiting on kuali
+make editing of dept,bldg,asset,(admin)user in Ajax.php
 
 add delete features for assets --working on (bldg-department done)
+
+
+can't/shouldn't do for a while
+ML python/php
