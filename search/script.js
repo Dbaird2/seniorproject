@@ -198,7 +198,7 @@ $(document).ready(function() {
         $('#offset').val(1);
     });
     $('#search-btn').on("click", function() {
-        $($offset).val(1);
+        $('#offset').val(1);
     });
 });
 function removeItemsFromLocalStorage() {
