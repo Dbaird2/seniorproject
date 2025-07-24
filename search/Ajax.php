@@ -344,6 +344,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($result) {
         }
     } else if ($category === 'departments') {
+        echo "<script>removeCheckbox('.filter-assets');</script>";
+        echo "<script>removeCheckbox('.filter-bldg');</script>";
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -355,13 +357,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $data_stmt->execute(":offset"=>$query_offset);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
             $params =[":search"=>"%$tag%"];
             $count_stmt = $dbh->prepare($dept_count_query);
             $count_stmt->execute($params);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
+            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
             $params[":offset"] = $query_offset;
             $data_stmt = $dbh->prepare($dept_query);
             $data_stmt->execute($params);
@@ -369,25 +371,26 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $row_count = (int)$total_rows['rows'];
     } else if ($category === 'users') {
+        echo "<script>removeCheckbox('.filter-assets');</script>";
+        echo "<script>removeCheckbox('.filter-bldg');</script>";
         if ($tag === 'ALL') {
-            $user_query = "SELECT username,email,last_login,f_name,l_name,unnest(dept_id) as dept_id FROM user_table LIMIT 50 OFFSET :offset";
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);
             $count_stmt->execute();
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $params[":offset"] = $query_offset;
+            $user_query = "SELECT username,email,last_login,f_name,l_name,unnest(dept_id) as dept_id FROM user_table LIMIT 50 OFFSET :offset";
             $data_stmt = $dbh->prepare($user_query);
-            $data_stmt->execute($params);
+            $data_stmt->execute(":offset"=>$query_offset);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            $user_query = "select username,email,last_login,f_name,l_name,unnest(dept_id) as dept_id from user_table, unnest(dept_id) as dept where dept ILIKE :search OR email ILIKE :search LIMIT 50 OFFSET :offset";
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table, unnest(dept_id) as dept WHERE email ILIKE :search OR dept ILIKE :search";
-            $params =[":search"=>"%$tag%"];
+            $params = [":search"=>"%$tag%"];
             $count_stmt = $dbh->prepare($user_count_query);
-            $count_stmt->execute($params);
+            $count_stmt->execute([":search"=>"%$tag%"]);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
+            $user_query = "select username,email,last_login,f_name,l_name,unnest(dept_id) as dept_id from user_table, unnest(dept_id) as dept where dept ILIKE :search OR email ILIKE :search LIMIT 50 OFFSET :offset";
             $params[":offset"] = $query_offset;
             $data_stmt = $dbh->prepare($user_query);
             $data_stmt->execute($params);
