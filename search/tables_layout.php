@@ -1,5 +1,5 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="ajax.css">
@@ -47,15 +47,15 @@ function asset_layout($result, $header_true, $row_num)
                             $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
                             // Escape values for safety
-                            $safe_tag = htmlspecialchars($row['asset_tag'], ENT_QUOTES);
-                            $safe_name = htmlspecialchars($row['asset_name'], ENT_QUOTES);
-                            $safe_deptid = htmlspecialchars($row['dept_id'], ENT_QUOTES);
-                            $safe_price = htmlspecialchars($row['asset_price'], ENT_QUOTES);
-                            $safe_po = htmlspecialchars($row['po'], ENT_QUOTES);
-                            $safe_room = htmlspecialchars($row['room_tag'], ENT_QUOTES);
-                            $safe_serial = htmlspecialchars($row['serial_num'], ENT_QUOTES);
-                            $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
-                            $room_loc = htmlspecialchars($row['room_loc'], ENT_QUOTES);
+                            $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+                            $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
+                            $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+                            $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
+                            $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
+                            $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+                            $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
+                            $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+                            $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 
                         ?>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
