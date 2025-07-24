@@ -348,7 +348,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
             $count_stmt = $dbh->prepare($dept_count_query);
-            $count_stmt->execute($params);
+            $count_stmt->execute();
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
             $params[":offset"] = $query_offset;
