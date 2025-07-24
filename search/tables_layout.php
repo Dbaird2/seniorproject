@@ -277,7 +277,7 @@ function dept_layout($result, $row_num)
                             $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
                             $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
                             $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-                            $manager = htmlspecialchars($row['manager'] ?? '', ENT_QUOTES);
+                            $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
                         ?>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
@@ -299,7 +299,7 @@ function dept_layout($result, $row_num)
                 $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
                 $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
                 $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-                $manager = htmlspecialchars($row['manager'] ?? '', ENT_QUOTES);
+                $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
             ?>
                 <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
                     <!-- Modal content -->
