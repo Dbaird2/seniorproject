@@ -98,7 +98,7 @@ function asset_layout($result, $header_true, $row_num)
                 $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                 $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
                 $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                $room_loc = htmlspecialchars($row['room_loc' ?? ''], ENT_QUOTES);
+                $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
             ?>
                 <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->

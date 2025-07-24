@@ -198,6 +198,9 @@ $(document).ready(function() {
     $('#search').on('blur', function() {
         $('#offset').val(1);
     });
+    $('#search-btn').on("click", function() {
+        $($offset).val(1);
+    });
 });
 function removeItemsFromLocalStorage() {
         localStorage.removeItem('price-value');
