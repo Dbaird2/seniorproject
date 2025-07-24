@@ -346,13 +346,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             bldg_layout($result, $header_true, $row_num);
         }
     } else if ($category === 'departments') {
-        if ($search === 'ALL') {
+        if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
         } else {
             $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search";
-            $params[] =[":search"=>"%$search%"];
+            $params[] =[":search"=>"%$tag%"];
             $count_stmt = $dbh->prepare($dept_count_query);
             $count_stmt->execute($params);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);

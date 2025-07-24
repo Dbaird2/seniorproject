@@ -168,10 +168,10 @@ function bldg_layout($result, $header_true, $row_num)
                             $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
                             // Escape values for safety
-                            $bldg_id = htmlspecialchars($row['bldg_id'], ENT_QUOTES);
-                            $bldg_name = htmlspecialchars($row['bldg_name'], ENT_QUOTES);
-                            $room_num = htmlspecialchars($row['room_loc'], ENT_QUOTES);
-                            $room_tag = htmlspecialchars($row['room_tag'], ENT_QUOTES);
+                            $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
+                            $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+                            $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+                            $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 
                         ?>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
