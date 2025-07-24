@@ -126,7 +126,6 @@ $(document).ready(function() {
     });
     $("#search").ready(searchTrigger); 
     $("#categories").change(searchTrigger);
-    $("#categories").ready(searchTrigger);
     $('#search-btn').click(searchTrigger);
 
     $('#audit-btn').click(auditTrigger);
