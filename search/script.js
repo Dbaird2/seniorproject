@@ -32,43 +32,42 @@ function searchTrigger() {
         //$("#display").html("");
 
     }
-    if (name.length < 3) {
-        return;
-    }
-    //AJAX is called.
-    $.ajax({
-        //AJAX type is "Post".
-        type: "POST",
-        //Data will be sent to "ajax.php".
-        url: "Ajax.php",
-        //Data, that will be sent to "ajax.php".
-        data: {
-            offset: offset,
-            categories: categories,
-            statusFilter: statusFilter,
-            box_name: box_name,
-            asset_price: price,
-            price_operation: price_operation,
-            dept_id: dept_id,
-            dept_id_search: dept_id_search,
-            room_tag: room_tag,
-            room_loc: room_loc,
-            asset_sn: asset_sn,
-            asset_price_check: asset_price,
-            asset_po: asset_po,
-            bldg_id: bldg_id,
-            bldg_name: bldg_name,
-            bldg_id_val: bldg_id_val,
+    if (name.length >= 3) {
+        //AJAX is called.
+        $.ajax({
+            //AJAX type is "Post".
+            type: "POST",
+            //Data will be sent to "ajax.php".
+            url: "Ajax.php",
+            //Data, that will be sent to "ajax.php".
+            data: {
+                offset: offset,
+                categories: categories,
+                statusFilter: statusFilter,
+                box_name: box_name,
+                asset_price: price,
+                price_operation: price_operation,
+                dept_id: dept_id,
+                dept_id_search: dept_id_search,
+                room_tag: room_tag,
+                room_loc: room_loc,
+                asset_sn: asset_sn,
+                asset_price_check: asset_price,
+                asset_po: asset_po,
+                bldg_id: bldg_id,
+                bldg_name: bldg_name,
+                bldg_id_val: bldg_id_val,
 
-            //Assigning value of "name" into "search" variable.
-            search: search
-        },
-        //If result found, this funtion will be called.
-        success: function(html) {
-            //Assigning result to "display" div in "search.php" file.
-            $("#display").html(html).show();
-        }
-    });
+                //Assigning value of "name" into "search" variable.
+                search: search
+            },
+            //If result found, this funtion will be called.
+            success: function(html) {
+                //Assigning result to "display" div in "search.php" file.
+                $("#display").html(html).show();
+            }
+        });
+    }
 }
 function auditTrigger() {
     var search = $('#search').val();
@@ -120,7 +119,11 @@ function auditTrigger() {
 
 $(document).ready(function() {
     //On pressing a key on "Search box" in "search.php" file. This function will be called.
-    $("#search").keyup(searchTrigger);
+    $("#search").on("keydown", function(e) {
+        if (e.key === "Enter") {
+            searchTrigger();
+        }
+    });
     $("#search").ready(searchTrigger); 
     $("#categories").change(searchTrigger);
     $("#categories").ready(searchTrigger);
@@ -192,7 +195,7 @@ $(document).ready(function() {
         localStorage.setItem('asset_name', $(this).is(':checked'));
     });
     */
-    $('#search').on('input', function() {
+    $('#search').on('blur', function() {
         $('#offset').val(1);
     });
 });
