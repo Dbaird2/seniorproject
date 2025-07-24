@@ -345,7 +345,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($result) {
             bldg_layout($result, $header_true, $row_num);
         }
-    } else if ($categories === 'departments') {
+    } else if ($category === 'departments') {
         if ($search === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -365,10 +365,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         if ($result) {
             dept_layout($result,$row_num);
         }
+        $row_count = (int)$total_rows['rows'];
         
 
 
-    } else if ($categories === 'users') {
+    } else if ($category === 'users') {
 
     }
 ?>

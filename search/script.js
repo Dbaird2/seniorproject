@@ -203,8 +203,6 @@ function removeItemsFromLocalStorage() {
         localStorage.removeItem('asset_price');
 }
 function addCheckboxes(jasset_class) {   
-    console.log("Showing:", jasset_class, $(jasset_class).length); // debug
- 
     $(jasset_class).show();
 }
 function keepCheckboxValues(asset_name, jasset_id) {
