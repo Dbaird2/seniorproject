@@ -119,6 +119,13 @@ function auditTrigger() {
 
 $(document).ready(function() {
     //On pressing a key on "Search box" in "search.php" file. This function will be called.
+    $('#search').on('blur', function() {
+        $('#offset').val(1);
+    });
+    $('#search-btn').click(function() {
+        $('#offset').val(1);
+    });
+
     $("#search").on("keydown", function(e) {
         if (e.key === "Enter") {
             searchTrigger();
@@ -194,12 +201,6 @@ $(document).ready(function() {
         localStorage.setItem('asset_name', $(this).is(':checked'));
     });
     */
-    $('#search').on('blur', function() {
-        $('#offset').val(1);
-    });
-    $('#search-btn').on("click", function() {
-        $('#offset').val(1);
-    });
 });
 function removeItemsFromLocalStorage() {
         localStorage.removeItem('price-value');

@@ -18,17 +18,8 @@ include_once("../navbar.php");
     * {
         margin: 0;
     }   
-    .is-search {
-            margin: 0;
-            height: 100vh;
-            font-size: calc(0.5vw + 0.4vh);
-            width: 100%;
-            position: absolute;
-            top: 8vh;
-    }
 
     .asset-search {
-        margin-top: 2vh;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         background-color: white;
         border: lightgray 1px solid;
