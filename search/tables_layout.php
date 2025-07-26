@@ -4,7 +4,7 @@
 function asset_layout($result, $header_true, $row_num)
 {
 ?>
-    <section class="is-ajax">
+    <section class="is-ajax" style="display:none;">
         <div class="table-div">
             <table id="asset-table">
                 <thead>
@@ -458,3 +458,10 @@ function user_layout($result, $row_num)
 <?php
 }
 ?>
+<script>
+window.addEventListener("load", function() {
+   //document.getElementbyId("loader").style.display="none";
+    const show_result = document.querySelector(".is-ajax");
+    show_result.style.display = "block";
+);
+</script>

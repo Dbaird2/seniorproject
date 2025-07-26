@@ -184,8 +184,10 @@ foreach ($users as $key => $user) {
                 </div>
             </div>
         </div>
+        <section class="graphs">
             <div id="piechart" style="width: 700px; height: 400px;"></div>
             <div id="histogram" style="width: 1300px; height: 400px;"></div>
+        </section>
     </section>
 </div>
 </body>

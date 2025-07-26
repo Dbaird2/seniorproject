@@ -479,7 +479,6 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
-        echo "<div class='show-results' style='display:none;'>";
         if ($category === 'assets') {
             asset_layout($result, $header_true, $row_num);
         } else if ($category === 'buildings') {
@@ -489,13 +488,5 @@ if ($total_pages > 2) { ?>
         } else if ($category === 'users') {
             user_layout($result,$row_num);
         }
-        echo "</div>";
 }
 ?>
-<script>
-const show_result = document.querySelector(".show-results");
-show_result.addEventListener("load", function() {
-    //document.getElementbyId("loader").style.display="none";
-    show_result.style.display = "block";
-});
-</script>
