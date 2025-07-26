@@ -88,6 +88,10 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 
             </table>
 <?php
+    }
+?>
+    </section>
+<?php
     foreach ($result as $row) {
         $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
         $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
@@ -99,7 +103,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
         $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 ?>
-                <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
+                <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -148,10 +152,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                         </div>
                     </div>
                 </div>
-<?php
-    }
-?>
-    </section>
 <?php
 }
 
@@ -214,7 +214,7 @@ $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
 $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 ?>
-                <div id="modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
+                <div id="modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -302,7 +302,7 @@ foreach ($result as $row) {
         $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
         $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 ?>
-                <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
+                <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -402,7 +402,7 @@ foreach ($result as $row) {
         $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
 ?>
-                <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
+                <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -425,16 +425,16 @@ foreach ($result as $row) {
                                     <input type="text" id="room_loc" name="room_loc" value="<?= $u_role ?>">
                                     <br>
                                     <label for="location">Last Login:</label>
-                                    <input type="text" id="location" name="location" value="<?= $last_login ?>" readonly>
+                                    <input type="text" id="last_login" name="last_login" value="<?= $last_login ?>" readonly>
                                     <br>
                                     <label for="location">First Name:</label>
-                                    <input type="text" id="location" name="location" value="<?= $f_name ?>" readonly>
+                                    <input type="text" id="f_name" name="f_name" value="<?= $f_name ?>" readonly>
                                     <br>
                                     <label for="location">Last Name:</label>
-                                    <input type="text" id="location" name="location" value="<?= $l_name ?>" readonly>
+                                    <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
                                     <label for="location">Department ID(s):</label>
-                                    <input type="text" id="location" name="location" value="<?= $dept_id ?>" readonly>
+                                    <input type="text" id="dept_ids" name="dept_ids" value="<?= $dept_id ?>" readonly>
                                     <br>
                                     <button type="submit">Update Room</button>
                                 </form>
