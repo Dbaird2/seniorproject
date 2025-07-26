@@ -533,8 +533,7 @@ function handleLoad() {
     const results = document.getElementById("show-results");
     if (loader) loader.style.display = "none";
     if (results) results.style.display = "block";
-    console.log("Window loaded, switching
-        display...");
+    console.log("Window loaded, switching display...");
 }
 </script>
 </body>
