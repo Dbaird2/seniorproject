@@ -159,7 +159,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 function bldg_layout($result, $header_true, $row_num)
 {
 ?>
-    <section class="is-ajax" id="is-ajax">
+    <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -256,7 +256,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 
 function dept_layout($result, $row_num)
 { ?>
-    <section class="is-ajax" id="is-ajax">
+    <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -343,7 +343,7 @@ foreach ($result as $row) {
 
 function user_layout($result, $row_num)
 { ?>
-    <section class="is-ajax" id="is-ajax">
+    <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -372,7 +372,7 @@ foreach ($result as $row) {
     $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
 ?>
-<tr style="min-height:90px;>
+<tr style="min-height:90px;">
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $username ?>"><?= $username ?></button>
