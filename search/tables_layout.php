@@ -4,7 +4,7 @@
 function asset_layout($result, $header_true, $row_num)
 {
 ?>
-    <section class="is-ajax" id="is-ajax">
+    <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -152,6 +152,9 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
     }
 ?>
     </section>
+<script>
+document.getElementById('is-ajax').classList.add('loaded');
+</script>
 <?php
 }
 

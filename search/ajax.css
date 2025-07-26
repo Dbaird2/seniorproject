@@ -8,10 +8,6 @@
 .asset-table tr {
     min-height: 2.5rem;
 }
-.asset-table {
-    min-height: 600px;
-    min-width: 900px;
-}
 #is-ajax th {
     font-size: 0.8rem;
     color:#2c3e50;
@@ -30,12 +26,14 @@
 }
 .table-div {
 }
-#is-ajax {
+.is-ajax {
+    min-height: 600px;
+    min-width: 900px;
     place-items:center;
     opacity:0;
     transition: opacity 0.3s ease-in;
 }
-#is-ajax.loaded {
+.is-ajax.loaded {
     opacity: 1;
 }
 
