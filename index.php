@@ -45,7 +45,7 @@ try {
     } else {
         $weekly_changes = ['weekly_changes' => 0];
     }
-    $asset_type_data_q = "SELECT asset_type, COUNT(*) as count FROM assets GROUP BY asset_type";
+    $asset_type_data_q = "SELECT asset_type, COUNT(*) as count FROM asset_info GROUP BY asset_type";
     $asset_bldg_count_data_q = "SELECT  r.bldg_id, COUNT(*) as count FROM asset_info as a natural join room_table as r natural join bldg_table as b GROUP BY r.bldg_id";
     $type_stmt = $dbh->prepare($asset_type_data_q);
     $type_stmt->execute();
@@ -183,9 +183,9 @@ foreach ($users as $key => $user) {
 ?>
                 </div>
             </div>
+        </div>
             <div id="piechart" style="width: 700px; height: 400px;"></div>
             <div id="histogram" style="width: 1300px; height: 400px;"></div>
-        </div>
     </section>
 </div>
 </body>
