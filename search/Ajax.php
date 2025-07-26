@@ -426,7 +426,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 
     }
 ?>
-
+<body>
         <nav aria-label="Page navigation example">
   <ul class="pagination d-flex justify-content-center">
 <?php
@@ -521,6 +521,8 @@ if ($total_pages > 2) { ?>
 }
 ?>
 <script>
+    console.log("Script loaded");
+
 window.addEventListener("load", function () {
     const loader = document.querySelector(".loader");
     const results = document.getElementById("show-results");
@@ -530,3 +532,4 @@ window.addEventListener("load", function () {
 
 });
 </script>
+</body>
