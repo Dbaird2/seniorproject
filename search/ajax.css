@@ -62,4 +62,10 @@
     padding: 0 25px;
     min-width:90px;
 }
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+.modal {
+    z-index: 1050 !important;
+}
 
