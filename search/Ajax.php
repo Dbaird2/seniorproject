@@ -479,6 +479,7 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
+        echo "<div id='show-results' style='display:none;'>":
         if ($category === 'assets') {
             asset_layout($result, $header_true, $row_num);
         } else if ($category === 'buildings') {
@@ -488,5 +489,11 @@ if ($total_pages > 2) { ?>
         } else if ($category === 'users') {
             user_layout($result,$row_num);
         }
+        echo "</div>";
 }
 ?>
+<script>
+window.addEventListener("load", function () {
+    document.getElementById("show-results").style.display= "block";
+});
+</script>
