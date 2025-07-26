@@ -102,34 +102,6 @@ include_once("tables_layout.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-.loader {
-  width: 50px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 8px solid #514b82;
-  animation:
-    l20-1 0.8s infinite linear alternate,
-    l20-2 1.6s infinite linear;
-    place-self: center;
-}
-@keyframes l20-1{
-   0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
-   12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
-   25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
-   50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-   62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
-   75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
-   100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
-}
-@keyframes l20-2{ 
-  0%    {transform:scaleY(1)  rotate(0deg)}
-  49.99%{transform:scaleY(1)  rotate(135deg)}
-  50%   {transform:scaleY(-1) rotate(0deg)}
-  100%  {transform:scaleY(-1) rotate(-135deg)}
-}
-
-</style>
 </head>
 <?php
 if (isset($_POST['search']) || isset($_GET['search'])) {
@@ -507,8 +479,6 @@ if ($total_pages > 2) { ?>
   </ul>
 </nav>
 <?php 
-        echo "<div class='loader'></div>";
-        echo "<div id='show-results' style='display:none;'>";
         if ($category === 'assets') {
             asset_layout($result, $header_true, $row_num);
         } else if ($category === 'buildings') {
@@ -518,22 +488,6 @@ if ($total_pages > 2) { ?>
         } else if ($category === 'users') {
             user_layout($result,$row_num);
         }
-        echo "</div>";
 }
 ?>
-<script>
-if (document.readyState === "complete") {
-    handleLoad();
-} else {
-    window.addEventListener("load", handleLoad);
-}
-
-function handleLoad() {
-    const loader = document.querySelector(".loader");
-    const results = document.getElementById("show-results");
-    if (loader) loader.style.display = "none";
-    if (results) results.style.display = "block";
-    console.log("Window loaded, switching display...");
-}
-</script>
 </body>

@@ -1,7 +1,7 @@
 .is-ajax {
     margin: 0;
+    min-height:90vh;
     height: 100vh;
-    font-size: calc(0.5vw + 0.4vh);
 }
 .is-ajax::-webkit-scrollbar {
     width: 1em;
@@ -35,7 +35,7 @@
 }
 
 .inner-text {
-    font-size: calc(0.5vw + 0.4vh);
+    font-size: 0.8rem;
     padding: 0.5vh 0.5vw;
 }
     .row-even {
@@ -46,21 +46,24 @@
     background-color: #ffffff;
 }
 .asset-table {
-    font-size: calc(0.7vw + 0.4vh);
+    font-size: 0.8rem;
 
     margin: auto; 
     border: 1px solid #c0d6e4;
     border-collapse: collapse;
 }
+.asset-table tr {
+    min-height: 2.5rem;
+}
 .is-ajax th {
-    font-size: calc(0.7vw + 0.4vh);
+    font-size: 0.8rem;
     color:#2c3e50;
     padding: 10px 10px;
     border: 1px solid #ddd;
     text-align: left;
 }
 .is-ajax td {
-    font-size: calc(0.6vw + 0.4vh);
+    font-size:0.8rem;
     font-weight: 500;
     color:#2c3e50;
     padding: 0 5px 15px;
@@ -82,7 +85,7 @@
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
-    font-size: calc(0.6vw + 0.4vh);
+    font-size: 0.8rem;
     height: 44px;
     line-height: 1.15;
     margin: 12px 0 0;
