@@ -5,102 +5,101 @@ function asset_layout($result, $header_true, $row_num)
 {
 ?>
     <section class="is-ajax">
-        <div class="table-div">
             <table id="asset-table">
                 <thead>
                     <tr>
                         <th class='row-even'>Row</th>
                         <th class='row-even'>Asset Tag</th>
-                        <?php if (array_key_exists('asset_name', $header_true)) {
-                            echo "<th class='row-even'>Description</th>";
-                        }
-                        if (array_key_exists('dept_id', $header_true)) {
-                            echo "<th class='row-even'>Department</th>";
-                        }
-                        if (array_key_exists('room_tag', $header_true)) {
-                            echo "<th class='row-even'>Room Tag</th>";
-                        }
-                        if (array_key_exists('room_loc', $header_true)) {
-                            echo "<th class='row-even'>Room Number</th>";
-                        }
-                        if (array_key_exists('room_loc', $header_true)) {
-                            echo "<th class='row-even'>Building Name</th>";
-                        }
-                        if (array_key_exists('asset_sn', $header_true)) {
-                            echo "<th class='row-even'>Serial Number</th>";
-                        }
-                        if (array_key_exists('asset_price', $header_true)) {
-                            echo "<th class='row-even'>Price</th>";
-                        }
-                        if (array_key_exists('asset_po', $header_true)) {
-                            echo "<th class='row-even'>Purchase Order</th>";
-                        } ?>
+<?php if (array_key_exists('asset_name', $header_true)) {
+echo "<th class='row-even'>Description</th>";
+}
+if (array_key_exists('dept_id', $header_true)) {
+    echo "<th class='row-even'>Department</th>";
+}
+if (array_key_exists('room_tag', $header_true)) {
+    echo "<th class='row-even'>Room Tag</th>";
+}
+if (array_key_exists('room_loc', $header_true)) {
+    echo "<th class='row-even'>Room Number</th>";
+}
+if (array_key_exists('room_loc', $header_true)) {
+    echo "<th class='row-even'>Building Name</th>";
+}
+if (array_key_exists('asset_sn', $header_true)) {
+    echo "<th class='row-even'>Serial Number</th>";
+}
+if (array_key_exists('asset_price', $header_true)) {
+    echo "<th class='row-even'>Price</th>";
+}
+if (array_key_exists('asset_po', $header_true)) {
+    echo "<th class='row-even'>Purchase Order</th>";
+} ?>
                     </tr>
 
                 </thead>
                 <tbody><?php
-                        foreach ($result as $row) {
-                            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+    foreach ($result as $row) {
+        $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
-                            // Escape values for safety
-                            $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
-                            $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
-                            $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
-                            $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
-                            $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
-                            $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
-                            $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
-                            $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                            $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+        // Escape values for safety
+        $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+        $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
+        $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+        $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
+        $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
+        $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+        $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
+        $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+        $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 
-                        ?>
+?>
 <tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $safe_tag ?>"><?= $safe_tag ?></button>
                         </td>
-                        <?php if (array_key_exists('asset_name', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_name . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('dept_id', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_deptid . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('room_tag', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_room . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('room_loc', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $room_loc . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('room_loc', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $bldg_name . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('asset_sn', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_serial . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('asset_price', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_price . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('asset_po', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
-                            } ?>
+<?php if (array_key_exists('asset_name', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_name . "</td>";
+        } ?>
+<?php if (array_key_exists('dept_id', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_deptid . "</td>";
+} ?>
+<?php if (array_key_exists('room_tag', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_room . "</td>";
+} ?>
+<?php if (array_key_exists('room_loc', $header_true)) {
+echo "<td class=" . $color_class . ">" . $room_loc . "</td>";
+} ?>
+<?php if (array_key_exists('room_loc', $header_true)) {
+echo "<td class=" . $color_class . ">" . $bldg_name . "</td>";
+} ?>
+<?php if (array_key_exists('asset_sn', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_serial . "</td>";
+} ?>
+<?php if (array_key_exists('asset_price', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_price . "</td>";
+} ?>
+<?php if (array_key_exists('asset_po', $header_true)) {
+echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
+} ?>
 </tr>
             <?php } ?>
                 </tbody>
 
             </table>
-            <?php
-            foreach ($result as $row) {
-                $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
-                $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
-                $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
-                $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
-                $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
-                $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
-                $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
-                $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
-            ?>
-                <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
+<?php
+    foreach ($result as $row) {
+        $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+        $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
+        $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+        $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
+        $safe_po = htmlspecialchars($row['po'] ?? '', ENT_QUOTES);
+        $safe_room = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+        $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
+        $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+        $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+?>
+                <div id="hidden-modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -149,10 +148,9 @@ function asset_layout($result, $header_true, $row_num)
                         </div>
                     </div>
                 </div>
-            <?php
-            }
-            ?>
-        </div>
+<?php
+    }
+?>
     </section>
 <?php
 }
@@ -162,62 +160,61 @@ function bldg_layout($result, $header_true, $row_num)
 {
 ?>
     <section class="is-ajax">
-        <div class="table-div">
             <table id="asset-table">
                 <thead>
                     <tr>
                         <th class='row-even'>Row</th>
                         <th class='row-even'>Room Tag</th>
-                        <?php if (array_key_exists('bldg_name', $header_true)) {
-                            echo "<th class='row-even'>Building Name</th>";
-                        }
-                        if (array_key_exists('room_loc', $header_true)) {
-                            echo "<th class='row-even'>Room Number</th>";
-                        }
-                        if (array_key_exists('bldg_id', $header_true)) {
-                            echo "<th class='row-even'>Building ID</th>";
-                        }
-                        ?>
+<?php if (array_key_exists('bldg_name', $header_true)) {
+echo "<th class='row-even'>Building Name</th>";
+}
+if (array_key_exists('room_loc', $header_true)) {
+    echo "<th class='row-even'>Room Number</th>";
+}
+if (array_key_exists('bldg_id', $header_true)) {
+    echo "<th class='row-even'>Building ID</th>";
+}
+?>
                     </tr>
 
                 </thead>
                 <tbody><?php
-                        foreach ($result as $row) {
-                            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+foreach ($result as $row) {
+    $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
-                            // Escape values for safety
-                            $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
-                            $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                            $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
-                            $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+    // Escape values for safety
+    $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
+    $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+    $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+    $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 
-                        ?>
+?>
 <tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $room_tag ?>"><?= $room_tag ?></button>
                         </td>
-                        <?php if (array_key_exists('bldg_name', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $bldg_name . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('room_loc', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $room_num . "</td>";
-                            } ?>
-                        <?php if (array_key_exists('bldg_id', $header_true)) {
-                                echo "<td class=" . $color_class . ">" . $bldg_id . "</td>";
-                            } ?>
+<?php if (array_key_exists('bldg_name', $header_true)) {
+echo "<td class=" . $color_class . ">" . $bldg_name . "</td>";
+    } ?>
+<?php if (array_key_exists('room_loc', $header_true)) {
+echo "<td class=" . $color_class . ">" . $room_num . "</td>";
+} ?>
+<?php if (array_key_exists('bldg_id', $header_true)) {
+echo "<td class=" . $color_class . ">" . $bldg_id . "</td>";
+} ?>
 </tr>
             <?php } ?>
                 </tbody>
 
             </table>
-            <?php foreach ($result as $row) {
-                $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
-                $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
-                $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
-                $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
-            ?>
-                <div id="modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
+<?php foreach ($result as $row) {
+$bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
+$bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
+$room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+$room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
+?>
+                <div id="hidden-modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -253,7 +250,6 @@ function bldg_layout($result, $header_true, $row_num)
                 </div>
 
             <?php } ?>
-        </div>
     </section>
 <?php
 }
@@ -261,7 +257,6 @@ function bldg_layout($result, $header_true, $row_num)
 function dept_layout($result, $row_num)
 { ?>
     <section class="is-ajax">
-        <div class="table-div">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -274,16 +269,16 @@ function dept_layout($result, $row_num)
 
                 </thead>
                 <tbody><?php
-                        foreach ($result as $row) {
-                            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+foreach ($result as $row) {
+    $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
-                            // Escape values for safety
-                            $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
-                            $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
-                            $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-                            $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
+    // Escape values for safety
+    $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+    $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
+    $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+    $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
-                        ?>
+?>
                        <tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
@@ -299,15 +294,15 @@ function dept_layout($result, $row_num)
                 </tbody>
 
             </table>
-            <?php
-            foreach ($result as $row) {
-                // Escape values for safety
-                $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
-                $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
-                $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-                $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
-            ?>
-                <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
+<?php
+    foreach ($result as $row) {
+        // Escape values for safety
+        $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+        $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
+        $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+        $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
+?>
+                <div id="hidden-modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -342,7 +337,6 @@ function dept_layout($result, $row_num)
                     </div>
                 </div>
             <?php } ?>
-        </div>
     </section>
 <?php
 }
@@ -350,7 +344,6 @@ function dept_layout($result, $row_num)
 function user_layout($result, $row_num)
 { ?>
     <section class="is-ajax">
-        <div class="table-div">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -366,20 +359,20 @@ function user_layout($result, $row_num)
 
                 </thead>
                 <tbody><?php
-                        foreach ($result as $row) {
-                            $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
+foreach ($result as $row) {
+    $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
-                            // Escape values for safety
-                            $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
-                            $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
-                            $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
-                            $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
-                            $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
-                            $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
-                            $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+    // Escape values for safety
+    $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
+    $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
+    $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
+    $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
+    $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
+    $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
+    $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
-                        ?>
-<tr>
+?>
+<tr style="min-height:90px;>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $username ?>"><?= $username ?></button>
@@ -397,19 +390,19 @@ function user_layout($result, $row_num)
                 </tbody>
 
             </table>
-            <?php
-            foreach ($result as $row) {
-                // Escape values for safety
-                $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
-                $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
-                $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
-                $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
-                $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
-                $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
-                $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+<?php
+    foreach ($result as $row) {
+        // Escape values for safety
+        $username = htmlspecialchars($row['username'] ?? '', ENT_QUOTES);
+        $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES);
+        $u_role = htmlspecialchars($row['u_role'] ?? '', ENT_QUOTES);
+        $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
+        $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
+        $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
+        $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
 ?>
-                <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
+                <div id="hidden-modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -453,7 +446,6 @@ function user_layout($result, $row_num)
                     </div>
                 </div>
             <?php } ?>
-        </div>
     </section>
 <?php
 }
