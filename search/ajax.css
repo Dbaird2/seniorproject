@@ -39,7 +39,7 @@
 .is-ajax {
     place-items:center;
     opacity: 0; /* Ensures it starts invisible before animation */
-    animation: fadeIn 1s ease-in-out forwards; /* Apply the animation */
+    animation: fadeIn 0.5s ease-in-out forwards; /* Apply the animation */
     /* animation-name: fadeIn (name of the
      * keyframes) */
     /* animation-duration: 2s (how long the animation takes) */
