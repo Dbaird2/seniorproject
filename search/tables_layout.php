@@ -87,9 +87,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                 </tbody>
 
             </table>
-<?php
-    }
-?>
     </section>
 <?php
     foreach ($result as $row) {
@@ -153,6 +150,9 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                     </div>
                 </div>
 <?php
+    }
+?>
+<?php
 }
 
 
@@ -208,6 +208,7 @@ echo "<td class=" . $color_class . ">" . $bldg_id . "</td>";
                 </tbody>
 
             </table>
+    </section>
 <?php foreach ($result as $row) {
 $bldg_id = htmlspecialchars($row['bldg_id'] ?? '', ENT_QUOTES);
 $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
@@ -250,7 +251,6 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                 </div>
 
             <?php } ?>
-    </section>
 <?php
 }
 
