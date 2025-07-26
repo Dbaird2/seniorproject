@@ -25,8 +25,8 @@ include_once("../navbar.php");
         border: lightgray 1px solid;
         border-radius: 30px;
         margin: 20px auto auto;
-        padding: 2vh 2vw 10px 50px;
-        width: 85vw;
+        padding: 10px 50px;
+        width: 60rem;
     }
     #submit-btn:hover {
         transform: translateY(-2px);
@@ -35,7 +35,6 @@ include_once("../navbar.php");
         padding: 12px 16px;
         border: 2px solid #e2e8f0;
         border-radius: 10px;
-        font-size: calc(1.0vh + 0.4vw);
         transition: border-color 0.3s ease;
         background: #f8fafc;
     }
@@ -50,7 +49,6 @@ include_once("../navbar.php");
     #price-value,
     #price-filter,
     .filter-select {
-        font-size: calc(1.0vh + 0.4vw);
         padding: 12px 16px;
         border: 2px solid #e2e8f0;
         border-radius: 10px;
@@ -67,7 +65,6 @@ include_once("../navbar.php");
 
     .search-button {
         background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        font-size: calc(1.0vh + 0.4vw);
         color: white;
         border: none;
         padding: 12px 20px;

@@ -26,25 +26,24 @@
 }
 .table-div {
 }
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start completely transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}
+
+/* Apply the animation to the desired element */
 .is-ajax {
-    min-height: 600px;
-    min-width: 900px;
-    place-items:center;
-    opacity:0;
-    transition: opacity 0.3s ease-in;
-}
-.is-ajax.loaded {
-    opacity: 1;
-}
-
-
-#table-body{
-    opacity:0;
-    transition: opacity 0.3s ease-in;
-}
-
-#table-body.loaded {
-    opacity: 1;
+    opacity: 0; /* Ensures it starts invisible before animation */
+    animation: fadeIn 2s ease-in-out forwards; /* Apply the animation */
+    /* animation-name: fadeIn (name of the
+     * keyframes) */
+    /* animation-duration: 2s (how long the animation takes) */
+    /* animation-timing-function: ease-in-out (speed curve) */
+    /* animation-fill-mode: forwards (maintains the end state) */
 }
 #button-9 {
     background-color: #405cf5;
