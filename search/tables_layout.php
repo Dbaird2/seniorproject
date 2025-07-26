@@ -88,8 +88,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 
             </table>
     </section>
-<?php
-    foreach ($result as $row) {
+<?php foreach ($result as $row) {
         $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
         $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
         $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
@@ -149,9 +148,8 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                         </div>
                     </div>
                 </div>
-<?php
-    }
-?>
+<?php } ?>
+
 <?php
 }
 
@@ -294,6 +292,7 @@ foreach ($result as $row) {
                 </tbody>
 
             </table>
+    </section>
 <?php
     foreach ($result as $row) {
         // Escape values for safety
@@ -337,7 +336,6 @@ foreach ($result as $row) {
                     </div>
                 </div>
             <?php } ?>
-    </section>
 <?php
 }
 
@@ -390,6 +388,7 @@ foreach ($result as $row) {
                 </tbody>
 
             </table>
+    </section>
 <?php
     foreach ($result as $row) {
         // Escape values for safety
@@ -446,7 +445,6 @@ foreach ($result as $row) {
                     </div>
                 </div>
             <?php } ?>
-    </section>
 <?php
 }
 ?>
