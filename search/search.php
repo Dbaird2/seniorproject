@@ -1,7 +1,6 @@
 <?php
 include_once("../config.php");
 check_auth();
-include_once("../navbar.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,6 +13,7 @@ include_once("../navbar.php");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script type="text/javascript" src="script.js"></script>
+<?php include_once("../navbar.php"); ?>
 </head>
 <style>
     * {
