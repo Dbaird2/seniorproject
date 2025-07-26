@@ -99,7 +99,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
         $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 ?>
-                <div id="hidden-modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
+                <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -214,7 +214,7 @@ $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
 $room_num = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
 $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 ?>
-                <div id="hidden-modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
+                <div id="modal<?= $room_tag ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $room_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -302,7 +302,7 @@ foreach ($result as $row) {
         $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
         $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 ?>
-                <div id="hidden-modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
+                <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -402,7 +402,7 @@ foreach ($result as $row) {
         $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
 
 ?>
-                <div id="hidden-modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
+                <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" ria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
                     <!-- Modal content -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">

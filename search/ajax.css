@@ -1,15 +1,3 @@
-.is-ajax::-webkit-scrollbar {
-    width: 1em;
-}
-
-.is-ajax::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-}
-
-.is-ajax::-webkit-scrollbar-thumb {
-    background-color: darkgrey;
-    outline: 1px solid slategrey;
-}
 .row-even {
     background-color: #f0f8ff;
 }
@@ -19,6 +7,10 @@
 }
 .asset-table tr {
     min-height: 2.5rem;
+}
+.asset-table {
+    min-height: 600px;
+    min-width: 900px;
 }
 .is-ajax th {
     font-size: 0.8rem;
