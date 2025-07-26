@@ -12,14 +12,14 @@
     min-height: 600px;
     min-width: 900px;
 }
-.is-ajax th {
+#is-ajax th {
     font-size: 0.8rem;
     color:#2c3e50;
     padding: 10px 10px;
     border: 1px solid #ddd;
     text-align: center;
 }
-.is-ajax td {
+#is-ajax td {
     font-size:0.8rem;
     font-weight: 500;
     color:#2c3e50;
@@ -29,9 +29,9 @@
 
 }
 .table-div {
-    place-items:center;
 }
 #is-ajax {
+    place-items:center;
     opacity:0;
     transition: opacity 0.3s ease-in;
 }
