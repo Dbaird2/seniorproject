@@ -153,7 +153,10 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 ?>
     </section>
 <script>
-document.getElementById('is-ajax').classList.add('loaded');
+  document.addEventListener("DOMContentLoaded", function() {
+          const table = document.querySelector(".is-ajax");
+              table.classList.add("loaded");
+            });
 </script>
 <?php
 }
