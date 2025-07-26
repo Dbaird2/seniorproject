@@ -2,10 +2,6 @@ add-asset.php                                           -- working on(finished?)
 
 add more responses for chatbot
 
-fix buildings search                                   
-
-add searching by departments 
-
 add csv support
 
 complete bulk adding    --working on
@@ -15,6 +11,7 @@ make editing of dept,bldg,asset,(admin)user in Ajax.php
 add delete features for assets --working on (bldg-department done)
 
 add page to show all audited departments w/ the data from it
+
 
 can't/shouldn't do for a while
 ML python/php

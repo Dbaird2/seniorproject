@@ -45,6 +45,25 @@ try {
     } else {
         $weekly_changes = ['weekly_changes' => 0];
     }
+    $asset_type_data_q = "SELECT asset_type, COUNT(*) as count FROM assets GROUP BY asset_type";
+    $asset_bldg_count_data_q = "SELECT  r.bldg_id, COUNT(*) as count FROM asset_info as a natural join room_table as r natural join bldg_table as b GROUP BY r.bldg_id";
+    $type_stmt = $dbh->prepare($asset_type_data_q);
+    $type_stmt->execute();
+    $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $type_data = [];
+    $type_data[] = ['Asset Type', 'Count'];
+    foreach ($data as $row) {
+        $type_data[] = [$row['asset_type'], $row['count']];
+    }
+
+    $bldg_count_stmt = $dbh->prepare($asset_bldg_count_data_q);
+    $bldg_count_stmt->execute();
+    $asset_bldg_count_data = $bldg_count_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $asset_bldg_count_data_result = [];
+    $asset_bldg_count_data_result[] = ['Department ID', 'Asset Count'];
+    foreach ($asset_bldg_count_data as $row) {
+        $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count']];
+    }
 } catch (PDOException $e) {
     error_log($e->getMessage());
 }
@@ -55,6 +74,39 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asset Management System</title>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+
+function drawChart() {
+    var data = google.visualization.arrayToDataTable(<?php echo json_encode($type_data); ?>);
+
+    var options = {
+    title: 'Asset Types',
+        pieHole: 0.4,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+    chart.draw(data, options);
+    var data = google.visualization.arrayToDataTable(<?php echo json_encode($asset_bldg_count_data_result); ?>);
+
+    var options = {
+    title: 'Asset Count per Department',
+        hAxis: {title: 'Department ID'},
+        vAxis: {title: 'Asset Count'},
+        bar: {groupWidth: '75%'},
+        isStacked: true,
+        legend: { position: 'top', maxLines: 3 }
+    };
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('histogram'));
+
+    chart.draw(data, options);
+}
+</script>
 </head>
 <link rel="stylesheet" href="/index.css">
 <body>
@@ -131,6 +183,8 @@ foreach ($users as $key => $user) {
 ?>
                 </div>
             </div>
+            <div id="piechart" style="width: 700px; height: 400px;"></div>
+            <div id="histogram" style="width: 1300px; height: 400px;"></div>
         </div>
     </section>
 </div>
