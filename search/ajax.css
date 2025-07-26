@@ -46,11 +46,6 @@
     background-color: #ffffff;
 }
 .asset-table {
-    font-size: 0.8rem;
-
-    margin: auto; 
-    border: 1px solid #c0d6e4;
-    border-collapse: collapse;
 }
 .asset-table tr {
     min-height: 2.5rem;
