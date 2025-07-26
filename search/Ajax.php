@@ -522,7 +522,11 @@ if ($total_pages > 2) { ?>
 ?>
 <script>
 window.addEventListener("load", function () {
-    document.querySelectory(".loader").style.display = "none";
-    document.getElementById("show-results").style.display= "block";
+    const loader = document.querySelector(".loader");
+    const results = document.getElementById("show-results");
+    if (loader) loader.style.display = "none";
+    if (results) results.style.display = "block";
+    console.log("Window loaded, switching display...");
+
 });
 </script>
