@@ -111,6 +111,7 @@ include_once("tables_layout.php");
   animation:
     l20-1 0.8s infinite linear alternate,
     l20-2 1.6s infinite linear;
+    place-self: center;
 }
 @keyframes l20-1{
    0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
@@ -521,15 +522,19 @@ if ($total_pages > 2) { ?>
 }
 ?>
 <script>
-    console.log("Script loaded");
+if (document.readyState === "complete") {
+    handleLoad();
+} else {
+    window.addEventListener("load", handleLoad);
+}
 
-window.addEventListener("load", function () {
+function handleLoad() {
     const loader = document.querySelector(".loader");
     const results = document.getElementById("show-results");
     if (loader) loader.style.display = "none";
     if (results) results.style.display = "block";
-    console.log("Window loaded, switching display...");
-
-});
+    console.log("Window loaded, switching
+        display...");
+}
 </script>
 </body>
