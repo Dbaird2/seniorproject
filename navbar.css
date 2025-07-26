@@ -157,3 +157,7 @@ body .has-navbar button {
     padding: 5px 5px 5px;
     text-align: center;
 }
+.nav_links ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
