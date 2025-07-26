@@ -4,7 +4,7 @@
 function asset_layout($result, $header_true, $row_num)
 {
 ?>
-    <section class="is-ajax">
+    <section class="is-ajax" id="is-ajax">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -37,7 +37,7 @@ if (array_key_exists('asset_po', $header_true)) {
                     </tr>
 
                 </thead>
-                <tbody><?php
+                <tbody id="table-body"><?php
     foreach ($result as $row) {
         $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -159,7 +159,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 function bldg_layout($result, $header_true, $row_num)
 {
 ?>
-    <section class="is-ajax">
+    <section class="is-ajax" id="is-ajax">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -178,7 +178,7 @@ if (array_key_exists('bldg_id', $header_true)) {
                     </tr>
 
                 </thead>
-                <tbody><?php
+                <tbody id="table-body"><?php
 foreach ($result as $row) {
     $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -256,7 +256,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
 
 function dept_layout($result, $row_num)
 { ?>
-    <section class="is-ajax">
+    <section class="is-ajax" id="is-ajax">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -268,7 +268,7 @@ function dept_layout($result, $row_num)
                     </tr>
 
                 </thead>
-                <tbody><?php
+                <tbody id="table-body"><?php
 foreach ($result as $row) {
     $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
@@ -343,7 +343,7 @@ foreach ($result as $row) {
 
 function user_layout($result, $row_num)
 { ?>
-    <section class="is-ajax">
+    <section class="is-ajax" id="is-ajax">
             <table id="asset-table">
                 <thead>
                     <tr>
@@ -358,7 +358,7 @@ function user_layout($result, $row_num)
                     </tr>
 
                 </thead>
-                <tbody><?php
+                <tbody id="table-body"><?php
 foreach ($result as $row) {
     $color_class = ($row_num % 2 === 0) ? 'row-even' : 'row-odd';
 
