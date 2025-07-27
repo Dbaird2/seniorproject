@@ -29,6 +29,7 @@
         <span class="dropdown-content2">
           <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="dropdown-element">Start</a>
           <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="dropdown-element">Continue</a>
+          <a href="https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php" class="dropdown-element">History</a>
         </span>
       </span>  
 <a href="https://dataworks-7b7x.onrender.com/search/search.php">Search</a>
@@ -75,6 +76,7 @@
 <span class="dropdown-content">
   <a href="https://dataworks-7b7x.onrender.com/audit/upload.php" class="dropdown-element">Start</a>
   <a href="https://dataworks-7b7x.onrender.com/audit/auditing.php" class="dropdown-element">Continue</a>
+  <a href="https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php" class="dropdown-element">History</a>
 </span>
 </span>
 </li>

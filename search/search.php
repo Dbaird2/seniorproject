@@ -152,7 +152,25 @@ if ($search === NULL) {
   <br>
   <br />
   <!-- Suggestions will be displayed in below div. -->
-  <div id="display"></div>
+  <div id="display">
+<table  id="is-ajax">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Auditor</th>
+                    <th>Audit ID</th>
+                </tr>
+            </thead>
+            <tbody>
+           <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+           </tr>
+            </tbody>
+        </table>
+
+</div>
 </div>
 </body>
 </html>

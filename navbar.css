@@ -12,6 +12,9 @@
 * {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
+.has-navbar {
+    all: unset; 
+}
 .has-navbar li,.has-navbar a,.has-navbar button {
     font-weight: 500;
     font-size: 13px;

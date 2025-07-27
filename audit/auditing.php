@@ -87,7 +87,6 @@ foreach ($data as &$row) {
     unset($row);
 }
 
-$file_name = $_SESSION['info'][3];
 $file_path = $_SESSION['info'][2];
 if (isset($_POST['download'])) {
 
@@ -360,6 +359,8 @@ for ($i = 0; $i < $highest_row; $i++) {
         $dept_arr[] = $data[$i][$dept_col];
         $cost_arr[] = (round((float)$data[$i][$cost_col], 2));
         $po_arr[] = $data[$i][$po_col];
+        $file_name = $data[$i][$dept_col];
+
     }
 
 

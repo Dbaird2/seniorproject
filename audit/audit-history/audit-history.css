@@ -1,0 +1,98 @@
+* {
+    margin:0;
+}
+.container {
+    place-self:center;
+    text-align: center;
+}
+
+.odd {
+    background-color: #f0f8ff;
+}
+.even {
+    background-color: #ffffff;
+}
+#is-history th {
+    font-size: 1rem;
+    color:#2c3e50;
+    padding: 10px 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+#is-history td {
+    font-size:1rem;
+    font-weight: 500;
+    color:#2c3e50;
+    padding: 5px 5px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5;
+    white-space: nowrap;
+
+}
+#is-history tr {
+    transition: background-color 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start completely transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}
+
+/* Apply
+ * the
+ * animation
+ * to
+ * the
+ * desired
+ * element
+ * */
+.is-history {
+    place-self:center;
+    opacity: 0; /* Ensures it starts invisible before animation */
+    animation: fadeIn 0.5s ease-in-out forwards; /* Apply the animation */
+    border-collapse: collapse;
+    /* animation-name: fadeIn (name of the
+     *      * keyframes) */
+/* animation-duration: 2s (how long the animation takes) */
+/* animation-timing-function: ease-in-out (speed curve) */
+/* animation-fill-mode: forwards (maintains the end state) */
+}
+#button-9 {
+    background-color: #405cf5;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.8rem;
+    height: 44px;
+    line-height: 1.15;
+    outline: none;
+    padding: 0 25px;
+    min-width:90px;
+}
+.search-input {
+    width: 40%;
+    min-width:100px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+.input-seciton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}

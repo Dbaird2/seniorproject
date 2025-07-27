@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $_SESSION['saved_tags'] = [];
             unset($_SESSION['data']);
             $_SESSION['data'] = array_values($data);
-            $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $file_name];
+            $_SESSION['info'] = [$highest_row, $highest_col, $file_path, basename($file_name)];
             header('Location: auditing.php');
             exit();
         } else {
