@@ -13,11 +13,11 @@ include_once ("../../config.php");
 <?php
 $search = $_POST['search'];
 if ($search === 'all') {
-    $select_query = "SELECT dept_id, auditor, finished_at FROM audit_history ORDER BY finished_at DESC"; 
+    $select_query = "SELECT dept_id, auditor, finished_at, audit_id FROM audit_history ORDER BY finished_at DESC"; 
     $stmt = $dbh->prepare($select_query);
     $stmt->execute();
 } else {
-    $select_query = "SELECT dept_id, auditor, finished_at FROM audit_history WHERE dept_id LIKE :search ORDER BY finished_at DESC";
+    $select_query = "SELECT dept_id, auditor, finished_at, audit_id FROM audit_history WHERE dept_id LIKE :search ORDER BY finished_at DESC";
     $search = '%' . $search . '%';
     $stmt = $dbh->prepare($select_query);
     $stmt->execute([':search' => $search]);
@@ -39,7 +39,7 @@ $i= 0;
 foreach ($audits as $row) {
     $color = ($i++ % 2 == 0) ? 'even' : 'odd';
     echo "<tr class='$color'>";
-    echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "'>" . $row['dept_id'] . "</a></td>";
+    echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>" . $row['dept_id'] . "</a></td>";
     echo "<td>" . $row['auditor'] . "</td>";
     echo "<td>" . date('Y-m-d H:i:s', strtotime($row['finished_at'])) . "</td>";
     echo "</tr>";

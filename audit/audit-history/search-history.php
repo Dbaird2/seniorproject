@@ -25,8 +25,8 @@ include_once("../../navbar.php");
         <h2>Audit History</h2>
     </div>
     <div class="input-seciton">
-    <input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
-    <input class="search-input" type="text" name="search" id="search" value="<?=$search?>" placeholder="Search for an audit..." > 
+    <input class = "search-input" type="hidden" name="offset" id="offset">
+    <input class="search-input" type="text" name="search" id="search" placeholder="Search for an audit..." > 
     <button id="button-9">Search</button>
     </div>
   <br>
