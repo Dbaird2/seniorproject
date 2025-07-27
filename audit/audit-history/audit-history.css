@@ -1,5 +1,6 @@
-* {
+*{
     margin:0;
+
 }
 .container {
     place-self:center;
@@ -44,24 +45,11 @@
     }
 }
 
-/* Apply
- * the
- * animation
- * to
- * the
- * desired
- * element
- * */
 .is-history {
     place-self:center;
     opacity: 0; /* Ensures it starts invisible before animation */
     animation: fadeIn 0.5s ease-in-out forwards; /* Apply the animation */
     border-collapse: collapse;
-    /* animation-name: fadeIn (name of the
-     *      * keyframes) */
-/* animation-duration: 2s (how long the animation takes) */
-/* animation-timing-function: ease-in-out (speed curve) */
-/* animation-fill-mode: forwards (maintains the end state) */
 }
 #button-9 {
     background-color: #405cf5;

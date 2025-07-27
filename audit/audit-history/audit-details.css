@@ -1,0 +1,36 @@
+.middle {
+    display: flex;
+    justify-content: center;
+}
+.header-table {
+    place-self: center;
+    border-collapse: collapse;
+    place-items: center;
+    padding:15px 15px;
+
+}
+
+.is-audit-details {
+    border-collapse: collapse;
+}
+.is-audit-details th, .is-audit-details td {
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+.found-data {
+    margin: 20px 0;
+    position: relative;
+    top: 0;
+}
+.audit-data {
+    margin: 20px 0;
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+
+.odd {
+    background-color: #f0f8ff;
+}
+.even {
+    background-color: #ffffff;
+}

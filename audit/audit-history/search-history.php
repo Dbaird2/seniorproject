@@ -1,4 +1,5 @@
-nclude_once("../../config.php");
+<?php 
+include_once("../../config.php");
 check_auth();
 
 include_once("../../navbar.php");
