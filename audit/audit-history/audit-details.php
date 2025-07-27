@@ -15,6 +15,9 @@ $select_query = "SELECT * FROM audit_history WHERE dept_id = :dept_id AND audito
 $stmt = $dbh->prepare($select_query);
 $stmt->execute([':dept_id' => $dept_id, ':auditor' => $auditor, ':audit_id' => $audit_id]);
 $audit_details = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$audit_details) {
+    exit;
+}
 
 $found_data = json_decode((string) $audit_details['found_data'], true);
 $audit_data = json_decode((string) $audit_details['audit_data'], true);
