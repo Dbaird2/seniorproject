@@ -68,7 +68,7 @@ try {
         $audit_headers = array_keys($audit_data[0]);
         $count = count($audit_data[0]);
         $keys = true;
-=        foreach ($audit_headers as $header_index => $header) {
+        foreach ($audit_headers as $header_index => $header) {
             if ($header === 'po') {
                 $headers_copy[$header_index] = 'Purchase Order';
             } elseif ($header === 'dept_id') {
