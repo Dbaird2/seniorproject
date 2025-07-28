@@ -1,26 +1,24 @@
 <?php
-error_reporting(0);  
-require_once("config.php");
+error_reporting(0);
+require_once("../config.php");
+check_auth("high");
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 require_once '../vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 include_once("../navbar.php");
 /* The point of this page is to read a CSV or Excel file then update,add,delete
  * the databases assets */
-?>
-
-
-<?php
 /*
  *  * Bulk Asset Import Script
  *   * ------------------------
- *    * This script handles uploading a spreadsheet (XLSX) containing asset data
+ *    * This script handles uploading a spreadsheet (XLSX) containing asset
+ *    data
  *     * and inserts new assets into the database (`asset_info`) if they:
  *      * - Are not already in `asset_info` or `complete_asset_view`
  *       * - Have a valid tag format
@@ -58,9 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'cost_col'       => ['COST Total Cost', 'Price'],
         'po_col'         => ['PO No.', 'Purchase Order'],
         'location_col'   => ['Location'],
-        'model_col'      => ['Model', 'Model Number'],    
-        'profile_id_col' => ['Profile ID', 'Profile'],    
-        'asset_type_col' => ['Asset Type'],               
+        'model_col'      => ['Model', 'Model Number'],
+        'profile_id_col' => ['Profile ID', 'Profile'],
+        'asset_type_col' => ['Asset Type'],
     ];
 
     /*
@@ -73,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     foreach (array_keys($column_map) as $key) {
         $$key = -1;
     }
-
     $useless_columns = [];
 
     foreach ($data[$header_row] as $i => $header) {
@@ -91,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
     }
     foreach ($data as &$row) {
-        foreach($useless_columns as $useless) {
+        foreach ($useless_columns as $useless) {
             unset($row[$useless]);
         }
         unset($row);
@@ -128,13 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     ];
     $profile_map = [
         'EQUIP-10'  => 10,
-        'NONCAPCOMP'=> 10,
+        'NONCAPCOMP' => 10,
         'EQUIP-20'  => 20,
         'EQUIP-05'  => 5
     ];
-?>
-
-<?php
     try {
         $dbh->beginTransaction();
         for ($i = $header_row; $i < $highest_row; $i++) {
@@ -151,9 +145,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
 
             echo "Checking tag: " . $data[$i][$tag_col] . "<br>";
-            if (preg_match($ASI, $data[$i][$tag_col]) || preg_match($STU, $data[$i][$tag_col]) || 
-                preg_match($CMP, $data[$i][$tag_col]) || preg_match($FDN, $data[$i][$tag_col]) || 
-                preg_match($SPA, $data[$i][$tag_col])) {
+            if (
+                preg_match($ASI, $data[$i][$tag_col]) || preg_match($STU, $data[$i][$tag_col]) ||
+                preg_match($CMP, $data[$i][$tag_col]) || preg_match($FDN, $data[$i][$tag_col]) ||
+                preg_match($SPA, $data[$i][$tag_col])
+            ) {
                 echo preg_match($ASI, $data[$i][$tag_col]) ? "ASI match found. " : "";
                 echo preg_match($STU, $data[$i][$tag_col]) ? "STU match found. " : "";
                 echo preg_match($CMP, $data[$i][$tag_col]) ? "CMP match found. " : "";
@@ -177,20 +173,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $key = $location_array[$i][0];
             if (isset($location_map[$key])) {
                 if ($key === '39A') {
-                    $location_array[$i][1] = 'A'.$location_array[$i][1];
+                    $location_array[$i][1] = 'A' . $location_array[$i][1];
                 } else if ($key === 'CONNEX STORAG') {
                     $location_array[$i][1] = 'STORAGE';
                 } else if ($key === '44A') {
-                    $location_array[$i][1] = 'A'.$location_array[$i][1];
+                    $location_array[$i][1] = 'A' . $location_array[$i][1];
                 } else if ($key === '44B') {
-                    $location_array[$i][1] = 'B'.$location_array[$i][1];
+                    $location_array[$i][1] = 'B' . $location_array[$i][1];
                 } else if ($key === '44C') {
-                    $location_array[$i][1] = 'C'.$location_array[$i][1];
+                    $location_array[$i][1] = 'C' . $location_array[$i][1];
                 } else if ($key === '44D') {
-                    $location_array[$i][1] = 'D'.$location_array[$i][1];
+                    $location_array[$i][1] = 'D' . $location_array[$i][1];
                 } else if ($key === '44E') {
-                    $location_array[$i][1] = 'E'.$location_array[$i][1];
-                } 
+                    $location_array[$i][1] = 'E' . $location_array[$i][1];
+                }
                 $location_array[$i][0] = (int)$location_map[$key];
             }
             echo $location_array[$i][0] ?? 'N/A';
@@ -209,11 +205,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $stmt = $dbh->prepare($check_tag_query);
             $stmt->execute([':tag' => $data[$i][$tag_col]]);
             $existing_asset = $stmt->fetch(PDO::FETCH_ASSOC);
-            $existing_asset = false; 
+            $existing_asset = false;
             if ($existing_asset) {
                 echo "Asset with tag " . $data[$i][$tag_col] . " already exists. Skipping.<br>";
                 continue;
-            } 
+            }
             $get_room_tag_query = "SELECT room_tag FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
             $stmt = $dbh->prepare($get_room_tag_query);
             $stmt->execute([':room_loc' => $location_array[$i][1], ':bldg_id' => $location_array[$i][0]]);
@@ -222,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $room_tag = $room_tag['room_tag'];
                 $insert_query = "INSERT INTO asset_info (asset_tag, asset_model, room_tag, asset_name, serial_num, po, asset_price, asset_type, lifecycle, dept_id) VALUES (:asset_tag, :asset_model, :room_tag, :asset_name, :serial_num, :po, :asset_price, :asset_type, :lifecycle, :dept_id)";
 
-                echo "Added " .$j++ . " " . $data[$i][$tag_col] . " ";
+                echo "Added " . $j++ . " " . $data[$i][$tag_col] . " ";
                 echo $location_array[$i][0] . " ";
                 if (isset($location_array[$i][1])) {
                     echo $location_array[$i][1] . " ";
@@ -239,14 +235,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 echo $data[$i][$cost_col] . " ";
                 echo $data[$i][$po_col] . " ";
                 echo $data[$i][$profile_id_col] . " ";
-?>
-<?php
                 echo "<br><br>";
             } else {
                 echo "Room tag not found for location " . $location_array[$i][1] . " in building " . $location_array[$i][0] . ". Skipping asset " . $data[$i][$tag_col] . ".<br>";
                 $room_tag = 'N/A';
                 continue;
-            } 
+            }
         }
         $dbh->commit();
     } catch (Exception $e) {
@@ -255,30 +249,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "<br>";
         echo "Rolling back changes...";
     }
-
 }
-function searchstr($string, $char) {
-    foreach(str_split($string) as $var) {
+function searchstr($string, $char)
+{
+    foreach (str_split($string) as $var) {
         if ($char === $var) {
             return true;
-        } 
+        }
     }
     return false;
 }
 ?>
- <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bulk Asset Upload</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <form action="bulk_app.php" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".xlsx, .xls, .csv" required>
-            <button type="submit">Upload</button>
-        </form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bulk Asset Upload</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <form action="bulk_app.php" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx, .xls, .csv" required>
+        <button type="submit">Upload</button>
+    </form>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const addAssetsButton = document.getElementById('add-assets');
@@ -299,8 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-</body>
+        </body>
+
 </html>
-
-
-
