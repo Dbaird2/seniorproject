@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $STU = "/^S[RC]?[TU]?\d+$/";
     $CMP = "/^\d+/";
     $FDN = "/^F[DN]?\d+$/";
-    $SPA = "/^SPA\d+$/";
+    $SPA = "/^SP\d+$/";
     $location_map = [
         'AVCMP'  => 140,
         'AVC'    => 140,
@@ -168,11 +168,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $location_array[$i][0] = 150;
                 $location_array[$i][1] = '000';
             }
-            if ($location_array[$i][0] === 'OUT') {
-                $location_array[$i][0] = 'OUTSIDE';
+            if ($location_array[$i][1] === 'OUT') {
+                $location_array[$i][1] = 'OUTSIDE';
             } 
             if ($location_array[$i][0] === 'LOB') {
-                $location_array[$i][0] = 'LOBBY';
+                $location_array[$i][1] = 'LOBBY';
             } 
             if ($location_array[$i][0] === '54' && $location_array[$i][1] === 'CLASSRO') {
                 $location_array[$i][1] = 'CLASSRM';
@@ -303,26 +303,6 @@ function searchstr($string, $char)
         <input type="file" name="file" accept=".xlsx, .xls, .csv" required>
         <button type="submit">Upload</button>
     </form>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addAssetsButton = document.getElementById('add-assets');
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-    addAssetsButton.addEventListener('click', function() {
-        let selectedAssets = [];
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                selectedAssets.push(checkbox.value);
-            }
-        });
-        if (selectedAssets.length > 0) {
-            alert('Selected Assets: ' + selectedAssets.join(', '));
-        } else {
-            alert('No assets selected.');
-        }
-    });
-});
-</script>
-        </body>
+</body>
 
 </html>
