@@ -133,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $dbh->beginTransaction();
         for ($i = $header_row; $i < $highest_row; $i++) {
             $location_array[$i] = [];
-            echo $data[$i][$location_col] ?? 'N/A';
             if (searchstr($data[$i][$location_col] ?? '', "-")) {
                 $location_array[$i] = explode("-", $data[$i][$location_col]);
             } else if (searchstr($data[$i][$location_col] ?? '', "_")) {
@@ -156,7 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 echo preg_match($FDN, $data[$i][$tag_col]) ? "FDN match found. " : "";
                 echo preg_match($SPA, $data[$i][$tag_col]) ? "SPA match found. " : "";
             } else continue;
-            echo "Valid tag: " . $data[$i][$tag_col] . "<br>";
 
             if ($location_array[$i][0] === '' || !isset($location_array[$i][1])) {
                 $location_array[$i][0] = 150;
@@ -189,10 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 }
                 $location_array[$i][0] = (int)$location_map[$key];
             }
-            echo $location_array[$i][0] ?? 'N/A';
-            echo " ";
-            echo $location_array[$i][1] ?? 'N/A';
-            echo "<br>";
 
             $key = $data[$i][$profile_id_col];
             if (isset($profile_map[$key])) {
@@ -216,6 +210,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             if ($room_tag) {
                 $room_tag = $room_tag['room_tag'];
                 $insert_query = "INSERT INTO asset_info (asset_tag, asset_model, room_tag, asset_name, serial_num, po, asset_price, asset_type, lifecycle, dept_id) VALUES (:asset_tag, :asset_model, :room_tag, :asset_name, :serial_num, :po, :asset_price, :asset_type, :lifecycle, :dept_id)";
+                $insert_stmt = $dbh->prepare($insert_query);
+                $insert_stmt->execute([":asset_tag"=>$data[$i][$tag_col],
+                    ":asset_model"=>$data[$i][$model_col],
+                    ":room_tag"=>$room_tag,
+                    ":asset_name"=>$data[$i][$descr_col],
+                    ":serial_num"=>$data[$i][$serial_col],
+                    ":po"=>$data[$i][$po_col],
+                    ":asset_price"=>$data[$i][$cost_col],
+                    ":asset_type"=>$data[$i][$asset_type_col],
+                    ":lifecycle"=>$data[$i][$profile_id_col],
+                    ":dept_id"=>$data[$i][$dept_col]
+                ]);
 
                 echo "Added " . $j++ . " " . $data[$i][$tag_col] . " ";
                 echo $location_array[$i][0] . " ";
