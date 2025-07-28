@@ -1,10 +1,6 @@
-add-asset.php                                           -- working on(finished?)
-
 add more responses for chatbot
 
 add csv support
-
-complete bulk adding    --working on
 
 make editing of dept,bldg,asset,(admin)user in Ajax.php
 

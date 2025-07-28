@@ -40,6 +40,7 @@
 </svg></a>
 <span class="dropdown-content2">
     <a href="https://dataworks-7b7x.onrender.com/add/add-asset.php" class="dropdown-element">Asset</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/bulk_add.php" class="dropdown-element">Bulk Add Assets</a>
     <a href="https://dataworks-7b7x.onrender.com/add/add-dept.php" class="dropdown-element">Department</a>
     <a href="https://dataworks-7b7x.onrender.com/add/add-bldg.php" class="dropdown-element">Building/Rooms</a>
 </span>
@@ -91,6 +92,7 @@
 </a>
   <span class="dropdown-content">
     <a href="https://dataworks-7b7x.onrender.com/add/add-asset.php" class="dropdown-element">Asset</a>
+    <a href="https://dataworks-7b7x.onrender.com/add/bulk_add.php" class="dropdown-element">Bulk Add Assets</a>
     <a href="https://dataworks-7b7x.onrender.com/add/add-dept.php" class="dropdown-element">Department</a>
     <a href="https://dataworks-7b7x.onrender.com/add/add-bldg.php" class="dropdown-element">Building/Rooms</a>
   </span>

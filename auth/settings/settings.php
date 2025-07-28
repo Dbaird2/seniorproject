@@ -196,15 +196,16 @@ check_auth("low");
 </style>
 <?php
 try {
+    echo $_SESSION['email'];
     $query = "SELECT * FROM user_table WHERE email = :email";
     $email=$_SESSION['email'];
     $user_stmt = $dbh->prepare($query);
     $user_stmt->execute([":email"=>$email]);
-    $result = $user_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $user_stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "error: " . $e->getMessage(); 
 }
-
+var_dump($result);
 $email = $result["email"];
 $f_name = $result["f_name"];
 $l_name = $result["l_name"];
