@@ -90,6 +90,7 @@ if (isset($_GET['query'])) {
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 1;
 $category = isset($_GET['categories']) ? $_GET['categories'] : 'assets';
 $status = isset($_GET['statusFilter']) ? $_GET['statusFilter'] : 'In Service';
+$bldg_id_search = isset($_GET['bldg_id_search']) ? $_GET['bldg_id_search'] : '';
 if ($search === NULL) {
     $offset = 1;
 }
@@ -105,7 +106,7 @@ if ($search === NULL) {
                 <option value="users">Users</option>
             </select>
             <br>
-            <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" />
+            <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" value="<?=$bldg_id_search?>"/>
 
             <select class="filter-assets" name="statusFilter" id="status-filter">
                     <option value="all">All Status</option>
@@ -133,8 +134,8 @@ if ($search === NULL) {
 <input type="checkbox"class="filter-assets" id="dept_id" value="dept_id" name="dept_id"> 
             <label for="room_tag"class="filter-assets"  id="room_tag_label">Room Tag</label>
 <input type="checkbox"class="filter-assets" id="room_tag" value="room_tag" name="room_tag"> 
-            <label for="room_loc" id="room_loc_label">Room Number</label>
-<input type="checkbox" id="room_loc" value="room_loc" name="room_loc">
+            <label for="room_loc" class="filter-room" id="room_loc_label">Room Number</label>
+<input type="checkbox" id="room_loc" class="filter-room" value="room_loc" name="room_loc">
             <label for="asset_sn" class="filter-assets" id="asset_sn_label">Serial Number</label>
 <input type="checkbox"class="filter-assets" id="asset_sn" value="asset_sn" name="asset_sn"> 
             <label for="asset_price" class="filter-assets" id="asset_price_label">Cost</label>
@@ -143,7 +144,7 @@ if ($search === NULL) {
 <input type="checkbox"class="filter-assets" id="asset_po" value="asset_po" name="asset_po">
 
             <label for="bldg_id" class="filter-bldg" id="bldg_id_label">Building ID</label>
-<input type="checkbox" class="filter-bldg" id="bldg_id" value="bldg_id" name="bldg_id"> 
+            <input type="checkbox" class="filter-bldg" id="bldg_id" value="bldg_id" name="bldg_id">
             <label for="bldg_name" class="filter-bldg" id="bldg_name_label">Building Name</label>
 <input type="checkbox" class="filter-bldg" id="bldg_name" value="bldg_name" name="bldg_name">
 </div>

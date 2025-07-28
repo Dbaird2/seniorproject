@@ -25,7 +25,7 @@ if (isset($_POST['audit'])) {
     $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
     $bldg_id = $_POST['bldg_id'] ;
-    $bldg_id_val = $_POST['bldg_id_val'];
+    $bldg_id_val = $_POST['bldg_id_search'];
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
 
@@ -345,6 +345,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     } else if ($category === 'departments') {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
+        echo "script>removeCheckbox('.filter-room');</script>";
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -372,6 +373,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     } else if ($category === 'users') {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
+        echo "script>removeCheckbox('.filter-room');</script>";
         if ($tag === 'ALL') {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);

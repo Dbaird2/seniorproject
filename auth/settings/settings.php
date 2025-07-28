@@ -196,7 +196,6 @@ check_auth("low");
 </style>
 <?php
 try {
-    echo $_SESSION['email'];
     $query = "SELECT * FROM user_table WHERE email = :email";
     $email=$_SESSION['email'];
     $user_stmt = $dbh->prepare($query);
@@ -205,7 +204,6 @@ try {
 } catch (PDOException $e) {
     echo "error: " . $e->getMessage(); 
 }
-var_dump($result);
 $email = $result["email"];
 $f_name = $result["f_name"];
 $l_name = $result["l_name"];

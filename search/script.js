@@ -23,7 +23,7 @@ function searchTrigger() {
     var asset_po = $('#asset_po').prop('checked');
     var bldg_id = $('#bldg_id').prop('checked');
     var bldg_name = $('#bldg_name').prop('checked');
-    var bldg_id_val = $('#bldg-id-search').val();
+    var bldg_id_search = $('#bldg-id-search').val();
 
     //Validating, if "name" is empty.
     if (name == "") {
@@ -56,7 +56,7 @@ function searchTrigger() {
                 asset_po: asset_po,
                 bldg_id: bldg_id,
                 bldg_name: bldg_name,
-                bldg_id_val: bldg_id_val,
+                bldg_id_search: bldg_id_search,
 
                 //Assigning value of "name" into "search" variable.
                 search: search
@@ -84,7 +84,7 @@ function auditTrigger() {
     var asset_po = $('#asset_po').prop('checked');
     var bldg_id = $('#bldg_id').prop('checked');
     var bldg_name = $('#bldg_name').prop('checked');
-    var bldg_id_val = $('#bldg-id-search').val();
+    var bldg_id_search = $('#bldg-id-search').val();
     var audit = true;
 
     $.ajax({
@@ -105,7 +105,7 @@ function auditTrigger() {
             bldg_id: bldg_id,
             bldg_name: bldg_name,
             audit: audit,
-            bldg_id_val, bldg_id_val,
+            bldg_id_search, bldg_id_search,
             search: search
         },
         dataType: 'json',  
@@ -178,6 +178,22 @@ $(document).ready(function() {
 
     $('#dept-id-search').on('change', function () {
         localStorage.setItem('dept-id-search', $(this).val());
+    });
+    const dept_id_search = localStorage.getItem('dept-id-search');
+    if (dept_id_search) {
+        $('#dept-id-search').val(dept_id_search);
+    }
+
+    $('#dept-id-search').on('change', function () {
+        localStorage.setItem('dept-id-search', $(this).val());
+    });
+    const bldg_id_search = localStorage.getItem('bldg-id-search');
+    if (bldg_id_search) {
+        $('#bldg-id-search').val(bldg_id_search);
+    }
+
+    $('#bldg-id-search').on('change', function () {
+        localStorage.setItem('bldg-id-search', $(this).val());
     });
 
     keepCheckboxValues('asset_name', '#asset_name');
