@@ -205,7 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $stmt = $dbh->prepare($check_tag_query);
             $stmt->execute([':tag' => $data[$i][$tag_col]]);
             $existing_asset = $stmt->fetch(PDO::FETCH_ASSOC);
-            $existing_asset = false;
             if ($existing_asset) {
                 echo "Asset with tag " . $data[$i][$tag_col] . " already exists. Skipping.<br>";
                 continue;
