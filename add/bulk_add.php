@@ -268,10 +268,14 @@ function searchstr($string, $char)
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bulk Asset Upload</title>
     <link rel="stylesheet" href="styles.css">
+<style>
+* {
+    margin:0;
+}
 </head>
 
 <body>
-    <form action="bulk_app.php" method="post" enctype="multipart/form-data">
+    <form action="bulk_add.php" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept=".xlsx, .xls, .csv" required>
         <button type="submit">Upload</button>
     </form>
