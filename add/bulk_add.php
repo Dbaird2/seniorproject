@@ -127,7 +127,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'EQUIP-10'  => 10,
         'NONCAPCOMP' => 10,
         'EQUIP-20'  => 20,
-        'EQUIP-05'  => 5
+        'EQUIP-05'  => 5,
+        'EQUIPAUTO' => 20,
+        'OTHIMP-10' => 10,
+        'OTHIMP-20' => 20,
+        'OTHIMP-30' => 30,
+        'OINTN'     => 10,
+        'NONCAPOTHR'=> 10,
+        'NONCAPAUTO'=> 20,
+        'EQUIPCOMP' => 10
     ];
     try {
         $dbh->beginTransaction();
@@ -194,6 +202,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $key = $data[$i][$profile_id_col];
             if (isset($profile_map[$key])) {
                 $data[$i][$profile_id_col] = $profile_map[$key];
+            } else if (key === 'SOFTWARE') {
+                continue;
+            } else {
+                $data[$i][$profile_id_col] = 10;
             }
 
             $loc_change = false;
@@ -212,6 +224,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $room_tag = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($room_tag) {
                 $room_tag = $room_tag['room_tag'];
+                $po = $data[$i][$po_col] === '' ? null : (int)$data[$i][$po_col];
+                $cost = $data[$i][$cost_col] === '' ? 0 : (int)$data[$i][$cost_col];
+                
                 $insert_query = "INSERT INTO asset_info (asset_tag, asset_model, room_tag, asset_name, serial_num, po, asset_price, asset_type, lifecycle, dept_id) VALUES (:asset_tag, :asset_model, :room_tag, :asset_name, :serial_num, :po, :asset_price, :asset_type, :lifecycle, :dept_id)";
                 $insert_stmt = $dbh->prepare($insert_query);
                 $insert_stmt->execute([":asset_tag"=>$data[$i][$tag_col],
@@ -219,8 +234,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     ":room_tag"=>$room_tag,
                     ":asset_name"=>$data[$i][$descr_col],
                     ":serial_num"=>$data[$i][$serial_col],
-                    ":po"=>$data[$i][$po_col],
-                    ":asset_price"=>$data[$i][$cost_col],
+                    ":po"=>$po,
+                    ":asset_price"=>$cost,
                     ":asset_type"=>$data[$i][$asset_type_col],
                     ":lifecycle"=>$data[$i][$profile_id_col],
                     ":dept_id"=>$data[$i][$dept_col]
