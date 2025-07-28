@@ -272,6 +272,7 @@ function searchstr($string, $char)
 * {
     margin:0;
 }
+</style>
 </head>
 
 <body>
