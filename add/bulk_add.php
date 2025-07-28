@@ -159,11 +159,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             if ($location_array[$i][0] === '' || !isset($location_array[$i][1])) {
                 $location_array[$i][0] = 150;
                 $location_array[$i][1] = '000';
-            } else if ($location_array[$i][0] === 'OUT') {
+            }
+            if ($location_array[$i][0] === 'OUT') {
                 $location_array[$i][0] = 'OUTSIDE';
-            } else if ($location_array[$i][0] === 'LOB') {
+            } 
+            if ($location_array[$i][0] === 'LOB') {
                 $location_array[$i][0] = 'LOBBY';
-            } else if ($location_array[$i][0] === '54' && $location_array[$i][1] === 'CLASSRO') {
+            } 
+            if ($location_array[$i][0] === '54' && $location_array[$i][1] === 'CLASSRO') {
                 $location_array[$i][1] = 'CLASSRM';
             }
 
