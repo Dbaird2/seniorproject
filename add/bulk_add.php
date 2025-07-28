@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             if ($location_array[$i][1] === 'OUT') {
                 $location_array[$i][1] = 'OUTSIDE';
             } 
-            if ($location_array[$i][0] === 'LOB') {
+            if ($location_array[$i][1] === 'LOB') {
                 $location_array[$i][1] = 'LOBBY';
             } 
             if ($location_array[$i][0] === '54' && $location_array[$i][1] === 'CLASSRO') {
