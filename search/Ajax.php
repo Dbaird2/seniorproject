@@ -123,7 +123,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
     $bldg_id = $_POST['bldg_id'] ;
-    $bldg_id_val = $_POST['bldg_id_val'];
+    $bldg_id_val = $_POST['bldg_id_search'];
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
     $params = [':search'=>"%$tag%"];
@@ -407,7 +407,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 <?php
     $total_pages = $row_count / 50;
     if (($offset === '1' || $offset === 1) && $total_pages > 1) {
-        $url = "https://dataworks-7b7x.onrender.com/search/Ajax.php?search=".urlencode($tag).
+        $url = "https://dataworks-7b7x.onrender.com/search/search.php?search=".urlencode($tag).
             "&categories=".urlencode($category).
             "&statusFilter=".urlencode($status).
             "&box_name=".urlencode($box_name).
@@ -419,7 +419,23 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             "&asset_price=".urlencode($asset_price).
             "&bldg_id_search=".urlencode($bldg_id_val).
             "&asset_po=".urlencode($asset_po).
-            "&bldg_id=".urlencode($bldg_id); ?>
+            "&bldg_id=".urlencode($bldg_id); 
+        $json_tag = json_encode($tag);
+        $json_cate = json_encode($category);
+        $json_status = json_encode($status);
+        $json_name = json_encode($box_name);
+        $json_dept = json_encode($dept_id);
+        $json_room_tag = json_encode($room_tag);
+        $json_room_loc = json_encode($room_loc);
+        $json_sn = json_encode($asset_sn);
+        $json_bldg_name = json_encode($bldg_name);
+        $json_price = json_encode($asset_price);
+        $json_bldg_id_val = json_encode($bldg_id_val);
+        $json_po = json_encode($asset_po);
+        $json_bldg_id = json_encode($bldg_id);
+        $json_dept_search= json_encode($dept_id_search);
+        $json_price_check = json_encode($asset_price_check);
+?>
 
 <li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Previous</a>
@@ -430,12 +446,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
- <li class="page-item"><a class="page-link" href="<?=$url?>&offset=<?=$offset+1?>"><?=$offset+1?></a></li>
+ <li class="page-item"><a class="page-link" href="#" onclick="searchTriggerViaAjax(<?=$json_tag?>,<?=$json_cate?>,<?=$json_status?>,<?=$json_name?>,<?=$json_dept?>,<?=$json_dept_search?>,<?=$json_room_tag?>,<?=$json_room_loc?>,<?=$json_sn?>,<?=$json_bldg_name?>,<?=$json_price?>,<?=$json_bldg_id_val?>,<?=$json_po?>,<?=$json_bldg_id?>,<?=$json_price_check?>,<?=$offset+1?>)"><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
-    <li class="page-item"><a class="page-link" href="<?=$url?>&offset=<?=$offset+2?>"><?=$offset+2?></a></li>
+    <li class="page-item"><a class="page-link" href="#" onclick="searchTriggerViaAjax(<?=$json_tag?>,<?=$json_cate?>,<?=$json_status?>,<?=$json_name?>,<?=$json_dept?>,<?=$json_dept_search?>,<?=$json_room_tag?>,<?=$json_room_loc?>,<?=$json_sn?>,<?=$json_bldg_name?>,<?=$json_price?>,<?=$json_bldg_id_val?>,<?=$json_po?>,<?=$json_bldg_id?>,<?=$offset+2?>"><?=$offset+2?></a></li>
 <?php }
 if ($total_pages > 3) { ?>
-    <li class="page-item"><a class="page-link" href="<?=$url?>&offset=<?=$offset+3?>"><?=$offset+3?></a></li>
+    <li class="page-item"><a class="page-link" href="#" onclick="searchTriggerViaAjax(<?=$json_tag?>,<?=$json_cate?>,<?=$json_status?>,<?=$json_name?>,<?=$json_dept?>,<?=$json_dept_search?>,<?=$json_room_tag?>,<?=$json_room_loc?>,<?=$json_sn?>,<?=$json_bldg_name?>,<?=$json_price?>,<?=$json_bldg_id_val?>,<?=$json_po?>,<?=$json_bldg_id?>,<?=$offset+3?>"><?=$offset+3?></a></li>
 <?php }
 if ($total_pages > 4) { ?>
     <li class="page-item"><a class="page-link" href="<?=$url?>&offset=<?=$offset+4?>"><?=$offset+4?></a></li>
