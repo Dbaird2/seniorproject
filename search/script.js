@@ -117,10 +117,24 @@ function auditTrigger() {
     });
 }
 function searchTriggerViaAjax(
-    search, categories, statusFilter, box_name, dept_id, dept_id_search,
-    room_tag, room_loc, asset_sn, bldg_name,
-    asset_price, bldg_id_search, asset_po, bldg_id, asset_price_check, price_operation, offset
+    offset
 ) {
+    var search = $('#search').val();
+    var categories = $('#categories').val();
+    var statusFilter = $('#statusFilter').val();
+    var price = $('#price-value').val();
+    var price_operation = $('#price-filter').val();
+    var box_name = $('#asset_name').prop('checked');
+    var dept_id = $('#dept_id').prop('checked');
+    var dept_id_search = $('#dept-id-search').val();
+    var room_tag = $('#room_tag').prop('checked');
+    var room_loc = $('#room_loc').prop('checked');
+    var asset_sn = $('#asset_sn').prop('checked');
+    var asset_price = $('#asset_price').prop('checked');
+    var asset_po = $('#asset_po').prop('checked');
+    var bldg_id = $('#bldg_id').prop('checked');
+    var bldg_name = $('#bldg_name').prop('checked');
+    var bldg_id_search = $('#bldg-id-search').val();
     $.ajax({
         //AJAX type is "Post".
         type: "POST",
@@ -132,14 +146,14 @@ function searchTriggerViaAjax(
             categories: categories,
             statusFilter: statusFilter,
             box_name: box_name,
-            asset_price: asset_price,
+            asset_price: price,
             price_operation: price_operation,
             dept_id: dept_id,
             dept_id_search: dept_id_search,
             room_tag: room_tag,
             room_loc: room_loc,
             asset_sn: asset_sn,
-            asset_price_check: asset_price_check,
+            asset_price_check: asset_price,
             asset_po: asset_po,
             bldg_id: bldg_id,
             bldg_name: bldg_name,
