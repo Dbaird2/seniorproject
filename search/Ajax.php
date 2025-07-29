@@ -435,7 +435,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $json_bldg_id = json_encode($bldg_id);
         $json_dept_search= json_encode($dept_id_search);
         $json_price_check = json_encode($asset_price_check);
-        $json_operation = $asset_price_operation;
+        $json_operation = json_encode($asset_price_operation);
 ?>
         <script>
         console.log(<?=$json_dept_search?>, <?=$json_price_check?>);
