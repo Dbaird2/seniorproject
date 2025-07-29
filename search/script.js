@@ -132,14 +132,14 @@ function searchTriggerViaAjax(
             categories: categories,
             statusFilter: statusFilter,
             box_name: box_name,
-            asset_price: price,
+            asset_price: asset_price,
             price_operation: price_operation,
             dept_id: dept_id,
             dept_id_search: dept_id_search,
             room_tag: room_tag,
             room_loc: room_loc,
             asset_sn: asset_sn,
-            asset_price_check: asset_price,
+            asset_price_check: asset_price_check,
             asset_po: asset_po,
             bldg_id: bldg_id,
             bldg_name: bldg_name,
@@ -170,7 +170,6 @@ $(document).ready(function() {
             searchTrigger();
         }
     });
-    $("#search").ready(searchTrigger); 
     $("#categories").change(searchTrigger);
     $('#search-btn').click(searchTrigger);
 
