@@ -25,7 +25,7 @@ if (isset($_POST['audit'])) {
     $asset_price_operation = $_POST['price_operation'] ;
     $asset_po = $_POST['asset_po'] ;
     $bldg_id = $_POST['bldg_id'] ;
-    $bldg_id_val = $_POST['bldg_id_search'];
+    $bldg_id_val = $_POST['bldg_id_search'] ?? NULL;
     $bldg_name = $_POST['bldg_name'] ;
     $box_name = $_POST['box_name'] ;
 
@@ -429,13 +429,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $json_room_loc = json_encode($room_loc);
         $json_sn = json_encode($asset_sn);
         $json_bldg_name = json_encode($bldg_name);
-        $json_price = json_encode($asset_price);
+        $json_price = $asset_price;
         $json_bldg_id_val = json_encode($bldg_id_val);
         $json_po = json_encode($asset_po);
         $json_bldg_id = json_encode($bldg_id);
         $json_dept_search= json_encode($dept_id_search);
         $json_price_check = json_encode($asset_price_check);
-        $json_operation = json_encode($asset_price_operation);
+        $json_operation = $asset_price_operation;
 ?>
         <script>
         console.log(<?=$json_dept_search?>, <?=$json_price_check?>);
