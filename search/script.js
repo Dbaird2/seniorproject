@@ -117,7 +117,7 @@ function auditTrigger() {
     });
 }
 function searchTriggerViaAjax(
-      search, categories, statusFilter, box_name, dept_id, dept_id_search
+      search, categories, statusFilter, box_name, dept_id, dept_id_search,
       room_tag, room_loc, asset_sn, bldg_name,
       asset_price, bldg_id_search, asset_po, bldg_id, asset_price_check, offset
 ) {
