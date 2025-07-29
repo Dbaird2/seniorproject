@@ -179,14 +179,6 @@ $(document).ready(function() {
     $('#dept-id-search').on('change', function () {
         localStorage.setItem('dept-id-search', $(this).val());
     });
-    const dept_id_search = localStorage.getItem('dept-id-search');
-    if (dept_id_search) {
-        $('#dept-id-search').val(dept_id_search);
-    }
-
-    $('#dept-id-search').on('change', function () {
-        localStorage.setItem('dept-id-search', $(this).val());
-    });
     const bldg_id_search = localStorage.getItem('bldg-id-search');
     if (bldg_id_search) {
         $('#bldg-id-search').val(bldg_id_search);
