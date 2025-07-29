@@ -6,5 +6,22 @@ make editing of dept,bldg,asset,(admin)user in Ajax.php
 
 add delete features for assets --working on (bldg-department done)
 
+add page for custodians to build their asset list
+
+fix building search
+
 can't/shouldn't do for a while
 ML python/php
+
+
+KUALI TO DO
+insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
+
+get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
+auditing from DB.
+
+dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
+
+create account based off PROPERTY CUSTODIAN RESPONSIBILITY FORM
+
+update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
