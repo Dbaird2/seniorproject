@@ -34,7 +34,7 @@ include_once '../navbar.php';
                         <datalist id="profile-list">
                             <?php
                             $query = "SELECT profile_name FROM user_asset_profile WHERE email = :email";
-                            $query = $dbh->prepare($query);
+                            $query_stmt = $dbh->prepare($query);
                             $query_stmt->execute([":email" => $_SESSION['email']]);
                             $result = $query_stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
                             /*
