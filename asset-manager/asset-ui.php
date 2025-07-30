@@ -33,7 +33,7 @@ include_once '../navbar.php';
                         <input type="text" id="profiles" list="profile-list" placeholder="Load Profile" autocomplete="on" accept="text/plain">
                         <datalist id="profile-list">
                             <?php
-                            $query = "SELECT profile_name FROM user_asset_profile WHERE email = ?";
+                            $query = "SELECT profile_name FROM user_asset_profile WHERE email = :email";
                             $query = $dbh->prepare($query);
                             $query_stmt->execute([":email" => $_SESSION['email']]);
                             $result = $query_stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
@@ -58,7 +58,7 @@ include_once '../navbar.php';
                 <input type="text" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
                 <datalist id="dept-list">
                     <?php
-                    $query = "SELECT dept_name FROM departments";
+                    $query = "SELECT dept_name FROM department";
                     $result = $dbh->query($query);
                     /*
                     test data
@@ -87,15 +87,16 @@ include_once '../navbar.php';
                     <input type="text" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">
                     <datalist id="asset-list">
                         <?php
-                        // $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'active' ORDER BY asset_name";
-                        // $result = $dbh->query($query);
+                        $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'active' ORDER BY asset_name";
+                        $result = $dbh->query($query);
                         // test data
-                        $result = [
+                        /*$result = [
                             ["asset_id" => "A12345", "asset_name" => "Laptop"],
                             ["asset_id" => "A67890", "asset_name" => "Desktop"]
                         ];
+                         */
                         foreach ($result as $row) {
-                            echo "<option value='" . htmlspecialchars($row['asset_id']) . "' data-id='" . htmlspecialchars($row['asset_id']) . "'>";
+                            echo "<option value='" . htmlspecialchars($row['asset_tag']) . "' data-id='" . htmlspecialchars($row['asset_tag']) . "'>";
                         }
                         ?>
                     </datalist>

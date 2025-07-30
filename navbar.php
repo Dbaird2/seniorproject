@@ -88,7 +88,7 @@
   </svg>
 </a>
 <span class="dropdown-content">
-  <a href="#" class="dropdown-element">Profiles</a>
+  <a href="https://dataworks-7b7x.onrender.com/asset-manager/manage/manage-profile.php" class="dropdown-element">Profiles</a>
   <a href="https://dataworks-7b7x.onrender.com/asset-manager/asset-ui.php" class="dropdown-element">Track Assets</a>
 </span>
 </span>
