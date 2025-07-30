@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 echo preg_match($SPA, $data[$i][$tag_col]) ? "SPA match found. " : "";
             } else continue;
 
-            if ($location_array[$i][0] === '' || !isset($location_array[$i][1])) {
+            if ($location_array[$i][0] === '' || !isset($location_array[$i][1]) || $location_array[$i][0] === NULL) {
                 $location_array[$i][0] = 150;
                 $location_array[$i][1] = '000';
             }
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $key = $data[$i][$profile_id_col];
             if (isset($profile_map[$key])) {
                 $data[$i][$profile_id_col] = $profile_map[$key];
-            } else if (key === 'SOFTWARE') {
+            } else if ($key === 'SOFTWARE') {
                 continue;
             } else {
                 $data[$i][$profile_id_col] = 10;

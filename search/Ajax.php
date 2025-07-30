@@ -345,7 +345,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     } else if ($category === 'departments') {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
-        echo "script>removeCheckbox('.filter-room');</script>";
+        echo "<script>removeCheckbox('.filter-room');</script>";
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -373,7 +373,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
     } else if ($category === 'users') {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
-        echo "script>removeCheckbox('.filter-room');</script>";
+        echo "<script>removeCheckbox('.filter-room');</script>";
         if ($tag === 'ALL') {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);
@@ -407,39 +407,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 <?php
     $total_pages = $row_count / 50;
     if (($offset === '1' || $offset === 1) && $total_pages > 1) {
-        $url = "https://dataworks-7b7x.onrender.com/search/search.php?search=".urlencode($tag).
-            "&categories=".urlencode($category).
-            "&statusFilter=".urlencode($status).
-            "&box_name=".urlencode($box_name).
-            "&dept_id=".urlencode($dept_id).
-            "&room_tag=".urlencode($room_tag).
-            "&room_loc=".urlencode($room_loc).
-            "&asset_sn=".urlencode($asset_sn).
-            "&bldg_name=".urlencode($bldg_name).
-            "&asset_price=".urlencode($asset_price).
-            "&bldg_id_search=".urlencode($bldg_id_val).
-            "&asset_po=".urlencode($asset_po).
-            "&bldg_id=".urlencode($bldg_id); 
-        $json_tag = json_encode($tag);
-        $json_cate = json_encode($category);
-        $json_status = json_encode($status);
-        $json_name = json_encode($box_name);
-        $json_dept = json_encode($dept_id);
-        $json_room_tag = json_encode($room_tag);
-        $json_room_loc = json_encode($room_loc);
-        $json_sn = json_encode($asset_sn);
-        $json_bldg_name = json_encode($bldg_name);
-        $json_price = $asset_price;
-        $json_bldg_id_val = json_encode($bldg_id_val);
-        $json_po = json_encode($asset_po);
-        $json_bldg_id = json_encode($bldg_id);
-        $json_dept_search= json_encode($dept_id_search);
-        $json_price_check = json_encode($asset_price_check);
-        $json_operation = json_encode($asset_price_operation);
 ?>
-        <script>
-        console.log(<?=$json_dept_search?>, <?=$json_price_check?>);
-        </script>
 <li class="page-item disabled">
       <a class="page-link" href="#" tabindex="-1">Previous</a>
     </li>
@@ -449,9 +417,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         <span class="sr-only">(current)</span>
       </span>
     </li>
-        <script>
-        console.log(<?=$json_tag?>,<?=$json_cate?>, <?=$json_status?>,<?=$json_name?>,<?=$json_name?>,<?=$json_dept?>,<?=$json_room_tag?>,<?=$json_room_loc?>,<?=$json_sn?>,<?=$json_bldg_name?>,<?=$json_price?>,<?=$json_bldg_id_val?>,<?=$json_po?>,<?=$json_bldg_id?>,<?=$json_dept_search?>,<?=$json_price_check?>,<?=$json_operation?>);
-</script>
 
     <li class="page-item"><a class="page-link" href="#" onclick='searchTriggerViaAjax(<?=$offset+1?>)'><?=$offset+1?></a></li>
 <?php if ($total_pages > 2) { ?>
@@ -464,7 +429,7 @@ if ($total_pages > 4) { ?>
     <li class="page-item"><a class="page-link" href="#" onclick='searchTriggerViaAjax(<?=$offset+4?>)'><?=$offset+4?></a></li>
 
 <?php }
-if ($total_pages <= 2 & $offset = 2)  { ?>
+if ($total_pages <= 2 && $offset = 2)  { ?>
 
 <?php } else { ?>
     <li class="page-item"><a class="page-link" href="#" onclick='searchTriggerViaAjax(<?=$offset+1?>)'>Next</a></li>

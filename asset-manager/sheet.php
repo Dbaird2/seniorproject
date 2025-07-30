@@ -1,0 +1,70 @@
+<?php
+require_once '../config.php';
+check_auth();
+if (isset($_POST)) {
+    $profile = $_POST['profile_name'];
+    $email = $_SESSION['email'];
+
+    $select_q = "SELECT p.asset_tag, a.asset_name,
+    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.asset_price, a.po
+    FROM user_asset_profile p NATURAL JOIN asset_table a NATURAL JOIN room_table r NATURAL JOIN bldg_table b
+    WHERE p.profile_name = :name AND p.email = :email";
+    try {
+        $select_stmt = $dbh->prepare($select_q);
+        $select_stmt->execute([":profile_name" => $profile, ":email" => $email]);
+        $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error: " . $e->getMessage());
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="asset-ajax.js"></script>
+    <link rel="stylesheet" href="manager.css">
+</head>
+
+<body>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Row</th>
+                <th>Asset Tag</th>
+                <th>Asset Name</th>
+                <th>Room Tag</th>
+                <th>Room Location</th>
+                <th>Building</th>
+                <th>Department ID</th>
+                <th>Cost</th>
+                <th>PO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($result as $index => $row) { ?>
+                <tr>
+                    <td><?= $index + 1 ?></td>
+                    <td><?= $row['asset_tag'] ?></td>
+                    <td><?= $row['asset_name'] ?></td>
+                    <td><?= $row['room_tag'] ?></td>
+                    <td><?= $row['room_loc'] ?></td>
+                    <td><?= $row['bldg_name'] ?></td>
+                    <td><?= $row['dept_id'] ?></td>
+                    <td><?= $row['asset_price'] ?></td>
+                    <td><?= $row['po'] ?></td>
+                    <td><button id="delete-asset" value="<?= $row['asset_tag'] ?>"></button>>">Delete</button></td>
+                    <td><textarea name="notes" id="notes">Notes</textarea></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</body>
+
+</html>

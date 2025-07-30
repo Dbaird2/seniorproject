@@ -1,20 +1,25 @@
-add more responses for chatbot
+--add more responses for chatbot
 
 add csv support
 
-make editing of dept,bldg,asset,(admin)user in Ajax.php
-
-add delete features for assets --working on (bldg-department done)
+add delete features for assets/user --working on (bldg-department done)
 
 add page for custodians to build their asset list
 
-fix building search
+style modal & update endpoint for forms
 
-can't/shouldn't do for a while
-ML python/php
+update room addition form for room tag
+
+fix audit insert to not make dupes (fixed?)
+
+update building numbers (2)
+
+add a continue from AUDIT xlsx
 
 
-KUALI TO DO
+            KUALI TO DO
+make editing of dept,bldg,asset,(admin)user in Ajax.php
+
 insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
 
 get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
@@ -25,3 +30,7 @@ dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
 create account based off PROPERTY CUSTODIAN RESPONSIBILITY FORM
 
 update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
+
+
+can't/shouldn't do for a while
+ML python/php

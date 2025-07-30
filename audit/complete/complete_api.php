@@ -38,14 +38,21 @@ try {
     $audit_id = NULL;
     try {
         // GETS CURRENT YEAR audit_id
-        $check_recent_audits = "SELECT auditor, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
+        $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
         $check_stmt = $dbh->prepare($check_recent_audits);
         $check_stmt->execute([$dept]);
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
+        $found_current_year = false;
         if ($result) {
+            $found_current_year = true;
             $audit_id = (int)$result['audit_id'] ?? 1;
+            $update_q = "UPDATE INTO audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :id AND dept_id = :dept_id";
+            $update_stmt = $dbh->prepare($update_q);
+            $update_stmt->execute([":audit_id"=>$audit_id, ":dept_id"=>$result['dept_id']);
+            echo json_encode(['status'=>'success','Message'=>'Updated audit id '. $audit_id]);
+            exit;
         }
-        if ($audit_id === NULL) {
+        else if ($audit_id === NULL) {
             $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id ORDER BY finished_at";
             $check_stmt = $dbh->prepare($get_audit_ids);
             $check_stmt->execute([':dept_id'=>$dept]);
