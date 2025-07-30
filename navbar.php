@@ -81,6 +81,18 @@
 </span>
 </span>
 </li>
+        <li> 
+<span class="dropdown">
+  <a class="dropbtn">Inventory<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+<span class="dropdown-content">
+  <a href="#" class="dropdown-element">Profiles</a>
+  <a href="https://dataworks-7b7x.onrender.com/asset-manager/asset-ui.php" class="dropdown-element">Track Assets</a>
+</span>
+</span>
+</li>
         <li><a href="https://dataworks-7b7x.onrender.com/search/search.php">Search</a></li>
 
 <?php if ($_SESSION['role'] === 'admin') { ?>
