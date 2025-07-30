@@ -72,12 +72,12 @@ include_once '../navbar.php';
                     }
                     ?>
                 </datalist>
-                <a class="cta" href="#"></a><button class="cta" href="#" id="quick-start" name="quick-start">Quick Start</button></a>
+                <a class="cta" href="#"><button id="quick-start" name="quick-start">Quick Start</button></a>
             </div>
             <div class="downloads">
                 <a href="#"><button>Excel Sheet</button></a>
                 <a href="#"><button>PDF</button></a>
-                <a class="cta" href="#"><button class="cta" href="#" id="restart" name="restart">Restart Sheet</button></a>
+                <a class="cta" href="#"><button id="restart" name="restart">Restart Sheet</button></a>
 
             </div>
         </header>

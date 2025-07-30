@@ -6,7 +6,7 @@ if (isset($_POST)) {
     $email = $_SESSION['email'];
 
     $select_q = "SELECT p.asset_tag, a.asset_name,
-    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.asset_price, a.po
+    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
     FROM user_asset_profile p NATURAL JOIN asset_table a NATURAL JOIN room_table r NATURAL JOIN bldg_table b
     WHERE p.profile_name = :name AND p.email = :email";
     try {
@@ -42,7 +42,6 @@ if (isset($_POST)) {
                 <th>Room Location</th>
                 <th>Building</th>
                 <th>Department ID</th>
-                <th>Cost</th>
                 <th>PO</th>
             </tr>
         </thead>
@@ -57,10 +56,9 @@ if (isset($_POST)) {
                     <td><?= $row['room_loc'] ?></td>
                     <td><?= $row['bldg_name'] ?></td>
                     <td><?= $row['dept_id'] ?></td>
-                    <td><?= $row['asset_price'] ?></td>
                     <td><?= $row['po'] ?></td>
-                    <td><button id="delete-asset" value="<?= $row['asset_tag'] ?>"></button>>">Delete</button></td>
-                    <td><textarea name="notes" id="notes">Notes</textarea></td>
+                    <td><button id="delete-asset" class='asset-row' value="<?= $row['asset_tag'] ?>">Delete</button></td>
+                    <td><textarea name="notes" class='asset-note' id="<?=$row['asset_tag']?>">Notes</textarea></td>
                 </tr>
             <?php } ?>
         </tbody>

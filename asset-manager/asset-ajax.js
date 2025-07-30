@@ -16,14 +16,13 @@ function addAsset() {
         }
     });
 }
-function deleteAsset() {
-    const input_val = document.getElementById('search-db').value;
+function deleteAsset(asset_tag) {
     const profile_name = document.getElementById('profiles').value;
     $.ajax({
         method: 'POST',
         url: 'crud/delete-asset.php',
         data: {
-            asset_tag: input_val,
+            asset_tag: asset_tag,
             profile_name: profile_name
         },
         success: function () {
@@ -88,11 +87,38 @@ function displayTable() {
         }
     });
 }
+function addNote(note, tag) {
+    const profile_name = document.getElementById('profiles').value;
+    $.ajax({
+        method: 'POST',
+        url: "crud/add-note.php",
+        data: {
+            asset_note: note,
+            asset_tag: tag,
+            profile_name: profile_name
+        },
+        success: function () {
+            console.log('add-note success');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+
+}
 $(document).ready(function () {
     //$('#search-db').off('change').on('change', addAsset);
     $('#add-asset').off('click').on('click', addAsset);
     $('#load-profile').off('click').on('click', displayTable);
-    $('#').off('click').on('click', deleteAsset);
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
 });
+    $(document).on('click', '.asset-row', function(e) {
+        const asset_tag = this.value;
+        deleteAsset(asset_tag);
+    });
+    $(document).on('blur','.asset-note', function(e) {
+            const note = this.value;
+            const tag = this.id;
+            addNote(note, tag);
+    });

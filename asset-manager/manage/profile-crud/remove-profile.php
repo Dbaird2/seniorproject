@@ -1,0 +1,15 @@
+<?php
+require_once "../../../config.php";
+if (isset($_POST)) {
+    $email = $_SESSION['email'];
+    $name = $_POST['display_name'];
+
+    $delete_q = "DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name";
+    try {
+        $delete_stmt = $dbh->prepare($delete_q);
+        $delete_stmt->execute([":email" => $email, ":name" => $name]);
+    } catch (PDOException $e) {
+        error_log("Failed removing profile " . $e->getMessage());
+    }
+}
+
