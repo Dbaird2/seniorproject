@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 0);      // Suppress HTML error output
 ini_set('log_errors', 1);          // Log errors instead
-error_reporting(E_ALL);            // (optional) report all errors in dev
+error_reporting(E_ALL);            
 header("Content-Type: application/json"); 
 try {
     header("Access-Control-Allow-Headers: Content-Type");
@@ -48,7 +48,7 @@ try {
             $audit_id = (int)$result['audit_id'] ?? 1;
             $update_q = "UPDATE INTO audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :id AND dept_id = :dept_id";
             $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":audit_id"=>$audit_id, ":dept_id"=>$result['dept_id']);
+            $update_stmt->execute([":audit_id"]=>$audit_id, ":dept_id"=>$result['dept_id']);
             echo json_encode(['status'=>'success','Message'=>'Updated audit id '. $audit_id]);
             exit;
         }

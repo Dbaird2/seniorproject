@@ -129,7 +129,7 @@ function addNote(note, tag) {
 
 }
 function pdf() {
-    const display_name = document.getElementById('profiles').value;
+    const profile_name = document.getElementById('profiles').value;
     const pdf = true;
     $.ajax ({
         method: 'POST',
