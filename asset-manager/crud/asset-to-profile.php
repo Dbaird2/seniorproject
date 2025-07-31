@@ -16,7 +16,7 @@ if (isset($_POST)) {
                     VALUES
                     (?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$email, $profile_name, $asset_tag]);
+                $insert_stmt->execute([$email, $profile_name, $tag]);
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());
             }
