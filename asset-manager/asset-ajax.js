@@ -17,6 +17,7 @@ function displayUpdatedTable(profile_name) {
 function addAsset() {
     const input_val = document.getElementById('search-db').value;
     const profile_name = document.getElementById('profiles').value;
+    console.log(input_val);
     $.ajax({
         method: 'POST',
         url: 'crud/asset-to-profile.php',

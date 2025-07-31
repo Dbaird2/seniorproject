@@ -58,7 +58,7 @@ include_once '../navbar.php';
                 <input type="text" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
                 <datalist id="dept-list">
                     <?php
-                    $query = "SELECT dept_name, dept_id FROM department";
+                    $query = "SELECT dept_name FROM department";
                     $result = $dbh->query($query);
                     /*
                     test data
@@ -68,7 +68,7 @@ include_once '../navbar.php';
                     ];
                     */
                     foreach ($result as $row) {
-                        echo "<option value='" . htmlspecialchars($row['dept_id']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
+                        echo "<option value='" . htmlspecialchars($row['dept_name']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
                     }
                     ?>
                 </datalist>
