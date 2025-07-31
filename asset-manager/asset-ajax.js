@@ -145,6 +145,7 @@ function pdf() {
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
         }
+    )};
 }
 $(document).ready(function () {
     //$('#search-db').off('change').on('change', addAsset);

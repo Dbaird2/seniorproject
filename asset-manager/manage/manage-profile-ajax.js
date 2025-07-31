@@ -53,11 +53,11 @@ function deleteProfile(profile_name) {
         }
     });
 }
-function renameProfile(new_name, old_name) {
-    if (new_name.length <= 0 || new_name.trim() === '') {
+function renameProfile(new_name_raw, old_name) {
+    if (new_name_ra_raww.length <= 0 || new_name_raw.trim() === '') {
         return;
     }
-    const new_name = new_name.trim();
+    const new_name = new_name_raw.trim();
     $.ajax({
         method: "POST",
         url: "profile-crud/rename-profile.php",
