@@ -33,7 +33,7 @@ include_once '../navbar.php';
                         <input type="text" id="profiles" list="profile-list" placeholder="Load Profile" autocomplete="on" accept="text/plain">
                         <datalist id="profile-list">
                             <?php
-                            $query = "SELECT profile_name FROM user_asset_profile WHERE email = :email";
+                            $query = "SELECT distinct profile_name FROM user_asset_profile WHERE email = :email";
                             $query_stmt = $dbh->prepare($query);
                             $query_stmt->execute([":email" => $_SESSION['email']]);
                             $result = $query_stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
@@ -45,7 +45,7 @@ include_once '../navbar.php';
                             ];
                             */
                             foreach ($result as $row) {
-                                echo "<option value='" . htmlspecialchars($row['profile_name']) . "' data-id='" . htmlspecialchars($row['profile_id']) . ' ' . htmlspecialchars($row['profile_name']) . "'>";
+                                echo "<option value='" . htmlspecialchars($row['profile_name']) . "' data-id='" . htmlspecialchars($row['profile_name'])."'>";
                             }
                             ?>
                         </datalist>
@@ -58,7 +58,7 @@ include_once '../navbar.php';
                 <input type="text" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
                 <datalist id="dept-list">
                     <?php
-                    $query = "SELECT dept_name FROM department";
+                    $query = "SELECT dept_name, dept_id FROM department";
                     $result = $dbh->query($query);
                     /*
                     test data
@@ -68,7 +68,7 @@ include_once '../navbar.php';
                     ];
                     */
                     foreach ($result as $row) {
-                        echo "<option value='" . htmlspecialchars($row['dept_name']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
+                        echo "<option value='" . htmlspecialchars($row['dept_id']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
                     }
                     ?>
                 </datalist>

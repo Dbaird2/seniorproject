@@ -1,3 +1,19 @@
+function displayUpdatedTable(profile_name) {
+    $.ajax({
+        method: 'POST',
+        url: "sheet.php",
+        data: {
+            status: 1,
+            profile_name: profile_name
+        },
+        success: function (html) {
+            $("#display-table").html(html).show();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
 function addAsset() {
     const input_val = document.getElementById('search-db').value;
     const profile_name = document.getElementById('profiles').value;
@@ -10,6 +26,7 @@ function addAsset() {
         },
         success: function () {
             console.log('add success');
+            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -27,6 +44,7 @@ function deleteAsset(asset_tag) {
         },
         success: function () {
             console.log('delete success');
+            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -44,6 +62,7 @@ function deleteAllAssets() {
         },
         success: function () {
             console.log('profile wipe success');
+            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -52,17 +71,18 @@ function deleteAllAssets() {
 
 }
 function quickStart() {
-    const dept_id = document.getElementById('dept').value;
+    const dept_name = document.getElementById('dept').value;
     const profile_name = document.getElementById('profiles').value;
     $.ajax({
         method: 'POST',
         url: 'crud/quick-start-profile.php',
         data: {
-            dept_id: dept_id,
+            dept_name: dept_name,
             profile_name: profile_name
         },
         success: function () {
             console.log('add success');
+            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -99,6 +119,7 @@ function addNote(note, tag) {
         },
         success: function () {
             console.log('add-note success');
+            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);

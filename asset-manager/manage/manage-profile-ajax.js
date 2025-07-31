@@ -26,6 +26,7 @@ function addProfile() {
         },
         success: function () {
             console.log('Successfully added profile');
+            displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -45,6 +46,7 @@ function removeProfile() {
         },
         success: function () {
             console.log('Successfully removed profile');
+            displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -61,6 +63,7 @@ function renameProfile(new_name, old_name) {
         },
         success: function () {
             console.log('Successfully renamed profile');
+            displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
