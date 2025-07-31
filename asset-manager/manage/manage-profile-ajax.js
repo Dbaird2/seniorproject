@@ -76,19 +76,18 @@ function renameProfile(new_name_raw, old_name) {
 }
 $(document).ready(function () {
     $('#add-profile').off('click').on('click', addProfile);
-    $('#delete-profile').off('click').on('click', removeProfile);
 });
-if (!window.renameProfile) {
+if (!window.rename_profile) {
     $(document).on('click', '.rename', function (e) {
         const row = $(this).closest('tr');
         const profile_name = row.find('input[type="text"]').val();
         renameProfile(profile_name, this.value);
     });
-    window.renameProfile = true;
+    window.rename_profile = true;
 }
-if (!window.deleteProfile) {
+if (!window.delete_profile) {
     $(document).on('click', '.delete-profile', function (e) {
         deleteProfile(this.value);
     });
-    window.deleteProfile = true;
+    window.delete_profile = true;
 }
