@@ -36,6 +36,7 @@ require_once '../../config.php';
                 <tr>
                     <td><input type="text" id="<?= $row['profile_name'] ?>" value="<?= $row['profile_name'] ?>"></td>
                     <td><button class="rename" value="<?= $row['profile_name'] ?>">Rename</button></td>
+                    <td><button class="delete-profile" value="<?= $row['profile_name'] ?>">Delete</button></td>
                 </tr>
             <?php } ?>
         </tbody>

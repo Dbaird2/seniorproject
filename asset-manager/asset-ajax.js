@@ -128,12 +128,31 @@ function addNote(note, tag) {
     });
 
 }
+function pdf() {
+    const display_name = document.getElementById('profiles').value;
+    const pdf = true;
+    $.ajax ({
+        method: 'POST',
+        url: 'sheet.php',
+        data: {
+            display_name: display_name,
+            pdf: pdf
+        },
+        success : function () {
+            console.log('downloading pdf');
+            displayUpdatedTable(profile_name);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+}
 $(document).ready(function () {
     //$('#search-db').off('change').on('change', addAsset);
     $('#add-asset').off('click').on('click', addAsset);
     $('#load-profile').off('click').on('click', displayTable);
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
+    $('#pdf').off('click').on('click', pdf);
 });
 if (!window.assetDeleteBound) {
     $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {

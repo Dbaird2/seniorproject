@@ -20,6 +20,10 @@ if (isset($_POST)) {
         error_log("Error: " . $e->getMessage());
     }
 }
+if (isset($_POST['pdf'])) {
+    require_once ("../vendor/autoload.php");
+    ob_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +36,7 @@ if (isset($_POST)) {
     <link rel="stylesheet" href="manager.css">
 </head>
 
-<body>
+<body class="is-ajax">
 
 <?php if ($result) { ?>
     <table class="table">
@@ -72,3 +76,13 @@ if (isset($_POST)) {
 </body>
 
 </html>
+<?php 
+                if (isset($_POST['pdf'])) {
+                    $html = ob_get_clean();
+                    $mpdf = new /Mpdf/Mpdf();
+                    $mpdf->WriteHTML($html);
+                    $mpdf->SetDisplayMode('fullpage');
+                    $mpdf->Output('Profile: '.htmlspecialchars((string) $_POST['profile_name']).'pdf',' D');
+                    unset($_POST['pdf']);
+                }
+?>

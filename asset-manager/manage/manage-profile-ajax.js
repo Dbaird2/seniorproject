@@ -12,7 +12,8 @@ function displayProfiles() {
     });
 }
 function addProfile() {
-    const profile_name = document.getElementById('display-name').value;
+    const profile_name_raw = document.getElementById('display-name').value;
+    const profile_name = profile_name_raw.trim();
     console.log(profile_name, "before");
     if (profile_name.length <= 0) {
         return;
@@ -33,9 +34,8 @@ function addProfile() {
         }
     });
 }
-function removeProfile() {
-    const profile_name = document.getElementById('display-name').value;
-    if (profile_name.length <= 0) {
+function deleteProfile(profile_name) {
+    if (profile_name.length <= 0 || profile_name.trim() === '' || !profile_name) {
         return;
     }
     $.ajax({
@@ -54,6 +54,10 @@ function removeProfile() {
     });
 }
 function renameProfile(new_name, old_name) {
+    if (new_name.length <= 0 || new_name.trim() === '') {
+        return;
+    }
+    const new_name = new_name.trim();
     $.ajax({
         method: "POST",
         url: "profile-crud/rename-profile.php",
@@ -73,15 +77,18 @@ function renameProfile(new_name, old_name) {
 $(document).ready(function () {
     $('#add-profile').off('click').on('click', addProfile);
     $('#delete-profile').off('click').on('click', removeProfile);
-    $('.rename').on('click', function (e) {
+});
+if (!window.renameProfile) {
+    $(document).on('click', '.rename', function (e) {
         const row = $(this).closest('tr');
         const profile_name = row.find('input[type="text"]').val();
-        console.log('click');
-        console.log(profile_name);
+        renameProfile(profile_name, this.value);
     });
-});
-$(document).on('click', '.rename', function (e) {
-    const row = $(this).closest('tr');
-    const profile_name = row.find('input[type="text"]').val();
-    renameProfile(profile_name, this.value);
-});
+    window.renameProfile = true;
+}
+if (!window.deleteProfile) {
+    $(document).on('click', '.delete-profile', function (e) {
+        deleteProfile(this.value);
+    });
+    window.deleteProfile = true;
+}
