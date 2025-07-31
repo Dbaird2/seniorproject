@@ -79,7 +79,7 @@ if (isset($_POST['pdf'])) {
 <?php 
                 if (isset($_POST['pdf'])) {
                     $html = ob_get_clean();
-                    $mpdf = new /Mpdf/Mpdf();
+                    $mpdf = new \Mpdf\Mpdf();
                     $mpdf->WriteHTML($html);
                     $mpdf->SetDisplayMode('fullpage');
                     $mpdf->Output('Profile: '.htmlspecialchars((string) $_POST['profile_name']).'pdf',' D');

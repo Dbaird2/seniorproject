@@ -35,6 +35,7 @@ function addProfile() {
     });
 }
 function deleteProfile(profile_name) {
+    
     if (profile_name.length <= 0 || profile_name.trim() === '' || !profile_name) {
         return;
     }
@@ -45,7 +46,7 @@ function deleteProfile(profile_name) {
             profile_name: profile_name
         },
         success: function () {
-            console.log('Successfully removed profile');
+            console.log('Successfully removed profile', profile_name);
             displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -54,7 +55,7 @@ function deleteProfile(profile_name) {
     });
 }
 function renameProfile(new_name_raw, old_name) {
-    if (new_name_ra_raww.length <= 0 || new_name_raw.trim() === '') {
+    if (new_name_raw.length <= 0 || new_name_raw.trim() === '') {
         return;
     }
     const new_name = new_name_raw.trim();
