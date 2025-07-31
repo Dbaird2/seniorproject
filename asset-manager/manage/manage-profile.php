@@ -25,8 +25,8 @@ check_auth();?>
             <h2 style="text-align:center;">Profile Management</h2>
             <header>
                 <input type="text" id="display-name" placeholder="Profile Name">
-                <button>Add Profile</button>
-                <button>Delete Profile</button>
+                <button id="add-profile">Add Profile</button>
+                <button id="delete-profile">Delete Profile</button>
             </header>
         </section>
         <div class="page2">

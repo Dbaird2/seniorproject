@@ -87,7 +87,7 @@ include_once '../navbar.php';
                     <input type="text" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">
                     <datalist id="asset-list">
                         <?php
-                        $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'active' ORDER BY asset_name";
+                        $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'In Service'";
                         $result = $dbh->query($query);
                         // test data
                         /*$result = [

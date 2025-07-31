@@ -9,7 +9,7 @@ if (isset($_POST)) {
     $update_q = "UPDATE user_asset_profile SET profile_name = :new_name WHERE email = :email AND profile_name = :profile_name";
     try {
         $update_stmt = $dbh->prepare($update_q);
-        $update_stmt->execute([":profile_name" => $old_name, ":email" => $email, "mew_name" => $profile_name]);
+        $update_stmt->execute([":profile_name" => $old_name, ":email" => $email, ":new_name" => $profile_name]);
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
     }

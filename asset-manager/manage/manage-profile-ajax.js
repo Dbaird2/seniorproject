@@ -68,7 +68,7 @@ function renameProfile(profile_name) {
 }
 $(document).ready(function () {
     $('#add-profile').off('click').on('click', addProfile);
-    $('#remove-profile').off('click').on('click', removeProfile);
+    $('#delete-profile').off('click').on('click', removeProfile);
     $('.rename').on('click', function (e) {
         const row = $(this).closest('tr');
         const profile_name = row.find('input[type="text"]').val();

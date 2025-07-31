@@ -1,6 +1,7 @@
 <?php
 require_once '../config.php';
 check_auth();
+$result = NULL;
 if (isset($_POST)) {
     $profile = $_POST['profile_name'];
     $email = $_SESSION['email'];
@@ -8,7 +9,7 @@ if (isset($_POST)) {
     $select_q = "SELECT p.asset_tag, a.asset_name,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
     FROM user_asset_profile p NATURAL JOIN asset_info a NATURAL JOIN room_table r NATURAL JOIN bldg_table b
-    WHERE p.profile_name = :name AND p.email = :email";
+    WHERE p.profile_name = :profile_name AND p.email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":profile_name" => $profile, ":email" => $email]);

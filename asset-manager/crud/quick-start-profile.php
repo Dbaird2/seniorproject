@@ -11,6 +11,10 @@ if (isset($_POST)) {
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":dept_id" => $dept_id]);
     $asset_results = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    // ADD DELETE QUERY TO THIS
+    $delete_q = "DELETE FROM user_asset_profile WHERE profile_name = :profile_name AND email = :email";
+    $delete_stmt = $dbh->prepare($delete_q);
+    $delete_stmt->execute([":profile_name"=>$profile_name,":email"=>$email]);
 
     try {
         $dbh->beginTransaction();
