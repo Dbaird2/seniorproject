@@ -36,6 +36,7 @@ function addAsset() {
 }
 function deleteAsset(asset_tag) {
     const profile_name = document.getElementById('profiles').value;
+    console.log('deleting ', profile_name);
     $.ajax({
         method: 'POST',
         url: 'crud/delete-asset.php',
@@ -120,7 +121,6 @@ function addNote(note, tag) {
         },
         success: function () {
             console.log('add-note success');
-            displayUpdatedTable(profile_name);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
@@ -135,12 +135,18 @@ $(document).ready(function () {
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
 });
+if (!window.assetDeleteBound) {
     $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {
         const asset_tag = this.value;
         deleteAsset(asset_tag);
     });
+    window.assetDeleteBound= true;
+}
+if (!window.assetNoteBound) {
     $(document).off('blur.asset-note').on('blur.asset-note','.asset-note', function(e) {
-            const note = this.value;
-            const tag = this.id;
-            addNote(note, tag);
+        const note = this.value;
+        const tag = this.id;
+        addNote(note, tag);
     });
+    window.assetNoteBound= true;
+}

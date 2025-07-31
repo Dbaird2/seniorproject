@@ -8,8 +8,7 @@ if (isset($_POST)) {
 
     $select_q = "SELECT p.asset_tag, a.asset_name,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
-    FROM user_asset_profile p
-    JOIN asset_info a ON p.asset_tag = a.asset_tag
+    FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
     JOIN bldg_table b ON r.bldg_id = b.bldg_id
     WHERE p.profile_name = :profile_name AND p.email = :email";
@@ -68,7 +67,7 @@ if (isset($_POST)) {
         </tbody>
     </table>
 <? } else { ?>
-    <h3>No Profiles Found</h3>
+    <h3>No assets in profile.</h3>
 <?php } ?>
 </body>
 
