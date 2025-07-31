@@ -23,6 +23,7 @@ if (isset($_POST)) {
         } else {
             echo json_decode(['status'->'failed', 'reason'=>'tag already exists']);
             exit;
+        }
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
     }

@@ -51,12 +51,13 @@ function removeProfile() {
         }
     });
 }
-function renameProfile(profile_name) {
+function renameProfile(new_name, old_name) {
     $.ajax({
         method: "POST",
         url: "profile-crud/rename-profile.php",
         data: {
-            profile_name: profile_name
+            old_name: old_name,
+            new_name: new_name
         },
         success: function () {
             console.log('Successfully renamed profile');

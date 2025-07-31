@@ -2,7 +2,7 @@
 include_once "../../../config.php";
 if (isset($_POST)) {
     $email = $_SESSION['email'];
-    $name = $_POST['display_name'];
+    $name = $_POST['profile_name'];
     $select_q = "SELECT COUNT(*) as profile_count from user_asset_profile WHERE email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
@@ -19,7 +19,7 @@ if (isset($_POST)) {
             $insert_stmt->execute([$email, $name]);
         } catch (PDOException $e) {
             echo json_encode(['failed'=>'inserting']);
-            error_log("Failed adding profile " . $e->getMessage());
+            error_log("Failed adding profile " . $e->getMessage() . ' profile_name value ' . $name);
         }
     } else {
         echo json_encode(["status" => "failed", "Reason" => "Profile Limit reached"]);
