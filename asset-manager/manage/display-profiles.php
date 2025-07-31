@@ -16,8 +16,8 @@ require_once '../../config.php';
     /* $email = 'dbaird2@csub.edu'; */
     $select = "SELECT distinct profile_name FROM user_asset_profile WHERE email = :email";
     $stmt = $dbh->prepare($select);
-    $stmt->execute([$email]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute([":email"=>$email]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
     /* mock data 
     $result = [
         ['profile_name' => 'D21560'],
