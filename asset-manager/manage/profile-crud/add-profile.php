@@ -1,5 +1,5 @@
 <?php
-require_once "../../../config.php";
+include_once "../../../config.php";
 if (isset($_POST)) {
     $email = $_SESSION['email'];
     $name = $_POST['display_name'];
@@ -10,6 +10,7 @@ if (isset($_POST)) {
         $count = $select_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("Failed checking profile limit" . $e->getMessage());
+        echo json_encode(['failed'=>'selecting']);
     }
     if ((int) $count['profile_count'] <= 6) {
         $insert_q = "INSERT INTO user_asset_profile (email, profile_name) VALUES (?, ?)";
@@ -17,6 +18,7 @@ if (isset($_POST)) {
             $insert_stmt = $dbh->prepare($insert_q);
             $insert_stmt->execute([$email, $name]);
         } catch (PDOException $e) {
+            echo json_encode(['failed'=>'inserting']);
             error_log("Failed adding profile " . $e->getMessage());
         }
     } else {

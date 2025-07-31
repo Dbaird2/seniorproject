@@ -1,6 +1,5 @@
 <?php
-require_once '../../config.php';
-check_auth();
+include_once '../../config.php';
 if (isset($_POST)) {
     $dept_id = trim($_POST['dept_id']);
     $profile_name = trim($_POST['profile_name']);

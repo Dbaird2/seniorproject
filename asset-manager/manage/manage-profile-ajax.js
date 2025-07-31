@@ -13,9 +13,11 @@ function displayProfiles() {
 }
 function addProfile() {
     const profile_name = document.getElementById('display-name').value;
+    console.log(profile_name, "before");
     if (profile_name.length <= 0) {
         return;
     }
+    console.log(profile_name, "after");
     $.ajax({
         method: 'POST',
         url: 'profile-crud/add-profile.php',

@@ -1,0 +1,14 @@
+.git
+*.log
+*.bak
+node_modules
+vendor
+tests
+tmp
+.dockerignore
+.docusaurus
+*.csv
+*.xlsx
+*.zip
+.env
+coverage

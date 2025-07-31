@@ -1,5 +1,5 @@
 <?php
-require_once '../../config.php';
+include_once '../../../config.php';
 check_auth();
 if (isset($_POST)) {
     $profile_name = trim($_POST['profile_name']);

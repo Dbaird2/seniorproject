@@ -7,7 +7,7 @@ if (isset($_POST)) {
 
     $select_q = "SELECT p.asset_tag, a.asset_name,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
-    FROM user_asset_profile p NATURAL JOIN asset_table a NATURAL JOIN room_table r NATURAL JOIN bldg_table b
+    FROM user_asset_profile p NATURAL JOIN asset_info a NATURAL JOIN room_table r NATURAL JOIN bldg_table b
     WHERE p.profile_name = :name AND p.email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
@@ -31,7 +31,7 @@ if (isset($_POST)) {
 
 <body>
 
-
+<?php if ($result) { ?>
     <table class="table">
         <thead>
             <tr>
@@ -63,6 +63,9 @@ if (isset($_POST)) {
             <?php } ?>
         </tbody>
     </table>
+<? } else { ?>
+    <h3>No Profiles Found</h3>
+<?php } ?>
 </body>
 
 </html>

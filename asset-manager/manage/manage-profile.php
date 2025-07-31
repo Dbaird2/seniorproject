@@ -1,3 +1,4 @@
+
 <?php include_once("../../config.php"); 
 check_auth();?>
 <!DOCTYPE html>
@@ -19,7 +20,6 @@ check_auth();?>
         }
     </style>
 </head>
-
 <body>
     <nav class="is-manage-profile">
         <section class="page1">
