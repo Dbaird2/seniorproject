@@ -6,7 +6,7 @@ if (isset($_POST)) {
     $email = $_SESSION['email'];
     $select_q = "SELECT dept_id from department where dept_name = ?";
     $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->exeucte([$dept_name]);
+    $select_stmt->execute([$dept_name]);
     $dept = $select_stmt->fetch(PDO::FETCH_ASSOC);
     $dept_id = $dept['dept_id'];
 
