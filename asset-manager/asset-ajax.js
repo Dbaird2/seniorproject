@@ -135,11 +135,11 @@ $(document).ready(function () {
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
 });
-    $(document).on('click', '.asset-row', function(e) {
+    $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {
         const asset_tag = this.value;
         deleteAsset(asset_tag);
     });
-    $(document).on('blur','.asset-note', function(e) {
+    $(document).off('blur.asset-note').on('blur.asset-note','.asset-note', function(e) {
             const note = this.value;
             const tag = this.id;
             addNote(note, tag);

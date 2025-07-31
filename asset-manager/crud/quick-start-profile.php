@@ -4,12 +4,17 @@ if (isset($_POST)) {
     $dept_name = trim($_POST['dept_name']);
     $profile_name = trim($_POST['profile_name']);
     $email = $_SESSION['email'];
+    $select_q = "SELECT dept_id from department where dept_name = ?";
+    $select_stmt = $dbh->prepare($select_q);
+    $select_stmt->exeucte([$dept_name]);
+    $dept = $select_stmt->fetch(PDO::FETCH_ASSOC);
+    $dept_id = $dept['dept_id'];
 
     $select_q = "SELECT asset_tag
     FROM asset_info
-    WHERE dept_name = :dept_name";
+    WHERE dept_id = :dept_id";
     $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":dept_name" => $dept_name]);
+    $select_stmt->execute([":dept_id" => $dept_id]);
     $asset_results = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
     // ADD DELETE QUERY TO THIS
     $delete_q = "DELETE FROM user_asset_profile WHERE profile_name = :profile_name AND email = :email";
