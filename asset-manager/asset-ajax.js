@@ -131,7 +131,7 @@ function addNote(note, tag) {
 function download(type) {
     const profile_name = document.getElementById('profiles').value;
     download = (type === 'pdf') ? 'pdf' : 'excel';
-    url = (type === 'pdf') ? 'sheet.php' : 'excel-download.php';
+    url = (type === 'pdf') ? 'sheet.php' : 'crud/excel-download.php';
     const pdf = true;
     $.ajax ({
         method: 'POST',
@@ -155,8 +155,8 @@ $(document).ready(function () {
     $('#load-profile').off('click').on('click', displayTable);
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
-    $('#pdf').off('click').on('click', download('pdf');
-    $('#excel').off('click').on('click', download('excel');
+    $('#pdf').off('click').on('click', download('pdf'));
+    $('#excel').off('click').on('click', download('excel'));
 });
 if (!window.assetDeleteBound) {
     $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {

@@ -16,6 +16,9 @@ update building numbers (2)
 
 add a continue from AUDIT xlsx
 
+add a completion list of what audits are done and when they need to be redone
+by
+
 
             KUALI TO DO
 make editing of dept,bldg,asset,(admin)user in Ajax.php

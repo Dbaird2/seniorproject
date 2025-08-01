@@ -2,7 +2,7 @@
 include_once "../../../config.php";
 if (isset($_POST)) {
     $email = $_SESSION['email'];
-    $name = trim($_POST['display_name']);
+    $name = trim($_POST['profile_name']);
 
     $delete_q = "DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name";
     try {
