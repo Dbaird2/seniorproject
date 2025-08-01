@@ -20,7 +20,7 @@ if (isset($_POST)) {
         error_log("Error: " . $e->getMessage());
     }
 }
-if (isset($_POST['pdf'])) {
+if (isset($_POST['type']) && $_POST['type'] === 'pdf') {
     require_once ("../vendor/autoload.php");
     ob_start();
 }

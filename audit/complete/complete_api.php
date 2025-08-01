@@ -48,7 +48,13 @@ try {
             $audit_id = (int)$result['audit_id'] ?? 1;
             $update_q = "UPDATE INTO audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :id AND dept_id = :dept_id";
             $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":audit_id"]=>$audit_id, ":dept_id"=>$result['dept_id']);
+            $update_stmt->execute([":audit_id"=>$audit_id, ":dept_id"=>$result['dept_id'], ":auditor"=>$auditor,":audit_data"=>$audited_asset_json,":found_data"=>$found_assets_json]);
+
+            // UPDATE department TABLE
+            $update_dept_q = "UPDATE INTO department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
+            $update_dept_stmt = $dbh->prepare($update_dept_q);
+            $update_dept_stmt->execute([":dept_id"=>$result['dept_id']]);
+
             echo json_encode(['status'=>'success','Message'=>'Updated audit id '. $audit_id]);
             exit;
         }
@@ -77,6 +83,11 @@ try {
         $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, found_data) VALUES (?, ?, ?, ?, ?)";
         $insert_stmt = $dbh->prepare($insert_q);
         $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
+
+        // UPDATE department TABLE
+        $update_dept_q = "UPDATE INTO department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
+        $update_dept_stmt = $dbh->prepare($update_dept_q);
+        $update_dept_stmt->execute([":dept_id"=>$dept]);
     } catch (PDOException $e) {
         echo json_encode(['status'=>'failed','Error on Insert'=>$e->getMessage(),]);
         exit;

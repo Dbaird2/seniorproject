@@ -128,15 +128,17 @@ function addNote(note, tag) {
     });
 
 }
-function pdf() {
+function download(type) {
     const profile_name = document.getElementById('profiles').value;
+    download = (type === 'pdf') ? 'pdf' : 'excel';
+    url = (type === 'pdf') ? 'sheet.php' : 'excel-download.php';
     const pdf = true;
     $.ajax ({
         method: 'POST',
-        url: 'sheet.php',
+        url: url,
         data: {
-            display_name: display_name,
-            pdf: pdf
+            profile_name: profile_name,
+            type: download
         },
         success : function () {
             console.log('downloading pdf');
@@ -153,7 +155,8 @@ $(document).ready(function () {
     $('#load-profile').off('click').on('click', displayTable);
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
-    $('#pdf').off('click').on('click', pdf);
+    $('#pdf').off('click').on('click', download('pdf');
+    $('#excel').off('click').on('click', download('excel');
 });
 if (!window.assetDeleteBound) {
     $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {
