@@ -1,23 +1,22 @@
---add more responses for chatbot
+add page for custodians to build their asset list
+
+add a continue from AUDIT xlsx
+
+fix audit insert to not make dupes (fixed?)
+
+add a completion list of what audits are done and when they need to be redone
+by
+
+update room addition form for room tag
 
 add csv support
 
 add delete features for assets/user --working on (bldg-department done)
 
-add page for custodians to build their asset list
-
-style modal & update endpoint for forms
-
-update room addition form for room tag
-
-fix audit insert to not make dupes (fixed?)
-
 update building numbers (2)
 
-add a continue from AUDIT xlsx
 
-add a completion list of what audits are done and when they need to be redone
-by
+--add more responses for chatbot
 
 
             KUALI TO DO
@@ -33,6 +32,8 @@ dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
 create account based off PROPERTY CUSTODIAN RESPONSIBILITY FORM
 
 update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
+
+style modal & update endpoint for forms
 
 
 can't/shouldn't do for a while

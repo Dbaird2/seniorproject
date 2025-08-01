@@ -155,8 +155,8 @@ $(document).ready(function () {
     $('#load-profile').off('click').on('click', displayTable);
     $('#restart').off('click').on('click',deleteAllAssets);
     $('#quick-start').off('click').on('click', quickStart);
-    $('#pdf').off('click').on('click', download_type('pdf'));
-    $('#excel').off('click').on('click', download_type('excel'));
+    $('#pdf').off('click').on('click', download_file('pdf'));
+    $('#excel').off('click').on('click', download_file('excel'));
 });
 if (!window.assetDeleteBound) {
     $(document).off('click.asset-row').on('click.asset-row', '.asset-row', function(e) {

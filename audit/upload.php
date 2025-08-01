@@ -40,14 +40,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $data = $worksheet->toArray();
         $highest_row= $worksheet->getHighestRow();
         $highest_col = $worksheet->getHighestColumn();
-        if ($data[0][2] == NULL) {
-            unset($data[0]);
-        }
-        if (count($data)>1) {
+        if (count($data) > 1 && $data[0][1] !== 'Tags Found') {
+            if ($data[0][2] == NULL) {
+                unset($data[0]);
+            }
             $_SESSION['saved_tags'] = [];
-            unset($_SESSION['data']);
             $_SESSION['data'] = array_values($data);
-            $_SESSION['info'] = [$highest_row, $highest_col, $file_path, basename($file_name)];
+            $_SESSION['info'] = [$highest_row, $highest_col, $filePath];
+
+            header('Location: auditing.php');
+            exit();
+        } else if (count($data) > 1 && $data[0][1] === 'Tags Found') {
+            unset($_SESSION['data']);
+            unset($_SESSION['info']);
+            unset($_SESSION['saved_tags']);
+            $highest_row = 0;
+            foreach ($data as $index => $value) {
+                if ($value[0] !== NULL) {
+                    $highest_row++;
+                    $_SESSION['data'][] = [$value[0], $value[5], $value[6], $value[7], $value[8], $value[9], $value[10]];
+                }
+                if ($index === 0) {
+                    continue;
+                }
+                if ($value[1] !== NULL) {
+                    $_SESSION['saved_tags'][] = [$value[1], $value[3], $value[4], $value[2]];
+                }
+            }
+            $_SESSION['info'] = [$highest_row, $highest_col, $filePath];
             header('Location: auditing.php');
             exit();
         } else {
