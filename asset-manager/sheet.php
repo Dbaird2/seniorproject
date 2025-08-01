@@ -77,7 +77,7 @@ if (isset($_POST['type']) && $_POST['type'] === 'pdf') {
 
 </html>
 <?php 
-                if (isset($_POST['pdf'])) {
+                if (isset($_POST['pdf']) && $_POST['pdf'] === true;) {
                     $html = ob_get_clean();
                     $mpdf = new \Mpdf\Mpdf();
                     $mpdf->WriteHTML($html);

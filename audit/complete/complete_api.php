@@ -46,12 +46,12 @@ try {
         if ($result) {
             $found_current_year = true;
             $audit_id = (int)$result['audit_id'] ?? 1;
-            $update_q = "UPDATE INTO audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :id AND dept_id = :dept_id";
+            $update_q = "UPDATE audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :audit_id AND dept_id = :dept_id";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":audit_id"=>$audit_id, ":dept_id"=>$result['dept_id'], ":auditor"=>$auditor,":audit_data"=>$audited_asset_json,":found_data"=>$found_assets_json]);
 
             // UPDATE department TABLE
-            $update_dept_q = "UPDATE INTO department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
+            $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
             $update_dept_stmt = $dbh->prepare($update_dept_q);
             $update_dept_stmt->execute([":dept_id"=>$result['dept_id']]);
 
@@ -85,7 +85,7 @@ try {
         $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
 
         // UPDATE department TABLE
-        $update_dept_q = "UPDATE INTO department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
+        $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
         $update_dept_stmt = $dbh->prepare($update_dept_q);
         $update_dept_stmt->execute([":dept_id"=>$dept]);
     } catch (PDOException $e) {
