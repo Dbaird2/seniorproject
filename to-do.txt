@@ -1,6 +1,4 @@
-add page for custodians to build their asset list
-
-add a continue from AUDIT xlsx
+add page for custodians to build their asset list (pdf/excel sheet)
 
 fix audit insert to not make dupes (fixed?)
 
@@ -9,11 +7,13 @@ by
 
 update room addition form for room tag
 
-add csv support
-
 add delete features for assets/user --working on (bldg-department done)
 
 update building numbers (2)
+
+add a continue from db
+
+add csv support
 
 
 --add more responses for chatbot

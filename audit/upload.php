@@ -278,9 +278,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 </style>
 <?php include_once("../navbar.php"); ?>
 <body>
+
 <div class="is-upload">
     <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-    <h2 class="header">Excel or CSV files only.</h2>
+    <h2 class="header">Excel or CSV files only.<br></h2>
+    <h4 class="header">Concerned about Excel formatting? Check out our help page <a href="#">Here</a></h4>
 <div class="container">
   <div class="folder">
     <div class="front-side">

@@ -20,10 +20,6 @@ if (isset($_POST)) {
         error_log("Error: " . $e->getMessage());
     }
 }
-if (isset($_POST['type']) && $_POST['type'] === 'pdf') {
-    require_once ("../vendor/autoload.php");
-    ob_start();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +35,8 @@ if (isset($_POST['type']) && $_POST['type'] === 'pdf') {
 <body class="is-ajax">
 
 <?php if ($result) { ?>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= $profile ?>'"><button id="excel">Excel Sheet</button></a>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= $profile ?>'"><button id="pdf">PDF</button></a>
     <table class="table">
         <thead>
             <tr>
@@ -70,19 +68,9 @@ if (isset($_POST['type']) && $_POST['type'] === 'pdf') {
             <?php } ?>
         </tbody>
     </table>
-<? } else { ?>
+<?php } else { ?>
     <h3>No assets in profile.</h3>
 <?php } ?>
 </body>
 
 </html>
-<?php 
-                if (isset($_POST['pdf']) && $_POST['pdf'] === true;) {
-                    $html = ob_get_clean();
-                    $mpdf = new \Mpdf\Mpdf();
-                    $mpdf->WriteHTML($html);
-                    $mpdf->SetDisplayMode('fullpage');
-                    $mpdf->Output('Profile: '.htmlspecialchars((string) $_POST['profile_name']).'pdf',' D');
-                    unset($_POST['pdf']);
-                }
-?>

@@ -75,8 +75,6 @@ check_auth();
                 <a class="cta" href="#"><button id="quick-start" name="quick-start">Quick Start</button></a>
             </div>
             <div class="downloads">
-                <a href="#"><button id="excel">Excel Sheet</button></a>
-                <a href="#"><button id="pdf">PDF</button></a>
                 <a class="cta" href="#"><button id="restart" name="restart">Restart Sheet</button></a>
 
             </div>

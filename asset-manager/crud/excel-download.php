@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $email = $_SESSION['email'];
-$profile_name = $_POST['profile_name'];
+$profile_name = $_GET['profile_name'];
 
 $select_q = "SELECT p.asset_tag, a.asset_name,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
@@ -23,16 +23,17 @@ try {
     error_log("Error: " . $e->getMessage());
     die("Failed to retrieve data.");
 }
-$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+$spreadsheet = new Spreadsheet();
 if ($result) {
     $spreadsheet->getActiveSheet()->fromArray($result, NULL, 'A1');
 } else {
-    $spreadsheet->getActiveSheet()->setCellValue('A1','No Data Found');
+    $spreadsheet->getActiveSheet()->setCellValue('A1', 'No Data Found');
 }
 
-$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+$writer = new Xlsx($spreadsheet);
 $writer->setPreCalculateFormulas(false);
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment; filename="'. urlencode($profile_name). '.xlsx''"');
+header('Content-Disposition: attachment; filename=' . urlencode($profile_name) . '.xlsx');
 $writer->save('php://output');
+
