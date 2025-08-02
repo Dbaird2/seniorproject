@@ -1,9 +1,7 @@
-add page for custodians to build their asset list (pdf/excel sheet)
-
-fix audit insert to not make dupes (fixed?)
-
 add a completion list of what audits are done and when they need to be redone
 by
+
+fix audit insert to not make dupes (fixed?)
 
 update room addition form for room tag
 

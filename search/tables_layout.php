@@ -284,8 +284,9 @@ foreach ($result as $row) {
                         </td>
 
                         <td class=<?= $color_class ?>><?= $dept_name ?></td>
-
-                        <td class=<?= $color_class ?>><?= $custodian ?></td>
+<?php foreach ($custodian as $cust) { ?>
+                        <td class=<?= $color_class ?>><?= $cust ?></td>
+<?php } ?>
                         <td class=<?= $color_class ?>> <?= $manager ?></td>
                     </tr>
             <?php } ?>
@@ -320,9 +321,12 @@ foreach ($result as $row) {
                                     <input type="text" id="name" name="name" value="<?= $dept_name ?>">
                                     <br>
 
+
+<?php foreach ($custodian as $cust) { ?>
                                     <label for="room_loc">Custodian:</label>
-                                    <input type="text" id="room_loc" name="room_loc" value="<?= $custodian ?>">
+                                    <input type="text" id="room_loc" name="room_loc" value="<?= $cust ?>">
                                     <br>
+<?php } ?>
                                     <label for="location">Manager:</label>
                                     <input type="text" id="location" name="location" value="<?= $manager ?>">
                                     <br>

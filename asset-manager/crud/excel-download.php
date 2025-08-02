@@ -1,6 +1,6 @@
 <?php
-include_once "../../../config.php";
-require_once "../../../vendor/autoload.php";
+include_once "../../config.php";
+require_once "../../vendor/autoload.php";
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

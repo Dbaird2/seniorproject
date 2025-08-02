@@ -1,5 +1,5 @@
 <?php
-require_once '../../../config.php';
+require_once '../../config.php';
 check_auth();
 $result = NULL;
 $profile_name = $_GET['profile_name'];
