@@ -207,11 +207,12 @@ $result = [
                         <label id="add-cust-label" class="form-label" for="dept-id">Custodian's Name</label>
                         <div class="container" id="add-cust"></div>
                     </div>
-                    <!-- <input class="form-input" type="search" list="custodian-names" id="cust-search" name="cust-search" requied> -->
                     <button class="submit-btn" type="submit" name="remove" id="submit2">Submit</button>
             </form>
             </div>
         </div>
+<datalist id="custodian-names"></datalist>
+
 <script>
 document.addEventListener("DOMContentLoaded", (e) => {
 result = <?php echo json_encode($result); ?>;
@@ -283,6 +284,7 @@ option_type.addEventListener('change', function() {
         cust_search.required = true;
         add_cust_section.appendChild(cust_search);
         dept_name2.addEventListener('change', function() {
+
             datalist.innerHTML = '';
 
             result.forEach(element => {
@@ -311,6 +313,7 @@ option_type.addEventListener('change', function() {
         const cust_search = document.getElementById('cust-search');
         if (cust_search) {
             cust_search.remove();
+            add_cust_label.style.display = "none";
         }
 
         const f_div = document.getElementById("f_div_id");
