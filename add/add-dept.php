@@ -90,10 +90,16 @@ if (isset($_GET['dept-name'])) {
     }
 }
 
-$select = "SELECT * FROM department ORDER BY dept_name";
+$select = "SELECT dept_id, dept_name, custodian FROM department ORDER BY dept_name";
 $stmt = $dbh->prepare($select);
 $stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = [[]];
+foreach ($result_raw as $row) {
+    $result[]['dept_id'] = $row['dept_id'];
+    $result[]['dept_name'] = $row['dept_name'];
+    $result[]['custodian'] = str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
+}
 /*
 $result = [
     ["dept_name" => "DISTRIBUTION", "dept_id" => "D21560"],
