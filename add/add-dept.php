@@ -16,7 +16,7 @@ if (isset($_GET['dept-name'])) {
         $mailstop = $_GET['dept-stop'];
         $f_name = trim($_GET['dept-cust-f']);
         $l_name = trim($_GET['dept-cust-l']);
-        $custodian = $f_name . " " . $l_name;
+        $custodian = '{' . $f_name . " " . $l_name . '}';
         $manager = trim($_GET['dept-mana-f']) . " " . trim($_GET['dept-mana-l']);
 
         $check_cust_uid = "SELECT id FROM user_table WHERE f_name ILIKE :f_name AND l_name ILIKE :l_name";
