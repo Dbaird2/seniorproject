@@ -273,7 +273,8 @@ foreach ($result as $row) {
     // Escape values for safety
     $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
     $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
-    $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+    //$custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+    $custodian= str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
     $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
 ?>
@@ -299,7 +300,8 @@ foreach ($result as $row) {
         // Escape values for safety
         $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
         $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
-        $custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+        //$custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
+        $custodian= str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
         $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 ?>
                 <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">

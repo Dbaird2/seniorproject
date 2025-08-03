@@ -95,17 +95,11 @@ $stmt = $dbh->prepare($select);
 $stmt->execute();
 $result_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $result = [[]];
-foreach ($result_raw as $row) {
-    $result[]['dept_id'] = $row['dept_id'];
-    $result[]['dept_name'] = $row['dept_name'];
-    $result[]['custodian'] = str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
+foreach ($result_raw as $index=>$row) {
+    $result[$index]['dept_id'] = $row['dept_id'];
+    $result[$index]['dept_name'] = $row['dept_name'];
+    $result[$index]['custodian'] = str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
 }
-/*
-$result = [
-    ["dept_name" => "DISTRIBUTION", "dept_id" => "D21560"],
-    ["dept_name" => "GRASP", "dept_id" => "D10730"]
-];
- */
 ?>
 
 <style>
@@ -361,5 +355,5 @@ if (item['dept_name'] == option_val.value) {
 }
 });
 });
-        </script>
+</script>
 </body>

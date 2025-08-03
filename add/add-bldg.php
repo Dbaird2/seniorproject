@@ -48,15 +48,30 @@ if (isset($_GET['room-num'])) {
     $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
     $room_nums = $_GET['room-num'];
+    $room_tags = $_GET['room-tag'];
 
     $seen = [];
     $new_room_nums = [];
     foreach ($room_nums as $index => $room) {
-        if (!isset($seen[$room]) && $room !== '') {
-            $seen[$room] = true;
-            $new_room_nums[] = $room;
+        if (!isset($seen[trim($room)]) && $room !== '') {
+            $seen[trim($room)] = true;
+            $new_room_nums[] = trim($room);
+            $new_room_tags[] = trim($room_tags[$index]);
         }
     }
+
+    $seen = [];
+    $room_tags = [];
+    $room_nums = [];
+    foreach ($new_room_tags as $index => $tag) {
+        if (!isset($seen[$tag]) && $tag !== '') {
+            $seen[$tag] = true;
+            $room_tags[] = $tag;
+            $room_nums[] = $new_room_nums[$index];
+        }
+    }
+
+    $check_tag_avail = "SELECT room_tag FROM room_table WHERE room_tag = :tag";
     $check_room_avail = "SELECT * FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
     $insert_room = "INSERT INTO room_table (room_loc, bldg_id) VALUES (?, ?)";
     $delete_room = "DELETE FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
@@ -67,10 +82,14 @@ if (isset($_GET['room-num'])) {
             $room_stmt = $dbh->prepare($check_room_avail);
             $room_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
             $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
+            $room_tag_stmt = $dbh->prepare($check_tag_avail);
+            $room_tag_stmt->execute([":tag"=>$room_tags[$index]]);
+            $tag_check = $room_tag_stmt->fetch(PDO::FETCH_ASSOC);
             if ($_GET['add-remove-room'] === 'add') {
-                if (!$room_check) {
+                if (!$room_check && !$tag_check) {
                     $insert_stmt = $dbh->prepare($insert_room);
-                    $insert_stmt->execute([$room, $bldg_id]);
+                    $insert_stmt->execute([$room, $bldg_id, $room_tags[$index]]);
+
                     echo "Adding " . $room;
 
                     $room_msg[$index][0] = 'green';
@@ -169,7 +188,10 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <input class="form-input" type="text" name="room-num[]" id="room-num" placeholder="Enter Room Number" required>
                     </div>
 
-                    <div id="extra-rooms"></div>
+                    <div class="form-group">
+                        <div id="extra-rooms"></div>
+                    </div>
+
                     <button class="submit-btn" type="submit" id="submit2">Submit</button>
                 </form>
                 <button class="submit-btn" onclick="addNewRoom()">Add Another Room</button>
@@ -208,17 +230,25 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         function addNewRoom() {
             const room_form = document.getElementById('extra-rooms');
-            const br = document.createElement('br');
             const div = document.createElement("div");
             const new_room = document.createElement("input");
             new_room.setAttribute('type', 'text');
             new_room.setAttribute('name', 'room-num[]');
             new_room.setAttribute('placeholder', 'Enter Room Number');
             new_room.classList.add("form-input");
-            div.appendChild(new_room);
-            div.appendChild(br);
-            room_form.appendChild(div);
 
+
+            const div2 = document.createElement("div");
+            const new_tag = document.createElement("input");
+            new_tag.setAttribute('type', 'text');
+            new_tag.setAttribute('name', 'room-tag[]');
+            new_tag.setAttribute('placeholder', 'Enter Room Tag');
+            new_tag.classList.add("form-input");
+
+            div.appendChild(new_room);
+            room_form.appendChild(div);
+            div2.appendChild(new_tag);
+            room_form.appendChild(div2);
         }
     </script>
 </body>

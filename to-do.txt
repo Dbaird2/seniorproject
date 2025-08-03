@@ -1,18 +1,12 @@
+            TO DO
 add a completion list of what audits are done and when they need to be redone
 by
 
-fix audit insert to not make dupes (fixed?)
-
-update room addition form for room tag
-
-add delete features for assets/user --working on (bldg-department done)
+add delete features for assets/user (bldg-department done)
 
 update building numbers (2)
 
-add a continue from db
-
 add csv support
-
 
 --add more responses for chatbot
 
@@ -36,3 +30,10 @@ style modal & update endpoint for forms
 
 can't/shouldn't do for a while
 ML python/php
+
+
+            NEEDS TESTING
+
+fix audit insert to not make dupes (fixed?)
+
+update room addition form for room tag (finished?)

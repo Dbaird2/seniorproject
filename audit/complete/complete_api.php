@@ -1,8 +1,8 @@
 <?php
-ini_set('display_errors', 0);      // Suppress HTML error output
-ini_set('log_errors', 1);          // Log errors instead
-error_reporting(E_ALL);            
-header("Content-Type: application/json"); 
+ini_set('display_errors', 0);      
+ini_set('log_errors', 1);          
+error_reporting(E_ALL);
+header("Content-Type: application/json");
 try {
     header("Access-Control-Allow-Headers: Content-Type");
     require_once "../../config.php";
@@ -17,85 +17,70 @@ try {
         exit;
     }
     $audit_data = $_SESSION['data'];
+    $audit_type = $_SESSION['info'][3];
 
-    [$tags, $notes, $times, $rooms, $dept] = explode("|", $result);
+    $audit_id = match ($audit_typ) {
+        'cust' => 1,
+        'mgmt' => 3,
+        'SPA'  => 5,
+        'FDN'  => 7
+    };
 
-    $tags = explode('`', $tags);
-    $notes = explode('`', $notes);
-    $times = explode('`', $times);
-    $rooms = explode('`', $rooms);
-    for ($i = 0; $i < count($tags); $i++) {
-        $found_assets[] = [
-            'Asset Tag' => $tags[$i] ?? '',
-            'Asset Note' => $notes[$i] ?? '',
-            'Time Scanned' => $times[$i] ?? '',
-            'Found Room' => $rooms[$i] ?? ''
-        ];
-    }
-    $found_assets_json = json_encode($found_assets);
     $audited_asset_json = json_encode($audit_data);
     $auditor = $_SESSION['email'];
-    $audit_id = NULL;
     try {
-        // GETS CURRENT YEAR audit_id
-        $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id";
+        $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id AND audit_id = :audit_id";
         $check_stmt = $dbh->prepare($check_recent_audits);
-        $check_stmt->execute([$dept]);
+        $check_stmt->execute([":dept" => $dept, ":audit_id" => $audit_id]);
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
         $found_current_year = false;
         if ($result) {
             $found_current_year = true;
-            $audit_id = (int)$result['audit_id'] ?? 1;
-            $update_q = "UPDATE audit_history SET auditor = :auditor, audit_data = :audit_data, found_data = :found_data WHERE audit_id = :audit_id AND dept_id = :dept_id";
+            $update_q = "UPDATE audit_history SET finished_at = CURRENT_TIMESTAMP, auditor = :auditor, audit_data = :audit_data WHERE audit_id = :audit_id AND dept_id = :dept_id";
             $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":audit_id"=>$audit_id, ":dept_id"=>$result['dept_id'], ":auditor"=>$auditor,":audit_data"=>$audited_asset_json,":found_data"=>$found_assets_json]);
+            $update_stmt->execute([":audit_id" => $audit_id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
 
-            // UPDATE department TABLE
             $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
             $update_dept_stmt = $dbh->prepare($update_dept_q);
-            $update_dept_stmt->execute([":dept_id"=>$result['dept_id']]);
+            $update_dept_stmt->execute([":dept_id" => $result['dept_id']]);
 
-            echo json_encode(['status'=>'success','Message'=>'Updated audit id '. $audit_id]);
+            echo json_encode(['status' => 'success', 'Message' => 'Updated audit id ' . $audit_id]);
             exit;
-        }
-        else if ($audit_id === NULL) {
-            $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id ORDER BY finished_at";
+        } else {
+            $start = $audit_id;
+            $end = $audit_id + 1;
+            $get_audit_ids = "SELECT audit_id FROM audit_history WHERE dept_id = :dept_id AND audit_id BETWEEN :start AND :end ORDER BY finished_at";
             $check_stmt = $dbh->prepare($get_audit_ids);
-            $check_stmt->execute([':dept_id'=>$dept]);
+            $check_stmt->execute([':dept_id' => $dept, ":start" => $start, ":end" => $end]);
             $id_results = $check_stmt->fetchAll(PDO::FETCH_ASSOC);
-            // CHECK OLDEST AUDIT_ID
-            if (count($id_results) >1) {
+            if (count($id_results) > 1) {
                 $audit_id = (int)$id_results[0]['audit_id'];
             } else if (count($id_results) > 0) {
-                $audit_id = $id_results[0]['audit_id'] == 1 ? 2 : 1;
-            } else {
-                $audit_id = 1;
-            }  
+                $audit_id = $id_results[0]['audit_id'] == $audit_id ? $audit_id + 1 : $audit_id;
+            }
         }
-        if ($audit_id === '' || $audit_id === 0 || $audit_id === NULL) {
-            $audit_id = 1;
-        }
-    } catch (PDOException $e ) {
-        echo json_encode(['status'=>'failed', 'Error on select'=>$e->getMessage()]);
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'failed', 'Error on select' => $e->getMessage()]);
         exit;
     }
     try {
-        $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, found_data) VALUES (?, ?, ?, ?, ?)";
+        $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data) VALUES (?, ?, ?, ?)";
         $insert_stmt = $dbh->prepare($insert_q);
-        $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $found_assets_json]);
+        $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json]);
 
-        // UPDATE department TABLE
         $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
         $update_dept_stmt = $dbh->prepare($update_dept_q);
-        $update_dept_stmt->execute([":dept_id"=>$dept]);
+        $update_dept_stmt->execute([":dept_id" => $dept]);
+        echo json_encode(['status' => 'success', 'message' => 'Insert audit id' . $audit_id]);
     } catch (PDOException $e) {
-        echo json_encode(['status'=>'failed','Error on Insert'=>$e->getMessage(),]);
+        echo json_encode(['status' => 'failed', 'Error on Insert' => $e->getMessage(),]);
         exit;
     }
 } catch (Exception $e) {
-    echo json_encode(['status'=>'failed', 'Error'=>$e->getMessage()]);
+    echo json_encode(['status' => 'failed', 'Error' => $e->getMessage()]);
     exit;
-} 
+}
 
-echo json_encode(['status'=>'success']);
+echo json_encode(['status' => 'success']);
 exit;
+
