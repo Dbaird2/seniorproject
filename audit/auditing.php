@@ -132,7 +132,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         WHERE a.asset_tag = :tag";
                     $select_stmt = $dbh->prepare($select_q);
                     $select_stmt->execute([":tag" => $tag]);
-                    $result->fetch(PDO::FETCH_ASSOC);
+                    $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                     if ($result) {
                         $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;

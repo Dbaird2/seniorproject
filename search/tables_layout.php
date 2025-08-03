@@ -262,6 +262,7 @@ function dept_layout($result, $row_num)
                         <th class='row-even'>Department ID</th>
                         <th class='row-even'>Department Name</th>
                         <th class='row-even'>Custodian</th>
+                        <th class='row-even'>Custodian</th>
                         <th class='row-even'>Manager</th>
                     </tr>
 
