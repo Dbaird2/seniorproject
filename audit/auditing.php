@@ -128,7 +128,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                 }
                 if ($found === 0) {
                     $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, d.custodian, a.date_added
-                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id JOIN department AS d ON a.dept_id = d.dept_id
+                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id
                         WHERE a.asset_tag = :tag";
                     $select_stmt = $dbh->prepare($select_q);
                     $select_stmt->execute([":tag" => $tag]);
@@ -140,7 +140,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
                         $_SESSION['data'][$total_count]["VIN"] =  '';
-                        $_SESSION['data'][$total_count]["Custodian"] =  trim($result['custodian'], '{}');
+                        $_SESSION['data'][$total_count]["Custodian"] =  /*trim($result['custodian'], '{}')*/'';
                         $_SESSION['data'][$total_count]["Dept"] = $result['dept_id'];
                         $_SESSION['data'][$total_count]["PO No."] =  $result['po'];
                         $_SESSION['data'][$total_count]["Acq Date"] =  $result['date_added'];
