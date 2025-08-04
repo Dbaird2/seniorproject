@@ -11,7 +11,7 @@ if (isset($_POST)) {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
-        $data->fetch(PDO::FETCH_ASSOC);
+        $data = $select_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         error_log("Error getting info: " . $e->getMessage());
         exit;

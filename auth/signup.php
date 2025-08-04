@@ -639,21 +639,21 @@ include_once("../navbar.php");
             const dept = document.getElementById("deptid").value;
             const deptInput = document.getElementById("deptid");
             const errDept = document.getElementById("dept_err");
-            const deptRegex = /^[D]\d{5}$/;
+            //const deptRegex = /^[D]\d{5}$/;
             
             if (dept === "") {
                 deptInput.classList.remove('error', 'valid');
                 errDept.textContent = "";
                 return false;
             }
-            
+            /*
             if (!deptRegex.test(dept.trim())) {
                 deptInput.classList.add('error');
                 deptInput.classList.remove('valid');
                 errDept.textContent = "Department must start with D and have 5 numbers";
                 return false;
             }
-            
+             */
             deptInput.classList.remove('error');
             deptInput.classList.add('valid');
             errDept.textContent = "";

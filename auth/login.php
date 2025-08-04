@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['id'] = $user_check['id'];
                 $_SESSION['role'] = $user_check['u_role'];
                 $_SESSION['email'] = $user_check['email'];
-                $_SESSION['deptid'] = trim($user_check['dept_id']);
+                $_SESSION['deptid'] = trim($user_check['dept_id'], '{}');
                 $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE email = ?";
                 $stmt = $dbh->prepare($stmt);
                 if ($stmt->execute([$user_check['email']])) {
