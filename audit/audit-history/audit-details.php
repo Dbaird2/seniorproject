@@ -127,7 +127,7 @@ ob_start();
                 echo "<td class='$color' >". htmlspecialchars($row['Serial ID']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Location']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['VIN']). "</td>";
-                echo "<td class='$color' >". htmlspecialchars($row['Custodian']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars(str_replace('"', '', $row['Custodian'])). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Dept']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['PO No.']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Acq Date']). "</td>";
