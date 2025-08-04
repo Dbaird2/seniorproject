@@ -127,9 +127,8 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     }
                 }
                 if ($found === 0) {
-                    $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, d.custodian, a.date_added
-                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id
-                        WHERE a.asset_tag = :tag";
+                    $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, a.date_added
+                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id WHERE a.asset_tag = :tag";
                     $select_stmt = $dbh->prepare($select_q);
                     $select_stmt->execute([":tag" => $tag]);
                     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
