@@ -131,7 +131,7 @@ ob_start();
                     echo "<td class='$color' >". htmlspecialchars($row['Found Room Tag']). "</td>";
                     echo "<td class='$color' >". htmlspecialchars($row['Found Note']). "</td>";
                     echo "<td class='$color' >". htmlspecialchars($row['Found Timestamp']). "</td>";
-                    echo "</tr>"
+                    echo "</tr>";
             }
 ?>
                 </tbody>
