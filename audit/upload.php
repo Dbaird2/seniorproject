@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file_path = $upload_dir . basename($file_name);
 
     if (move_uploaded_file($file_tmp_path, $file_path)) {
-    } else {
     }
     if ($excel_sheet) {
         $spreadsheet = IOFactory::load($file_path);
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $skipped = 2;
                 foreach ($data as $index => $row) {
 
-                    if ($index === 0 || $index === 1) {
+                    if ($index === 0) {
                         continue;
                     }
 
@@ -82,10 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             } else {
                 $skipped = 1;
                 foreach ($data as $index => $row) {
-
-                    if ($index === 0) {
-                        continue;
-                    }
                     if ($data[0][1] === 'Tag Number' && ($row[1] === '' || $row[1] === NULL)) {
                         $skipped++;
                         continue;
