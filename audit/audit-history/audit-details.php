@@ -118,20 +118,25 @@ ob_start();
                     echo "<td class='$color' style='color:blue;font-weight:700;'>". htmlspecialchars($row['Unit']) ."</td>";
                     echo "<td class='$color' style='color:blue;font-weight:700;'>". htmlspecialchars($row['Tag Number']). "</td>";
                     echo "<td class='$color' style='color:blue;font-weight:700;'>". htmlspecialchars($row['Descr']). "</td>";
+                } else {
+                    echo "<td class='$color' style='font-weight:700;'>". htmlspecialchars($row['Unit']) ."</td>";
+                    echo "<td class='$color' style='font-weight:700;'>". htmlspecialchars($row['Tag Number']). "</td>";
+                    echo "<td class='$color' style='font-weight:700;'>". htmlspecialchars($row['Descr']). "</td>";
+
                 }
-                    echo "<td class='$color' >". htmlspecialchars($row['Serial ID']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Location']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['VIN']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Custodian']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Dept']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['PO No.']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Acq Date']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['COST Total Cost']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Tag Status']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Found Room Tag']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Found Note']). "</td>";
-                    echo "<td class='$color' >". htmlspecialchars($row['Found Timestamp']). "</td>";
-                    echo "</tr>";
+                echo "<td class='$color' >". htmlspecialchars($row['Serial ID']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Location']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['VIN']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Custodian']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Dept']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['PO No.']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Acq Date']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['COST Total Cost']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Tag Status']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Found Room Tag']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Found Note']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Found Timestamp']). "</td>";
+                echo "</tr>";
             }
 ?>
                 </tbody>
