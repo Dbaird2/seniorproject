@@ -27,7 +27,7 @@ try {
     try {
         $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id AND audit_id = :audit_id";
         $check_stmt = $dbh->prepare($check_recent_audits);
-        $check_stmt->execute([":dept" => $dept, ":audit_id" => $audit_id]);
+        $check_stmt->execute([":dept_id" => $dept, ":audit_id" => $audit_id]);
         $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
         $found_current_year = false;
         if ($result) {
