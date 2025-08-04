@@ -356,9 +356,9 @@ document.querySelector('.table').addEventListener('change', function(e) {
             .catch(error => console.error('Error:', error));
     } else {
         const params = new URLSearchParams({
-        tag: e.target.id,
-            note: e.target.value
-    });
+            tag: this.id,
+            note: this.value
+        });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
         method: 'POST',

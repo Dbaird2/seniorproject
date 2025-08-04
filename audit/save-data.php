@@ -22,6 +22,6 @@ if (isset($_POST['room'])) {
     }
 }
 
-echo json_encode(['failure' => true, 'message' => 'tag not found']);
+echo json_encode(['failure' => true, 'message' => $_POST]);
 exit;
 
