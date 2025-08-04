@@ -342,7 +342,7 @@ document.querySelector('.table').addEventListener('change', function(e) {
         tag: this.id,
             value: this.value
     });
-        url = "http://localhost:3000/audit/save-data.php";
+        url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
         method: 'POST',
             body: params,
@@ -359,7 +359,7 @@ document.querySelector('.table').addEventListener('change', function(e) {
         tag: e.target.id,
             note: e.target.value
     });
-        url = "http://localhost:3000/audit/save-data.php";
+        url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
         method: 'POST',
             body: params,
