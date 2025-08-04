@@ -294,8 +294,8 @@ function loadMoreRows() {
                 <td>${row["Dept"]}</td>
                 <td>${row["COST Total Cost"]}</td>
                 <td>${row["PO"] ?? ''}</td>
-                <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Note"]}></td>
-                <td><input class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
+                <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
+                <td><input class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Note"]}></td>
                 `;
         table.appendChild(tr);
     }
@@ -339,8 +339,8 @@ method: 'POST',
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
-        tag: this.id,
-            value: this.value
+        tag: e.target.id,
+            value: e.target.value
     });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
@@ -356,8 +356,8 @@ document.querySelector('.table').addEventListener('change', function(e) {
             .catch(error => console.error('Error:', error));
     } else {
         const params = new URLSearchParams({
-            tag: this.id,
-            note: this.value
+            tag: e.target.id,
+            note: e.target.value
         });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
