@@ -7,7 +7,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 if (isset($_POST)) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
-    $audit_type_map [
+    $audit_type = match ($audit_id) {
         1 => 'cust',
         2 => 'cust',
         3 => 'mgmt',
@@ -16,8 +16,7 @@ if (isset($_POST)) {
         6 => 'FDN',
         7 => 'SPA',
         8 => 'SPA'
-    ];
-    $audit_type = $audit_type_map[$audit_id];
+    };
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
         $select_stmt = $dbh->prepare($select_q);
