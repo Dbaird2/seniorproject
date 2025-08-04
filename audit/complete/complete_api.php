@@ -13,6 +13,7 @@ try {
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
+    $dept = $_SESSION['data'][0]["Dept"];
 
     $audit_id = match ($audit_type) {
         'cust' => 1,
