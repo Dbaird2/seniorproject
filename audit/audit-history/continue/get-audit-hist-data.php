@@ -2,8 +2,8 @@
 require_once "../../../config.php";
 
 if (isset($_POST)) {
-    $dept_id = $_POST['dept_id'];
-    $audit_id = $_POST['dept_id'];
+    $dept_id = $_GET['dept_id'];
+    $audit_id = $_GET['dept_id'];
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
         $select_stmt = $dbh->prepare($select_q);
