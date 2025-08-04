@@ -79,16 +79,23 @@ $array = $time_array = $note_array = $room_array = [];
 $total_count = count($_SESSION['data']);
 if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicInput'][0] !== '' || $_POST['dynamicInput'][1] !== '')) {
     foreach ($_POST['dynamicInput'] as $index => $row) {
+        $found = false;
+        $found_at = -2;
         if ($row === '') {
             continue;
         }
+        foreach ($_SESSION['data'] as $sesh_index => $sesh_row) {
+            if ($sesh_row["Tag Number"] === $row) {
+                $found = true;
+                $found_at = $sesh_index;
+                break;
+            }
+        }
         $scanned_tags[] = $row;
-        $scanned_notes[] = 'None';
-        $scanned_times[] = $_POST['dynamicTime'][$index];
-        $scanned_rooms[] = $_POST['room-tag'];
+        $scanned_notes[] = ($found === true && $_SESSION['data'][$found_at]['Found Note'] !== '') ? $_SESSION['data'][$found_at]['Found Note'] : '';
+        $scanned_times[] = ($found === true && $_SESSION['data'][$found_at]['Found Timestamp'] !== '') ? $_SESSION['data'][$found_at]['Found Timestamp'] : $_POST['dynamicTime'][$index];
+        $scanned_rooms[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Tag'] !== '') ? $_SESSION['data'][$found_at]['Found Room Tag'] : $_POST['room-tag'];
     }
-
-
 
     $seen_tags = [];
     $filtered_tags = [];

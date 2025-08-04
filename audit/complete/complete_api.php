@@ -11,11 +11,6 @@ try {
 
     $result = json_decode(file_get_contents("php://input"), true);
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
-    if (!is_string($result)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Invalid input format']);
-        exit;
-    }
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
 
