@@ -12,8 +12,8 @@ include_once ("../../config.php");
 <body>
 <?php
 $search = $_POST['search'];
-$status_search = isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
-$and = $status_sarch === '' ? '' : ' AND ';
+$status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
+$and = $status_search === '' ? '' : ' AND ';
 if ($search === 'all') {
     $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status FROM audit_history ORDER BY finished_at DESC"; 
     $stmt = $dbh->prepare($select_query);
