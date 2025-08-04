@@ -339,8 +339,8 @@ method: 'POST',
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
-        tag: e.target.id,
-            value: e.target.value
+            tag: e.target.id,
+            room: e.target.value
     });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
