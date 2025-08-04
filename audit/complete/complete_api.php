@@ -14,7 +14,7 @@ try {
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
 
-    $audit_id = match ($audit_typ) {
+    $audit_id = match ($audit_type) {
         'cust' => 1,
         'mgmt' => 3,
         'SPA'  => 5,
