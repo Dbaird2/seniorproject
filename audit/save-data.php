@@ -11,7 +11,7 @@ if (isset($_POST['room'])) {
             exit;
         }
     }
-} else {
+} else if (isset($_POST['note'])) {
     $note = $_POST['note'];
     foreach ($_SESSION['data'] as $index => &$row) {
         if ($row['Tag Number'] === $tag) {
@@ -22,6 +22,6 @@ if (isset($_POST['room'])) {
     }
 }
 
-echo json_encode(['failure' => true, 'message' => 'tag not found' . $_POST]);
+echo json_encode(['failure' => true, 'message' => 'tag not found']);
 exit;
 
