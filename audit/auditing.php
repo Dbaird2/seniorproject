@@ -24,13 +24,12 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-$data = $_SESSION['data'];
 $highest_row = (int)$_SESSION['info'][0];
 $keys = array_keys($_SESSION['data'][0]);
 
 $file_path = $_SESSION['info'][2];
 $file_name = $_SESSION['info'][4];
-if (isset($_POST['download'])) {
+if (isset($_POST['create'])) {
     try {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -39,7 +38,7 @@ if (isset($_POST['download'])) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true);
         }
 
-        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'L1', 'M1', 'N1', 'O1', 'P1', 'Q1', 'R1', 'S1'];
+        $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'L1', 'M1', 'N1', 'O1', 'P1', 'Q1', 'R1', 'S1', 'T1', 'U1', 'V1', 'W1', 'X1', 'Y1', 'Z1', 'AA1', 'AB1'];
         $row_index = 2;
 
 
@@ -127,8 +126,9 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     }
                 }
                 if ($found === 0) {
-                    $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, a.date_added
-                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id WHERE a.asset_tag = :tag";
+                    $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, d.custodian, a.date_added
+                        FROM asset_info AS a JOIN room_table AS r ON r.room_tag = a.room_tag JOIN bldg_table AS b ON b.bldg_id = r.bldg_id JOIN department AS d ON a.dept_id = d.dept_id
+                        WHERE a.asset_tag = :tag";
                     $select_stmt = $dbh->prepare($select_q);
                     $select_stmt->execute([":tag" => $tag]);
                     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -139,7 +139,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
                         $_SESSION['data'][$total_count]["VIN"] =  '';
-                        $_SESSION['data'][$total_count]["Custodian"] =  /*trim($result['custodian'], '{}')*/'';
+                        $_SESSION['data'][$total_count]["Custodian"] =  trim($result['custodian'], '{}');
                         $_SESSION['data'][$total_count]["Dept"] = $result['dept_id'];
                         $_SESSION['data'][$total_count]["PO No."] =  $result['po'];
                         $_SESSION['data'][$total_count]["Acq Date"] =  $result['date_added'];
@@ -167,24 +167,41 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         }
     }
 }
+
+
 ?>
 
 <body>
-    <div class='formId'>
-        <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
-
-            <input type="hidden" name="download" id="download">
-
-            <button type='submit' id='create' name='create'>Export</button>
-        </form>
+    <div class=" is-search">
         <div class="wrapper">
+
             <?php if ($_SESSION['role'] === 'admin') { ?>
                 <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
             <?php } ?>
+            <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
+                <button type='submit' id='create' name='create'>Export</button>
+            </form>
+            <h4 class="gradient-text">Auditing</h4>
         </div>
-    </div>
-    <div class="is-search">
+        <label class="switch">
+            <input id="scanner-mode" type="checkbox" checked />
+            <span class="slider"></span>
+        </label>
+        <div id="insert-tags-div">
+            <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
+                <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag" autofocus accesskey="a">
+                <div id="inputContainer"></div>
+
+                <input type="hidden" name="data" id="data">
+                <button type="submit" id='dynamicSubmit'>Submit</button>
+
+            </form>
+        </div>
+
+
+        <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
         <div class="div-table">
+
             <table class="table">
                 <thead>
                     <tr>
@@ -203,12 +220,14 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                 </thead>
                 <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
 <?php
-$max_rows = 5000;
+$data = $_SESSION['data'];
+$max_rows = 300;
 $total_rows = count($data);
 $j = 1;
-$data = array_slice($data, $j, $max_rows);
+$data_slice = array_slice($data, $j, $max_rows);
 $i = 0;
-foreach ($_SESSION['data'] as $index => $row) {
+
+foreach ($data_slice as $index => $row) {
     $color_class = ($i % 2 === 0) ? 'row-odd' : 'row-even';
     $i++;
     $j = $index + 1;
@@ -230,7 +249,7 @@ foreach ($_SESSION['data'] as $index => $row) {
     echo "<tr class='{$color_class}'>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
-        <td class='{$match}'>{$found_tag}</td>
+        <td  class='{$match}'>{$found_tag}</td>
         <td class='{$match}'>{$descr}</td>
         <td>{$serial}</td>
         <td>{$location}</td>
@@ -246,20 +265,49 @@ foreach ($_SESSION['data'] as $index => $row) {
             </table>
         </div>
 
-        <div id="insert-tags-div">
-            <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-                <label for="room-tag" class="room-label">Room Tag<br></label>
-                <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag">
-                <label for="inputContainer" class="room-label">Asset Tags<br></label>
-                <div id="inputContainer"></div>
 
-                <input type="hidden" name="data" id="data">
-                <button type="submit" id='dynamicSubmit'>Submit</button>
-
-            </form>
-        </div>
     </div>
 <script>
+const session_data = <?= json_encode(array_slice($_SESSION['data'], 300)) ?>;
+let index = 0;
+let offset = 0
+    const chunk_size = 300;
+
+function loadMoreRows() {
+
+    const table = document.querySelector(".table");
+    for (let i = offset; i < chunk_size && index < session_data.length; i++, index++) {
+        color_class = (i % 2 === 0) ? 'row-odd' : 'row-even';
+
+        const row = session_data[index];
+        const tr = document.createElement("tr");
+        tr.classList.add(color_class);
+        match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
+        match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
+        tr.innerHTML = `
+            <td class=${match}>${300 + index + 1}</td>
+                <td class=${match}>${row["Tag Number"]}</td>
+                <td class=${match}>${row["Tag Status"]}</td>
+                <td class=${match}>${row["Descr"]}</td>
+                <td>${row["Serial ID"]}</td>
+                <td>${row["Location"]}</td>
+                <td>${row["Dept"]}</td>
+                <td>${row["COST Total Cost"]}</td>
+                <td>${row["PO"] ?? ''}</td>
+                <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Note"]}></td>
+                <td><input class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
+                `;
+        table.appendChild(tr);
+    }
+
+}
+const loops = Math.ceil(session_data.length / 300);
+console.log(session_data.length, loops);
+for (let i = 0; i < loops; i++) {
+    setTimeout(loadMoreRows, 1000);
+}
+
+
 var botmanWidget = {
 frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
     chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
@@ -288,85 +336,94 @@ method: 'POST',
 })
 });
 
+document.querySelector('.table').addEventListener('change', function(e) {
+    if (e.target.classList.contains('room')) {
+        const params = new URLSearchParams({
+        tag: this.id,
+            value: this.value
+    });
+        url = "http://localhost:3000/audit/save-data.php";
+        fetch(url, {
+        method: 'POST',
+            body: params,
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-const room = document.querySelectorAll('.room');
-room.forEach(element => {
-element.addEventListener('change', function(e) {
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    } else {
+        const params = new URLSearchParams({
+        tag: e.target.id,
+            note: e.target.value
+    });
+        url = "http://localhost:3000/audit/save-data.php";
+        fetch(url, {
+        method: 'POST',
+            body: params,
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-    const params = new URLSearchParams({
-    tag: this.id,
-        room: this.value
-});
-url = "http://localhost:3000/audit/save-data.php";
-fetch(url, {
-method: 'POST',
-    body: params,
-    headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-}
-
-})
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-});
-});
-
-const note = document.querySelectorAll('.note');
-note.forEach(element => {
-element.addEventListener('change', function(e) {
-    const params = new URLSearchParams({
-    tag: this.id,
-        note: this.value
-});
-url = "http://localhost:3000/audit/save-data.php";
-fetch(url, {
-method: 'POST',
-    body: params,
-    headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-}
-
-})
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
-});
-})
-
-    function addNewInput() {
-        const inputDiv = document.createElement('div');
-        inputDiv.classList.add('input-container');
-
-        const newInput = document.createElement('input');
-        newInput.type = 'text';
-        newInput.name = 'dynamicInput[]';
-        newInput.autocomplete = "off";
-        newInput.placeholder = 'Enter tag';
-        inputDiv.appendChild(newInput);
-
-        newInput.classList.add('dynamicId');
-
-        newInput.addEventListener("change", addNewInput, false);
-
-        const timeInput = document.createElement('input');
-        timeInput.type = 'hidden';
-        timeInput.name = 'dynamicTime[]';
-        timeInput.value = getFormattedDateTime();
-        inputDiv.appendChild(timeInput);
-
-        const noteInput = document.createElement('input');
-        noteInput.type = 'hidden';
-        noteInput.name = 'dynamicNote[]';
-        noteInput.placeholder = 'Notes';
-
-        inputDiv.appendChild(noteInput);
-        noteInput.classList.add('dynamicId');
-
-        const inputContainer = document.getElementById('inputContainer');
-        inputContainer.appendChild(inputDiv);
-
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
     }
+
+});
+
+document.addEventListener("input", function(e) {
+    const scanner_mode = document.getElementById('scanner-mode').checked;
+    if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
+    const value = e.target.value.trim();
+
+    if (value.length > 0) {
+        const inputs = Array.from(document.querySelectorAll(".dynamicId"));
+        const index = inputs.indexOf(e.target);
+        if (index > -1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        } else {
+            e.target.blur();
+        }
+    }
+});
+
+function addNewInput() {
+    const inputDiv = document.createElement('div');
+    inputDiv.classList.add('input-container');
+
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.name = 'dynamicInput[]';
+    newInput.autocomplete = "off";
+    newInput.placeholder = 'Enter tag';
+    newInput.setAttribute("accesskey", "s");
+    newInput.classList.add('dynamicId');
+
+
+    newInput.addEventListener("change", addNewInput, false);
+    inputDiv.appendChild(newInput);
+
+    const timeInput = document.createElement('input');
+    timeInput.type = 'hidden';
+    timeInput.name = 'dynamicTime[]';
+    timeInput.value = getFormattedDateTime();
+    inputDiv.appendChild(timeInput);
+
+    const noteInput = document.createElement('input');
+    noteInput.type = 'hidden';
+    noteInput.name = 'dynamicNote[]';
+    noteInput.placeholder = 'Notes';
+
+    inputDiv.appendChild(noteInput);
+
+    const inputContainer = document.getElementById('inputContainer');
+    inputContainer.appendChild(inputDiv);
+
+}
 
 
 function getFormattedDateTime() {
@@ -392,7 +449,26 @@ function getFormattedDateTime() {
 
     return formattedDateTime;
 }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
+
+function filterTable() {
+    var input, filter, table, tr, td, i, txt_value;
+    input = document.getElementById("my-input");
+    filter = input.value.toUpperCase();
+    table = document.querySelector(".table");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            txt_value = td.textContent || td.innerText;
+            if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+                    </script>
+                            <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
                         </div>
                             </body>

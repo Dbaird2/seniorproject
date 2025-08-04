@@ -1,13 +1,14 @@
- * {
-        margin: 0;
-    }
+* { 
+    margin: 0 ;
+}
 .is-search {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    display: flex;
-    flex-direction: inline;
-    width: 100%;
-    margin-top: 35px;
-    font-size: 10px;
+    background: rgb(216, 240, 248);
+    min-height: 100vh;
+    display: block;
+    flex-direction: normal;
+    align-items: normal;
+    padding: 20px;
 }
 .is-search ul {
     display:flex;
@@ -15,8 +16,10 @@
     justify-content: left;
 }
 
-.is-search input {
-    width: 90%;
+.element::-webkit-scrollbar {
+    display: none;
+}
+#insert-tags-div input {
     padding: 14px 16px;
     border: 2px solid #e3f2fd;
     border-radius: 10px;
@@ -25,17 +28,51 @@
     background-color: #fafafa;
     color: #333;
 }
+#dynamicForm{
+    display:flex;
+    align-items: flex-start;
+    max-height: 175px;
+    overflow-y: auto;
+    width: fit-content;
+    scrollbar-width: none;
+
+}
+#my-input{
+    width: 25%;
+    padding: 14px 16px;
+    border: 2px solid #e3f2fd;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    color: #333;
+    text-align: center;
+    display: block;
+    place-self: center;
+}
+.table input {
+    padding: 14px 16px;
+    border: 2px solid #e3f2fd;
+    border-radius: 10px;
+    font-size: 10px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    color: #333;
+    text-align: center;
+
+}
 .div-table {
-    width:80%;
+    width:100%;
     max-height: 80vh;
     overflow-y: auto;
+    scrollbar-width: none;
+
 }
 .table {
     width:100%;
     text-align: center;
     padding:10px 10px;
     max-height:350px;
-    table-layout: fixed;
 }
 .table td {
     min-height:100px;
@@ -58,6 +95,9 @@
 .not-found {
     color:red;
 }
+.extra {
+    color: rgb(45, 45, 247);
+}
 .row-odd {
     background-color: #f0f8ff;
 }
@@ -66,7 +106,7 @@
     overflow-y: auto;
 }
 .room-label {
-  font-weight: bold;
+    font-weight: bold;
 }
 .wrapper li{
     text-align:left;
@@ -74,9 +114,8 @@
 }
 .wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
 }
 .wrapper h3 {
     text-align: center;
@@ -89,7 +128,6 @@
     overflow-y: auto;
 }
 .is-search button {
-    width: 90%;
     padding: 10px;
     background: white;
     color: #FFC72C;
@@ -102,3 +140,104 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
+
+/* The
+ * switch
+ * -
+ * the
+ * box
+ * around
+ * the
+ * slider
+ * */
+    .switch {
+        font-size: 17px;
+        position: relative;
+        display: inline-block;
+        width: 4em;
+        height: 2em;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 30px;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 1.6em;
+        width: 1.6em;
+        border-radius: 20px;
+        left: 0.2em;
+        bottom: 0.2em;
+        background-color: white;
+        transition: 0.4s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .switch input:checked + .slider {
+        background-color: #4cc9f0;
+    }
+
+    .switch input:focus + .slider {
+        box-shadow: 0 0 1px #4cc9f0;
+    }
+
+    .switch input:checked + .slider:before {
+        transform: translateX(2em);
+        background-color: #4cc9f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .slider:after {
+        content: "OFF";
+        color: white;
+        position: absolute;
+        right: 0.5em;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8em;
+        transition: opacity 0.4s;
+        opacity: 1;
+    }
+
+    .switch input:checked + .slider:after {
+        content: "ON";
+        left: 0.5em;
+        opacity: 1;
+        right: auto;
+    }
+
+    .is-search h4 {
+        background: linear-gradient(135deg, green, lightgray);
+
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: linear-gradient(135deg, green, lightgray);
+        font-variant-caps:petite-caps;
+        animation-name: example;
+        animation-duration: 4s;
+    }
+    @keyframes example {
+        0%   {color: bisque;}
+        25%  {color: lightblue;}
+        50%  {color: lightgray;}
+        100% {color: gray;}
+    }
