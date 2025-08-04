@@ -13,7 +13,7 @@ if (isset($_POST)) {
         error_log("Error getting info: " . $e->getMessage());
         exit;
     }
-    $audit_data = json_decode($data['audit_data']);
+    $audit_data = json_decode($data['audit_data'], true);
     unset($_SESSION['data']);
     $index = 0;
     foreach ($audit_data as $row) {

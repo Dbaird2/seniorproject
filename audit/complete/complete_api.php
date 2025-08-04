@@ -22,7 +22,7 @@ try {
         'FDN'  => 7
     };
 
-    $audited_asset_json = json_encode($audit_data);
+    $audited_asset_json = json_encode($audit_data, true);
     $auditor = $_SESSION['email'];
     try {
         $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE extract(YEAR from finished_at) = extract(YEAR FROM CURRENT_TIMESTAMP) AND dept_id = :dept_id AND audit_id = :audit_id";
