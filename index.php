@@ -6,6 +6,13 @@ include_once 'navbar.php';
 $query = "SELECT * FROM asset_info NATURAL JOIN room_table
     ORDER BY date_added DESC LIMIT 10";
 
+try {
+    var_dump($_SESSION['deptid']);
+    echo 'dept ' . $_SESSION['deptid'];
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
 $user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as recent_login FROM user_table ORDER BY last_login DESC LIMIT 5";
 
 $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";

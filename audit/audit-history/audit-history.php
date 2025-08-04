@@ -59,8 +59,12 @@ foreach ($audits as $row) {
         echo "<td>" . $row['audit_status'] . "</td>";
         echo "<td>" . $audit_type[(int)$row['audit_id']] . "</td>";
     if ($row['audit_status'] === 'In Progress') {
-        echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
-        echo "<td><a href='complete/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
+        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || $_SESSION['deptid'] === $row['dept_id']) {
+            echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
+        }
+        if (($_SESSION['deptid'] === $row['dept_id'] && $audit_type[(int)$row['audit_id']] === 'Self Audit') || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
+            echo "<td><a href='complete/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
+        }
     }
         echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>PDF</a></td>";
         echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>Excel</a></td>";
