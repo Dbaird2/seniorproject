@@ -9,7 +9,7 @@ if (isset($_POST)) {
         $update_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
     } catch (PDOException $e) {
         error_log("Error updating: " . $e-getMessage());
-        exit
+        exit;
     }
 }
 
