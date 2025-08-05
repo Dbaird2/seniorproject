@@ -36,10 +36,6 @@ try {
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":audit_id" => $audit_id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
 
-            $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
-            $update_dept_stmt = $dbh->prepare($update_dept_q);
-            $update_dept_stmt->execute([":dept_id" => $result['dept_id']]);
-
             echo json_encode(['status' => 'success', 'Message' => 'Updated audit id ' . $audit_id]);
             exit;
         } else {

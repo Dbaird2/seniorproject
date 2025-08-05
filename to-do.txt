@@ -2,6 +2,16 @@
 add a completion list of what audits are done and when they need to be redone
 by
 
+notes functionality in asset-ui
+
+graph for audited departments on index
+
+notes for admins in asset-ui
+
+style in asset-ui
+
+
+
 add delete features for assets/user (bldg-department done)
 
 update building numbers (2)

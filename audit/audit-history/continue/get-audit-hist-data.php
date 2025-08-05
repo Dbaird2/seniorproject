@@ -12,10 +12,10 @@ if (isset($_POST)) {
         2 => 'cust',
         3 => 'mgmt',
         4 => 'mgmt',
-        5 => 'FDN',
-        6 => 'FDN',
-        7 => 'SPA',
-        8 => 'SPA'
+        5 => 'SPA',
+        6 => 'SPA',
+        7 => 'FDN',
+        8 => 'FDN'
     };
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
@@ -47,10 +47,13 @@ if (isset($_POST)) {
             $_SESSION['data'][$index]['Found Room Tag'] = $row['Found Room Tag'] ?? '';
             $_SESSION['data'][$index]['Found Note'] = $row['Found Note'] ?? '';
             $_SESSION['data'][$index++]['Found Timestamp'] = $row['Found Timestamp'] ?? '';
+            echo "<pre>";
+            var_dump($row);
+            echo "</pre>";
         }
     }
     unset($_SESSION['info']);
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id];
-    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    exit;
+    //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    //exit;
 } 

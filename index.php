@@ -12,8 +12,7 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
-
-$user_query = "SELECT f_name, l_name, TO_CHAR(last_login, 'Month DD, yyyy HH12:MI AM') as recent_login FROM user_table ORDER BY last_login DESC LIMIT 5";
+$audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
 
 $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
@@ -22,7 +21,7 @@ $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added 
 $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
 try {
     $stmt = $dbh->prepare($query);
-    $stmt_user = $dbh->prepare($user_query);
+    $audit_stmt = $dbh->prepare($audits);
     $stmt_asset_count = $dbh->prepare($asset_count);
     $stmt_weekly_adds = $dbh->prepare($weekly_adds);
     $stmt_weekly_changes = $dbh->prepare($weekly_changes);
@@ -32,10 +31,10 @@ try {
     } else {
         $assets = [];
     }
-    if ($stmt_user->execute()) {
-        $users = $stmt_user->fetchAll(PDO::FETCH_ASSOC);
+    if ($audit_stmt->execute()) {
+        $audit_results = $audit_stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
-        $users = [];
+        $audit_results = [];
     }
     if ($stmt_asset_count->execute()) {
         $asset_count = $stmt_asset_count->fetch(PDO::FETCH_ASSOC);
@@ -71,6 +70,17 @@ try {
     foreach ($asset_bldg_count_data as $row) {
         $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count']];
     }
+    $depts = [];
+    foreach ($data as $row) {
+        if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
+            continue;
+        }
+
+        if (!in_array($row['dept_id'], $depts)) {
+            $status_data[] = $row['audit_status'];
+            $depts[] = $row['dept_id'];
+        }
+    }
 } catch (PDOException $e) {
     error_log($e->getMessage());
 }
@@ -88,10 +98,10 @@ google.charts.setOnLoadCallback(drawChart);
 
 
 function drawChart() {
-    var data = google.visualization.arrayToDataTable(<?php echo json_encode($type_data); ?>);
+    var data = google.visualization.arrayToDataTable(<?php echo json_encode($status_data); ?>);
 
     var options = {
-    title: 'Asset Types',
+    title: 'Audits',
         pieHole: 0.4,
     };
 
@@ -179,15 +189,6 @@ foreach ($assets as $key => $asset) {
                 </div>
                 <div class="recent-activity">
                     <h3>Recent Activity</h3>               
-<?php
-$row = 1;
-foreach ($users as $key => $user) {
-?>
-                    <div class="login-activity"><?=$row?> . <?= $user['f_name']?>  <?=$user['l_name'] ?> logged in at <?= $user['recent_login'] ?></div>                
-<?php
-    $row++;
-}
-?>
                 </div>
             </div>
         </div>
