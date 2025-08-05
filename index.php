@@ -12,7 +12,6 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
-$audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
 
 $asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
 
@@ -31,11 +30,6 @@ try {
     } else {
         $assets = [];
     }
-    if ($audit_stmt->execute()) {
-        $audit_results = $audit_stmt->fetchAll(PDO::FETCH_ASSOC);
-    } else {
-        $audit_results = [];
-    }
     if ($stmt_asset_count->execute()) {
         $asset_count = $stmt_asset_count->fetch(PDO::FETCH_ASSOC);
     } else {
@@ -51,16 +45,31 @@ try {
     } else {
         $weekly_changes = ['weekly_changes' => 0];
     }
-    $asset_type_data_q = "SELECT asset_type, COUNT(*) as count FROM asset_info GROUP BY asset_type";
+    $audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
     $asset_bldg_count_data_q = "SELECT  r.bldg_id, COUNT(*) as count FROM asset_info as a natural join room_table as r natural join bldg_table as b GROUP BY r.bldg_id";
-    $type_stmt = $dbh->prepare($asset_type_data_q);
+    $type_stmt = $dbh->prepare($audits);
     $type_stmt->execute();
     $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
-    $type_data = [];
-    $type_data[] = ['Asset Type', 'Count'];
+    $depts = [];
+    $status_data = [];
+    $status_data[] = ["Audit Status", "Count"];
+    $status_count['In Progress'] = 0;
+    $status_count['Incomplete'] = 0;
+    $status_count['Complete'] = 0;
     foreach ($data as $row) {
-        $type_data[] = [$row['asset_type'], $row['count']];
+        if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
+            continue;
+        }
+
+        if (!in_array($row['dept_id'], $depts)) {
+            $status_count[$row['audit_status']]++;
+            $depts[] = $row['dept_id'];
+        }
     }
+
+    $status_data[] = ['Complete', $status_count['Complete']];
+    $status_data[] = ['In Progress', $status_count['In Progress']];
+    $status_data[] = ['Incomplete', $status_count['Incomplete']];
 
     $bldg_count_stmt = $dbh->prepare($asset_bldg_count_data_q);
     $bldg_count_stmt->execute();
@@ -69,17 +78,6 @@ try {
     $asset_bldg_count_data_result[] = ['Department ID', 'Asset Count'];
     foreach ($asset_bldg_count_data as $row) {
         $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count']];
-    }
-    $depts = [];
-    foreach ($data as $row) {
-        if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
-            continue;
-        }
-
-        if (!in_array($row['dept_id'], $depts)) {
-            $status_data[] = $row['audit_status'];
-            $depts[] = $row['dept_id'];
-        }
     }
 } catch (PDOException $e) {
     error_log($e->getMessage());
