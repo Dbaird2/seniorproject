@@ -51,7 +51,6 @@ try {
     $type_stmt->execute();
     $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
     $depts = [];
-    $status_data = [];
     $status_data[] = ["Audit Status", "Count"];
     $status_count['In Progress'] = 0;
     $status_count['Incomplete'] = 0;
@@ -75,9 +74,9 @@ try {
     $bldg_count_stmt->execute();
     $asset_bldg_count_data = $bldg_count_stmt->fetchAll(PDO::FETCH_ASSOC);
     $asset_bldg_count_data_result = [];
-    $asset_bldg_count_data_result[] = ['Department ID', 'Asset Count'];
+    $asset_bldg_count_data_result[] = ['Department ID', 'Asset Count', ['role' => 'tooltip']];
     foreach ($asset_bldg_count_data as $row) {
-        $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count']];
+        $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count'], $row['dept_id'] . ' - ' . $row['count']];
     }
 } catch (PDOException $e) {
     error_log($e->getMessage());
@@ -100,12 +99,13 @@ function drawChart() {
 
     var options = {
     title: 'Audits',
-        pieHole: 0.4,
+        pieHole: 1,
     };
 
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
     chart.draw(data, options);
+
     var data = google.visualization.arrayToDataTable(<?php echo json_encode($asset_bldg_count_data_result); ?>);
 
     var options = {
