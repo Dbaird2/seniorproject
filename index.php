@@ -1,7 +1,9 @@
 <?php
-error_reporting(0);
 require_once 'config.php';
 check_auth();
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 include_once 'navbar.php';
 $query = "SELECT * FROM asset_info NATURAL JOIN room_table
     ORDER BY date_added DESC LIMIT 10";
