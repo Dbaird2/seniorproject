@@ -22,7 +22,6 @@ $weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added 
 $weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
 try {
     $stmt = $dbh->prepare($query);
-    $audit_stmt = $dbh->prepare($audits);
     $stmt_asset_count = $dbh->prepare($asset_count);
     $stmt_weekly_adds = $dbh->prepare($weekly_adds);
     $stmt_weekly_changes = $dbh->prepare($weekly_changes);
