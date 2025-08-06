@@ -1,6 +1,7 @@
 <?php
 /* Asset Management Dashboard - Department Audit System */
 include_once "config.php";
+check_auth();
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 /* QUERIES */
@@ -75,20 +76,20 @@ $mgmt_diff = $now->diff($mgmt_due);
 $mgmt_per = (int)(($mgmt_diff->days / 1085) * 100);
 
 
-$total_departments = $dept_count_results['total_depts'] ?? 24;
-$self_audits_in_progress = $self_prog_count['In Progress'] ?? 11;
-$self_audits_complete = $self_prog_count['Complete'] ?? 11;
+$total_departments = $dept_count_results['total_depts'] ?? 0;
+$self_audits_in_progress = $self_prog_count['In Progress'] ?? 0;
+$self_audits_complete = $self_prog_count['Complete'] ?? 0;
 
-$mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 1;
-$mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 1;
+$mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 0;
+$mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 0;
 
 $spa_completion_rate = $spa_per;
 $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
 $dept_count_results['total_depts'] = 1;
-$self_completion_status =  (int)($mgmt_prog_count['Complete'] / $dept_count_results['total_depts']) ?? 10;
-$mgmt_completion_status = (int)($self_prog_count['Complete'] / $dept_count_results['total_depts']) ?? 1;
+$self_completion_status =  (int)(($mgmt_prog_count['Complete'] ?? 0)/ $dept_count_results['total_depts']) ?? 1;
+$mgmt_completion_status = (int)(($self_prog_count['Complete'] ?? 0) / $dept_count_results['total_depts']) ?? 1;
 $spa_status = "Incomplete";
 
 /* CHART DATA/CONFIGURING */
