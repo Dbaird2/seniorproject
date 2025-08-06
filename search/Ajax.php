@@ -74,7 +74,7 @@ if (isset($_POST['audit'])) {
 
         $where_array = implode(' OR ', $where_array);
 
-        $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, 
+        $audit_query = "SELECT a.asset_tag, a.serial_num, a.po, a.bus_unit,
             a.asset_name, a.asset_price, a.room_tag, a.dept_id, b.bldg_name, r.room_loc FROM asset_info AS a 
             JOIN room_table AS r ON a.room_tag = r.room_tag 
             JOIN bldg_table AS b ON r.bldg_id = b.bldg_id 
@@ -155,6 +155,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = "a.asset_tag";
+        $column_array[] = "a.but_unit";
         $where_array[] = "a.asset_tag LIKE :search";
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of

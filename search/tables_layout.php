@@ -9,6 +9,7 @@ function asset_layout($result, $header_true, $row_num)
                 <thead>
                     <tr>
                         <th class='row-even'>Row</th>
+                        <th class='row-even'>Unit</th>
                         <th class='row-even'>Asset Tag</th>
 <?php if (array_key_exists('asset_name', $header_true)) {
 echo "<th class='row-even'>Description</th>";
@@ -43,6 +44,7 @@ if (array_key_exists('asset_po', $header_true)) {
 
         // Escape values for safety
         $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+        $bus_unit = htmlspecialchars($row['bus_unit'] ?? '', ENT_QUOTES);
         $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
         $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
         $safe_price = htmlspecialchars($row['asset_price'] ?? '', ENT_QUOTES);
@@ -55,6 +57,7 @@ if (array_key_exists('asset_po', $header_true)) {
 ?>
 <tr>
                         <td class=<?= $color_class ?>><?= $row_num++ ?></td>
+                        <td class=<?= $color_class ?>><?= $bus_unit ?></td>
                         <td class=<?= $color_class ?>>
                             <button id="button-9" data-toggle="modal" data-target="#modal<?= $safe_tag ?>"><?= $safe_tag ?></button>
                         </td>
