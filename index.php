@@ -21,7 +21,7 @@ $self_ids = $mgmt_ids = [];
 $self_prog_count = $mgmt_prog_count = [];
 foreach ($audit_progress as $index => $row) {
     if (in_array($row['audit_id'], [1, 2])) {
-        if (in_array($row['dept_id'], $self_ids)) {
+        if (!in_array($row['dept_id'], $self_ids)) {
             $self_prog_count[$row['audit_status']]++;
             $self_ids[] = [
                 'audit_id' => $row['audit_id'],
@@ -30,7 +30,7 @@ foreach ($audit_progress as $index => $row) {
         }
     }
     if (in_array($row['audit_id'], [3, 4])) {
-        if (in_array($row['dept_id'], $mgmt_ids)) {
+        if (!in_array($row['dept_id'], $mgmt_ids)) {
             $mgmt_prog_count[$row['audit_status']]++;
             $mgmt_ids[] = [
                 'audit_id' => $row['audit_id'],
@@ -214,7 +214,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 <div class="completion-bar">
                     <div class="completion-fill spa" style="width: <?php echo $spa_completion_rate; ?>%"></div>
                 </div>
-                <div class="completion-text"><?php echo $spa_completion_rate; ?>% Until Due</div>
+                <div class="completion-text"><?php echo $spa_diff->days; ?> days until Due</div>
             </div>
 
             <!-- <div class="audit-type-card fdn">
@@ -268,7 +268,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 <div class="completion-bar">
                     <div class="completion-fill self" style="width: <?php echo $self_completion_rate; ?>%"></div>
                 </div>
-                <div class="completion-text"><?php echo $self_completion_rate; ?>% Until Due</div>
+                <div class="completion-text"><?php echo $self_diff->days; ?> days Until Due</div>
             </div>
 
             <div class="audit-type-card mgmt">
@@ -298,7 +298,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 <div class="completion-bar">
                     <div class="completion-fill mgmt" style="width: <?php echo $mgmt_completion_rate; ?>%"></div>
                 </div>
-                <div class="completion-text"><?php echo $mgmt_completion_rate; ?>% Until Due</div>
+                <div class="completion-text"><?php echo $mgmt_diff->days; ?> days Until Due</div>
             </div>
         </div>
         <script type="text/javascript">
