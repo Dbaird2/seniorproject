@@ -155,7 +155,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = "a.asset_tag";
-        $column_array[] = "a.but_unit";
+        $column_array[] = "a.bus_unit";
         $where_array[] = "a.asset_tag LIKE :search";
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of
