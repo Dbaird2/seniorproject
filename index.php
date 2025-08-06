@@ -67,13 +67,13 @@ $now = new DateTime();
 
 /* SPA DIFF */
 $spa_diff = $now->diff($spa_due);
-$spa_per = (int)(($spa_diff->days / 730) * 100);
+$spa_per = (int)(((730 - $spa_diff->days) / 730) * 100);
 
 $self_diff = $now->diff($self_due);
-$self_per = (int)(($self_diff->days / 365) * 100);
+$self_per = (int)(((365 - $self_diff->days) / 365) * 100);
 
 $mgmt_diff = $now->diff($mgmt_due);
-$mgmt_per = (int)(($mgmt_diff->days / 1085) * 100);
+$mgmt_per = (int)(((1085 - $mgmt_diff->days) / 1085) * 100);
 
 
 $total_departments = $dept_count_results['total_depts'] ?? 0;
@@ -88,8 +88,8 @@ $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
 $dept_count_results['total_depts'] = 1;
-$self_completion_status =  (int)(($mgmt_prog_count['Complete'] ?? 0)/ $dept_count_results['total_depts']) ?? 1;
-$mgmt_completion_status = (int)(($self_prog_count['Complete'] ?? 0) / $dept_count_results['total_depts']) ?? 1;
+$self_completion_status =  (int)((($dept_count_results['total_depts'] ?? 0 - $mgmt_prog_count['Complete'] ?? 0))/ $dept_count_results['total_depts']) ?? 1;
+$mgmt_completion_status = (int)((($dept_count_results['total_dept'] ?? 0 - $self_prog_count['Complete'] ?? 0)) / $dept_count_results['total_depts']) ?? 1;
 $spa_status = "Incomplete";
 
 /* CHART DATA/CONFIGURING */
