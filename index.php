@@ -40,13 +40,18 @@ foreach ($audit_progress as $index => $row) {
     }
     if (in_array($row['audit_id'], [5, 6])) {
         if ($spa_id === 0) {
-            $spa_completion_status = $row['audit_status'] === 'Complete' ? 100 : 50;
-            $spa_completion_status = $row['audit_status'] === 'Incomplete' ? 0 : $spa_completion_status;
             $spa_status = $row['audit_status'] ?? 'Incomplete';
             $spa_id = $row['audit_id'];
         }
-    }
+    } 
 }
+echo "<pre>";
+var_dump($mgmt_ids);
+var_dump($self_ids);
+echo "</pre>";
+$spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
+$spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
+$spa_completion_status = $spa_status === 'Incomplete' ? 0 : $spa_completion_status;
 
 $due_dates_q = "SELECT * FROM audit_freq";
 
@@ -88,9 +93,8 @@ $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
 $dept_count_results['total_depts'] = 1;
-$self_completion_status =  (int)((($dept_count_results['total_depts'] ?? 0 - $mgmt_prog_count['Complete'] ?? 0))/ $dept_count_results['total_depts']) ?? 1;
-$mgmt_completion_status = (int)((($dept_count_results['total_dept'] ?? 0 - $self_prog_count['Complete'] ?? 0)) / $dept_count_results['total_depts']) ?? 1;
-$spa_status = "Incomplete";
+$self_completion_status =  (int)(((($dept_count_results['total_depts'] ?? 0) - ($mgmt_prog_count['Complete'] ?? 0)))/ $dept_count_results['total_depts']) ?? 1;
+$mgmt_completion_status = (int)(((($dept_count_results['total_dept'] ?? 0) - ($self_prog_count['Complete'] ?? 0))) / $dept_count_results['total_depts']) ?? 1;
 
 /* CHART DATA/CONFIGURING */
 $data = [
