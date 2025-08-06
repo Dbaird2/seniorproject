@@ -1,4 +1,3 @@
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
 /* Asset Management Dashboard - Department Audit System */
 include_once "config.php";
@@ -178,6 +177,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
     <title>Department Audit Management Dashboard</title>
     <?php include_once "navbar.php"; ?>
     <link rel="stylesheet" href="index.css">
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body>
