@@ -85,7 +85,7 @@ $mgmt_diff = $now->diff($mgmt_due);
 $mgmt_per = (int)(((1085 - $mgmt_diff->days) / 1085) * 100);
 
 
-$total_departments = $dept_count_results['total_depts'] ?? 1;
+$total_departments = (int)$dept_count_results['total_depts'] ?? 85;
 $self_audits_in_progress = $self_prog_count['In Progress'] ?? 0;
 $self_audits_complete = $self_prog_count['Complete'] ?? 0;
 
@@ -100,56 +100,6 @@ $self_completion_status = (int)(($total_departments - $self_audits_complete) / $
 $mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
 
 /* CHART DATA/CONFIGURING */
-$data = [
-    [
-        "audit_status" => "In Progress",
-        "audit_id"     => 1,
-        "finished_at"  => "2025",
-        "dept_id"      => "D21530"
-    ],
-    [
-        "audit_status" => "In Progress",
-        "audit_id"     => 3,
-        "finished_at"  => "2025",
-        "dept_id"      => "D21560"
-    ],
-    [
-        "audit_status" => "Completed",
-        "audit_id"     => 4,
-        "finished_at"  => "2022",
-        "dept_id"      => "D21560"
-    ],
-    [
-        "audit_status" => "Incomplete",
-        "audit_id"     => null,
-        "finished_at"  => null,
-        "dept_id"      => "D23024"
-    ],
-    [
-        "audit_status" => "Incomplete",
-        "audit_id"     => null,
-        "finished_at"  => null,
-        "dept_id"      => "D10801"
-    ],
-    [
-        "audit_status" => "Incomplete",
-        "audit_id"     => null,
-        "finished_at"  => null,
-        "dept_id"      => "D10150"
-    ],
-    [
-        "audit_status" => "Incomplete",
-        "audit_id"     => null,
-        "finished_at"  => null,
-        "dept_id"      => "D10120"
-    ],
-    [
-        "audit_status" => "Incomplete",
-        "audit_id"     => null,
-        "finished_at"  => null,
-        "dept_id"      => "D10370"
-    ],
-];
 $depts = [];
 $audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
 $type_stmt = $dbh->prepare($audits);
@@ -257,7 +207,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 <div class="completion-bar">
                     <div class="completion-fill self" style="width: <?php echo $self_completion_status ?? 0; ?>%"></div>
                 </div>
-                <div class="completion-text"><?php echo $self_completion_status ?? 0; ?>% Audits Left</div>
+                <div class="completion-text"><?php echo $self_completion_status ?? 0; ?>% Audits Finished</div>
                 <div class="audit-stats">
                     <div class="audit-stat">
                         <div class="audit-stat-number"><?php echo $self_audits_in_progress; ?></div>
@@ -287,7 +237,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 <div class="completion-bar">
                     <div class="completion-fill mgmt" style="width: <?php echo $mgmt_completion_status ?? 0; ?>%"></div>
                 </div>
-                <div class="completion-text"><?php echo $mgmt_completion_status ?? 0; ?>% Audits Left</div>
+                <div class="completion-text"><?php echo $mgmt_completion_status ?? 0; ?>% Audits Finished</div>
                 <div class="audit-stats">
                     <div class="audit-stat">
                         <div class="audit-stat-number"><?php echo $mgmt_audits_in_progress; ?></div>
