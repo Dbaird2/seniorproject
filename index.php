@@ -19,6 +19,8 @@ $audit_progress = $audit_progress_stmt->fetchAll(PDO::FETCH_ASSOC);
 $spa_id = 0;
 $self_ids = $mgmt_ids = [];
 $self_prog_count = $mgmt_prog_count = [];
+$self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
+$mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
 foreach ($audit_progress as $index => $row) {
     if (in_array($row['audit_id'], [1, 2])) {
         if (!in_array($row['dept_id'], $self_ids)) {
@@ -46,6 +48,8 @@ foreach ($audit_progress as $index => $row) {
     } 
 }
 echo "<pre>";
+var_dump($mgmt_prog_count);
+var_dump($self_prog_count);
 var_dump($mgmt_ids);
 var_dump($self_ids);
 echo "</pre>";
@@ -62,7 +66,7 @@ $spa_due = $due_dates['spa_due'] ?? '2026-07-01';
 $self_due = $due_dates['self_due'] ?? '2026-07-01';
 $mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
 
-$user_name = $_SESSION['user_name'] ?? "Audit Manager";
+$user_name = $_SESSION['email'] ?? "Audit Manager";
 $current_date = date("M j, Y");
 $current_year = date("Y");
 $spa_due = new DateTime($spa_due);
@@ -81,7 +85,7 @@ $mgmt_diff = $now->diff($mgmt_due);
 $mgmt_per = (int)(((1085 - $mgmt_diff->days) / 1085) * 100);
 
 
-$total_departments = $dept_count_results['total_depts'] ?? 0;
+$total_departments = $dept_count_results['total_depts'] ?? 1;
 $self_audits_in_progress = $self_prog_count['In Progress'] ?? 0;
 $self_audits_complete = $self_prog_count['Complete'] ?? 0;
 
@@ -92,9 +96,8 @@ $spa_completion_rate = $spa_per;
 $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
-$dept_count_results['total_depts'] = 1;
-$self_completion_status =  (int)(((($dept_count_results['total_depts'] ?? 0) - ($mgmt_prog_count['Complete'] ?? 0)))/ $dept_count_results['total_depts']) ?? 1;
-$mgmt_completion_status = (int)(((($dept_count_results['total_dept'] ?? 0) - ($self_prog_count['Complete'] ?? 0))) / $dept_count_results['total_depts']) ?? 1;
+$self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments);
+$mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
 
 /* CHART DATA/CONFIGURING */
 $data = [
