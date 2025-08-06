@@ -20,7 +20,7 @@ $self_ids = $mgmt_ids = [];
 $self_prog_count = $mgmt_prog_count = [];
 foreach ($audit_progress as $index => $row) {
     if (in_array($row['audit_id'], [1, 2])) {
-        if (in_array($self_ids, $row['dept_id'])) {
+        if (in_array($row['dept_id'], $self_ids)) {
             $self_prog_count[$row['audit_status']]++;
             $self_ids[] = [
                 'audit_id' => $row['audit_id'],
@@ -29,7 +29,7 @@ foreach ($audit_progress as $index => $row) {
         }
     }
     if (in_array($row['audit_id'], [3, 4])) {
-        if (in_array($mgmt_ids, $row['dept_id'])) {
+        if (in_array($row['dept_id'], $mgmt_ids)) {
             $mgmt_prog_count[$row['audit_status']]++;
             $mgmt_ids[] = [
                 'audit_id' => $row['audit_id'],
