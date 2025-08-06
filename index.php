@@ -1,217 +1,519 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <?php
-require_once 'config.php';
-check_auth();
+/* Asset Management Dashboard - Department Audit System */
+include_once "config.php";
 ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
-include_once 'navbar.php';
-$query = "SELECT * FROM asset_info NATURAL JOIN room_table
-    ORDER BY date_added DESC LIMIT 10";
+/* QUERIES */
+$dept_count_q = "SELECT COUNT(*) AS total_depts FROM department";
 
-try {
-    var_dump($_SESSION['deptid']);
-    echo 'dept ' . $_SESSION['deptid'];
-} catch (Exception $e) {
-    echo $e->getMessage();
-}
+$dept_count_stmt = $dbh->query($dept_count_q);
+$dept_count_results = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
 
-$asset_count = "SELECT COUNT(*) as total_assets FROM asset_info";
+/* GET AUDITS */
+$audit_progress_q = "SELECT audit_id, dept_id, audit_status FROM audit_history ORDER BY finished_at desc";
 
-$weekly_adds = "SELECT COUNT(*) as weekly_adds FROM asset_info WHERE date_added >= NOW() - INTERVAL '1 week'";
+$audit_progress_stmt = $dbh->query($audit_progress_q);
+$audit_progress = $audit_progress_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$weekly_changes = "SELECT COUNT(*) as weekly_changes FROM complete_asset_view WHERE change_date >= NOW() - INTERVAL '1 week'";
-try {
-    $stmt = $dbh->prepare($query);
-    $stmt_asset_count = $dbh->prepare($asset_count);
-    $stmt_weekly_adds = $dbh->prepare($weekly_adds);
-    $stmt_weekly_changes = $dbh->prepare($weekly_changes);
-
-    if ($stmt->execute()) {
-        $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } else {
-        $assets = [];
-    }
-    if ($stmt_asset_count->execute()) {
-        $asset_count = $stmt_asset_count->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $asset_count = ['total_assets' => 0];
-    }
-    if ($stmt_weekly_adds->execute()) {
-        $weekly_adds = $stmt_weekly_adds->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $weekly_adds = ['weekly_adds' => 0];
-    }
-    if ($stmt_weekly_changes->execute()) {
-        $weekly_changes = $stmt_weekly_changes->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $weekly_changes = ['weekly_changes' => 0];
-    }
-    $audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
-    $asset_bldg_count_data_q = "SELECT  r.bldg_id, COUNT(*) as count FROM asset_info as a natural join room_table as r natural join bldg_table as b GROUP BY r.bldg_id";
-    $type_stmt = $dbh->prepare($audits);
-    $type_stmt->execute();
-    $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
-    $depts = [];
-    $status_data[] = ["Audit Status", "Count"];
-    $status_count['In Progress'] = 0;
-    $status_count['Incomplete'] = 0;
-    $status_count['Complete'] = 0;
-    foreach ($data as $row) {
-        if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
-            continue;
-        }
-
-        if (!in_array($row['dept_id'], $depts)) {
-            $status_count[$row['audit_status']]++;
-            $depts[] = $row['dept_id'];
+$spa_id = 0;
+$self_ids = $mgmt_ids = [];
+$self_prog_count = $mgmt_prog_count = [];
+foreach ($audit_progress as $index => $row) {
+    if (in_array($row['audit_id'], [1, 2])) {
+        if (in_array($self_ids, $row['dept_id'])) {
+            $self_prog_count[$row['audit_status']]++;
+            $self_ids[] = [
+                'audit_id' => $row['audit_id'],
+                'dept_id' => $row['dept_id']
+            ];
         }
     }
-
-    $status_data[] = ['Complete', $status_count['Complete']];
-    $status_data[] = ['In Progress', $status_count['In Progress']];
-    $status_data[] = ['Incomplete', $status_count['Incomplete']];
-
-    $bldg_count_stmt = $dbh->prepare($asset_bldg_count_data_q);
-    $bldg_count_stmt->execute();
-    $asset_bldg_count_data = $bldg_count_stmt->fetchAll(PDO::FETCH_ASSOC);
-    $asset_bldg_count_data_result = [];
-    $asset_bldg_count_data_result[] = ['Department ID', 'Asset Count', ['role' => 'tooltip']];
-    foreach ($asset_bldg_count_data as $row) {
-        $asset_bldg_count_data_result[] = [$row['dept_id'], $row['count'], $row['dept_id'] . ' - ' . $row['count']];
+    if (in_array($row['audit_id'], [3, 4])) {
+        if (in_array($mgmt_ids, $row['dept_id'])) {
+            $mgmt_prog_count[$row['audit_status']]++;
+            $mgmt_ids[] = [
+                'audit_id' => $row['audit_id'],
+                'dept_id' => $row['dept_id']
+            ];
+        }
     }
-} catch (PDOException $e) {
-    error_log($e->getMessage());
+    if (in_array($row['audit_id'], [5, 6])) {
+        if ($spa_id === 0) {
+            $spa_completion_status = $row['audit_status'] === 'Complete' ? 100 : 50;
+            $spa_completion_status = $row['audit_status'] === 'Incomplete' ? 0 : $spa_completion_status;
+            $spa_status = $row['audit_status'] ?? 'Incomplete';
+            $spa_id = $row['audit_id'];
+        }
+    }
 }
+
+$due_dates_q = "SELECT * FROM audit_freq";
+
+$due_dates_stmt = $dbh->query($due_dates_q);
+$due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
+
+$spa_due = $due_dates['spa_due'] ?? '2026-07-01';
+$self_due = $due_dates['self_due'] ?? '2026-07-01';
+$mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
+
+$user_name = $_SESSION['user_name'] ?? "Audit Manager";
+$current_date = date("M j, Y");
+$current_year = date("Y");
+$spa_due = new DateTime($spa_due);
+$self_due = new DateTime($self_due);
+$mgmt_due = new DateTime($mgmt_due);
+$now = new DateTime();
+
+/* SPA DIFF */
+$spa_diff = $now->diff($spa_due);
+$spa_per = (int)(($spa_diff->days / 730) * 100);
+
+$self_diff = $now->diff($self_due);
+$self_per = (int)(($self_diff->days / 365) * 100);
+
+$mgmt_diff = $now->diff($mgmt_due);
+$mgmt_per = (int)(($mgmt_diff->days / 1085) * 100);
+
+
+$total_departments = $dept_count_results['total_depts'] ?? 24;
+$self_audits_in_progress = $self_prog_count['In Progress'] ?? 11;
+$self_audits_complete = $self_prog_count['Complete'] ?? 11;
+
+$mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 1;
+$mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 1;
+
+$spa_completion_rate = $spa_per;
+$self_completion_rate = $self_per;
+$mgmt_completion_rate = $mgmt_per;
+
+$dept_count_results['total_depts'] = 1;
+$self_completion_status =  (int)($mgmt_prog_count['Complete'] / $dept_count_results['total_depts']) ?? 10;
+$mgmt_completion_status = (int)($self_prog_count['Complete'] / $dept_count_results['total_depts']) ?? 1;
+$spa_status = "Incomplete";
+
+/* CHART DATA/CONFIGURING */
+$data = [
+    [
+        "audit_status" => "In Progress",
+        "audit_id"     => 1,
+        "finished_at"  => "2025",
+        "dept_id"      => "D21530"
+    ],
+    [
+        "audit_status" => "In Progress",
+        "audit_id"     => 3,
+        "finished_at"  => "2025",
+        "dept_id"      => "D21560"
+    ],
+    [
+        "audit_status" => "Completed",
+        "audit_id"     => 4,
+        "finished_at"  => "2022",
+        "dept_id"      => "D21560"
+    ],
+    [
+        "audit_status" => "Incomplete",
+        "audit_id"     => null,
+        "finished_at"  => null,
+        "dept_id"      => "D23024"
+    ],
+    [
+        "audit_status" => "Incomplete",
+        "audit_id"     => null,
+        "finished_at"  => null,
+        "dept_id"      => "D10801"
+    ],
+    [
+        "audit_status" => "Incomplete",
+        "audit_id"     => null,
+        "finished_at"  => null,
+        "dept_id"      => "D10150"
+    ],
+    [
+        "audit_status" => "Incomplete",
+        "audit_id"     => null,
+        "finished_at"  => null,
+        "dept_id"      => "D10120"
+    ],
+    [
+        "audit_status" => "Incomplete",
+        "audit_id"     => null,
+        "finished_at"  => null,
+        "dept_id"      => "D10370"
+    ],
+];
+$depts = [];
+$audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
+$type_stmt = $dbh->prepare($audits);
+$type_stmt->execute();
+$data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
+$depts = [];
+$status_data[] = ["Audit Status", "Count"];
+$status_count['In Progress'] = 0;
+$status_count['Incomplete'] = 0;
+$status_count['Complete'] = 0;
+foreach ($data as $row) {
+    if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
+        continue;
+    }
+
+    if (!in_array($row['dept_id'], $depts)) {
+        $status_count[$row['audit_status']]++;
+        $depts[] = $row['dept_id'];
+    }
+}
+
+$status_data[] = ['Complete', $status_count['Complete']];
+$status_data[] = ['In Progress', $status_count['In Progress']];
+$status_data[] = ['Incomplete', $status_count['Incomplete']];
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asset Management System</title>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
-google.charts.load('current', {packages: ['corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-
-function drawChart() {
-    var data = google.visualization.arrayToDataTable(<?php echo json_encode($status_data); ?>);
-
-    var options = {
-    title: 'Audits',
-        pieHole: 1,
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-    chart.draw(data, options);
-
-    var data = google.visualization.arrayToDataTable(<?php echo json_encode($asset_bldg_count_data_result); ?>);
-
-    var options = {
-    title: 'Asset Count per Department',
-        hAxis: {title: 'Department ID'},
-        vAxis: {title: 'Asset Count'},
-        bar: {groupWidth: '75%'},
-        isStacked: true,
-        legend: { position: 'top', maxLines: 3 }
-    };
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('histogram'));
-
-    chart.draw(data, options);
-}
-</script>
+    <title>Department Audit Management Dashboard</title>
+    <?php include_once "navbar.php"; ?>
+    <link rel="stylesheet" href="index.css">
 </head>
-<link rel="stylesheet" href="/index.css">
+
 <body>
-<div class="is-index">
-    <section class="container">
-        <div class="container-head">
-            <div class="head-text">
-                <h2>Asset Management Dashboard</h2>
-                <p>Monitor and manage your organization's assets in real-time</p>
-            </div>
-            <div class="head-bot">
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Department Audit Management Dashboard</h1>
+            <p>Welcome back, <?php echo htmlspecialchars($user_name); ?> • <?php echo $current_date; ?> • Audit Year <?php echo $current_year; ?></p>
+        </div>
 
-                <div class="small-box">
-                    <span class="small-box-text"><?= $asset_count['total_assets'] ?><br></span>
-                    <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Total Assets</strong></span>
+        <!-- Audit Type Overview -->
+        <div class="audit-overview">
+            <div class="audit-type-card spa">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">SPA Audit</div>
+                    <div class="audit-badge spa">Special Purpose</div>
                 </div>
-                <div class="small-box">
-                    <span class="small-box-text"><?= $weekly_changes['weekly_changes'] ?><br></span>
-                    <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Weekly Change(s)</strong></span>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: <?php echo $spa_completion_status ?? 0; ?>%"></div>
                 </div>
-                <div class="small-box">
-                    <span class="small-box-text"><?= $weekly_adds['weekly_adds'] ?><br></span>
-                    <span style="font-size: calc(0.7vh + 0.4vw);"><strong>Weekly Add(s)</strong></span>
+                <div class="completion-text"><?php echo $spa_status; ?></div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $current_date; ?></div>
+                        <div class="audit-stat-label"><?= $spa_status ?? 'Incomplete' ?></div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $spa_due->format('M d, Y') ?></div>
+                        <div class="audit-stat-label">Due By</div>
+                    </div>
                 </div>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: <?php echo $spa_completion_rate; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $spa_completion_rate; ?>% Until Due</div>
+            </div>
+
+            <!-- <div class="audit-type-card fdn">
+                <div class="audit-type-header">
+                    <div class="audit-type-title">FDN Audits</div>
+                    <div class="audit-badge fdn">Foundation</div>
+                </div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php //echo $fdn_audits_due;
+                                                        ?></div>
+                        <div class="audit-stat-label">Due This Year</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number">12</div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill fdn" style="width: <?php //echo $fdn_completion_rate;
+                                                                    ?>%"></div>
+                </div>
+                <div class="completion-text"><?php //echo $fdn_completion_rate;
+                                                ?>% Complete</div>
+            </div> -->
+
+            <div class="audit-type-card self">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Self Audits</div>
+                    <div class="audit-badge self">Self Assessment</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: <?php echo $self_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $self_completion_status ?? 0; ?>% Audits Left</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $self_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $self_due->format('M d, Y') ?></div>
+                        <div class="audit-stat-label">Due By</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $mgmt_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: <?php echo $self_completion_rate; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $self_completion_rate; ?>% Until Due</div>
+            </div>
+
+            <div class="audit-type-card mgmt">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Management Audits</div>
+                    <div class="audit-badge mgmt">Management</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: <?php echo $mgmt_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $mgmt_completion_status ?? 0; ?>% Audits Left</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $mgmt_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $mgmt_due->format('M d, Y') ?></div>
+                        <div class="audit-stat-label">Due By</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $self_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: <?php echo $mgmt_completion_rate; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $mgmt_completion_rate; ?>% Until Due</div>
             </div>
         </div>
-        <br>
-    <div class="recent-asset-change">
-            <div class="recent-assets">
-                <h3>Recent Asset Additions</h3>
-                <div class="asset-item asset-even asset-header">
-                    <div class="asset-id">Asset Tag</div>
-                    <div class="asset-status">Asset Name</div>
-                    <div class="asset-category">Asset Type</div>
-                    <div class="asset-location">In Room Tag</div>
-                    <div class="asset-price">Price</div>
-                    <div class="asset-price">Department</div>
+        <script type="text/javascript">
+            google.charts.load('current', {
+                packages: ['corechart']
+            });
+            google.charts.setOnLoadCallback(drawChart);
 
-                </div>
-<?php
-foreach ($assets as $key => $asset) {
-?>
-                <div class="asset-item asset-odd">
-                    <div class="asset-id"><?= $asset['asset_tag'] ?></div>
-                    <div class="asset-status"><?= $asset['asset_name'] ?></div>
-                    <div class="asset-category"><?= $asset['asset_type'] ?></div>
-                    <div class="asset-location"><?= $asset['room_tag'] ?></div>
-                    <div class="asset-price">$<?= $asset['asset_price'] ?></div>
-                    <div class="asset-deptid"><?= $asset['dept_id'] ?></div>
-                </div>
-<?php
-}
-?>
 
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(<?= json_encode($status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'Audits',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('audit-status-piechart'));
+
+                chart.draw(data, options);
+            }
+        </script>
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Department Audit Distribution Chart -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M11,2V22C5.9,21.5 2,17.2 2,12C2,6.8 5.9,2.5 11,2M13,2V11H22C21.5,6.2 17.8,2.5 13,2M13,13V22C17.7,21.5 21.5,17.7 22,13H13Z" />
+                        </svg>
+                        <h3>Department Audit Status</h3>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" onclick="switchChart('department')">Audit Status</button>
+                        <button class="chart-btn" onclick="switchChart('audit-type')">By Audit Type</button>
+                        <!-- <button class="chart-btn" onclick="switchChart('timeline')">Timeline View</button> -->
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    <div id="audit-status-piechart" style="width:100%;height:100%;"></div>
+                    <div id="audit-type-piechart" style="display:none;width:100%;height:100%;">Bob</div>
+
+                    <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status across all departments</div>
+                </div>
             </div>
-            <div class="activity">
-                <div class="quick-actions">
+
+            <!-- Quick Actions for Audit Management -->
+            <div class="actions-section">
+                <div class="actions-header">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                    </svg>
                     <h3>Quick Actions</h3>
-                    <div class="option"><a href="#add_asset.php">➕Add Asset</a></div>
-                    <div class="option"><a href="auditing.php">Start Audit</a></div>
-                    <div class="option"><a href="#change_asset_tag.php">Search Assets</a></div>
-                    <div class="option"><a href="help.php">Help</a></div>
                 </div>
-                <div class="recent-activity">
-                    <h3>Recent Activity</h3>               
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="handleAction('schedule-audit')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" />
+                        </svg>
+                        View Your Profiles
+                    </button>
+                    <button class="action-btn secondary" onclick="handleAction('start-self-audit')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+                        </svg>
+                        Start Self Audit
+                    </button>
+                    <button class="action-btn" onclick="handleAction('search-departments')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+                        </svg>
+                        Search Departments
+                    </button>
+                    <button class="action-btn purple" onclick="handleAction('view-audit-history')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+                        </svg>
+                        View Audit History
+                    </button>
                 </div>
             </div>
         </div>
-        <section class="graphs">
-            <div id="piechart" style="width: 700px; height: 400px;"></div>
-            <div id="histogram" style="width: 1300px; height: 400px;"></div>
-        </section>
-    </section>
-</div>
-</body>
-</html>
-<script>
-var botmanWidget = {
-frameEndpoint: '/chat/botman-widget.html', // Make sure this is correct
-    chatServer: '/chat/chatbot.php',
-    introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
-    title: "Chatbot",
-    mainColor: "#ADD8E6",
-    bubbleBackground: "#ADD8E6",
-    placeholderText: "Type your question here..."
-};
-localStorage.removeItem('categories');
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
-<?php
-?>
+        <!-- Department Alerts & Notifications -->
+        <div class="department-alerts">
+            <div class="alerts-header">
+                <div class="alerts-title">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M10,21H14A2,2 0 0,1 12,23A2,2 0 0,1 10,21M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21" />
+                    </svg>
+                    <h3>Department Audit Alerts</h3>
+                </div>
+                <span class="alert-badge"><?php echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
+            </div>
+            <div class="alert-items">
+                <div class="alert-item">
+                    <div class="alert-title">🚨 IT Department - Self Audit Overdue</div>
+                    <div class="alert-time">Due 3 months ago - Requires immediate attention</div>
+                </div>
+                <div class="alert-item warning">
+                    <div class="alert-title">⚠️ HR Department - SPA Audit Due</div>
+                    <div class="alert-time">Special Purpose Audit scheduled for next month</div>
+                </div>
+                <div class="alert-item info">
+                    <div class="alert-title">ℹ️ Finance Department - FDN Audit Completed</div>
+                    <div class="alert-time">Foundation audit completed successfully last week</div>
+                </div>
+                <div class="alert-item warning">
+                    <div class="alert-title">📋 Operations - Management Audit Pending</div>
+                    <div class="alert-time">Awaiting management review and approval</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleAction(action) {
+            const actions = {
+                'schedule-audit': () => {
+                    window.location.href = 'schedule-audit.php';
+                },
+                'start-self-audit': () => {
+                    window.location.href = 'self-audit.php';
+                },
+                'search-departments': () => {
+                    window.location.href = 'search-departments.php';
+                },
+                'view-audit-history': () => {
+                    window.location.href = 'audit-history.php';
+                },
+                'download-reports': () => {
+                    window.location.href = 'download-reports.php';
+                }
+            };
+
+            if (actions[action]) {
+                actions[action]();
+            } else {
+                console.log(`Action not implemented: ${action}`);
+                alert(`Redirecting to ${action} page...`);
+            }
+        }
+
+        function switchChart(type) {
+            /* Remove active class from all buttons */
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            /* Add active class to clicked button */
+            event.target.classList.add('active');
+
+            /* Update chart placeholder text */
+            const placeholder = document.querySelector('.chart-placeholder-text');
+            const subtext = document.querySelector('.chart-placeholder-subtext');
+
+            switch (type) {
+                case 'department':
+                    console.log(document.getElementById('audit-status-piechart').style.display);
+
+                    document.getElementById('audit-status-piechart').style.display = "block";
+                    document.getElementById('audit-type-piechart').style.display = "none";
+                    console.log(document.getElementById('audit-status-piechart').style.display);
+                    subtext.textContent = 'Chart showing audit status across all departments';
+                    break;
+                case 'audit-type':
+                    document.getElementById('audit-status-piechart').style.display = "none";
+                    document.getElementById('audit-type-piechart').style.display = "block";
+                    console.log(document.getElementById('audit-status-piechart').style.display);
+
+                    subtext.textContent = 'Distribution of SPA, FDN, Self, and Management audits';
+                    break;
+                case 'timeline':
+                    placeholder.textContent = 'Audit Timeline View';
+                    subtext.textContent = 'Yearly audit schedule and completion timeline';
+                    break;
+            }
+
+            console.log(`Switching chart to: ${type}`);
+        }
+
+        /* Smooth entrance animation */
+        document.addEventListener('DOMContentLoaded', function() {
+            /* Animate audit type cards */
+            const auditCards = document.querySelectorAll('.audit-type-card');
+            auditCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.transform = 'translateY(0)';
+                    card.style.opacity = '1';
+                }, 100 + (index * 150));
+            });
+
+            /* Animate completion bars */
+            setTimeout(() => {
+                const completionBars = document.querySelectorAll('.completion-fill');
+                completionBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 500);
+                });
+            }, 800);
+        });
+
+        /* Auto-refresh audit data every 10 minutes */
+        setInterval(() => {
+            console.log('Checking for audit updates...');
+            /* You can make an AJAX call here to refresh
+             * audit data */
+        }, 60000);
+    </script>
+</body>
+
+</html>
