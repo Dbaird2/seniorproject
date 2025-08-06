@@ -99,25 +99,36 @@ $mgmt_completion_rate = $mgmt_per;
 $self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments);
 $mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
 
+echo $self_completion_status . ' ' . $mgmt_compltion_status . '<br>';
+echo $total_departments . ' ' . $self_audits_complete . ' ' . $mgmt_audits_complete . '<br>';
+
 /* CHART DATA/CONFIGURING */
 $depts = [];
 $audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
 $type_stmt = $dbh->prepare($audits);
 $type_stmt->execute();
 $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
-$depts = [];
+$depts = $self_depts = $spa_depts = [];
 $status_data[] = ["Audit Status", "Count"];
-$status_count['In Progress'] = 0;
-$status_count['Incomplete'] = 0;
-$status_count['Complete'] = 0;
+$status_count['In Progress'] = $status_count['Incomplete'] = $status_count['Complete'] = 0;
+$self_status_count['In Progress'] = $self_status_count['Incomplete'] = $self_status_count['Complete'] = 0;
+$spa_status_count['In Progress'] = $spa_status_count['Incomplete'] = $spa_status_count['Complete'] = 0;
 foreach ($data as $row) {
-    if (((int)$row['audit_id'] !== 3 && (int)$row['audit_id'] !== 4) && $row['audit_id'] !== null) {
-        continue;
-    }
-
-    if (!in_array($row['dept_id'], $depts)) {
-        $status_count[$row['audit_status']]++;
-        $depts[] = $row['dept_id'];
+    if ((int)$row['audit_id'] === 3 && (int)$row['audit_id'] === 4) {
+        if (!in_array($row['dept_id'], $depts)) {
+            $status_count[$row['audit_status']]++;
+            $depts[] = $row['dept_id'];
+        }
+    } else if (in_array($row['audit_id'], [1, 2])) {
+        if (!in_array($row['dept_id'], $depts)) {
+            $self_status_count[$row['audit_status']]++;
+            $self_depts[] = $row['dept_id'];
+        }
+    } else if (in_array($row['audit_id'], [5, 6])) {
+        if (!in_array($row['dept_id'], $depts)) {
+            $spa_status_count[$row['audit_status']]++;
+            $spa_depts[] = $row['dept_id'];
+        }
     }
 }
 
@@ -269,11 +280,33 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                 var data = google.visualization.arrayToDataTable(<?= json_encode($status_data, true) ?>);
                 console.log(data);
                 var options = {
-                    title: 'Audits',
+                    title: 'Management Audits',
                     pieHole: 1,
                 };
 
                 var chart = new google.visualization.PieChart(document.getElementById('audit-status-piechart'));
+
+                chart.draw(data, options);
+//----------------------------------------------------------------------------------------------------------------//
+                var data = google.visualization.arrayToDataTable(<?= json_encode($self_status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'Department Self Audits',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('self-audit-piechart'));
+
+                chart.draw(data, options);
+//----------------------------------------------------------------------------------------------------------------//
+                var data = google.visualization.arrayToDataTable(<?= json_encode($spa_status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'SPA Audit',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('spa-audit-piechart'));
 
                 chart.draw(data, options);
             }
@@ -290,16 +323,18 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                         <h3>Department Audit Status</h3>
                     </div>
                     <div class="chart-controls">
-                        <button class="chart-btn active" onclick="switchChart('department')">Audit Status</button>
-                        <button class="chart-btn" onclick="switchChart('audit-type')">By Audit Type</button>
+                        <button class="chart-btn active" onclick="switchChart('department')">Management Audit Status</button>
+                        <button class="chart-btn" onclick="switchChart('audit-type')">Self Audit Status</button>
+                        <button class="chart-btn" onclick="switchChart('spa-audit-type')">SPA Audit Status</button>
                         <!-- <button class="chart-btn" onclick="switchChart('timeline')">Timeline View</button> -->
                     </div>
                 </div>
                 <div class="chart-placeholder">
                     <div id="audit-status-piechart" style="width:100%;height:100%;"></div>
-                    <div id="audit-type-piechart" style="display:none;width:100%;height:100%;">Bob</div>
+                    <div id="self-audit-piechart" style="display:none;width:100%;height:100%;"></div>
+                    <div id="spa-audit-piechart" style="display:none;width:100%;height:100%;"></div>
 
-                    <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status across all departments</div>
+                    <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status by management audits</div>
                 </div>
             </div>
 
@@ -418,20 +453,25 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
                     document.getElementById('audit-status-piechart').style.display = "block";
-                    document.getElementById('audit-type-piechart').style.display = "none";
+                    document.getElementById('self-audit-piechart').style.display = "none";
+                    document.getElementById('spa-audit-piechart').style.display = "none";
                     console.log(document.getElementById('audit-status-piechart').style.display);
                     subtext.textContent = 'Chart showing audit status across all departments';
                     break;
                 case 'audit-type':
                     document.getElementById('audit-status-piechart').style.display = "none";
-                    document.getElementById('audit-type-piechart').style.display = "block";
+                    document.getElementById('self-audit-piechart').style.display = "block";
+                    document.getElementById('spa-audit-piechart').style.display = "none";
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
-                    subtext.textContent = 'Distribution of SPA, FDN, Self, and Management audits';
+                    subtext.textContent = 'Chart showing SELF audit status';
                     break;
-                case 'timeline':
-                    placeholder.textContent = 'Audit Timeline View';
-                    subtext.textContent = 'Yearly audit schedule and completion timeline';
+                case 'spa-audit-type':
+                    document.getElementById('audit-status-piechart').style.display = "none";
+                    document.getElementById('self-audit-piechart').style.display = "none";
+                    document.getElementById('spa-audit-piechart').style.display = "block";
+
+                    subtext.textContent = 'Chart showing SPA audit status';
                     break;
             }
 
