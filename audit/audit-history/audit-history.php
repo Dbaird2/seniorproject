@@ -43,12 +43,13 @@ $i= 0;
 $audit_type = [
     1 => 'Self Audit',
     2 => 'Self Audit',
-    3 => 'Management Audit',
+    3 => 'Overdue Self Audit',
     4 => 'Management Audit',
-    5 => 'SPA Audit',
-    6 => 'SPA Audit',
-    7 => 'FDN Audit',
-    8 => 'FDN Audit'
+    5 => 'Management Audit',
+    6 => 'Overdue Management Audit',
+    7 => 'SPA Audit',
+    8 => 'SPA Audit',
+    9 => 'Overdue SPA Audit
 ];
 foreach ($audits as $row) {
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';

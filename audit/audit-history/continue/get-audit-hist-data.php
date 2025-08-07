@@ -10,12 +10,10 @@ if (isset($_POST)) {
     $audit_type = match ($audit_id) {
         1 => 'cust',
         2 => 'cust',
-        3 => 'mgmt',
         4 => 'mgmt',
-        5 => 'SPA',
-        6 => 'SPA',
-        7 => 'FDN',
-        8 => 'FDN'
+        5 => 'mgmt',
+        7 => 'SPA',
+        8 => 'SPA'
     };
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
@@ -50,7 +48,7 @@ if (isset($_POST)) {
         }
     }
     unset($_SESSION['info']);
-    $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id];
+    $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
     header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
     exit;
 } 
