@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__ . "/../../config.php");
 require_once __DIR__ . '/../../vendor/autoload.php';
+/* THIS IS FOR PDF DOWNLOAD */
 
 check_auth();
 ini_set('display_errors', 1);
