@@ -23,8 +23,21 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $file_path = $audit_details['dept_id'] . '_AUDIT.xlsx';
 $data = json_decode($audit_details['audit_data'], true);
+$keys = [
+    0 => 'Unit',
+    1 => 'Tag Number',
+    2 => 'Tag Status',
+    3 => 'Found Room Tag',
+    4 => 'Found Note',
+    5 => 'Found Timestamp',
+    6 => 'Description',
+    7 => 'Location',
+    8 => 'Dept',
+    9 => 'Serial ID',
+    10 => 'VIN',
+    11 => 'Custodian'
+]; 
 try {
-    $keys = array_keys($data[0]);
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
@@ -37,8 +50,24 @@ try {
     foreach ($keys as $index => $key) {
         $sheet->setCellValue($column_letters[$index], $key);
     } 
-
-    $sheet->fromArray($data, NULL, 'A2');
+    $index = 2;
+    foreach ($data as $row) {
+        if ($row['Tag Number'] !== 'Tag Number' && $row['Tag Number'] !== '' && $row['Tag Number'] !== NULL) {
+            $sheet->setCellValue('A'.$index, $row['Unit']);
+            $sheet->setCellValue('B'.$index, $row['Tag Number']);
+            $sheet->setCellValue('C'.$index, $row['Tag Status']);
+            $sheet->setCellValue('D'.$index, $row['Found Room Tag']);
+            $sheet->setCellValue('E'.$index, $row['Found Note']);
+            $sheet->setCellValue('F'.$index, $row['Found Timestamp']);
+            $sheet->setCellValue('G'.$index, $row['Descr']);
+            $sheet->setCellValue('H'.$index, $row['Location']);
+            $sheet->setCellValue('I'.$index, $row['Dept']);
+            $sheet->setCellValue('J'.$index, $row['Serial ID']);
+            $sheet->setCellValue('K'.$index, $row['VIN']);
+            $sheet->setCellValue('L'.$index++, $row['Custodian']);
+        }
+    }
+    //$sheet->fromArray($data, NULL, 'A2');
 
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // For .xlsx
     // For .xls: header('Content-Type: application/vnd.ms-excel');

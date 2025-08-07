@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                         continue;
                     }
 
-                    if ($data[1][1] === 'Tag Number' && ($row[1] === '' || $row[1] === NULL)) {
+                    if ($row[1] === 'Tag Number' && ($row[1] === '' || $row[1] === NULL)) {
                         $skipped++;
                         continue;
                     }
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             } else {
                 $skipped = 1;
                 foreach ($data as $index => $row) {
-                    if ($data[0][1] === 'Tag Number' && ($row[1] === '' || $row[1] === NULL)) {
+                    if ($row[1] === 'Tag Number' && ($row[1] === '' || $row[1] === NULL)) {
                         $skipped++;
                         continue;
                     }
