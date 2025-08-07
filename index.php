@@ -47,12 +47,6 @@ foreach ($audit_progress as $index => $row) {
         }
     } 
 }
-echo "<pre>";
-var_dump($mgmt_prog_count);
-var_dump($self_prog_count);
-var_dump($mgmt_ids);
-var_dump($self_ids);
-echo "</pre>";
 $spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
 $spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
 $spa_completion_status = $spa_status === 'Incomplete' ? 0 : $spa_completion_status;
@@ -96,11 +90,9 @@ $spa_completion_rate = $spa_per;
 $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
-$self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments);
-$mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
+$self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $self_audits_complete) / $total_departments);
+$mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
 
-echo $self_completion_status . ' ' . $mgmt_compltion_status . '<br>';
-echo $total_departments . ' ' . $self_audits_complete . ' ' . $mgmt_audits_complete . '<br>';
 
 /* CHART DATA/CONFIGURING */
 $depts = [];

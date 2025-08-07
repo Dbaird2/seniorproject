@@ -47,13 +47,10 @@ if (isset($_POST)) {
             $_SESSION['data'][$index]['Found Room Tag'] = $row['Found Room Tag'] ?? '';
             $_SESSION['data'][$index]['Found Note'] = $row['Found Note'] ?? '';
             $_SESSION['data'][$index++]['Found Timestamp'] = $row['Found Timestamp'] ?? '';
-            echo "<pre>";
-            var_dump($row);
-            echo "</pre>";
         }
     }
     unset($_SESSION['info']);
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id];
-    //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    //exit;
+    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    exit;
 } 
