@@ -31,7 +31,7 @@ if (isset($_POST)) {
     $index = 0;
     foreach ($audit_data as $row) {
 
-        if ($row['Tag Number'] !== '' && $row['Tag Number'] !== NULL) {
+        if ($row['Tag Number'] !== '' && $row['Tag Number'] !== NULL && $row['Tag Number'] !== 'Tag Number') {
             $_SESSION['data'][$index]['Unit'] = $row['Unit'] ?? '';
             $_SESSION['data'][$index]['Tag Number'] = $row['Tag Number'];
             $_SESSION['data'][$index]['Descr'] = $row['Descr'] ?? '';
