@@ -22,7 +22,9 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $file_path = $audit_details['dept_id'] . '.xlsx';
+$data = json_decode($audit_details['audit_data']);
 try {
+    $keys = array_keys($_SESSION['data'][0]);
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
@@ -40,11 +42,11 @@ try {
     $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
     $filePath = str_replace(".xls", "_AUDIT", $filePath);
     $filePath = $filePath . ".xlsx";
-    foreach ($keys as $index => $key) {
+    /* foreach ($keys as $index => $key) {
         $sheet->setCellValue($column_letters[$index], $key);
-    }
+    } */
 
-    $sheet->fromArray($_SESSION['data'], NULL, 'A2');
+    $sheet->fromArray($data, NULL, 'A2');
 
     $writer = new Xlsx($spreadsheet);
     $writer->save($filePath);
