@@ -24,7 +24,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $file_path = $audit_details['dept_id'] . '.xlsx';
 $data = json_decode($audit_details['audit_data']);
 try {
-    $keys = array_keys($_SESSION['data'][0]);
+    //$keys = array_keys($data[0]);
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
