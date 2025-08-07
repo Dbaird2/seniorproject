@@ -21,10 +21,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-$file_path = $audit_details['dept_id'] . '.xlsx';
+$file_path = $audit_details['dept_id'] . '_AUDIT.xlsx';
 $data = json_decode($audit_details['audit_data'], true);
 try {
-    //$keys = array_keys($data[0]);
+    $keys = array_keys($data[0]);
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
@@ -34,24 +34,20 @@ try {
 
     $column_letters = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1', 'J1', 'K1', 'L1', 'M1', 'N1', 'O1', 'P1', 'Q1', 'R1', 'S1', 'T1', 'U1', 'V1', 'W1', 'X1', 'Y1', 'Z1', 'AA1', 'AB1'];
     $row_index = 2;
-
-
-    $fileNameOnly = basename($file_path);
-    $filePath = $fileNameOnly;
-
-    $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
-    $filePath = str_replace(".xls", "_AUDIT", $filePath);
-    $filePath = $filePath . ".xlsx";
-    /* foreach ($keys as $index => $key) {
+    foreach ($keys as $index => $key) {
         $sheet->setCellValue($column_letters[$index], $key);
-    } */
+    } 
 
     $sheet->fromArray($data, NULL, 'A2');
 
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // For .xlsx
+    // For .xls: header('Content-Type: application/vnd.ms-excel');
+    // For .csv: header('Content-Type: text/csv');
+
+    header('Content-Disposition: attachment; filename="' . urlencode($file_path) . '"');
+    header('Cache-Control: max-age=0'); // Optional, to prevent caching
     $writer = new Xlsx($spreadsheet);
-    $writer->save($filePath);
-    header('Location: https://dataworks-7b7x.onrender.com/audit/download.php?file=' . urlencode($filePath));
-    error_reporting(1);
+    $writer->save('php://output');
 } catch (Exception $e) {
     echo "Something went wrong trying to parse before downloading " . $e;
 }
