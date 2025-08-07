@@ -182,9 +182,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
     <div class=" is-search">
         <div class="wrapper">
 
-            <?php if ($_SESSION['role'] === 'admin') { ?>
                 <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
-            <?php } ?>
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
@@ -231,7 +229,7 @@ $data = $_SESSION['data'];
 $max_rows = 300;
 $total_rows = count($data);
 $j = 1;
-$data_slice = array_slice($data, $j, $max_rows);
+$data_slice = array_slice($data, 0, $max_rows);
 $i = 0;
 
 foreach ($data_slice as $index => $row) {
@@ -387,7 +385,7 @@ document.addEventListener("input", function(e) {
     if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
     const value = e.target.value.trim();
 
-    if (value.length > 0) {
+    if (value.length >= 5) {
         const inputs = Array.from(document.querySelectorAll(".dynamicId"));
         const index = inputs.indexOf(e.target);
         if (index > -1 && index < inputs.length - 1) {

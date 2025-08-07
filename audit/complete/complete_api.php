@@ -60,9 +60,6 @@ try {
         $insert_stmt = $dbh->prepare($insert_q);
         $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json]);
 
-        $update_dept_q = "UPDATE department SET last_audit_date = CURRENT_TIMESTAMP, audited = true WHERE dept_id = :dept_id";
-        $update_dept_stmt = $dbh->prepare($update_dept_q);
-        $update_dept_stmt->execute([":dept_id" => $dept]);
         echo json_encode(['status' => 'success', 'message' => 'Insert audit id' . $audit_id]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'failed', 'Error on Insert' => $e->getMessage(),]);
