@@ -22,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $file_path = $audit_details['dept_id'] . '.xlsx';
-$data = json_decode($audit_details['audit_data']);
+$data = json_decode($audit_details['audit_data'], true);
 try {
     //$keys = array_keys($data[0]);
     $spreadsheet = new Spreadsheet();
