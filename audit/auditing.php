@@ -384,8 +384,16 @@ document.addEventListener("input", function(e) {
     const scanner_mode = document.getElementById('scanner-mode').checked;
     if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
     const value = e.target.value.trim();
-
-    if (value.length >= 5) {
+    let tab = 5;
+    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F') {
+        tab++;
+        if (value[1] === 'P') {
+            tab++;
+        } else if (value[1] === 'T' && value[2] ==='U') {
+            tab += 2;
+        }
+    }
+    if (value.length >= tab) {
         const inputs = Array.from(document.querySelectorAll(".dynamicId"));
         const index = inputs.indexOf(e.target);
         if (index > -1 && index < inputs.length - 1) {
