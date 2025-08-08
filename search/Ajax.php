@@ -381,7 +381,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count_stmt->execute();
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $user_query = "SELECT username,email,u_role,last_login,f_name,l_name,unnest(dept_id) as dept_id FROM user_table LIMIT 50 OFFSET :offset";
+            $user_query = "SELECT username,email,u_role,last_login,f_name,l_name, dept_id FROM user_table LIMIT 50 OFFSET :offset";
             $data_stmt = $dbh->prepare($user_query);
             $data_stmt->execute([":offset"=>$query_offset]);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -392,7 +392,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count_stmt->execute([":search"=>"%$tag%"]);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $user_query = "select username,email,last_login,u_role,f_name,l_name,unnest(dept_id) as dept_id from user_table, unnest(dept_id) as dept where dept ILIKE :search OR email ILIKE :search LIMIT 50 OFFSET :offset";
+            $user_query = "select username,email,last_login,u_role,f_name,l_name, dept_id from user_table where :search = ANY(dept_id) OR email ILIKE :search LIMIT 50 OFFSET :offset";
             $params[":offset"] = $query_offset;
             $data_stmt = $dbh->prepare($user_query);
             $data_stmt->execute($params);

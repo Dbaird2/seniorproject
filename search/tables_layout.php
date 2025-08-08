@@ -377,7 +377,7 @@ foreach ($result as $row) {
     $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
     $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
     $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
-    $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+    $dept = trim($row['dept_id'], '{}');
 
 ?>
 <tr style="min-height:90px;">
@@ -392,7 +392,7 @@ foreach ($result as $row) {
                         <td class=<?= $color_class ?>> <?= $last_login ?></td>
                         <td class=<?= $color_class ?>><?= $f_name ?></td>
                         <td class=<?= $color_class ?>><?= $l_name ?></td>
-                        <td class=<?= $color_class ?>><?= $dept_id ?></td>
+                        <td class=<?= $color_class ?>><?= $dept ?></td>
 </tr>
             <?php } ?>
                 </tbody>
@@ -408,7 +408,8 @@ foreach ($result as $row) {
         $last_login = htmlspecialchars($row['last_login'] ?? '', ENT_QUOTES);
         $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
         $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
-        $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
+        $dept = trim($row['dept_id'], '{}');
+        $dept = explode(',', $dept);
 
 ?>
                 <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
@@ -442,9 +443,11 @@ foreach ($result as $row) {
                                     <label for="location">Last Name:</label>
                                     <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
-                                    <label for="location">Department ID(s):</label>
-                                    <input type="text" id="dept_ids" name="dept_ids" value="<?= $dept_id ?>" readonly>
-                                    <br>
+                                    <?php foreach ($dept as $dept_row) { ?>
+                                        <label for="location">Department ID:</label>
+                                        <input type="text" id="dept_ids" name="dept_ids" value="<?= $dept_row ?>" readonly>
+                                        <br>
+                                    <?php } ?>
                                     <button type="submit">Update Room</button>
                                 </form>
                             </div>
