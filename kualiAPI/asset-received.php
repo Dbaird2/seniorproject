@@ -84,7 +84,7 @@ try {
         $date = date("Y-m-d", $timestamp_sec);
         $tag_data = $edge['node']['data']['0nVFqyLknC']['data'];
         $num = $edge['node']['data']['0FlHusDHFt'];    
-        $po = $edge['node']['data']['3BdpFK5t1I'];
+        $po = (int)$edge['node']['data']['3BdpFK5t1I'];
 
         $model = $edge['node']['data']['CCqucq9BjK']['data'][0]['data']['_29h3triQJ']['label'];
         $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
