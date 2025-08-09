@@ -116,7 +116,7 @@ try {
         $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
         echo '<br>Number of PCS' . $num . '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
     }
-    $insert_into_kuali_table = "UPDATE kuali_table SET asset_recieved_time = :time";
+    $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
     $update_stmt->execute([":time" => $highest_time]);
     $dbh->commit();
