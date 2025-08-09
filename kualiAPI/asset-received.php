@@ -122,5 +122,6 @@ try {
     $dbh->commit();
 } catch (PDOException $e) {
     $dbh->rollBack();
+    echo "Error rolling back ". $e->getMessage();
 }
 
