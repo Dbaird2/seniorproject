@@ -9,6 +9,7 @@ $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['asset_received_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000); 
 
+
 $subdomain = "subdomain";
 $apikey = $result['kuali_key'];
 
@@ -123,13 +124,13 @@ try {
 
             echo '<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
         }
-        $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
+        $raw_ms = $update_time > $raw_ms ? $update_time : $raw_ms;
         echo '<br>Number of PCS' . $num . '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
     }
     try {
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
-    $update_stmt->execute([":time" => $highest_time]);
+    $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error updating " . $e->getMessage();
     }
