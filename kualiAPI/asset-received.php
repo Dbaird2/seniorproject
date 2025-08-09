@@ -100,15 +100,23 @@ try {
             $serial_num = $tag['data']['Wrnezf-g0C'] ?? 'Unknown';
             $value = $tag['data']['QkRodcpQRN'] ?? 1;
             $name = $tag['data']['vNv8CdzZjv'];
-            $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
-            $s_stmt = $dbh->prepare($select_q);
-            $s_stmt->execute([":tag" => $tag_num]);
-            $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
+            try {
+                $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
+                $s_stmt = $dbh->prepare($select_q);
+                $s_stmt->execute([":tag" => $tag_num]);
+                $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                echo "Error selecting " . $e->getMessage();
+            }
             if (!$tag_taken) {
-                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES
-                    (?, ?, ?, ?, ?, ?, ?, ?)";
-                $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
+                try {
+                    $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?)";
+                    $insert_stmt = $dbh->prepare($insert_q);
+                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
+                } catch (PDOException $e) {
+                    echo "Error inserting " .$e->getMessage();
+                }
             }
 
             echo '<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
@@ -116,9 +124,13 @@ try {
         $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
         echo '<br>Number of PCS' . $num . '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
     }
+    try {
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
     $update_stmt->execute([":time" => $highest_time]);
+    } catch (PDOException $e) {
+        echo "Error updating " . $e->getMessage();
+    }
     $dbh->commit();
 } catch (PDOException $e) {
     $dbh->rollBack();
