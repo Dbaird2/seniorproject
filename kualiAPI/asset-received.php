@@ -77,7 +77,7 @@ $SPA = "/^SP\d+$/";
 try {
     $dbh->beginTransaction();
     foreach ($edges as $index => $edge) {
-        $update_time = $edge['node']['meta']['createdAt'];
+        $update_time = (int)$edge['node']['meta']['createdAt'];
         echo $update_time;
         $time = $edge['node']['data']['wzgp7QHb7F'];
         $timestamp_sec = $time / 1000; 
@@ -99,6 +99,8 @@ try {
             } else continue;
             $serial_num = $tag['data']['Wrnezf-g0C'] ?? 'Unknown';
             $value = $tag['data']['QkRodcpQRN'] ?? 1;
+            $length = strlen($value);
+            $value = (float)substr_replace($value, '.', $length - 2, 0);
             $name = $tag['data']['vNv8CdzZjv'];
             try {
                 $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
@@ -111,7 +113,7 @@ try {
             if (!$tag_taken) {
                 try {
                     $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?)";
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     $insert_stmt = $dbh->prepare($insert_q);
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
                 } catch (PDOException $e) {
