@@ -10,7 +10,7 @@ $raw_ms = (int)$result['asset_received_time'] ?? 1742244529568;
 $highest_time = date('c', $raw_ms / 1000); 
 
 $subdomain = "subdomain";
-$apikey = $result['key'];
+$apikey = $result['kuali_key'];
 
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
 
