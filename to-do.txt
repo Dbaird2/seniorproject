@@ -1,7 +1,4 @@
             TO DO
-add a completion list of what audits are done and when they need to be redone
-by
-
 notes functionality in asset-ui
 
 graph for audited departments on index
@@ -9,8 +6,6 @@ graph for audited departments on index
 notes for admins in asset-ui
 
 style in asset-ui
-
-
 
 add delete features for assets/user (bldg-department done)
 
@@ -22,12 +17,10 @@ add csv support
 
 
             KUALI TO DO
-make editing of dept,bldg,asset,(admin)user in Ajax.php
-
-insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
+make editing of dept,bldg,asset in Ajax.php
 
 get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
-auditing from DB.
+auditing
 
 dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
 
@@ -43,7 +36,8 @@ ML python/php
 
 
             NEEDS TESTING
+insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
 
-fix audit insert to not make dupes (fixed?)
+fix audit insert to not make dupes
 
-update room addition form for room tag (finished?)
+update room addition form for room tag 
