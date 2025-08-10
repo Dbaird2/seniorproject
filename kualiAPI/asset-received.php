@@ -76,6 +76,7 @@ $CMP = "/^\d+/";
 $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
 $new_time = $raw_ms;
+$room_tag = 2051;
 try {
     foreach ($edges as $index => $edge) {
         $update_time = (int)$edge['node']['meta']['createdAt'];
@@ -124,10 +125,10 @@ try {
                 $tag_taken = true;
             }
             if ($s_stmt->rowCount() <= 0) {
-                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 try {
                     $insert_stmt = $dbh->prepare($insert_q);
-                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
+                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag]);
                     echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
                     echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
                 } catch (PDOException $e) {
