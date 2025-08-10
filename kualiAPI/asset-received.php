@@ -75,11 +75,11 @@ $STU = "/^S[RC]?[TU]?\d+$/";
 $CMP = "/^\d+/";
 $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
-
+$new_time = $raw_ms;
 try {
     foreach ($edges as $index => $edge) {
-        $update_time = $edge['node']['meta']['createdAt'];
-        $time = $edge['node']['data']['wzgp7QHb7F'];
+        $update_time = (int)$edge['node']['meta']['createdAt'];
+        $time = (int)$edge['node']['data']['wzgp7QHb7F'];
         $timestamp_sec = $time / 1000;
         $date = date("Y-m-d", $timestamp_sec);
         $tag_data = $edge['node']['data']['0nVFqyLknC']['data'];
@@ -97,7 +97,6 @@ try {
                 preg_match($SPA, $tag_num)
             ) {
             } else continue;
-            echo $update_time;
             if ($po === '' || $po === NULL) {
                 continue;
             } 
@@ -110,10 +109,18 @@ try {
             $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
             try {
                 $s_stmt = $dbh->prepare($select_q);
-                $s_stmt->execute([":tag" => $tag_num]);
+                if (!$s_stmt) {
+                    throw new PDOException("Prepare failed: " . implode(" | ", $dbh->errorInfo()));
+                }
+                $executed = $s_stmt->execute([":tag" => $tag_num]);
+                if (!$executed) {
+                    throw new PDOException("Execute failed: " . implode(" | ", $s_stmt->errorInfo()));
+                }
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
+                
             } catch (PDOException $e) {
                 echo "Error selecting " . $e->getMessage();
+                $tag_taken = true;
             }
             if (!$tag_taken) {
                 $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -125,15 +132,18 @@ try {
                 } catch (PDOException $e) {
                     echo "Error inserting " . $e->getMessage();
                 }
+            } else {
+                echo $tag_taken['asset_tag'];
             }
 
         }
-        $check_time = $update_time > $raw_ms ? $update_time : $raw_ms;
-        $check_time = $update_time > $check_time ? $update_time : $raw_ms;
+        if ($update_time > $raw_ms && $update_time > $new_time) {
+            $new_time = $update_time;
+        }
     }
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
-    $update_stmt->execute([":time" => $check_time]);
+    $update_stmt->execute([":time" => $new_time]);
 } catch (PDOException $e) {
     echo "Error with database " . $e->getMessage();
     exit;
