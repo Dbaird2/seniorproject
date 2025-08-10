@@ -95,8 +95,8 @@ try {
                 preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
                 preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||
                 preg_match($SPA, $tag_num)
-                echo " Match Found <br>";
             ) {
+                echo " Match Found <br>";
             } else continue;
             if ($po === '' || $po === NULL) {
                 continue;
