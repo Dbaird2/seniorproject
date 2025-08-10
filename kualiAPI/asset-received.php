@@ -10,7 +10,7 @@ $raw_ms =  $result['asset_received_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
 $subdomain = "subdomain";
-$apikey = $result['key'];
+$apikey = $result['kuali_key'];
 
 
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
@@ -119,7 +119,7 @@ try {
         }
         $highest_time = $update_time > $highest_time ? $time : $highest_time;
     }
-    $insert_into_kuali_table = "UPDATE kuali_table SET asset_recieved_time = :time";
+    $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
     $update_stmt->execute([":time" => $highest_time]);
 } catch (PDOException $e) {
