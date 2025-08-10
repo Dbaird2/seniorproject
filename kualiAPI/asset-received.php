@@ -133,7 +133,7 @@ try {
                     echo "Error inserting " . $e->getMessage();
                 }
             } else {
-                echo $tag_taken['asset_tag'];
+                echo $tag_taken['asset_tag'] . "<br>";
             }
 
         }
