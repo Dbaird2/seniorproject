@@ -88,7 +88,6 @@ $profile_map = [
     'EQUIPCOMP' => 10
 ];
 try {
-    $dbh->beginTransaction();
     foreach ($edges as $index => $edge) {
         $asset_profile = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['pZEr8FpYK_']['label'];
         $key = $asset_profile;
@@ -134,22 +133,14 @@ try {
                     (?, ?, ?, ?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
                 $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile]);
+                $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
+                $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
+                $update_stmt = $dbh->prepare($insert_into_kuali_table);
+                $update_stmt->execute([":time" => $highest_time]);
             }
         }
-        if (
-            preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
-            preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||
-            preg_match($SPA, $tag_num)
-        ) {
-        } else continue;
-        $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
     }
-    $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
-    $update_stmt = $dbh->prepare($insert_into_kuali_table);
-    $update_stmt->execute([":time" => $highest_time]);
-    $dbh->commit();
 } catch (PDOException $e) {
-    $dbh->rollBack();
     echo "Rolling back " . $e->getMessage();
 }
 
