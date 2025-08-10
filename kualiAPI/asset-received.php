@@ -128,13 +128,13 @@ try {
                 try {
                     $insert_stmt = $dbh->prepare($insert_q);
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
-                    echo '<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+                    echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
                     echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
                 } catch (PDOException $e) {
                     echo "Error inserting " . $e->getMessage();
                 }
             } else {
-                echo $tag_taken['asset_tag'] . "<br>";
+                echo $tag_taken['asset_tag'] . " Taken<br>";
             }
 
         }
