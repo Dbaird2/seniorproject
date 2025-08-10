@@ -6,7 +6,8 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT asset_received_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms =  $result['asset_received_time'] ?? 0;
+$raw_ms = (int)$result['asset_received_time'] ?? 0;
+echo $raw_ms . "<br>";
 $highest_time = date('c', $raw_ms / 1000);
 
 $subdomain = "subdomain";
@@ -119,13 +120,13 @@ try {
                 try {
                     $insert_stmt = $dbh->prepare($insert_q);
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle]);
+                    echo '<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+                    echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
                 } catch (PDOException $e) {
                     echo "Error inserting " . $e->getMessage();
                 }
             }
 
-            echo '<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
-            echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
         }
         $highest_time = $update_time > $highest_time ? $time : $highest_time;
     }
