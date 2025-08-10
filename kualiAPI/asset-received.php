@@ -123,7 +123,7 @@ try {
                 echo "Error selecting " . $e->getMessage();
                 $tag_taken = true;
             }
-            if (!$tag_taken) {
+            if ($s_stmt->rowCount() <= 0) {
                 $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 try {
                     $insert_stmt = $dbh->prepare($insert_q);
