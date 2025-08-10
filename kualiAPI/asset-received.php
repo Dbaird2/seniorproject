@@ -128,11 +128,12 @@ try {
             }
 
         }
-        $highest_time = $update_time > $highest_time ? $time : $highest_time;
+        $check_time = $update_time > $raw_ms ? $update_time : $raw_ms;
+        $check_time = $update_time > $check_time ? $update_time : $raw_ms;
     }
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
-    $update_stmt->execute([":time" => $highest_time]);
+    $update_stmt->execute([":time" => $check_time]);
 } catch (PDOException $e) {
     echo "Error with database " . $e->getMessage();
     exit;
