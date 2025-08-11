@@ -104,6 +104,7 @@ $depts = $self_depts = $spa_depts = [];
 $status_data[] = ["Audit Status", "Count"];
 $self_status_data[] = ["Audit Status", "Count"];
 $spa_status_data[] = ["Audit Status", "Count"];
+
 $status_count['In Progress'] = $status_count['Incomplete'] = $status_count['Complete'] = 0;
 $self_status_count['In Progress'] = $self_status_count['Incomplete'] = $self_status_count['Complete'] = 0;
 $spa_status_count['In Progress'] = $spa_status_count['Incomplete'] = $spa_status_count['Complete'] = 0;
@@ -113,12 +114,12 @@ foreach ($data as $row) {
             $status_count[$row['audit_status']]++;
             $depts[] = $row['dept_id'];
         }
-    } else if ((int)$row['audit_id'] === 1 || (int)$row['audit_id'] === 2) {
+    } else if (in_array($row['audit_id'], [1, 2])) {
         if (!in_array($row['dept_id'], $depts)) {
             $self_status_count[$row['audit_status']]++;
             $self_depts[] = $row['dept_id'];
         }
-    } else if ((int)$row['audit_id'] === 5 || (int)$row['audit_id'] === 6) {
+    } else if (in_array($row['audit_id'], [5, 6])) {
         if (!in_array($row['dept_id'], $depts)) {
             $spa_status_count[$row['audit_status']]++;
             $spa_depts[] = $row['dept_id'];
@@ -126,17 +127,17 @@ foreach ($data as $row) {
     }
 }
 
-$status_data[] = ['Complete', $status_count['Complete'] ?? 0];
-$status_data[] = ['In Progress', $status_count['In Progress'] ?? 0];
-$status_data[] = ['Incomplete', $status_count['Incomplete'] ?? 0];
+$status_data[] = ['Complete', $status_count['Complete']];
+$status_data[] = ['In Progress', $status_count['In Progress']];
+$status_data[] = ['Incomplete', $status_count['Incomplete']];
 
-$self_status_data[] = ['Complete', $self_status_count['Complete'] ?? 0];
-$self_status_data[] = ['In Progress', $self_status_count['In Progress'] ?? 0];
-$self_status_data[] = ['Incomplete', $self_status_count['Incomplete'] ?? 0];
+$self_status_data[] = ['Complete', $self_status_count['Complete']];
+$self_status_data[] = ['In Progress', $self_status_count['In Progress']];
+$self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
 
-$spa_status_data[] = ['Complete', $spa_status_count['Complete'] ?? 0];
-$spa_status_data[] = ['In Progress', $spa_status_count['In Progress'] ?? 0];
-$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete'] ?? 0];
+$spa_status_data[] = ['Complete', $spa_status_count['Complete']];
+$spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
+$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 ?>
 
 <!DOCTYPE html>
@@ -150,13 +151,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete'] ?? 0];
     <link rel="stylesheet" href="index.css">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
-<script>
-$(function(){
-	$('.chat-area > .chat-list').jScrollPane({
-		mouseWheelSpeed: 30
-	});
-});
-</script>
+
 <body>
     <div class="dashboard-container">
         <!-- Welcome Section -->
@@ -384,7 +379,7 @@ $(function(){
         </div>
 
         <!-- Department Alerts & Notifications -->
-        <!--<div class="department-alerts">
+        <div class="department-alerts">
             <div class="alerts-header">
                 <div class="alerts-title">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -392,7 +387,7 @@ $(function(){
                     </svg>
                     <h3>Department Audit Alerts</h3>
                 </div>
-                <span class="alert-badge"><?php// echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
+                <span class="alert-badge"><?php echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
             </div>
             <div class="alert-items">
                 <div class="alert-item">
@@ -412,23 +407,23 @@ $(function(){
                     <div class="alert-time">Awaiting management review and approval</div>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 
     <script>
         function handleAction(action) {
             const actions = {
                 'schedule-audit': () => {
-                    window.location.href = 'asset-manager/manage/manage-profile.php';
+                    window.location.href = 'schedule-audit.php';
                 },
                 'start-self-audit': () => {
-                    window.location.href = 'audit/upload.php';
+                    window.location.href = 'self-audit.php';
                 },
                 'search-departments': () => {
-                    window.location.href = 'search/search.php';
+                    window.location.href = 'search-departments.php';
                 },
                 'view-audit-history': () => {
-                    window.location.href = 'audit/audit-history/search-history.php';
+                    window.location.href = 'audit-history.php';
                 },
                 'download-reports': () => {
                     window.location.href = 'download-reports.php';
