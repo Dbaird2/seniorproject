@@ -102,6 +102,8 @@ $type_stmt->execute();
 $data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
 $depts = $self_depts = $spa_depts = [];
 $status_data[] = ["Audit Status", "Count"];
+$self_status_data[] = ["Audit Status", "Count"];
+$spa_status_data[] = ["Audit Status", "Count"];
 $status_count['In Progress'] = $status_count['Incomplete'] = $status_count['Complete'] = 0;
 $self_status_count['In Progress'] = $self_status_count['Incomplete'] = $self_status_count['Complete'] = 0;
 $spa_status_count['In Progress'] = $spa_status_count['Incomplete'] = $spa_status_count['Complete'] = 0;
@@ -111,12 +113,12 @@ foreach ($data as $row) {
             $status_count[$row['audit_status']]++;
             $depts[] = $row['dept_id'];
         }
-    } else if (in_array($row['audit_id'], [1, 2])) {
+    } else if ((int)$row['audit_id'] === 1 || (int)$row['audit_id'] === 2) {
         if (!in_array($row['dept_id'], $depts)) {
             $self_status_count[$row['audit_status']]++;
             $self_depts[] = $row['dept_id'];
         }
-    } else if (in_array($row['audit_id'], [5, 6])) {
+    } else if ((int)$row['audit_id'] === 5, (int)$row['audit_id'] === 6) {
         if (!in_array($row['dept_id'], $depts)) {
             $spa_status_count[$row['audit_status']]++;
             $spa_depts[] = $row['dept_id'];
@@ -124,17 +126,17 @@ foreach ($data as $row) {
     }
 }
 
-$status_data[] = ['Complete', $status_count['Complete']];
-$status_data[] = ['In Progress', $status_count['In Progress']];
-$status_data[] = ['Incomplete', $status_count['Incomplete']];
+$status_data[] = ['Complete', $status_count['Complete'] ?? 0];
+$status_data[] = ['In Progress', $status_count['In Progress'] ?? 0];
+$status_data[] = ['Incomplete', $status_count['Incomplete'] ?? 0];
 
-$self_status_data[] = ['Complete', $self_status_count['Complete']];
-$self_status_data[] = ['In Progress', $self_status_count['In Progress']];
-$self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
+$self_status_data[] = ['Complete', $self_status_count['Complete'] ?? 0];
+$self_status_data[] = ['In Progress', $self_status_count['In Progress'] ?? 0];
+$self_status_data[] = ['Incomplete', $self_status_count['Incomplete'] ?? 0];
 
-$spa_status_data[] = ['Complete', $spa_status_count['Complete']];
-$spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
-$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
+$spa_status_data[] = ['Complete', $spa_status_count['Complete'] ?? 0];
+$spa_status_data[] = ['In Progress', $spa_status_count['In Progress'] ?? 0];
+$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete'] ?? 0];
 ?>
 
 <!DOCTYPE html>
@@ -417,16 +419,16 @@ $(function(){
         function handleAction(action) {
             const actions = {
                 'schedule-audit': () => {
-                    window.location.href = 'schedule-audit.php';
+                    window.location.href = 'asset-manager/manage/manage-profile.php';
                 },
                 'start-self-audit': () => {
-                    window.location.href = 'self-audit.php';
+                    window.location.href = 'audit/upload.php';
                 },
                 'search-departments': () => {
-                    window.location.href = 'search-departments.php';
+                    window.location.href = 'search/search.php';
                 },
                 'view-audit-history': () => {
-                    window.location.href = 'audit-history.php';
+                    window.location.href = 'audit/audit-history/search-history.php';
                 },
                 'download-reports': () => {
                     window.location.href = 'download-reports.php';

@@ -49,7 +49,7 @@ $audit_type = [
     6 => 'Overdue Management Audit',
     7 => 'SPA Audit',
     8 => 'SPA Audit',
-    9 => 'Overdue SPA Audit
+    9 => 'Overdue SPA Audit'
 ];
 foreach ($audits as $row) {
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
