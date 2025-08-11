@@ -10,11 +10,56 @@ $dept_count_q = "SELECT COUNT(*) AS total_depts FROM department";
 $dept_count_stmt = $dbh->query($dept_count_q);
 $dept_count_results = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
 
+/* GET FREQ DATA */
+$due_dates_q = "SELECT * FROM audit_freq";
+
+$due_dates_stmt = $dbh->query($due_dates_q);
+$due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
+
+$spa_due = $due_dates['spa_due'] ?? '2026-07-01';
+$old_spa_id = (int)$due_dates['curr_spa_id'] === 8 ? 9 : 8;
+$self_due = $due_dates['self_due'] ?? '2026-07-01';
+$old_self_id = (int)$due_dates['curr_self_id'] === 1 ? 2 : 1;
+$mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
+$old_mgmt_id = (int)$due_dates['curr_mgmt_id'] === 4 ? 5 : 4;
+
 /* GET AUDITS */
 $audit_progress_q = "SELECT audit_id, dept_id, audit_status FROM audit_history ORDER BY finished_at desc";
 
 $audit_progress_stmt = $dbh->query($audit_progress_q);
 $audit_progress = $audit_progress_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+/* CHART DATA/CONFIGURING */
+$depts = [];
+$depts = $self_depts = $spa_depts = [];
+$status_data[] = ["Audit Status", "Count"];
+$self_status_data[] = ["Audit Status", "Count"];
+$spa_status_data[] = ["Audit Status", "Count"];
+
+$status_count['In Progress'] = $status_count['Complete'] = 0;    
+$status_count['Incomplete'] = $total_departments;
+$status_over_count['In Progress'] = $status_over_count['Complete'] = 0;    
+$status_over_count['Incomplete'] = $total_departments;
+
+$self_status_count['In Progress'] = $self_status_count['Complete'] = 0;
+$self_status_count['Incomplete'] = $total_departments;
+$self_over_status_count['In Progress'] = $self_over_status_count['Complete'] = 0;
+$self_over_status_count['Incomplete'] = $total_departments;
+
+$spa_status_count['In Progress'] = $spa_status_count['Complete'] = 0;
+$spa_status_count['Incomplete'] = 1;
+
+$status_data[] = ['Complete', $status_count['Complete']];
+$status_data[] = ['In Progress', $status_count['In Progress']];
+$status_data[] = ['Incomplete', $status_count['Incomplete']];
+
+$self_status_data[] = ['Complete', $self_status_count['Complete']];
+$self_status_data[] = ['In Progress', $self_status_count['In Progress']];
+$self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
+
+$spa_status_data[] = ['Complete', $spa_status_count['Complete']];
+$spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
+$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 
 $spa_id = 0;
 $self_ids = $mgmt_ids = $overdue_ids = [];
@@ -23,6 +68,32 @@ $self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
 $mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
 $overdue_prog_count['In Progress'] = $overdue_prog_count['Complete'] = 0;
 foreach ($audit_progress as $index => $row) {
+    switch ($row['audit_id']) {
+    case 3:
+        $self_over_status_count[$row['audit_id']]++;
+        $self_over_status_count['Incomplete']--;
+        break;
+    case 6:
+        $mgmt_over_status_count[$row['audit_id']]++;
+        $mgmt_over_status_count['Incomplete']--;
+        break;
+    case 9:
+        $spa_over_status_count[$row['audit_id']]++;
+        $spa_over_status_count['Incomplete']--;
+        break;
+    case $old_mgmt_id:
+        $mgmt_over_status_count[$row['audit_id']]++;
+        $mgmt_over_status_count['Incomplete']--;
+        break;
+    case $old_self_id:
+        $self_over_status_count[$row['audit_id']]++;
+        $self_over_status_count['Incomplete']--;
+        break;
+    case $old_spa_id:
+        $spa_over_status_count[$row['audit_id']]++;
+        $spa_over_status_count['Incomplete']--;
+        break;
+    }
     if (in_array($row['audit_id'], [1, 2])) {
         if (!in_array($row['dept_id'], $self_ids)) {
             $self_prog_count[$row['audit_status']]++;
@@ -30,15 +101,10 @@ foreach ($audit_progress as $index => $row) {
                 'audit_id' => $row['audit_id'],
                 'dept_id' => $row['dept_id']
             ];
-        }
-    }
-    if ($row['audit_id'] === 3 || $row['audit_id'] === 6 || $row['audit_id'] === 9) {
-        if (!in_array($row['dept_id'], $self_ids)) {
-            $overdue_prog_count[$row['audit_status']]++;
-            $overdue_ids[] = [
-                'audit_id' => $row['audit_id'],
-                'dept_id' => $row['dept_id']
-            ];
+            if ($row['audit_status'] !== 'Incomplete') {
+                $self_status_count[$row['audit_status']]++;
+                $self_status_count['Incomplete']--;
+            }
         }
     }
     if (in_array($row['audit_id'], [4, 5])) {
@@ -48,6 +114,10 @@ foreach ($audit_progress as $index => $row) {
                 'audit_id' => $row['audit_id'],
                 'dept_id' => $row['dept_id']
             ];
+            if ($row['audit_status'] !== 'Incomplete') {
+                $status_count[$row['audit_status']]++;
+                $status_count['Incomplete']--;
+            }
         }
     }
     if (in_array($row['audit_id'], [7, 8])) {
@@ -55,20 +125,16 @@ foreach ($audit_progress as $index => $row) {
             $spa_status = $row['audit_status'] ?? 'Incomplete';
             $spa_id = $row['audit_id'];
         }
+        if (!in_array($row['dept_id'], $spa_depts)) {
+            if ($row['audit_status'] !== 'Incomplete') {
+                $spa_status_count[$row['audit_status']]++;
+                $spa_status_count['Incomplete']--;
+            }
+            $spa_depts[] = $row['dept_id'];
+        }
     } 
 }
-$spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
-$spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
-$spa_completion_status = $spa_status === 'Incomplete' ? 0 : $spa_completion_status;
 
-$due_dates_q = "SELECT * FROM audit_freq";
-
-$due_dates_stmt = $dbh->query($due_dates_q);
-$due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
-
-$spa_due = $due_dates['spa_due'] ?? '2026-07-01';
-$self_due = $due_dates['self_due'] ?? '2026-07-01';
-$mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
 
 $user_name = $_SESSION['email'] ?? "Audit Manager";
 $current_date = date("M j, Y");
@@ -92,9 +158,24 @@ $mgmt_per = (int)(((1085 - $mgmt_diff->days) / 1085) * 100);
 $total_departments = (int)$dept_count_results['total_depts'] ?? 85;
 $self_audits_in_progress = $self_prog_count['In Progress'] ?? 0;
 $self_audits_complete = $self_prog_count['Complete'] ?? 0;
+$self_prev_audits_complete = $self_over_status_count['Complete'];
+$self_prev_audits_in_progress = $self_over_prog_count['In Progress'] ?? 0;
 
 $mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 0;
 $mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 0;
+$mgmt_prev_audits_complete = $mgmt_over_status_count['Complete'];
+$mgmt_prev_audits_in_progress = $mgmt_over_prog_count['In Progress'] ?? 0;
+
+$spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
+$spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
+$spa_completion_status = $spa_status === 'Incomplete' ? 0 : $spa_completion_status;
+
+$prev_spa_status = $spa_over_status_count['Incomplete'] === 1 ? 0 : 50;
+$prev_spa_status = $spa_over_status_count['In Progress'] === 1 ? 50 : 100;
+$prev_spa = $spa_over_status_count['Incomplete'] === 1 ? 'Incomplete' : 'In Progress';
+$prev_spa = $spa_over_status_count['In Progress'] === 1 ? 'In Progress' : 'Complete';
+
+
 
 $spa_completion_rate = $spa_per;
 $self_completion_rate = $self_per;
@@ -103,73 +184,9 @@ $mgmt_completion_rate = $mgmt_per;
 $self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $self_audits_complete) / $total_departments);
 $mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
 
+$self_prev_completion_status = (int)(($total_departments - $self_prev_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $self_prev_audits_complete) / $total_departments);
+$mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $mgmt_prev_audits_complete) / $total_departments);
 
-/* CHART DATA/CONFIGURING */
-$depts = [];
-$audits = "SELECT COALESCE(audit_status, 'Incomplete') AS audit_status, audit_id, EXTRACT(YEAR FROM finished_at), d.dept_id FROM audit_history h RIGHT JOIN department d ON d.dept_id = h.dept_id";
-$type_stmt = $dbh->prepare($audits);
-$type_stmt->execute();
-$data = $type_stmt->fetchAll(PDO::FETCH_ASSOC);
-$depts = $self_depts = $spa_depts = [];
-$status_data[] = ["Audit Status", "Count"];
-$self_status_data[] = ["Audit Status", "Count"];
-$spa_status_data[] = ["Audit Status", "Count"];
-
-$status_count['In Progress'] = $status_count['Complete'] = 0;    
-$status_count['Incomplete'] = $total_departments;
-
-$self_status_count['In Progress'] = $self_status_count['Complete'] = 0;
-$self_status_count['Incomplete'] = $total_departments;
-
-$spa_status_count['In Progress'] = $spa_status_count['Complete'] = 0;
-$spa_status_count['Incomplete'] = 1;
-foreach ($data as $row) {
-    if ((int)$row['audit_id'] === 4 && (int)$row['audit_id'] === 5) {
-        if (!in_array($row['dept_id'], $depts)) {
-            if ($row['audit_status'] !== 'Incomplete') {
-                $status_count[$row['audit_status']]++;
-                $status_count['Incomplete']--;
-            }
-            $depts[] = $row['dept_id'];
-        }
-    } else if (in_array($row['audit_id'], [1, 2])) {
-        if (!in_array($row['dept_id'], $self_depts)) {
-            if ($row['audit_status'] !== 'Incomplete') {
-                $self_status_count[$row['audit_status']]++;
-                $self_status_count['Incomplete']--;
-            }
-            $self_depts[] = $row['dept_id'];
-        }
-    } else if (in_array($row['audit_id'], [7, 8])) {
-        if (!in_array($row['dept_id'], $spa_depts)) {
-            if ($row['audit_status'] !== 'Incomplete') {
-                $spa_status_count[$row['audit_status']]++;
-                $spa_status_count['Incomplete']--;
-            }
-            $spa_depts[] = $row['dept_id'];
-        }
-    }
-}
-
-$status_data[] = ['Complete', $status_count['Complete']];
-$status_data[] = ['In Progress', $status_count['In Progress']];
-$status_data[] = ['Incomplete', $status_count['Incomplete']];
-
-$self_status_data[] = ['Complete', $self_status_count['Complete']];
-$self_status_data[] = ['In Progress', $self_status_count['In Progress']];
-$self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
-
-$spa_status_data[] = ['Complete', $spa_status_count['Complete']];
-$spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
-$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
-echo "<pre>";
-echo "Status data";
-var_dump($status_data);
-echo "Self Status data";
-var_dump($self_status_data);
-echo "Spa Status data";
-var_dump($spa_status_data);
-echo "</pre>";
 ?>
 
 <!DOCTYPE html>
@@ -220,30 +237,6 @@ echo "</pre>";
                 <div class="completion-text"><?php echo $spa_diff->days; ?> days until Due</div>
             </div>
 
-            <!-- <div class="audit-type-card fdn">
-                <div class="audit-type-header">
-                    <div class="audit-type-title">FDN Audits</div>
-                    <div class="audit-badge fdn">Foundation</div>
-                </div>
-                <div class="audit-stats">
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?php //echo $fdn_audits_due;
-                                                        ?></div>
-                        <div class="audit-stat-label">Due This Year</div>
-                    </div>
-                    <div class="audit-stat">
-                        <div class="audit-stat-number">12</div>
-                        <div class="audit-stat-label">Completed</div>
-                    </div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill fdn" style="width: <?php //echo $fdn_completion_rate;
-                                                                    ?>%"></div>
-                </div>
-                <div class="completion-text"><?php //echo $fdn_completion_rate;
-                                                ?>% Complete</div>
-            </div> -->
-
             <div class="audit-type-card self">
 
                 <div class="audit-type-header">
@@ -264,7 +257,7 @@ echo "</pre>";
                         <div class="audit-stat-label">Due By</div>
                     </div>
                     <div class="audit-stat">
-                        <div class="audit-stat-number"><?= $mgmt_audits_complete ?></div>
+                        <div class="audit-stat-number"><?= $self_audits_complete ?></div>
                         <div class="audit-stat-label">Completed</div>
                     </div>
                 </div>
@@ -294,7 +287,7 @@ echo "</pre>";
                         <div class="audit-stat-label">Due By</div>
                     </div>
                     <div class="audit-stat">
-                        <div class="audit-stat-number"><?= $self_audits_complete ?></div>
+                        <div class="audit-stat-number"><?= $mgmt_audits_complete ?></div>
                         <div class="audit-stat-label">Completed</div>
                     </div>
                 </div>
@@ -324,8 +317,8 @@ echo "</pre>";
                 </div>
                 <div class="chart-placeholder">
                     <div id="audit-status-piechart" style="width:100%;height:100%;"></div>
-                    <div id="self-audit-piechart" style="width:100%;height:100%;"></div>
-                    <div id="spa-audit-piechart" style="width:100%;height:100%;"></div>
+                    <div id="self-audit-piechart" style="display:none;width:100%;height:100%;"></div>
+                    <div id="spa-audit-piechart" style="display:none;width:100%;height:100%;"></div>
 
                     <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status by management audits</div>
                 </div>
@@ -364,6 +357,79 @@ echo "</pre>";
                         </svg>
                         View Audit History
                     </button>
+                </div>
+            </div>
+        </div>
+        <!-- Audit Overdue Type Overview -->
+        <div class="audit-overview">
+            <div class="audit-type-card spa">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Previous SPA Audit</div>
+                    <div class="audit-badge spa">Special Purpose</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: <?php echo $prev_spa_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $prev_spa; ?></div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $current_date; ?></div>
+                        <div class="audit-stat-label"><?= $spa_status ?? 'Incomplete' ?></div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="audit-type-card self">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Self Audits</div>
+                    <div class="audit-badge self">Self Assessment</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: <?php echo $self_prev_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $self_prev_completion_status ?? 0; ?>% Audits Finished</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $self_prev_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $self_prev_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="audit-type-card mgmt">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Management Audits</div>
+                    <div class="audit-badge mgmt">Management</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: <?php echo $mgmt_prev_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $mgmt_prev_completion_status ?? 0; ?>% Audits Finished</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $mgmt_prev_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $mgmt_prev_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: 100%"></div>
                 </div>
             </div>
         </div>
@@ -446,6 +512,9 @@ echo "</pre>";
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
                     document.getElementById('audit-status-piechart').style.display = "block";
+                    document.getElementById('audit-status-piechart').style.width = "100%";
+                    document.getElementById('audit-status-piechart').style.height = "100%";
+
                     document.getElementById('self-audit-piechart').style.display = "none";
                     document.getElementById('spa-audit-piechart').style.display = "none";
                     console.log(document.getElementById('audit-status-piechart').style.display);
@@ -454,6 +523,8 @@ echo "</pre>";
                 case 'audit-type':
                     document.getElementById('audit-status-piechart').style.display = "none";
                     document.getElementById('self-audit-piechart').style.display = "block";
+                    document.getElementById('self-audit-piechart').style.width = "100%";
+                    document.getElementById('self-audit-piechart').style.height = "100%";
                     document.getElementById('spa-audit-piechart').style.display = "none";
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
@@ -463,6 +534,8 @@ echo "</pre>";
                     document.getElementById('audit-status-piechart').style.display = "none";
                     document.getElementById('self-audit-piechart').style.display = "none";
                     document.getElementById('spa-audit-piechart').style.display = "block";
+                    document.getElementById('spa-audit-piechart').style.width = "100%";
+                    document.getElementById('spa-audit-piechart').style.height = "100%";
 
                     subtext.textContent = 'Chart showing SPA audit status';
                     break;
