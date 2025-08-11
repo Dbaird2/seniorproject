@@ -251,7 +251,7 @@ body {
     border: 2px dashed #ccc;
     height: 400px;
 }
-.chart-placeholder {
+.chart-placeholder > div{
     max-height:none;
     max-width:fit-content;
 }

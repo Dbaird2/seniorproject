@@ -175,6 +175,13 @@ $spa_completion_status = $spa_status === 'Incomplete' ? 0 : $spa_completion_stat
 $prev_spa_status = $spa_over_status_count['Incomplete'] === 1 ? 0 : ($sped_over_status_count['In Progress'] === 1 ? 50 : 100);
 $prev_spa = $spa_over_status_count['Incomplete'] === 1 ? 'Incomplete' : 'In Progress';
 $prev_spa = ($prev_spa === 'In Progress' && $spa_over_status_count['In Progress'] === 1) ? 'In Progress' : 'Complete';
+if ($spa_over_status_count['Incomplete'] === 1) {
+    $prev_spa = 'Incomplete';
+} else if ($spa_over_status_count['In Progress'] === 1) {
+    $prev_spa = 'In Progress';
+} else {
+    $prev_spa = 'Complete';
+}
 
 
 
