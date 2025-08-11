@@ -31,7 +31,16 @@ foreach ($audit_progress as $index => $row) {
             ];
         }
     }
-    if (in_array($row['audit_id'], [3, 4])) {
+    if ($row['audit_id'] === 3 || $row['audit_id'] === 6 || $row['audit_id'] === 9) {
+        if (!in_array($row['dept_id'], $self_ids)) {
+            $overdue_prog_count[$row['audit_status']]++;
+            $overdue_ids[] = [
+                'audit_id' => $row['audit_id'],
+                'dept_id' => $row['dept_id']
+            ];
+        }
+    }
+    if (in_array($row['audit_id'], [4, 5])) {
         if (!in_array($row['dept_id'], $mgmt_ids)) {
             $mgmt_prog_count[$row['audit_status']]++;
             $mgmt_ids[] = [
@@ -40,7 +49,7 @@ foreach ($audit_progress as $index => $row) {
             ];
         }
     }
-    if (in_array($row['audit_id'], [5, 6])) {
+    if (in_array($row['audit_id'], [7, 8])) {
         if ($spa_id === 0) {
             $spa_status = $row['audit_status'] ?? 'Incomplete';
             $spa_id = $row['audit_id'];
@@ -109,7 +118,7 @@ $status_count['In Progress'] = $status_count['Incomplete'] = $status_count['Comp
 $self_status_count['In Progress'] = $self_status_count['Incomplete'] = $self_status_count['Complete'] = 0;
 $spa_status_count['In Progress'] = $spa_status_count['Incomplete'] = $spa_status_count['Complete'] = 0;
 foreach ($data as $row) {
-    if ((int)$row['audit_id'] === 3 && (int)$row['audit_id'] === 4) {
+    if ((int)$row['audit_id'] === 4 && (int)$row['audit_id'] === 5) {
         if (!in_array($row['dept_id'], $depts)) {
             $status_count[$row['audit_status']]++;
             $depts[] = $row['dept_id'];
@@ -119,7 +128,7 @@ foreach ($data as $row) {
             $self_status_count[$row['audit_status']]++;
             $self_depts[] = $row['dept_id'];
         }
-    } else if (in_array($row['audit_id'], [5, 6])) {
+    } else if (in_array($row['audit_id'], [7, 8])) {
         if (!in_array($row['dept_id'], $depts)) {
             $spa_status_count[$row['audit_status']]++;
             $spa_depts[] = $row['dept_id'];
@@ -147,7 +156,6 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Department Audit Management Dashboard</title>
-    <?php include_once "navbar.php"; ?>
     <link rel="stylesheet" href="index.css">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
