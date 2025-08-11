@@ -115,23 +115,37 @@ $status_data[] = ["Audit Status", "Count"];
 $self_status_data[] = ["Audit Status", "Count"];
 $spa_status_data[] = ["Audit Status", "Count"];
 
-$status_count['In Progress'] = $status_count['Incomplete'] = $status_count['Complete'] = 0;
-$self_status_count['In Progress'] = $self_status_count['Incomplete'] = $self_status_count['Complete'] = 0;
-$spa_status_count['In Progress'] = $spa_status_count['Incomplete'] = $spa_status_count['Complete'] = 0;
+$status_count['In Progress'] = $status_count['Complete'] = 0;    
+$status_count['Incomplete'] = $total_departments;
+
+$self_status_count['In Progress'] = $self_status_count['Complete'] = 0;
+$self_status_count['Incomplete'] = $total_departments;
+
+$spa_status_count['In Progress'] = $spa_status_count['Complete'] = 0;
+$spa_status_count['Incomplete'] = 1;
 foreach ($data as $row) {
     if ((int)$row['audit_id'] === 4 && (int)$row['audit_id'] === 5) {
         if (!in_array($row['dept_id'], $depts)) {
-            $status_count[$row['audit_status']]++;
+            if ($row['audit_status'] !== 'Incomplete') {
+                $status_count[$row['audit_status']]++;
+                $status_count['Incomplete']--;
+            }
             $depts[] = $row['dept_id'];
         }
     } else if (in_array($row['audit_id'], [1, 2])) {
-        if (!in_array($row['dept_id'], $depts)) {
-            $self_status_count[$row['audit_status']]++;
+        if (!in_array($row['dept_id'], $self_depts)) {
+            if ($row['audit_status'] !== 'Incomplete') {
+                $self_status_count[$row['audit_status']]++;
+                $self_status_count['Incomplete']--;
+            }
             $self_depts[] = $row['dept_id'];
         }
     } else if (in_array($row['audit_id'], [7, 8])) {
-        if (!in_array($row['dept_id'], $depts)) {
-            $spa_status_count[$row['audit_status']]++;
+        if (!in_array($row['dept_id'], $spa_depts)) {
+            if ($row['audit_status'] !== 'Incomplete') {
+                $spa_status_count[$row['audit_status']]++;
+                $spa_status_count['Incomplete']--;
+            }
             $spa_depts[] = $row['dept_id'];
         }
     }
