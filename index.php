@@ -148,6 +148,14 @@ $self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
 $spa_status_data[] = ['Complete', $spa_status_count['Complete']];
 $spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
 $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
+echo "<pre>";
+echo "Status data";
+var_dump($status_data);
+echo "Self Status data";
+var_dump($self_status_data);
+echo "Spa Status data";
+var_dump($spa_status_data);
+echo "</pre>";
 ?>
 
 <!DOCTYPE html>
