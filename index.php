@@ -9,6 +9,7 @@ $dept_count_q = "SELECT COUNT(*) AS total_depts FROM department";
 
 $dept_count_stmt = $dbh->query($dept_count_q);
 $dept_count_results = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
+$total_departments = (int)$dept_count_results['total_depts'] ?? 85;
 
 /* GET FREQ DATA */
 $due_dates_q = "SELECT * FROM audit_freq";
@@ -155,7 +156,6 @@ $mgmt_diff = $now->diff($mgmt_due);
 $mgmt_per = (int)(((1085 - $mgmt_diff->days) / 1085) * 100);
 
 
-$total_departments = (int)$dept_count_results['total_depts'] ?? 85;
 $self_audits_in_progress = $self_prog_count['In Progress'] ?? 0;
 $self_audits_complete = $self_prog_count['Complete'] ?? 0;
 $self_prev_audits_complete = $self_over_status_count['Complete'];
