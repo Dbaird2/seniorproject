@@ -49,6 +49,8 @@ $self_over_status_count['Incomplete'] = $total_departments;
 
 $spa_status_count['In Progress'] = $spa_status_count['Complete'] = 0;
 $spa_status_count['Incomplete'] = 1;
+$spa_over_status_count['In Progress'] = $spa_over_status_count['Complete'] = 0;
+$spa_over_status_count['Incomplete'] = 1;
 
 $status_data[] = ['Complete', $status_count['Complete']];
 $status_data[] = ['In Progress', $status_count['In Progress']];
@@ -75,8 +77,8 @@ foreach ($audit_progress as $index => $row) {
         $self_over_status_count['Incomplete']--;
         break;
     case 6:
-        $mgmt_over_status_count[$row['audit_id']]++;
-        $mgmt_over_status_count['Incomplete']--;
+        $status_over_count[$row['audit_id']]++;
+        $status_over_count['Incomplete']--;
         break;
     case 9:
         $spa_over_status_count[$row['audit_id']]++;
