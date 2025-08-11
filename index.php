@@ -17,10 +17,11 @@ $audit_progress_stmt = $dbh->query($audit_progress_q);
 $audit_progress = $audit_progress_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $spa_id = 0;
-$self_ids = $mgmt_ids = [];
-$self_prog_count = $mgmt_prog_count = [];
+$self_ids = $mgmt_ids = $overdue_ids = [];
+$self_prog_count = $mgmt_prog_count = $overdue_prog_count = [];
 $self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
 $mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
+$overdue_prog_count['In Progress'] = $overdue_prog_count['Complete'] = 0;
 foreach ($audit_progress as $index => $row) {
     if (in_array($row['audit_id'], [1, 2])) {
         if (!in_array($row['dept_id'], $self_ids)) {
@@ -157,6 +158,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Department Audit Management Dashboard</title>
     <link rel="stylesheet" href="index.css">
+<?php include_once "navbar.php"; ?>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
@@ -280,48 +282,6 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
                 <div class="completion-text"><?php echo $mgmt_diff->days; ?> days Until Due</div>
             </div>
         </div>
-        <script type="text/javascript">
-            google.charts.load('current', {
-                packages: ['corechart']
-            });
-            google.charts.setOnLoadCallback(drawChart);
-
-
-            function drawChart() {
-                var data = google.visualization.arrayToDataTable(<?= json_encode($status_data, true) ?>);
-                console.log(data);
-                var options = {
-                    title: 'Management Audits',
-                    pieHole: 1,
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('audit-status-piechart'));
-
-                chart.draw(data, options);
-//----------------------------------------------------------------------------------------------------------------//
-                var data = google.visualization.arrayToDataTable(<?= json_encode($self_status_data, true) ?>);
-                console.log(data);
-                var options = {
-                    title: 'Department Self Audits',
-                    pieHole: 1,
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('self-audit-piechart'));
-
-                chart.draw(data, options);
-//----------------------------------------------------------------------------------------------------------------//
-                var data = google.visualization.arrayToDataTable(<?= json_encode($spa_status_data, true) ?>);
-                console.log(data);
-                var options = {
-                    title: 'SPA Audit',
-                    pieHole: 1,
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('spa-audit-piechart'));
-
-                chart.draw(data, options);
-            }
-        </script>
         <!-- Main Content Grid -->
         <div class="content-grid">
             <!-- Department Audit Distribution Chart -->
@@ -342,8 +302,8 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
                 </div>
                 <div class="chart-placeholder">
                     <div id="audit-status-piechart" style="width:100%;height:100%;"></div>
-                    <div id="self-audit-piechart" style="display:none;width:100%;height:100%;"></div>
-                    <div id="spa-audit-piechart" style="display:none;width:100%;height:100%;"></div>
+                    <div id="self-audit-piechart" style="width:100%;height:100%;"></div>
+                    <div id="spa-audit-piechart" style="width:100%;height:100%;"></div>
 
                     <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status by management audits</div>
                 </div>
@@ -387,7 +347,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
         </div>
 
         <!-- Department Alerts & Notifications -->
-        <div class="department-alerts">
+        <!-- <div class="department-alerts">
             <div class="alerts-header">
                 <div class="alerts-title">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -416,7 +376,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <script>
         function handleAction(action) {
@@ -523,6 +483,48 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
              * audit data */
         }, 60000);
     </script>
+        <script type="text/javascript">
+            google.charts.load('current', {
+                packages: ['corechart']
+            });
+            google.charts.setOnLoadCallback(drawChart);
+
+
+            function drawChart() {
+                var data = google.visualization.arrayToDataTable(<?= json_encode($status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'Management Audits',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('audit-status-piechart'));
+
+                chart.draw(data, options);
+//----------------------------------------------------------------------------------------------------------------//
+                var data = google.visualization.arrayToDataTable(<?= json_encode($self_status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'Department Self Audits',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('self-audit-piechart'));
+
+                chart.draw(data, options);
+//----------------------------------------------------------------------------------------------------------------//
+                var data = google.visualization.arrayToDataTable(<?= json_encode($spa_status_data, true) ?>);
+                console.log(data);
+                var options = {
+                    title: 'SPA Audit',
+                    pieHole: 1,
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('spa-audit-piechart'));
+
+                chart.draw(data, options);
+            }
+        </script>
 </body>
 
 </html>
