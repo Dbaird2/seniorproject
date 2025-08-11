@@ -127,6 +127,14 @@ foreach ($data as $row) {
 $status_data[] = ['Complete', $status_count['Complete']];
 $status_data[] = ['In Progress', $status_count['In Progress']];
 $status_data[] = ['Incomplete', $status_count['Incomplete']];
+
+$self_status_data[] = ['Complete', $self_status_count['Complete']];
+$self_status_data[] = ['In Progress', $self_status_count['In Progress']];
+$self_status_data[] = ['Incomplete', $self_status_count['Incomplete']];
+
+$spa_status_data[] = ['Complete', $spa_status_count['Complete']];
+$spa_status_data[] = ['In Progress', $spa_status_count['In Progress']];
+$spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +148,13 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
     <link rel="stylesheet" href="index.css">
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
-
+<script>
+$(function(){
+	$('.chat-area > .chat-list').jScrollPane({
+		mouseWheelSpeed: 30
+	});
+});
+</script>
 <body>
     <div class="dashboard-container">
         <!-- Welcome Section -->
@@ -368,7 +382,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
         </div>
 
         <!-- Department Alerts & Notifications -->
-        <div class="department-alerts">
+        <!--<div class="department-alerts">
             <div class="alerts-header">
                 <div class="alerts-title">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -376,7 +390,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                     </svg>
                     <h3>Department Audit Alerts</h3>
                 </div>
-                <span class="alert-badge"><?php echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
+                <span class="alert-badge"><?php// echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
             </div>
             <div class="alert-items">
                 <div class="alert-item">
@@ -396,7 +410,7 @@ $status_data[] = ['Incomplete', $status_count['Incomplete']];
                     <div class="alert-time">Awaiting management review and approval</div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <script>

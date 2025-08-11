@@ -5,6 +5,8 @@ graph for audited departments on index
 
 notes for admins in asset-ui
 
+figure out what to do at the bottom of index
+
 style in asset-ui
 
 add delete features for assets/user (bldg-department done)
@@ -14,6 +16,8 @@ update building numbers (2)
 add csv support
 
 --add more responses for chatbot
+
+put in tickets via botman conversation
 
 
             KUALI TO DO
