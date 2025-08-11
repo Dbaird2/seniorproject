@@ -251,6 +251,10 @@ body {
     border: 2px dashed #ccc;
     height: 400px;
 }
+.chart-placeholder {
+    max-height:none;
+    max-width:fit-content;
+}
 
 .chart-placeholder-icon {
     font-size: 4rem;
