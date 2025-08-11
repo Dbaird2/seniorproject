@@ -66,7 +66,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 
 $spa_id = 0;
 $self_ids = $mgmt_ids = $overdue_ids = [];
-$self_prog_count = $mgmt_prog_count = $overdue_prog_count = [];
+$self_prog_count = $mgmt_prog_count = $mgmt_over_prog_count = [];
 $self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
 $mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
 $overdue_prog_count['In Progress'] = $overdue_prog_count['Complete'] = 0;
@@ -77,11 +77,11 @@ foreach ($audit_progress as $index => $row) {
         $self_over_status_count['Incomplete']--;
         break;
     case 6:
-        $status_over_count[$row['audit_id']]++;
+        $status_over_count[$row['audit_status']]++;
         $status_over_count['Incomplete']--;
         break;
     case 9:
-        $spa_over_status_count[$row['audit_id']]++;
+        $spa_over_status_count[$row['audit_status']]++;
         $spa_over_status_count['Incomplete']--;
         break;
     case $old_mgmt_id:
@@ -89,11 +89,11 @@ foreach ($audit_progress as $index => $row) {
         $mgmt_over_status_count['Incomplete']--;
         break;
     case $old_self_id:
-        $self_over_status_count[$row['audit_id']]++;
+        $self_over_status_count[$row['audit_status']]++;
         $self_over_status_count['Incomplete']--;
         break;
     case $old_spa_id:
-        $spa_over_status_count[$row['audit_id']]++;
+        $spa_over_status_count[$row['audit_status']]++;
         $spa_over_status_count['Incomplete']--;
         break;
     }
@@ -165,8 +165,8 @@ $self_prev_audits_in_progress = $self_over_prog_count['In Progress'] ?? 0;
 
 $mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 0;
 $mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 0;
-$mgmt_prev_audits_complete = $mgmt_over_status_count['Complete'];
-$mgmt_prev_audits_in_progress = $mgmt_over_prog_count['In Progress'] ?? 0;
+$mgmt_prev_audits_complete = $status_over_count['Complete'];
+$mgmt_prev_audits_in_progress = $status_over_count['In Progress'] ?? 0;
 
 $spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
 $spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
