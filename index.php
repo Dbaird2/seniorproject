@@ -118,7 +118,7 @@ foreach ($data as $row) {
             $self_status_count[$row['audit_status']]++;
             $self_depts[] = $row['dept_id'];
         }
-    } else if ((int)$row['audit_id'] === 5, (int)$row['audit_id'] === 6) {
+    } else if ((int)$row['audit_id'] === 5 || (int)$row['audit_id'] === 6) {
         if (!in_array($row['dept_id'], $depts)) {
             $spa_status_count[$row['audit_status']]++;
             $spa_depts[] = $row['dept_id'];
