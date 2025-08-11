@@ -377,7 +377,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 <div class="audit-stats">
                     <div class="audit-stat">
                         <div class="audit-stat-number"><?php echo $current_date; ?></div>
-                        <div class="audit-stat-label"><?= $spa_status ?? 'Incomplete' ?></div>
+                        <div class="audit-stat-label"><?= $prev_spa ?? 'Incomplete' ?></div>
                     </div>
                 </div>
                 <div class="completion-bar">
