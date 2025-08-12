@@ -10,10 +10,13 @@ if (isset($_POST)) {
     $audit_type = match ($audit_id) {
         1 => 'cust',
         2 => 'cust',
+        3 => '0-cust',
         4 => 'mgmt',
         5 => 'mgmt',
+        6 => 'o-mgmt',
         7 => 'SPA',
-        8 => 'SPA'
+        8 => 'SPA',
+        9 => 'o-SPA'
     };
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
