@@ -3,7 +3,7 @@
 }
 .is-search {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    background: rgb(216, 240, 248);
+    background: lightblue;
     min-height: 100vh;
     display: block;
     flex-direction: normal;
@@ -69,6 +69,7 @@
 
 }
 .table {
+    border-collapse: collapse;
     width:100%;
     text-align: center;
     padding:10px 10px;
@@ -129,12 +130,12 @@
 }
 .is-search button {
     padding: 10px;
-    background: white;
-    color: #FFC72C;
-    border: 2px solid #9dc9e9 ;
-    border-radius: 10px;
+    background: transparent;
+    color: darkblue;
+    border: outset 1px darkblue;
+    border-radius: 50px;
     font-size: 10px;
-    font-weight: 400;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.5px;
@@ -241,3 +242,42 @@
         50%  {color: lightgray;}
         100% {color: gray;}
     }
+    th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: #55608f;
+	}
+}
+
+tbody {
+	tr {
+		&:hover {
+			background-color: rgba(255,255,255,0.3);
+		}
+	}
+	td {
+		position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(255,255,255,0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
