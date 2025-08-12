@@ -119,8 +119,13 @@ function addNote(note, tag) {
             asset_tag: tag,
             profile_name: profile_name
         },
-        success: function () {
-            console.log('add-note success');
+        success: function (data) {
+            if (data.status === 'success') {
+                console.log('add-note success', data.message);
+            } else {
+                console.log(data.message);
+            }
+                
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);
