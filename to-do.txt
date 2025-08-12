@@ -1,12 +1,6 @@
             TO DO
 notes functionality in asset-ui
 
-graph for audited departments on index
-
-notes for admins in asset-ui
-
-figure out what to do at the bottom of index
-
 style in asset-ui
 
 add delete features for assets/user (bldg-department done)

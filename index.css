@@ -241,19 +241,13 @@ body {
 }
 
 .chart-placeholder {
-    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-    border-radius: 12px;
     display: flex;
+    border-radius: 12px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #666;
-    border: 2px dashed #ccc;
     height: 400px;
-}
-.chart-placeholder > div{
-    max-height:none;
-    max-width:fit-content;
 }
 
 .chart-placeholder-icon {

@@ -324,9 +324,9 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                     </div>
                 </div>
                 <div class="chart-placeholder">
-                    <div id="audit-status-piechart" style="width:100%;height:100%;"></div>
-                    <div id="self-audit-piechart" style="display:none;width:100%;height:100%;"></div>
-                    <div id="spa-audit-piechart" style="display:none;width:100%;height:100%;"></div>
+                    <div id="audit-status-piechart"></div>
+                    <div id="self-audit-piechart"></div>
+                    <div id="spa-audit-piechart"></div>
 
                     <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status by management audits</div>
                 </div>
@@ -502,7 +502,11 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
             }
         }
 
-        function switchChart(type) {
+document.getElementById('audit-status-piechart').style.display = "block";
+
+document.getElementById('self-audit-piechart').style.display = "none";
+document.getElementById('spa-audit-piechart').style.display = "none";
+function switchChart(type) {
             /* Remove active class from all buttons */
             document.querySelectorAll('.chart-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -520,8 +524,6 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
                     document.getElementById('audit-status-piechart').style.display = "block";
-                    document.getElementById('audit-status-piechart').style.width = "100%";
-                    document.getElementById('audit-status-piechart').style.height = "100%";
 
                     document.getElementById('self-audit-piechart').style.display = "none";
                     document.getElementById('spa-audit-piechart').style.display = "none";
@@ -531,8 +533,6 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 case 'audit-type':
                     document.getElementById('audit-status-piechart').style.display = "none";
                     document.getElementById('self-audit-piechart').style.display = "block";
-                    document.getElementById('self-audit-piechart').style.width = "100%";
-                    document.getElementById('self-audit-piechart').style.height = "100%";
                     document.getElementById('spa-audit-piechart').style.display = "none";
                     console.log(document.getElementById('audit-status-piechart').style.display);
 
@@ -542,8 +542,6 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                     document.getElementById('audit-status-piechart').style.display = "none";
                     document.getElementById('self-audit-piechart').style.display = "none";
                     document.getElementById('spa-audit-piechart').style.display = "block";
-                    document.getElementById('spa-audit-piechart').style.width = "100%";
-                    document.getElementById('spa-audit-piechart').style.height = "100%";
 
                     subtext.textContent = 'Chart showing SPA audit status';
                     break;
