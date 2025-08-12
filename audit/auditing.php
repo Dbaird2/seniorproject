@@ -182,7 +182,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
     <div class=" is-search">
         <div class="wrapper">
 
-                <button type="submit" id="complete-audit" name="complete-audit">Complete Audit</button>
+                <button type="submit" id="complete-audit" name="complete-audit">Save Audit</button>
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
