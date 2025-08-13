@@ -328,11 +328,10 @@ foreach ($result as $row) {
                                     <br>
 
 
-<?php foreach ($custodian as $cust) { ?>
                                     <label for="room_loc">Custodian:</label>
                                     <input type="text" id="room_loc" name="room_loc" value="<?= $cust ?>">
                                     <br>
-<?php } ?>
+
                                     <label for="location">Manager:</label>
                                     <input type="text" id="location" name="location" value="<?= $manager ?>">
                                     <br>
