@@ -357,7 +357,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
                         </svg>
-                        Search Departments
+                        Search Assets
                     </button>
                     <button class="action-btn purple" onclick="handleAction('view-audit-history')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -365,6 +365,14 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                         </svg>
                         View Audit History
                     </button>
+<?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
+                    <button class="action-btn secondary" onclick="handleAction('mona-reports')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
+                        </svg>
+                        Mona's Monthly Report
+                    </button>
+<?php } ?>
                 </div>
             </div>
         </div>
@@ -478,19 +486,22 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
         function handleAction(action) {
             const actions = {
                 'schedule-audit': () => {
-                    window.location.href = 'schedule-audit.php';
+                    window.location.href = 'asset-manager/manage/manage-profile.php';
                 },
                 'start-self-audit': () => {
-                    window.location.href = 'self-audit.php';
+                    window.location.href = 'audit/upload.php';
                 },
                 'search-departments': () => {
-                    window.location.href = 'search-departments.php';
+                    window.location.href = 'search/search.php';
                 },
                 'view-audit-history': () => {
-                    window.location.href = 'audit-history.php';
+                    window.location.href = '/audit/audit-history.php';
                 },
                 'download-reports': () => {
                     window.location.href = 'download-reports.php';
+                }
+                'mona-reports': () => {
+                    window.location.href = '/mail-clerk-reports/excel-reformatting.php';
                 }
             };
 
