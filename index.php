@@ -325,8 +325,8 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 </div>
                 <div class="chart-placeholder">
                     <div id="audit-status-piechart"></div>
-                    <div id="self-audit-piechart"></div>
-                    <div id="spa-audit-piechart"></div>
+                    <div id="self-audit-piechart" style="display:none;"></div>
+                    <div id="spa-audit-piechart" style="display:none;"></div>
 
                     <div class="chart-placeholder-subtext" id="piechart">Chart showing audit status by management audits</div>
                 </div>
@@ -486,22 +486,22 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
         function handleAction(action) {
             const actions = {
                 'schedule-audit': () => {
-                    window.location.href = 'asset-manager/manage/manage-profile.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/asset-manager/manage/manage-profile.php';
                 },
                 'start-self-audit': () => {
-                    window.location.href = 'audit/upload.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/upload.php';
                 },
                 'search-departments': () => {
-                    window.location.href = 'search/search.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/search/search.php';
                 },
                 'view-audit-history': () => {
-                    window.location.href = '/audit/audit-history.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/audit-history.php';
                 },
                 'download-reports': () => {
-                    window.location.href = 'download-reports.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/download-reports.php';
                 }
                 'mona-reports': () => {
-                    window.location.href = '/mail-clerk-reports/excel-reformatting.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/mail-clerk-reports/monas-report.php';
                 }
             };
 
