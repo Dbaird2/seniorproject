@@ -466,7 +466,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mail Clerk Monthly Report</title>
-    <?php include_once "navbar.php"; ?>
+    <?php include_once "../navbar.php"; ?>
 </head>
 
 <body>

@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 0);      
 ini_set('log_errors', 1);          
-error_reporting(E_ALL);
+error_reporting(0);
 header("Content-Type: application/json");
 try {
     header("Access-Control-Allow-Headers: Content-Type");
@@ -18,11 +18,10 @@ try {
     $audit_id = match ($audit_type) {
         'cust' => 1,
         'mgmt' => 4,
-        'SPA'  => 7,
-        'FDN'  => 8
+        'SPA'  => 7
     };
 
-    $audited_asset_json = json_encode($audit_data, true);
+    $audited_asset_json = json_encode($audit_data);
     $auditor = $_SESSION['email'];
     try {
         $get_curr_audit_q = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
@@ -35,8 +34,13 @@ try {
         if (isset($_SESSION['info'][5])) {
             $id = $_SESSION['info'][5];
         } else {
-            $id = $audit_id === 1 ? $id_results['curr_self_id'] : $id_results['curr_mgmt_id'];
-            $id = $audit_id === 4 ? $id : $id_results['curr_spa_id'];
+            if ($audit_id === 1) {
+                $id = $id_results['curr_self_id'];
+            } else if ($audit_id === 4) {
+                $id = $id_results['curr_mgmt_id'];
+            } else {
+                $id = $id_results['curr_spa_id'];
+            }
         }
 
         $check_stmt->execute([":dept_id" => $dept, ":audit_id" => $id]);
@@ -48,7 +52,7 @@ try {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":audit_id" => $id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
             } catch (PDOException $e) {
-                echo json_encode(['status' => 'failure', 'Fail on update ' . $e->getMessage());
+                echo json_encode(['status' => 'failure', "Message" => 'Fail on update ' . $e->getMessage()]);
                 exit;
             }
             echo json_encode(['status' => 'success', 'Message' => 'Updated audit id ' . $audit_id]);
