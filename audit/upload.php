@@ -367,9 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 <?php if ($_SESSION['role'] !== 'custodian') { ?>
                     <select class="form-input" name="audit-type" id="audit-type">
                         <option value="cust">Self Audit</option>
+                        <option value="ocust">Old Self Audit</option>
                         <option value="mgmt">Management</option>
+                        <option value="omgmt">Old Management</option>
                         <option value="SPA">SPA</option>
-                        <option value="FDN">FDN</option>
+                        <option value="oSPA">Old SPA audit</option>
                     </select>
                 <?php } ?>
                 <button class="button-9" type="submit" role="button">Submit</button>

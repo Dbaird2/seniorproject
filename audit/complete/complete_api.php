@@ -17,8 +17,11 @@ try {
 
     $audit_id = match ($audit_type) {
         'cust' => 1,
+        'ocust' => 3,
         'mgmt' => 4,
-        'SPA'  => 7
+        'omgmt' => 6,
+        'SPA'  => 7,
+        'oSPA'  => 9
     };
 
     $audited_asset_json = json_encode($audit_data);
@@ -38,8 +41,10 @@ try {
                 $id = $id_results['curr_self_id'];
             } else if ($audit_id === 4) {
                 $id = $id_results['curr_mgmt_id'];
-            } else {
+            } else if ($audit_id === 7) {
                 $id = $id_results['curr_spa_id'];
+            } else if ($audit_id === 3 || $audit_id === 6 || $audit_id === 9) {
+                $id = $audit_id;
             }
         }
 
