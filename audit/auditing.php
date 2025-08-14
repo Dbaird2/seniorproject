@@ -11,9 +11,6 @@ if (empty($_SESSION['info']) && empty($_SESSION['data'])) {
 }
 
 
-echo "<pre>";
-var_dump($_SESSION['data']);
-echo "</pre>";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
@@ -28,7 +25,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $highest_row = (int)$_SESSION['info'][0];
-$keys = array_keys($_SESSION['data'][0]);
+$keys = array_keys($_SESSION['data'][1]);
 
 $file_path = $_SESSION['info'][2];
 $file_name = $_SESSION['info'][4];
