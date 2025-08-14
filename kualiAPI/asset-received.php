@@ -132,7 +132,7 @@ try {
                 $tag_taken = true;
             }
             if ($s_stmt->rowCount() <= 0) {
-            $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try {
                 $insert_stmt = $dbh->prepare($insert_q);
                 $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag]);
@@ -142,7 +142,7 @@ try {
                     $new_time = $update_time;
                 }
             } catch (PDOException $e) {
-                echo '<br>Failed to inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+                echo '<br>Failed to insert<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
                 echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Time ' . $update_time . '<br>Date '  . $date . '<br><br>';
                 echo "Error inserting " . $e->getMessage();
             }
