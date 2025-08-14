@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                         continue;
                     }
                     foreach ($row as $r_index => $r_row) {
-                        $_SESSION['data'][$index - $skipped][$data[0][$r_index]] = $r_row;
+                        $_SESSION['data'][$index][$data[0][$r_index]] = $r_row;
                     }
                 }
             }
