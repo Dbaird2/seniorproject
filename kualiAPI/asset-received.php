@@ -142,6 +142,8 @@ try {
                     $new_time = $update_time;
                 }
             } catch (PDOException $e) {
+                echo '<br>Failed to inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+                echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Time ' . $update_time . '<br>Date '  . $date . '<br><br>';
                 echo "Error inserting " . $e->getMessage();
             }
             } else {
@@ -149,8 +151,6 @@ try {
             }
         }
     }
-    echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
-    echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
     $update_stmt->execute([":time" => $new_time]);
