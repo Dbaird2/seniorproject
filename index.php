@@ -499,7 +499,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 },
                 'download-reports': () => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/download-reports.php';
-                }
+                },
                 'mona-reports': () => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/mail-clerk-reports/monas-report.php';
                 }
