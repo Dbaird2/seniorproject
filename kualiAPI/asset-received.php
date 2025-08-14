@@ -7,12 +7,10 @@ $select = "SELECT asset_received_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['asset_received_time'] ?? 0;
-echo $raw_ms . "<br>";
 $highest_time = date('c', $raw_ms / 1000);
 
 $subdomain = "subdomain";
 $apikey = $result['kuali_key'];
-
 
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
 
@@ -99,15 +97,18 @@ try {
             ) {
                 echo " Match Found <br>";
             } else continue;
-            if ($po === '' || $po === NULL) {
-                continue;
-            } 
 
-            $serial_num = $tag['data']['Wrnezf-g0C'] ?? 'Unknown';
-            $value = $tag['data']['QkRodcpQRN'] ?? 1;
+            $serial_num = $tag['data']['Wrnezf-g0C'];
+            $value = $tag['data']['QkRodcpQRN'];
             $length = strlen($value);
             $value = (float)substr_replace($value, '.', $length - 2, 0);
             $name = $tag['data']['vNv8CdzZjv'];
+            if (
+                $po === '' || $po === NULL || $tag_num === '' || $tag_num === NULL || $dept_id === '' || $dept_id === NULL || $serial_num === '' || $serial_num === NULL
+                || $value === '' || $value === NULL || $name === '' || $name === NULL
+            ) {
+                continue;
+            }
             $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
             try {
                 $s_stmt = $dbh->prepare($select_q);
@@ -119,30 +120,30 @@ try {
                     throw new PDOException("Execute failed: " . implode(" | ", $s_stmt->errorInfo()));
                 }
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
-                
             } catch (PDOException $e) {
                 echo "Error selecting " . $e->getMessage();
                 $tag_taken = true;
             }
             if ($s_stmt->rowCount() <= 0) {
-                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                try {
-                    $insert_stmt = $dbh->prepare($insert_q);
-                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag]);
-                    echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
-                    echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
-                } catch (PDOException $e) {
-                    echo "Error inserting " . $e->getMessage();
+            $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try {
+                $insert_stmt = $dbh->prepare($insert_q);
+                $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag]);
+                echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+                echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Time ' . $update_time . '<br>Date '  . $date . '<br><br>';
+                if ($update_time > $raw_ms && $update_time > $new_time) {
+                    $new_time = $update_time;
                 }
+            } catch (PDOException $e) {
+                echo "Error inserting " . $e->getMessage();
+            }
             } else {
                 echo $tag_taken['asset_tag'] . " Taken<br>";
             }
-
-        }
-        if ($update_time > $raw_ms && $update_time > $new_time) {
-            $new_time = $update_time;
         }
     }
+    echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
+    echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date ' . $date . '<br><br>';
     $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
     $update_stmt = $dbh->prepare($insert_into_kuali_table);
     $update_stmt->execute([":time" => $new_time]);
