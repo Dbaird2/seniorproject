@@ -75,6 +75,7 @@ $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
 $new_time = $raw_ms;
 $room_tag = 2051;
+
 try {
     foreach ($edges as $index => $edge) {
         $update_time = (int)$edge['node']['meta']['createdAt'];
@@ -83,7 +84,13 @@ try {
         $date = date("Y-m-d", $timestamp_sec);
         $tag_data = $edge['node']['data']['0nVFqyLknC']['data'];
         $num = $edge['node']['data']['0FlHusDHFt'];    // # OF PCS
-        $po = (int)$edge['node']['data']['3BdpFK5t1I'];
+        $po = $edge['node']['data']['3BdpFK5t1I'];
+        if (preg_match('/(Order)(order)/', $po, &$matches, PREG_OFFSET_CAPTURE)) {
+            $po = 0;
+        } else {
+            $po = (int)$po;
+        }
+
 
         $model = $edge['node']['data']['CCqucq9BjK']['data'][0]['data']['_29h3triQJ']['label'];
         $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
