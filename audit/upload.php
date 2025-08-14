@@ -48,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if ($data[0][11] === 'Tag Status') {
       $continue = true;
     }
-    echo $data[0][11] . "<br>";
     if (count($data) > 2) {
       $header_index = 0;
       if ($data[0][2] == NULL) {
