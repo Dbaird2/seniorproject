@@ -14,6 +14,10 @@ try {
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
     $dept = $_SESSION['data'][0]["Dept"];
+    $index = 1;
+    while ($dept === '' || $dept === NULL) {
+        $dept = $_SESSION['data'][$index]["Dept"];
+    }
 
     $audit_id = match ($audit_type) {
         'cust' => 1,
