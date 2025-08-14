@@ -45,6 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $highest_row = $worksheet->getHighestRow();
         $highest_col = $worksheet->getHighestColumn();
         unset($_SESSION['data']);
+        $continue = false;
+        if ($data[0][12] === 'Tag Status') {
+            $continue = true;
+        }
         if (count($data) > 2) {
             $header_index = 0;
             if ($data[0][2] == NULL) {
@@ -78,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
 
                 }
-            } else {
+            } else if ($continue === false) {
                 $skipped = 1;
                 foreach ($data as $index => $row) {
                     if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
@@ -99,7 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                 }
+            } else if ($continue === true) {
+                foreach ($data as $index => $row) {
+                    if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
+                        continue;
+                    }
+                    foreach ($row as $r_index => $r_row) {
+                        $_SESSION['data'][$index - $skipped][$data[0][$r_index]] = $r_row;
+                    }
+                }
             }
+
 
             $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name];
             if (isset($_SESSION['data'][0])) {

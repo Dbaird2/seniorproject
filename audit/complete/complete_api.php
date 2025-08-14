@@ -78,6 +78,3 @@ try {
     exit;
 }
 
-echo json_encode(['status' => 'success']);
-exit;
-
