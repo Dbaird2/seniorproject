@@ -111,6 +111,7 @@ function displayTable() {
 }
 function addNote(note, tag) {
     const profile_name = document.getElementById('profiles').value;
+    console.log(note, tag, profile_name);
     $.ajax({
         method: 'POST',
         url: "crud/add-note.php",
@@ -125,6 +126,7 @@ function addNote(note, tag) {
             } else {
                 console.log(data.message);
             }
+            console.log(data);
                 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -138,6 +140,7 @@ function download_file(type) {
     const download = (type === 'pdf') ? 'pdf' : 'excel';
     const url = (type === 'pdf') ? 'crud/pdf-download.php' : 'crud/excel-download.php';
     const pdf = true;
+    console.log(profile_name, download);
     $.ajax ({
         method: 'POST',
         url: url,

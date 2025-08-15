@@ -265,7 +265,6 @@ function dept_layout($result, $row_num)
                         <th class='row-even'>Department ID</th>
                         <th class='row-even'>Department Name</th>
                         <th class='row-even'>Custodian</th>
-                        <th class='row-even'>Custodian</th>
                         <th class='row-even'>Manager</th>
                     </tr>
 
@@ -278,7 +277,7 @@ foreach ($result as $row) {
     $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
     $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
     //$custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-    $custodian= /*str_getcsv(*/trim($row['custodian'], '{}');/*, ',', '"', '\\');*/
+    $custodian= str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
     $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
 ?>
@@ -289,7 +288,18 @@ foreach ($result as $row) {
                         </td>
 
                         <td class=<?= $color_class ?>><?= $dept_name ?></td>
-                        <td class=<?= $color_class ?>><?= $custodian ?></td>
+                        <td class=<?= $color_class ?>>
+<?php 
+    $count = count($custodian);
+    foreach ($custodian as $index=>$cust) { 
+        if ($count-1 == $index) {
+            echo $cust;
+        } else {
+            echo $cust . ',';
+        } 
+    }
+?>
+</td>
                         <td class=<?= $color_class ?>> <?= $manager ?></td>
                     </tr>
             <?php } ?>
