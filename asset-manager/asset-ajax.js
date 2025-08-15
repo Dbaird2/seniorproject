@@ -141,21 +141,11 @@ function download_file(type) {
     const url = (type === 'pdf') ? 'crud/pdf-download.php' : 'crud/excel-download.php';
     const pdf = true;
     console.log(profile_name, download);
-    $.ajax ({
-        method: 'POST',
-        url: url,
-        data: {
-            profile_name: profile_name,
-            type: download
-        },
-        success : function () {
-            console.log('downloading pdf');
-            displayUpdatedTable(profile_name);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("AJAX Error:", textStatus, errorThrown);
-        }
-    });
+    if (download === 'pdf') {
+        window.location = "crud/pdf-download.php?profile_name="+profile_name;
+    } else {
+        window.location = "crud/excel-download.php?profile_name="+profile_name;
+    }
 }
 $(document).ready(function () {
     //$('#search-db').off('change').on('change', addAsset);

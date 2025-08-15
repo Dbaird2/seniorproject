@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $email = $_SESSION['email'];
-$profile_name = $_POST['profile_name'];
+$profile_name = $_GET['profile_name'];
 $profile_name = trim($profile_name, "'");
 
 $select_q = "SELECT p.asset_tag, a.asset_name,
@@ -37,4 +37,6 @@ $writer->setPreCalculateFormulas(false);
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment; filename=' . urlencode($profile_name) . '.xlsx');
 $writer->save('php://output');
+echo json_encode(['status'=>'Success']);
+exit;
 
