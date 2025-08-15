@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             ) {
               continue;
             }
-            if ($data[0][$r_index] === 'Tag Number') {
+            if ($data[1][$r_index] === 'Tag Number') {
                 $select_q = "SELECT asset_note FROM asset_info WHERE asset_tag = :tag";
                 $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
                 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -393,7 +393,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
           <input class="title" type="file" name="file" id="filePath" accept=".xlsx, .xls" />
           Choose a file
         </label>
-        <?php if ($_SESSION['role'] !== 'custodian') { ?>
           <select class="form-input" name="audit-type" id="audit-type">
             <option value="cust">Self Audit</option>
             <option value="ocust">Old Self Audit</option>
@@ -402,9 +401,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             <option value="omgmt">Old Management</option>
             <option value="SPA">SPA</option>
             <option value="oSPA">Old SPA audit</option>
-<?php } ?>
-          </select>
         <?php } ?>
+          </select>
         <button class="button-9" type="submit" role="button">Submit</button>
 
       </div>
