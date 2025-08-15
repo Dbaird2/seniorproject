@@ -1,16 +1,16 @@
 <?php
-include_once "../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT asset_addition_time, kuali_key FROM kuali_table";
+$select = "SELECT asset_addition_time,kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['asset_received_time'] ?? 0;
+$raw_ms = (int)$result['asset_addition_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
-$subdomain = "subdomain";
+
 $apikey = $result['kuali_key'];
+
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
 
 $curl = curl_init($url);
@@ -68,6 +68,7 @@ $resp2 = json_decode($resp);
 $decode_true = json_decode($resp, true);
 $edges = $decode_true['data']['app']['documentConnection']['edges'];
 
+
 $ASI = "/^A[SI]?\d+$/";
 $STU = "/^S[RC]?[TU]?\d+$/";
 $CMP = "/^\d+/";
@@ -89,7 +90,13 @@ $profile_map = [
 ];
 try {
     foreach ($edges as $index => $edge) {
-        $asset_profile = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['pZEr8FpYK_']['label'];
+        $update_time = $edge['node']['meta']['createdAt'];
+        if (!isset($edge['node']['data']['PUcYspMrJZ'])) {
+            echo "<br> Skipping Tag Not Available <br>";
+            continue;
+        }
+        $tag_data = $edge['node']['data']['PUcYspMrJZ']['data'];
+        $asset_profile = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['pZEr8FpYK_']['label'] ?? 'EQUIP-10';
         $key = $asset_profile;
         if (isset($profile_map[$key])) {
             $asset_profile = $profile_map[$key];
@@ -98,7 +105,7 @@ try {
         } else {
             $asset_profile = 10;
         }
-        $value = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['PxtY2-Q3bL'];
+        $value = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['PxtY2-Q3bL'] ?? 1;
         $length = strlen($value);
         $value = (float)substr_replace($value, '.', $length - 2, 0);
 
@@ -106,41 +113,47 @@ try {
             echo 'Skipped BLDGIMP <br>';
             continue;
         }
-        $update_time = $edge['node']['meta']['createdAt'];
-        $time = $edge['node']['data']['wzgp7QHb7F'];
-        $timestamp_sec = $time / 1000;
-        $date = date("Y-m-d", $timestamp_sec);
-        $tag_data = $edge['node']['data']['PUcYspMrJZ']['data'];
-
+        if (isset($edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['WZ5fZCt1qz']['data'])) {
+            $dept_id = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['WZ5fZCt1qz']['data']['IOw4-l7NsM'];
+        }
+        $po = 1;
 
         foreach ($tag_data as $tag) {
-            $dept_id = $tag['data']['XGD63KvFDV']['data']['IOw4-l7NsM'];
             $tag_num = $tag['data']['hYk-CuEHw-'];
             if (
                 preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
                 preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||
                 preg_match($SPA, $tag_num)
             ) {
+                echo "<br> Match found " . $tag_num;
             } else continue;
+            if (isset($tag['data']['XGD63KvFDV']['data']['IOw4-l7NsM'])) {
+                $dept_id = $tag['data']['XGD63KvFDV']['data']['IOw4-l7NsM'];
+            }
+
             $serial_num = $tag['data']['TuFLyAwO61'] ?? 'Unknown';
             $name = $tag['data']['wnpc592QUl'];
             $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
             $s_stmt = $dbh->prepare($select_q);
-            $s_stmt->execute([":tag" => $tag_num]);
+            $s_stmt = $s_stmt->execute([":tag" => $tag_num]);
             $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
             if (!$tag_taken) {
-                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle) VALUES
+                $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po) VALUES
                     (?, ?, ?, ?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile]);
+                $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po]);
                 $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
                 $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
                 $update_stmt = $dbh->prepare($insert_into_kuali_table);
                 $update_stmt->execute([":time" => $highest_time]);
             }
+            echo "<br>Asset Profile " . $asset_profile . "<br>Value " . $value . "<br>Tag " . $tag_num .
+                "<br>Dept " . $dept_id . "<br>SN " . $serial_num . "<br>Name " . $name . "<br>";
         }
     }
 } catch (PDOException $e) {
-    echo "Rolling back " . $e->getMessage();
+    error_log("Error " . $e->getMessage());
+    exit;
 }
+exit;
 

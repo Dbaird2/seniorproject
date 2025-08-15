@@ -20,9 +20,6 @@ if (isset($_POST)) {
         error_log("Error: " . $e->getMessage());
     }
 }
-echo "<pre>";
-var_dump($result);
-echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,7 +63,7 @@ echo "</pre>";
                     <td><?= $row['dept_id'] ?></td>
                     <td><?= $row['po'] ?></td>
                     <td><button id="delete-asset" class='asset-row' value="<?= $row['asset_tag'] ?>">Delete</button></td>
-                    <td><textarea name="notes" class='asset-note' id="<?=$row['asset_tag']?>"><?= $row['asset_note'] ?? 'Notes' ?> </textarea></td>
+                    <td><textarea name="notes" class='asset-note' id="<?=$row['asset_tag']?>"><?= $row['asset_note'] ?? 'Notes' ?></textarea></td>
                 </tr>
             <?php } ?>
         </tbody>

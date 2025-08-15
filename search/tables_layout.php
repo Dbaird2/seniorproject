@@ -114,6 +114,14 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                             </div>
                             <div class="modal-body">
                                 <form action="change_asset_info.php" method="post">
+<input type="hidden" id="old_tag" name="old_tag">
+<input type="hidden" id="old_name" name="old_name">
+<input type="hidden" id="old_dept" name="old_dept">
+<input type="hidden" id="old_room_tag" name="old_room_tag">
+<input type="hidden" id="old_sn" name="old_sn">
+<input type="hidden" id="old_price" name="old_price">
+<input type="hidden" id="old_po" name="old_po">
+<input type="hidden" id="old_status" name="old_status">
                                     <label for="asset_tag">Asset Tag:</label>
                                     <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>">
                                     <br>
@@ -227,9 +235,13 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_asset_info.php" method="post">
+                                <form action="change_bldg_info.php" method="post">
+<input type="hidden" id="old_bldg_id" name="old_bldg_id">
+<input type="hidden" id="old_name" name="old_name">
+<input type="hidden" id="old_room_loc" name="old_room_loc">
+<input type="hidden" id="old_room_tag" name="old_room_tag">
                                     <label for="asset_tag">Building ID:</label>
-                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $bldg_id ?>">
+                                    <input type="number" id="bldg_id" name="bldg_id" value="<?= $bldg_id ?>">
                                     <br>
                                     <label for="name">Building Name:</label>
                                     <input type="text" id="name" name="name" value="<?= $bldg_name ?>">
@@ -239,7 +251,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                     <input type="text" id="room_loc" name="room_loc" value="<?= $room_num ?>">
                                     <br>
                                     <label for="location">Room Tag:</label>
-                                    <input type="text" id="location" name="location" value="<?= $room_tag ?>">
+                                    <input type="text" id="room_tag" name="room_tag" value="<?= $room_tag ?>">
                                     <br>
                                     <button type="submit">Update Room</button>
                                 </form>
@@ -328,20 +340,25 @@ foreach ($result as $row) {
                             </div>
                             <div class="modal-body">
                                 <form action="change_asset_info.php" method="post">
+<input type="hidden" id="old_dept" name="old_dept">
+<input type="hidden" id="old_name" name="old_name">
+<input type="hidden" id="old_cust" name="old_cust">
+<input type="hidden" id="old_manager" name="old_manager">
                                     <label for="asset_tag">Department ID:</label>
-                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $dept_id ?>">
+                                    <input type="text" id="dept" name="dept" value="<?= $dept_id ?>">
                                     <br>
                                     <label for="name">Department Name:</label>
                                     <input type="text" id="name" name="name" value="<?= $dept_name ?>">
                                     <br>
 
-
+<?php foreach ($custodian as $index=>$cust) { ?>
                                     <label for="room_loc">Custodian:</label>
-                                    <input type="text" id="room_loc" name="room_loc" value="<?= $cust ?>">
+                                    <input type="text" id="cust" name="cust[]" value="<?= $cust ?>">
                                     <br>
+<?php } ?>
 
                                     <label for="location">Manager:</label>
-                                    <input type="text" id="location" name="location" value="<?= $manager ?>">
+                                    <input type="text" id="manager" name="manager" value="<?= $manager ?>">
                                     <br>
                                     <button type="submit">Update Room</button>
                                 </form>
@@ -430,16 +447,24 @@ foreach ($result as $row) {
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_asset_info.php" method="post">
+                                <form action="change_user_info.php" method="post">
+                                    <input type="hidden" id="old_dept" name="old_dept" value=<?= $dept ?>>
                                     <label for="asset_tag">Username:</label>
-                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $username ?>">
+                                    <input type="text" id="username" name="username" value="<?= $username ?>" readonly>
                                     <br>
                                     <label for="name">Email:</label>
-                                    <input type="text" id="name" name="name" value="<?= $email ?>">
+                                    <input type="text" id="email" name="email" value="<?= $email ?>"readonly>
                                     <br>
 
                                     <label for="room_loc">User Role:</label>
-                                    <input type="text" id="room_loc" name="room_loc" value="<?= $u_role ?>">
+                                    <input type="text" id="old_role" name="old_role" value="<?= $u_role ?>" readonly>
+<br>
+                                    <select id="role" name="role">
+                                        <option value="management">Management</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">user</option>
+                                        <option value="custodian" selected>Custodian</option>
+</select>
                                     <br>
                                     <label for="location">Last Login:</label>
                                     <input type="text" id="last_login" name="last_login" value="<?= $last_login ?>" readonly>
@@ -450,12 +475,12 @@ foreach ($result as $row) {
                                     <label for="location">Last Name:</label>
                                     <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
-                                    <?php foreach ($dept as $dept_row) { ?>
+                                    <?php foreach ($dept as $index=>$dept_row) { ?>
                                         <label for="location">Department ID:</label>
-                                        <input type="text" id="dept_ids" name="dept_ids" value="<?= $dept_row ?>" readonly>
+                                        <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept_row ?>">
                                         <br>
                                     <?php } ?>
-                                    <button type="submit">Update Room</button>
+                                    <button type="submit" name="submit">Update User</button>
                                 </form>
                             </div>
                             <div class="modal-footer">

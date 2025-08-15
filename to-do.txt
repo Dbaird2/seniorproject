@@ -1,21 +1,13 @@
             TO DO
 style in asset-ui
 
-fix PDF and Excel in asset-ui
-
 add delete features for assets/user (bldg-department done)
-
-update building numbers (2)
-
-add csv support
-
---add more responses for chatbot
 
 put in tickets via botman conversation
 
 
             KUALI TO DO
-make editing of dept,bldg,asset in Ajax.php
+make editing of dept,asset in Ajax.php
 
 get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
 auditing
@@ -28,8 +20,7 @@ update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
 
 style modal & update endpoint for forms
 
-
-can't/shouldn't do for a while
+           ML SUPPORT
 ML python/php
 
 
@@ -39,3 +30,5 @@ insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
 fix audit insert to not make dupes
 
 update room addition form for room tag 
+
+make editing of users,bldg in Ajax.php

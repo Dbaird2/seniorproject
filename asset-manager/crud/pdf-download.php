@@ -11,7 +11,7 @@ $select_q = "SELECT p.asset_tag, a.asset_name,
     FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
     JOIN bldg_table b ON r.bldg_id = b.bldg_id
-    WHERE p.profile_name = :profile_name AND p.email = :email";
+    WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
 try {
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":profile_name" => $profile_name, ":email" => $email]);
@@ -19,6 +19,10 @@ try {
 } catch (PDOException $e) {
     error_log("Error: " . $e->getMessage());
 }
+?>
+<?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,10 +34,6 @@ try {
     <link rel="stylesheet" href="../manager.css">
 
 </head>
-<?php
-require_once __DIR__ . '/../../vendor/autoload.php';
-ob_start();
-?>
 <body class="is-ajax">
     <?php if ($result) { ?>
         <table class="table">
