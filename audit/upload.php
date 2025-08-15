@@ -350,7 +350,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
   <div class="is-upload">
     <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-      <h2 class="header">Excel or CSV files only.<br></h2>
       <h4 class="header">Concerned about Excel formatting? Check out our help page <a href="#">here</a></h4>
       <div class="container">
         <div class="folder">
@@ -361,17 +360,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
           <div class="back-side cover"></div>
         </div>
         <label class="custom-file-upload">
-          <input class="title" type="file" name="file" id="filePath" />
+          <input class="title" type="file" name="file" id="filePath" accept=".xlsx, .xls" />
           Choose a file
         </label>
         <?php if ($_SESSION['role'] !== 'custodian') { ?>
           <select class="form-input" name="audit-type" id="audit-type">
             <option value="cust">Self Audit</option>
             <option value="ocust">Old Self Audit</option>
+<?php if ($_SESSOIN['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
             <option value="mgmt">Management</option>
             <option value="omgmt">Old Management</option>
             <option value="SPA">SPA</option>
             <option value="oSPA">Old SPA audit</option>
+<?php } ?>
           </select>
         <?php } ?>
         <button class="button-9" type="submit" role="button">Submit</button>

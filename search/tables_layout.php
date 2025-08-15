@@ -278,7 +278,7 @@ foreach ($result as $row) {
     $dept_id = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
     $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
     //$custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
-    $custodian= str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
+    $custodian= /*str_getcsv(*/trim($row['custodian'], '{}');/*, ',', '"', '\\');*/
     $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 
 ?>
@@ -289,9 +289,7 @@ foreach ($result as $row) {
                         </td>
 
                         <td class=<?= $color_class ?>><?= $dept_name ?></td>
-<?php foreach ($custodian as $cust) { ?>
-                        <td class=<?= $color_class ?>><?= $cust ?></td>
-<?php } ?>
+                        <td class=<?= $color_class ?>><?= $custodian ?></td>
                         <td class=<?= $color_class ?>> <?= $manager ?></td>
                     </tr>
             <?php } ?>

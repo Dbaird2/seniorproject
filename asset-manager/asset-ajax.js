@@ -136,7 +136,7 @@ function addNote(note, tag) {
 function download_file(type) {
     const profile_name = document.getElementById('profiles').value;
     const download = (type === 'pdf') ? 'pdf' : 'excel';
-    const url = (type === 'pdf') ? 'sheet.php' : 'crud/excel-download.php';
+    const url = (type === 'pdf') ? 'crud/pdf-download.php' : 'crud/excel-download.php';
     const pdf = true;
     $.ajax ({
         method: 'POST',

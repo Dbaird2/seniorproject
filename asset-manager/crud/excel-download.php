@@ -7,7 +7,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $email = $_SESSION['email'];
-$profile_name = $_GET['profile_name'];
+$profile_name = $_POST['profile_name'];
+$profile_name = trim($profile_name, "'");
 
 $select_q = "SELECT p.asset_tag, a.asset_name,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note

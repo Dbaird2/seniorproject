@@ -2,7 +2,8 @@
 require_once '../../config.php';
 check_auth();
 $result = NULL;
-$profile_name = $_GET['profile_name'];
+$profile_name = $_POST['profile_name'];
+$profile_name = trim($profile_name, "'");
 $email = $_SESSION['email'];
 
 $select_q = "SELECT p.asset_tag, a.asset_name,
