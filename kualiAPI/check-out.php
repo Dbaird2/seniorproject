@@ -80,7 +80,7 @@ try {
         if ($check_out_type === 'Checking Out Equipment') {
             $dept = $edge['node']['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
             $borrower = $edge['node']['data']['J06VDujK2F']['displayName'] ?? 'Unknown Borrower';
-            $info = "CHCKD, " . $dept . ' ' . $borrower;
+            $info = "CHCKD," . $dept . ' ' . $borrower;
             $check_out = true;
         } else {
             $check_in = true;

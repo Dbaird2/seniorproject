@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $header_index = 1;
         unset($data[0]);
       }
+      /* SHEET HAS 2 ROW HEADERS */
       if (!isset($data[0])) {
         $skipped = 2;
         foreach ($data as $index => $row) {
@@ -73,13 +74,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             ) {
               continue;
             }
+            if ($data[0][$r_index] === 'Tag Number') {
+                $select_q = "SELECT asset_note FROM asset_info WHERE asset_tag = :tag";
+                $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
+                $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result['asset_note'] !== '') {
+                    $info = explode(",", $result['asset_note']);
+                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                } else {
+                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                }
+            }
             $_SESSION['data'][$index - $skipped][$data[1][$r_index]] = $r_row;
           }
-          $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
         }
+      /* SHEET HAS 1 ROW HEADER */
       } else if ($continue === false) {
         $skipped = 1;
         foreach ($data as $index => $row) {
@@ -94,13 +109,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             ) {
               continue;
             }
+            if ($data[0][$r_index] === 'Tag Number') {
+                $select_q = "SELECT asset_note FROM asset_info WHERE asset_tag = :tag";
+                $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
+                $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
+                if ($result['asset_note'] !== '') {
+                    $info = explode(",", $result['asset_note']);
+                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                } else {
+                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                }
+            }
+
             $_SESSION['data'][$index - $skipped][$data[0][$r_index]] = $r_row;
           }
-          $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-          $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
         }
+        /* CONTINUE FROM SHEET */
       } else if ($continue === true) {
         foreach ($data as $index => $row) {
           if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
@@ -134,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
       $blank_msg = "File cannot be empty 2";
     }
   }
-  if ($csv) {
+/*  if ($csv) {
     if (($handle = fopen($file_name, 'r')) !== FALSE) {
       while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $num = count($data);
@@ -146,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
       }
       fclose($handle);
     }
-  }
+  }*/
 }
 ?>
 <!DOCTYPE html>
