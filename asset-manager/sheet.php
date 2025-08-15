@@ -11,7 +11,7 @@ if (isset($_POST)) {
     FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
     JOIN bldg_table b ON r.bldg_id = b.bldg_id
-    WHERE p.profile_name = :profile_name AND p.email = :email";
+    WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
     try {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":profile_name" => $profile, ":email" => $email]);
@@ -20,6 +20,9 @@ if (isset($_POST)) {
         error_log("Error: " . $e->getMessage());
     }
 }
+echo "<pre>";
+var_dump($result);
+echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="en">

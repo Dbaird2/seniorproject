@@ -14,7 +14,7 @@ $select_q = "SELECT p.asset_tag, a.asset_name,
     WHERE p.profile_name = :profile_name AND p.email = :email";
 try {
     $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":profile_name" => $profile, ":email" => $email]);
+    $select_stmt->execute([":profile_name" => $profile_name, ":email" => $email]);
     $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Error: " . $e->getMessage());

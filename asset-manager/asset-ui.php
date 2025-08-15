@@ -30,7 +30,7 @@ check_auth();
             <nav id="nav-ui">
                 <ul class="nav-ui">
                     <li>
-                        <input type="text" id="profiles" list="profile-list" placeholder="Load Profile" autocomplete="on" accept="text/plain">
+                        <input type="search" id="profiles" list="profile-list" placeholder="Load Profile" autocomplete="on" accept="text/plain">
                         <datalist id="profile-list">
                             <?php
                             $query = "SELECT distinct profile_name FROM user_asset_profile WHERE email = :email";
@@ -55,7 +55,7 @@ check_auth();
                 </ul>
             </nav>
             <div class="quick-buttons">
-                <input type="text" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
+                <input type="search" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
                 <datalist id="dept-list">
                     <?php
                     $query = "SELECT dept_name FROM department";
@@ -82,7 +82,7 @@ check_auth();
         <nav id="nav-ui" style="place-self: center;">
             <ul class="nav-ui">
                 <li>
-                    <input type="text" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">
+                    <input type="search" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">
                     <datalist id="asset-list">
                         <?php
                         $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'In Service'";
