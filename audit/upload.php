@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
               continue;
             }
             if ($data[1][$r_index] === 'Tag Number') {
-                $select_q = "SELECT asset_note FROM asset_info WHERE asset_tag = :tag";
+                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
                 $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
                 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result['asset_note'] !== '') {
@@ -396,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
           <select class="form-input" name="audit-type" id="audit-type">
             <option value="cust">Self Audit</option>
             <option value="ocust">Old Self Audit</option>
-<?php if ($_SESSOIN['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
+<?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
             <option value="mgmt">Management</option>
             <option value="omgmt">Old Management</option>
             <option value="SPA">SPA</option>
