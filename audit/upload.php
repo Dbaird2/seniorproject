@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $select_stmt = $dbh->prepare($select_q);
                 $select_stmt->execute([":tag"=>$r_row]);
                 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-                if ($result['asset_notes'] !== '') {
+                if ($result['asset_notes'] !== '' && $result['asset_notes'] !== NULL) {
                     $info = explode(",", $result['asset_notes']);
                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
