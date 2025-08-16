@@ -159,7 +159,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = "a.asset_status";
         $where_array[] = "a.asset_tag LIKE :search";
         if ($status === 'In Service' || $status === 'Disposed') {
-            $where_status = " AND a.asset_status = " . $status;
+            $where_status = " AND a.asset_status = '" . $status . "'";
         }
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of

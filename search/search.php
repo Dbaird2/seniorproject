@@ -110,8 +110,8 @@ if ($search === NULL) {
 
             <select class="filter-assets" name="statusFilter" id="status-filter">
                     <option value="all">All Status</option>
-                    <option value="service">In Service</option>
-                    <option value="disposed">Disposed</option>
+                    <option value="In Service">In Service</option>
+                    <option value="Disposed">Disposed</option>
                 </select>
 
             <select class="filter-assets" name="price-operator" id="price-filter">
