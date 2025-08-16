@@ -156,7 +156,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //      SET COLUMNS WITH WHERE CONDITIONING
         $column_array[] = "a.asset_tag";
         $column_array[] = "a.bus_unit";
+        $column_array[] = "a.asset_status";
         $where_array[] = "a.asset_tag LIKE :search";
+        if ($status === 'In Service' || $status === 'Disposed') {
+            $where_array[] = "a.asset_status = :status";
+        }
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of
             $header_true['room_tag'] = 'true';
@@ -222,6 +226,12 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_dept = $where_price = '';
             $count = 0;
             $q_all_params = [':offset'=>$query_offset];
+            if ($status === 'In Service' || $status === 'Disposed') {
+                $q_all_params[':status'] = $status;
+                $q_c_params[':status'] = $status;
+                $where_status = " a.asset_status = :status ";
+                $count++;
+            }
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
                 $where_dept = " a.dept_id = :dept_id ";
                 $q_all_params[':dept_id'] = $dept_id_search;
@@ -235,10 +245,13 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $count++;
             }
             $where = ($count > 0) ? ' WHERE ' : '';
-            if ($where_dept && $where_price) {
+            if ($count == 2) {
                 $and = ' AND ';
+            } 
+            if ($count == 3) {
+                $and2 = ' AND ';
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $status . $query_end;
 
             $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept;
 
@@ -256,6 +269,10 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } else {
             $exec_query = $dbh->prepare($query);
             $params['offset'] = $query_offset;
+            if ($status === 'In Service' || $status === 'Disposed') {
+                $params[':status'] = $status;
+                $params2[':status'] = $status;
+            }
             $exec_query->execute($params);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 

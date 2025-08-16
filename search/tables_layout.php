@@ -44,6 +44,7 @@ if (array_key_exists('asset_po', $header_true)) {
 
         // Escape values for safety
         $safe_tag = htmlspecialchars($row['asset_tag'] ?? '', ENT_QUOTES);
+        $asset_status = htmlspecialchars($row['asset_status'] ?? '', ENT_QUOTES);
         $bus_unit = htmlspecialchars($row['bus_unit'] ?? '', ENT_QUOTES);
         $safe_name = htmlspecialchars($row['asset_name'] ?? '', ENT_QUOTES);
         $safe_deptid = htmlspecialchars($row['dept_id'] ?? '', ENT_QUOTES);
@@ -79,6 +80,7 @@ echo "<td class=" . $color_class . ">" . $bldg_name . "</td>";
 <?php if (array_key_exists('asset_sn', $header_true)) {
 echo "<td class=" . $color_class . ">" . $safe_serial . "</td>";
 } ?>
+                        <td class=<?= $color_class ?>><?= $asset_status ?></td>
 <?php if (array_key_exists('asset_price', $header_true)) {
 echo "<td class=" . $color_class . ">" . $safe_price . "</td>";
 } ?>

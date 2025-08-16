@@ -1,5 +1,5 @@
             TO DO
-style in asset-ui
+style in asset-ui, modal
 
 add delete features for assets/user (bldg-department done)
 
@@ -9,22 +9,20 @@ put in tickets via botman conversation
             KUALI TO DO
 make editing of dept,asset in Ajax.php
 
-get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
-auditing
-
-dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
-
-create account based off PROPERTY CUSTODIAN RESPONSIBILITY FORM
-
 update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
 
-style modal & update endpoint for forms
+update endpoint for forms
 
            ML SUPPORT
 ML python/php
 
 
             NEEDS TESTING
+dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
+
+get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
+auditing
+
 insert assets from ASSET RECIEVED FORM/ASSET MANAGEMENT ADDITION FORM
 
 fix audit insert to not make dupes
