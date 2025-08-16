@@ -1,10 +1,10 @@
 <?php
 require_once ("../config.php");
 
-error_reporting(0);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+error_reporting(0);
 //-------------------------------------------------------------------------
 //  DYNAMIC SQL QUERIES
     $query_start = "SELECT ";
@@ -158,6 +158,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = "a.bus_unit";
         $column_array[] = "a.asset_status";
         $where_array[] = "a.asset_tag LIKE :search";
+        $where_status = '';
         if ($status === 'In Service' || $status === 'Disposed') {
             $where_status = " AND a.asset_status = '" . $status . "'";
         }
@@ -210,8 +211,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status ?? '' . $query_end;
-        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status ?? '';
+        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . $query_end;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status;
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -226,6 +227,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $where_dept = $where_price = '';
             $count = 0;
             $q_all_params = [':offset'=>$query_offset];
+            $where_status = '';
             if ($status === 'In Service' || $status === 'Disposed') {
                 $where_status = " a.asset_status = '" . $status . "'";
                 $count++;
@@ -252,9 +254,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             if ($where_price && $where_status) {
                 $and = ' AND ';
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status ?? '' . $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . $query_end;
 
-            $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status ?? '';
+            $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status;
 
             $exec_query = $dbh->prepare($query);
             $exec_query->execute($q_all_params);
