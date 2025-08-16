@@ -10,7 +10,7 @@ function searchTrigger() {
     var search = $('#search').val();
     var offset = $('#offset').val();
     var categories = $('#categories').val();
-    var statusFilter = $('#statusFilter').val();
+    var statusFilter = $('#status-filter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
     var box_name = $('#asset_name').prop('checked');
@@ -71,7 +71,7 @@ function searchTrigger() {
 }
 function auditTrigger() {
     var search = $('#search').val();
-    var statusFilter = $('#statusFilter').val();
+    var statusFilter = $('#status-filter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
     var box_name = $('#asset_name').prop('checked');
@@ -121,7 +121,7 @@ function searchTriggerViaAjax(
 ) {
     var search = $('#search').val();
     var categories = $('#categories').val();
-    var statusFilter = $('#statusFilter').val();
+    var statusFilter = $('#status-filter').val();
     var price = $('#price-value').val();
     var price_operation = $('#price-filter').val();
     var box_name = $('#asset_name').prop('checked');
@@ -190,13 +190,13 @@ $(document).ready(function() {
     $('#audit-btn').click(auditTrigger);
 
 
-    const status = localStorage.getItem('statusFilter');
+    const status = localStorage.getItem('status-filter');
     if (status) {
-        $('#statusFilter').val(status);
+        $('#status-filter').val(status);
     }
 
-    $('#statusFilter').on('change', function () {
-        localStorage.setItem('statusFilter', $(this).val());
+    $('#status-filter').on('change', function () {
+        localStorage.setItem('status-filter', $(this).val());
     });
 
     const category = localStorage.getItem('categories');  

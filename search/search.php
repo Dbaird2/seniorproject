@@ -108,7 +108,7 @@ if ($search === NULL) {
             <br>
             <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" value="<?=$bldg_id_search?>"/>
 
-            <select class="filter-assets" name="statusFilter" id="status-filter">
+            <select class="filter-assets" name="status-filter" id="status-filter">
                     <option value="all">All Status</option>
                     <option value="In Service">In Service</option>
                     <option value="Disposed">Disposed</option>
