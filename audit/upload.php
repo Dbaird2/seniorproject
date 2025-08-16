@@ -76,7 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
             if ($data[1][$r_index] === 'Tag Number') {
                 $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
+                $select_stmt = $dbh->prepare($select_q);
+                $select_stmt->execute([":tag"=>$r_row]);
                 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result['asset_notes'] !== '') {
                     $info = explode(",", $result['asset_notes']);
@@ -111,7 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
             if ($data[0][$r_index] === 'Tag Number') {
                 $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                $select_stmt = $dbh->prepare($select_q)->execute([":tag"=>$r_row]);
+                $select_stmt = $dbh->prepare($select_q);
+                $select_stmt->execute([":tag"=>$r_row]);
                 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                 if ($result['asset_notes'] !== '') {
                     $info = explode(",", $result['asset_notes']);
