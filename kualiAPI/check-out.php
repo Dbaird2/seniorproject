@@ -94,20 +94,25 @@ try {
             continue;
         }
         $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag";
-        $select_stmt = $dbh->prepare($select_q)->execute([":tag" => $tag]);
+        $select_stmt = $dbh->prepare($select_q);
+        $select_stmt->execute([":tag" => $tag]);
         if ($select_stmt->rowCount() === 1) {
             if ($check_out) {
                 $update_q = "UPDATE asset_info SET asset_note = :note WHERE asset_tag = :tag";
-                $update_stmt = $dbh->prepare($update_q)->execute([":note" => $info, ":tag" => $tag]);
+                $update_stmt = $dbh->prepare($update_q);
+                $update_stmt->execute([":note" => $info, ":tag" => $tag]);
 
                 $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali)->execute([":time" => $update_time]);
+                $update_stmt = $dbh->prepare($update_kuali);
+                $update_stmt->execute([":time" => $update_time]);
             } else if ($check_in) {
                 $update_q = "UPDATE asset_info SET asset_note = NULL WHERE asset_tag = :tag";
-                $update_stmt = $dbh->prepare($update_q)->execute([":tag" => $tag]);
+                $update_stmt = $dbh->prepare($update_q);
+                $update_stmt->execute([":tag" => $tag]);
 
                 $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali)->execute([":time" => $update_time]);
+                $update_stmt = $dbh->prepare($update_kuali);
+                $update_stmt->execute([":time" => $update_time]);
             }
         }
         echo "<br>" . $count++;
