@@ -6,7 +6,7 @@ if (isset($_POST)) {
     $profile = $_POST['profile_name'];
     $email = $_SESSION['email'];
 
-    $select_q = "SELECT p.asset_tag, a.asset_name,
+    $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
     FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
@@ -37,10 +37,12 @@ if (isset($_POST)) {
 <?php if ($result) { ?>
         <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= $profile ?>'"><button id="excel">Excel Sheet</button></a>
         <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= $profile ?>'"><button id="pdf">PDF</button></a>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/setup-audit.php?profile_name='<?= $profile ?>'"><button id="pdf">Audit</button></a>
     <table class="table">
         <thead>
             <tr>
                 <th>Row</th>
+                <th>Business Unit</th>
                 <th>Asset Tag</th>
                 <th>Asset Name</th>
                 <th>Room Tag</th>
@@ -55,6 +57,7 @@ if (isset($_POST)) {
             foreach ($result as $index => $row) { ?>
                 <tr>
                     <td><?= $index + 1 ?></td>
+                    <td><?= $row['bus_unit'] ?></td>
                     <td><?= $row['asset_tag'] ?></td>
                     <td><?= $row['asset_name'] ?></td>
                     <td><?= $row['room_tag'] ?></td>

@@ -54,6 +54,30 @@ function deleteProfile(profile_name) {
         }
     });
 }
+function adminDeleteProfile(data) {
+    const array = data.split("`").map(item => item.trim());
+    const email = array[0];
+    const profile_name = array[1];
+    
+    if (profile_name.length <= 0 || profile_name.trim() === '' || !profile_name) {
+        return;
+    }
+    $.ajax({
+        method: 'POST',
+        url: 'profile-crud/admin-remove-profile.php',
+        data: {
+            email: email
+            profile_name: profile_name
+        },
+        success: function () {
+            console.log('Successfully removed profile', profile_name);
+            displayProfiles();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
 function renameProfile(new_name_raw, old_name) {
     if (new_name_raw.length <= 0 || new_name_raw.trim() === '') {
         return;
@@ -86,9 +110,24 @@ if (!window.rename_profile) {
     });
     window.rename_profile = true;
 }
+
 if (!window.delete_profile) {
     $(document).on('click', '.delete-profile', function (e) {
         deleteProfile(this.value);
     });
     window.delete_profile = true;
+}
+
+if (!window.admin_delete_profile) {
+    $(document).on('click', '.audit', function (e) {
+        adminDeleteProfile(this.value);
+    });
+    window.admin_delete_profile = true;
+}
+
+if (!window.audit_profile) {
+    $(document).on('click', '.audit', function (e) {
+        auditProfile(this.value);
+    });
+    window.audit_profile = true;
 }

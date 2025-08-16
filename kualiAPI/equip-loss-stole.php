@@ -87,7 +87,7 @@ try {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":tag" => $tag]);
         if ($select_stmt->rowCount() === 1) {
-            $update_q = "UPDATE asset_info SET asset_status = Disposed WHERE asset_tag = :tag";
+            $update_q = "UPDATE asset_info SET asset_status = 'Disposed' WHERE asset_tag = :tag";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":tag" => $tag]);
 

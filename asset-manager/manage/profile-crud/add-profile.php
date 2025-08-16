@@ -2,7 +2,7 @@
 include_once "../../../config.php";
 if (isset($_POST)) {
     $email = $_SESSION['email'];
-    $name = $_POST['profile_name'];
+    $name = trim($_POST['profile_name']);
     $select_q = "SELECT COUNT(*) as profile_count from user_asset_profile WHERE email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
