@@ -30,7 +30,7 @@ if (isset($_POST['audit'])) {
     $box_name = $_POST['box_name'] ;
 
 
-    $where_dept = $where_price = '';
+    $where_dept = $where_price = $where_status = '';
     $location_from = '';
 
     $where = $and = $and1 = $and2 = '';
@@ -212,7 +212,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $where_array = implode(' OR ', $where_array);
         $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . $query_end;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status;
-        echo "<br>" . $query . "<br>" . $query_count . "<br>"; 
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -256,7 +255,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . $query_end;
 
             $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status;
-            echo "<br>" . $query .  "<br>" . $query_count . "<br>";
 
             $exec_query = $dbh->prepare($query);
             $exec_query->execute($q_all_params);
