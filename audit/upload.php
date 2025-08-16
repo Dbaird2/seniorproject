@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
                 $select_stmt = $dbh->prepare($select_q);
                 $select_stmt->execute([":tag"=>$r_row]);
-                $asset_notes = $select_stmt->fetchColumn;
+                $asset_notes = $select_stmt->fetchColumn();
                 if (!empty($asset_notes)) {
                     $info = explode(",", $asset_notes);
                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
@@ -114,9 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
                 $select_stmt = $dbh->prepare($select_q);
                 $select_stmt->execute([":tag"=>$r_row]);
-                $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-                if ($result['asset_notes'] !== '') {
-                    $info = explode(",", $result['asset_notes']);
+                $asset_notes = $select_stmt->fetchColumn();
+                if (!empty($asset_notes)) {
+                    $info = explode(",", $asset_notes);
                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
                     $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
