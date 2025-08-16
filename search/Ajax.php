@@ -210,8 +210,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . $query_end;
-        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status;
+        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status ?? '' . $query_end;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status ?? '';
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -252,9 +252,9 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             if ($where_price && $where_status) {
                 $and = ' AND ';
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status ?? '' . $query_end;
 
-            $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status;
+            $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status ?? '';
 
             $exec_query = $dbh->prepare($query);
             $exec_query->execute($q_all_params);
