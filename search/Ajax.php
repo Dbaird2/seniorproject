@@ -159,7 +159,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $column_array[] = "a.asset_status";
         $where_array[] = "a.asset_tag LIKE :search";
         if ($status === 'In Service' || $status === 'Disposed') {
-            $where_array[] = "a.asset_status = :status";
+            $where_status = " AND a.asset_status = " . $status;
         }
         if ($room_tag === 'true') {
             // Might be wasted, potentially will get rid of
@@ -210,8 +210,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price . $query_end;
-        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price;
+        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . $query_end;
+        $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status;
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
@@ -227,9 +227,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count = 0;
             $q_all_params = [':offset'=>$query_offset];
             if ($status === 'In Service' || $status === 'Disposed') {
-                $q_all_params[':status'] = $status;
-                $q_c_params[':status'] = $status;
-                $where_status = " a.asset_status = :status ";
+                $where_status = " a.asset_status = " . $status . ' ';
                 $count++;
             }
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
@@ -269,10 +267,6 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } else {
             $exec_query = $dbh->prepare($query);
             $params['offset'] = $query_offset;
-            if ($status === 'In Service' || $status === 'Disposed') {
-                $params[':status'] = $status;
-                $params2[':status'] = $status;
-            }
             $exec_query->execute($params);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 

@@ -29,6 +29,7 @@ if (array_key_exists('room_loc', $header_true)) {
 if (array_key_exists('asset_sn', $header_true)) {
     echo "<th class='row-even'>Serial Number</th>";
 }
+    echo "<th class='row-even'>Status</th>";
 if (array_key_exists('asset_price', $header_true)) {
     echo "<th class='row-even'>Price</th>";
 }
