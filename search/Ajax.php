@@ -227,7 +227,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count = 0;
             $q_all_params = [':offset'=>$query_offset];
             if ($status === 'In Service' || $status === 'Disposed') {
-                $where_status = " a.asset_status = " . $status . ' ';
+                $where_status = " a.asset_status = '" . $status . "'";
                 $count++;
             }
             if (isset($_POST['dept_id_search']) && $_POST['dept_id_search'] !== '') {
