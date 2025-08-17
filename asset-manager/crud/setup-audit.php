@@ -9,9 +9,9 @@ if (isset($_GET['profile_name'])) {
         a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
         d.custodian, a.date_added, a.asset_price
         FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
-        JOIN room_table r ON a.room_tag = r.room_tag, a.asset_notes
+        JOIN room_table r ON a.room_tag = r.room_tag
         JOIN bldg_table b ON r.bldg_id = b.bldg_id
-        JOIN department d ON a.dept_id = r.dept_id
+        JOIN department d ON a.dept_id = d.dept_id
         WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":profile_name"=>$profile,":email"=>$email]);
@@ -27,7 +27,7 @@ if (isset($_GET['profile_name'])) {
             $_SESSION['data'][$index]['Serial ID'] = $row['serial_num'];
             $_SESSION['data'][$index]['Location'] = $row['bldg_id']. '-'.$row['room_loc'];
             $_SESSION['data'][$index]['VIN'] = '';
-            $_SESSION['data'][$index]['Custodian'] = trim($row['custodian'], '"');
+            $_SESSION['data'][$index]['Custodian'] = trim(trim($row['custodian'], '"'), "{}");
             $_SESSION['data'][$index]['Dept'] = $row['dept_id'];
             $_SESSION['data'][$index]['PO No.'] = $row['po'];
             $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
