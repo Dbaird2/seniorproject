@@ -119,7 +119,7 @@ if (!window.delete_profile) {
 }
 
 if (!window.admin_delete_profile) {
-    $(document).on('click', '.audit', function (e) {
+    $(document).on('click', '.admin-delete-profile', function (e) {
         adminDeleteProfile(this.value);
     });
     window.admin_delete_profile = true;

@@ -204,12 +204,14 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         </div>
 
 
-        <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
-        <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
-            <option value="All">All</option>
-            <option value="X">Found</option>
-            <option value="O">Not Found</option>
-        </select>
+        <div class="filter-seciton">
+            <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
+            <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
+                <option value="All">All</option>
+                <option value="X">Found</option>
+                <option value="O">Not Found</option>
+            </select>
+        </div>
         <div class="div-table">
 
             <table class="table">
