@@ -207,9 +207,9 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
         <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
             <option value="All">All</option>
-            <option value="All">Found</option>
-            <option value="All">Extra</option>
-            <option value="All">Not Found</option>
+            <option value="Found">Found</option>
+            <option value="Extra">Extra</option>
+            <option value="Not Found">Not Found</option>
         </select>
 
         <div class="div-table">

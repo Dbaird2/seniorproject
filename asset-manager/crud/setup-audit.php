@@ -51,12 +51,6 @@ if (isset($_GET['profile_name'])) {
         }
     }
     $_SESSION['info'] = [$highest_row, NULL, $profile, 'cust', $profile];
-    echo "<pre>";
-    var_dump($_SESSION['info']);
-    var_dump($_SESSION['data']);
-    echo $profile . "<br>" . $email ;
-    echo "</pre>";
-    
-    //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    //exit;
+    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    exit;
 }
