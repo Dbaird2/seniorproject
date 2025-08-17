@@ -2,7 +2,7 @@
 include_once "../../config.php";
 
 if (isset($_GET['profile_name'])) {
-    $profile = $_GET['profile_name'];
+    $profile = trim($_GET['profile_name'], "'");
     $email = $_SESSION['email'];
 
     $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,

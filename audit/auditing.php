@@ -495,12 +495,14 @@ function filterAssetStatus() {
     var input, filter, table, tr, td, i, txt_value;
     input = document.getElementById("my-input");
     filter = input.value.toUpperCase();
+    console.log(filter);
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[2];
         if (td) {
             txt_value = td.textContent || td.innerText;
+            console.log(txt_value);
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {

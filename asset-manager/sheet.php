@@ -35,9 +35,9 @@ if (isset($_POST)) {
 <body class="is-ajax">
 
 <?php if ($result) { ?>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= $profile ?>'"><button id="excel">Excel Sheet</button></a>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= $profile ?>'"><button id="pdf">PDF</button></a>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/setup-audit.php?profile_name='<?= $profile ?>'"><button id="pdf">Audit</button></a>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= urlencode($profile) ?>'"><button id="excel">Excel Sheet</button></a>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= urlencode($profile) ?>'"><button id="pdf">PDF</button></a>
+        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/setup-audit.php?profile_name='<?= urlencode($profile) ?>'"><button id="pdf">Audit</button></a>
     <table class="table">
         <thead>
             <tr>
