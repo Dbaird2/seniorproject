@@ -493,7 +493,7 @@ function filterTable() {
 }
 function filterAssetStatus() {
     var input, filter, table, tr, td, i, txt_value;
-    input = document.getElementById("my-input");
+    input = document.getElementById("my-status");
     filter = input.value.toUpperCase();
     console.log(filter);
     table = document.querySelector(".table");

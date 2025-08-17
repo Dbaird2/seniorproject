@@ -36,7 +36,7 @@ if (isset($_GET['profile_name'])) {
             $_SESSION['data'][$index]['PO No.'] = $row['po'];
             $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
             $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
-            if (!empty($info) {
+            if (!empty($info)) {
                 $_SESSION['data'][$index]['Tag Status'] = 'Found';
                 $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
                 $_SESSION['data'][$index]['Found Note'] = $info[1];
