@@ -205,7 +205,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
 
 
         <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
-        <select type="text" id="my-status" onchange="filterTable()" placeholder="Search for tags.." accesskey="b">
+        <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
             <option value="All">All</option>
             <option value="All">Found</option>
             <option value="All">Extra</option>
@@ -472,10 +472,13 @@ function getFormattedDateTime() {
 
 function filterTable() {
     var input, filter, table, tr, td, i, txt_value;
+    /* SEARCH BAR INPUT */
     input = document.getElementById("my-input");
     filter = input.value.toUpperCase();
+    /* GET ALL tr's IN TABLE */
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
+    /* FILTER THROUGH tr's */
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[1];
         if (td) {
