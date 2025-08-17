@@ -1,5 +1,5 @@
-* { 
-    margin: 0 ;
+* {
+    margin: 0;
 }
 .is-search {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -36,6 +36,23 @@
     width: fit-content;
     scrollbar-width: none;
 
+}
+.filter-section {
+    display: flex;
+    justify-content: center;
+}
+#my-status {
+    width: 10%;
+    padding: 14px 16px;
+    border: 2px solid #e3f2fd;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    color: #333;
+    text-align: center;
+    display: block;
+    place-self: center;
 }
 #my-input{
     width: 25%;
@@ -143,131 +160,140 @@
 }
 
 /* The
- * switch
- * -
- * the
- * box
- * around
- * the
- * slider
- * */
-    .switch {
-        font-size: 17px;
-        position: relative;
-        display: inline-block;
-        width: 4em;
-        height: 2em;
-    }
+ *  *
+ *  switch
+ *   *
+ *   -
+ *    *
+ *    the
+ *     *
+ *     box
+ *      *
+ *      around
+ *       *
+ *       the
+ *        *
+ *        slider
+ *         *
+ *         */
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 4em;
+    height: 2em;
+}
 
-    /* Hide default HTML checkbox */
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+/* Hide default HTML
+ * checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-    /* The slider */
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 30px;
-        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
-    }
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 30px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+}
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 1.6em;
-        width: 1.6em;
-        border-radius: 20px;
-        left: 0.2em;
-        bottom: 0.2em;
-        background-color: white;
-        transition: 0.4s;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.6em;
+    width: 1.6em;
+    border-radius: 20px;
+    left: 0.2em;
+    bottom: 0.2em;
+    background-color: white;
+    transition: 0.4s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-    .switch input:checked + .slider {
-        background-color: #4cc9f0;
-    }
+.switch input:checked + .slider {
+    background-color: #4cc9f0;
+}
 
-    .switch input:focus + .slider {
-        box-shadow: 0 0 1px #4cc9f0;
-    }
+.switch input:focus + .slider {
+    box-shadow: 0 0 1px #4cc9f0;
+}
 
-    .switch input:checked + .slider:before {
-        transform: translateX(2em);
-        background-color: #4cc9f0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
+.switch input:checked + .slider:before {
+    transform: translateX(2em);
+    background-color: #4cc9f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
 
-    .slider:after {
-        content: "OFF";
+.slider:after {
+    content: "OFF";
+    color: white;
+    position: absolute;
+    right: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    transition: opacity 0.4s;
+    opacity: 1;
+}
+
+.switch input:checked + .slider:after {
+    content: "ON";
+    left: 0.5em;
+    opacity: 1;
+    right: auto;
+}
+
+.is-search h4 {
+    background: linear-gradient(135deg, green, lightgray);
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: linear-gradient(135deg, green, lightgray);
+    font-variant-caps:petite-caps;
+    animation-name: example;
+    animation-duration: 4s;
+}
+@keyframes example {
+    0%   {color: bisque;}
+    25%  {color: lightblue;}
+    50%  {color: lightgray;}
+    100% {color: gray;}
+}
+td {
+    padding: 15px;
+    background-color: rgba(255,255,255,0.2);
+    color: black;
+}
+
+
+thead {
+    th {
         color: white;
-        position: absolute;
-        right: 0.5em;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.8em;
-        transition: opacity 0.4s;
-        opacity: 1;
+        background-color: #55608f;
     }
+}
 
-    .switch input:checked + .slider:after {
-        content: "ON";
-        left: 0.5em;
-        opacity: 1;
-        right: auto;
-    }
-
-    .is-search h4 {
-        background: linear-gradient(135deg, green, lightgray);
-
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: linear-gradient(135deg, green, lightgray);
-        font-variant-caps:petite-caps;
-        animation-name: example;
-        animation-duration: 4s;
-    }
-    @keyframes example {
-        0%   {color: bisque;}
-        25%  {color: lightblue;}
-        50%  {color: lightgray;}
-        100% {color: gray;}
+tbody {
+    tr {
+        &:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
     }
     td {
-        padding: 15px;
-        background-color: rgba(255,255,255,0.2);
-        color: black;
-    }
-
-
-    thead {
-        th {
-            color: white;
-            background-color: #55608f;
-        }
-    }
-
-    tbody {
-        tr {
-            &:hover {
-                background-color: rgba(255,255,255,0.3);
-            }
-        }
-        td {
-            position: relative;
-            &:hover {
-                &:before {
-                    background-color: rgba(255,255,255,0.2);
-                }
+        position: relative;
+        &:hover {
+            &:before {
+                background-color: rgba(255,255,255,0.2);
             }
         }
     }
+}

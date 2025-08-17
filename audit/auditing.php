@@ -182,7 +182,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
     <div class=" is-search">
         <div class="wrapper">
 
-                <button type="submit" id="complete-audit" name="complete-audit">Save Audit</button>
+            <button type="submit" id="complete-audit" name="complete-audit">Save Audit</button>
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
@@ -208,10 +208,8 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
             <option value="All">All</option>
             <option value="X">Found</option>
-            <option value="Extra">Extra</option>
-            <option value="">Not Found</option>
+            <option value="O">Not Found</option>
         </select>
-
         <div class="div-table">
 
             <table class="table">
@@ -351,7 +349,7 @@ method: 'POST',
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
-            tag: e.target.id,
+        tag: e.target.id,
             room: e.target.value
     });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
@@ -368,9 +366,9 @@ document.querySelector('.table').addEventListener('change', function(e) {
             .catch(error => console.error('Error:', error));
     } else {
         const params = new URLSearchParams({
-            tag: e.target.id,
+        tag: e.target.id,
             note: e.target.value
-        });
+    });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
         fetch(url, {
         method: 'POST',
@@ -396,7 +394,7 @@ document.addEventListener("input", function(e) {
         tab++;
         if (value[1] === 'P') {
             tab++;
-        } else if (value[1] === 'T' && value[2] ==='U') {
+        } else if (value[1] === 'T' && value[2] === 'U') {
             tab += 2;
         }
     }
@@ -472,13 +470,10 @@ function getFormattedDateTime() {
 
 function filterTable() {
     var input, filter, table, tr, td, i, txt_value;
-    /* SEARCH BAR INPUT */
     input = document.getElementById("my-input");
     filter = input.value.toUpperCase();
-    /* GET ALL tr's IN TABLE */
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
-    /* FILTER THROUGH tr's */
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[1];
         if (td) {
@@ -491,27 +486,36 @@ function filterTable() {
         }
     }
 }
+
 function filterAssetStatus() {
     var input, filter, table, tr, td, i, txt_value;
     input = document.getElementById("my-status");
     filter = input.value.toUpperCase();
-    console.log(filter);
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[2];
-        if (td && filter !== 'ALL') {
+        if (td && filter === 'X') {
             txt_value = td.textContent || td.innerText;
-            console.log(txt_value);
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {
                 tr[i].style.display = "none";
             }
+        } else if (filter === 'ALL') {
+            tr[i].style.display = "";
+        } else if (td && filter === 'O') {
+            var filter2 = 'X';
+            txt_value = td.textContent || td.innerText;
+            if (txt_value.toUpperCase().indexOf(filter2) > -1) {
+                tr[i].style.display = "none";
+            } else {
+                tr[i].style.display = "";
+            }
         }
     }
 }
-                    </script>
-                            <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
-                        </div>
-                            </body>
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
+    </div>
+</body>
