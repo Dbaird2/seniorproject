@@ -207,9 +207,9 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
         <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
             <option value="All">All</option>
-            <option value="Found">Found</option>
+            <option value="X">Found</option>
             <option value="Extra">Extra</option>
-            <option value="Not Found">Not Found</option>
+            <option value="">Not Found</option>
         </select>
 
         <div class="div-table">
@@ -250,7 +250,7 @@ foreach ($data_slice as $index => $row) {
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
 
-    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '' && $row['Tag Status'] === "Found") ? "Found" : "Not Found";
+    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "X" : "";
     $found_room = isset($row["Found Room Tag"]) ? $row["Found Room Tag"] : "";
     $found_note = isset($row["Found Note"]) ? $row["Found Note"] : "";
     $serial = htmlspecialchars($row["Serial ID"] ?? "");
@@ -500,7 +500,7 @@ function filterAssetStatus() {
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[2];
-        if (td) {
+        if (td && filter !== 'ALL') {
             txt_value = td.textContent || td.innerText;
             console.log(txt_value);
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
