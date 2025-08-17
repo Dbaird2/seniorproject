@@ -205,6 +205,13 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
 
 
         <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
+        <select type="text" id="my-status" onchange="filterTable()" placeholder="Search for tags.." accesskey="b">
+            <option value="All">All</option>
+            <option value="All">Found</option>
+            <option value="All">Extra</option>
+            <option value="All">Not Found</option>
+        </select>
+
         <div class="div-table">
 
             <table class="table">
@@ -471,6 +478,24 @@ function filterTable() {
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+            txt_value = td.textContent || td.innerText;
+            if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+function filterAssetStatus() {
+    var input, filter, table, tr, td, i, txt_value;
+    input = document.getElementById("my-input");
+    filter = input.value.toUpperCase();
+    table = document.querySelector(".table");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
         if (td) {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {

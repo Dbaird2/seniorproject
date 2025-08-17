@@ -16,6 +16,9 @@ if (isset($_GET['profile_name'])) {
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":profile_name"=>$profile,":email"=>$email]);
     $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    unset($_SESSION['data']);
+    unset($_SESSION['info']);
+    $highest_row = 1;
     if (!empty($result)) {
         foreach ($result as $index => $row) {
             if (!empty($row['asset_notes'])) {
@@ -43,7 +46,7 @@ if (isset($_GET['profile_name'])) {
                 $_SESSION['data'][$index]['Found Note'] = '';
                 $_SESSION['data'][$index]['Found Timestamp'] = '';
             }
-            $highest_row = $index + 1;
+            $highest_row++;
         }
     }
     $_SESSION['info'] = [$highest_row, NULL, $profile, 'cust', $profile];
