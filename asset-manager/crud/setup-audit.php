@@ -7,7 +7,7 @@ if (isset($_GET['profile_name'])) {
 
     $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,
         a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
-        d.custodian, a.date_added, a.asset_price
+        d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
         FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
         JOIN room_table r ON a.room_tag = r.room_tag
         JOIN bldg_table b ON r.bldg_id = b.bldg_id
@@ -19,6 +19,7 @@ if (isset($_GET['profile_name'])) {
     unset($_SESSION['data']);
     unset($_SESSION['info']);
     $highest_row = 1;
+    $info = '';
     if (!empty($result)) {
         foreach ($result as $index => $row) {
             if (!empty($row['asset_notes'])) {
@@ -35,7 +36,7 @@ if (isset($_GET['profile_name'])) {
             $_SESSION['data'][$index]['PO No.'] = $row['po'];
             $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
             $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
-            if ($info[0] !== '') {
+            if (!empty($info) {
                 $_SESSION['data'][$index]['Tag Status'] = 'Found';
                 $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
                 $_SESSION['data'][$index]['Found Note'] = $info[1];

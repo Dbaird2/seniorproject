@@ -250,7 +250,7 @@ foreach ($data_slice as $index => $row) {
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
 
-    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "X" : "";
+    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '' && $row['Tag Status'] === "Found") ? "Found" : "Not Found";
     $found_room = isset($row["Found Room Tag"]) ? $row["Found Room Tag"] : "";
     $found_note = isset($row["Found Note"]) ? $row["Found Note"] : "";
     $serial = htmlspecialchars($row["Serial ID"] ?? "");
