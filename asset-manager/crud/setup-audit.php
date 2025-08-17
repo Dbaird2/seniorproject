@@ -6,7 +6,7 @@ if (isset($_GET['profile_name'])) {
     $email = $_SESSION['email'];
 
     $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,
-        a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note,
+        a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
         d.custodian, a.date_added, a.asset_price
         FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
         JOIN room_table r ON a.room_tag = r.room_tag, a.asset_notes
