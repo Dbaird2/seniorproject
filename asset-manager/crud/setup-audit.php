@@ -9,9 +9,9 @@ if (isset($_GET['profile_name'])) {
         a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
         d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
         FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
-        JOIN room_table r ON a.room_tag = r.room_tag
-        JOIN bldg_table b ON r.bldg_id = b.bldg_id
-        JOIN department d ON a.dept_id = d.dept_id
+        LEFT JOIN room_table r ON a.room_tag = r.room_tag
+        LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
+        LEFT JOIN department d ON a.dept_id = d.dept_id
         WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":profile_name"=>$profile,":email"=>$email]);

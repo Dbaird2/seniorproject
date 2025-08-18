@@ -1,5 +1,6 @@
 <?php
-
+include_once "../config.php";
+check_auth();
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 ini_set('error_log', __DIR__ . '/php_errors.log');
@@ -465,18 +466,38 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail Clerk Monthly Report</title>
+    <title>Mona's Excel Insert</title>
     <?php include_once "../navbar.php"; ?>
 </head>
+<style>
+    * {
+        margin: 0;
+    }
 
-<body>
-    <form action="monas-report.php" enctype="multipart/form-data" method="POST">
-        <input type="file" name="file" id="file_name" accept=".xlsx, .xls" required>
-        <input type="file" name="ref-file" id="ref_file_name" accept=".xlsm" required>
-        <input type="number" name="postage-fee" step="0.001">
-        <button name="submit" value="good">Submit</button>
-    </form>
+    .mona-report {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+        min-height: 100vh;
 
+    }
+
+    .form {
+        color: #333;
+        place-self: center;
+    }
+</style>
+
+<body class="mona-report">
+    <div class="form">
+        <form action="monas-report.php" enctype="multipart/form-data" method="POST">
+            <label for="file">Upload Scanner Report</label><br>
+            <input type="file" name="file" id="file_name" accept=".xlsx, .xls" required><br>
+            <label for="ref-file">Upload Reference File</label><br>
+            <input type="file" name="ref-file" id="ref_file_name" accept=".xlsm" required><br>
+            <input type="number" name="postage-fee" step="0.001" required>
+            <button name="submit" value="good">Submit</button>
+        </form>
+    </div>
 </body>
 
 </html>
