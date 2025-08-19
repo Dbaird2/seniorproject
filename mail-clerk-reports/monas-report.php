@@ -214,7 +214,6 @@ if (isset($_POST['submit'])) {
         $start_of_data++;
 
         foreach ($data_to_write[$row] as $info) {
-            echo $info[0] . ' ' . $row . "<br>";
             $postage_sheet->setCellValue("B" . $start_of_data, $info[0]);
             foreach (range('A', 'H') as $column) {
                 $postage_sheet
