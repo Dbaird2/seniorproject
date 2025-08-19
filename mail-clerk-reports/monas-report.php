@@ -387,7 +387,7 @@ if (isset($_POST['submit'])) {
 
 <body class="mona-report">
     <div class="form">
-        <form action="new-monas-report.php" enctype="multipart/form-data" method="POST">
+        <form action="monas-report.php" enctype="multipart/form-data" method="POST">
             <label for="file">Upload Scanner Report</label><br>
             <input type="file" name="file" id="file_name" accept=".xlsx, .xls" required><br>
             <label for="ref-file">Upload Reference File</label><br>
