@@ -1,9 +1,11 @@
 <?php
 include_once "../config.php";
-check_auth();
-ini_set('display_errors', '0');
-ini_set('log_errors', '1');
-ini_set('error_log', __DIR__ . '/php_errors.log');
+check_auth("high");
+register_shutdown_function(function () {
+    error_log('peak MB=' . (memory_get_peak_usage(true) / 1048576));
+});
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $file_path = $file_name = $count = NULL;
 
@@ -28,18 +30,6 @@ function bubbleSort($array)
                 $temp = $array[$j][0];
                 $array[$j][0] = $array[$j + 1][0];
                 $array[$j + 1][0] = $temp;
-
-                $temp = $array[$j][1];
-                $array[$j][1] = $array[$j + 1][1];
-                $array[$j + 1][1] = $temp;
-
-                $temp = $array[$j][2];
-                $array[$j][2] = $array[$j + 1][2];
-                $array[$j + 1][2] = $temp;
-
-                $temp = $array[$j][3];
-                $array[$j][3] = $array[$j + 1][3];
-                $array[$j + 1][3] = $temp;
                 $swapped = true;
             }
         }
@@ -51,10 +41,10 @@ function bubbleSort($array)
 }
 
 if (isset($_POST['submit'])) {
-    while (ob_get_level() > 0) {
-        ob_end_clean();
-    }
-    @ini_set('zlib.output_compression', 'Off');
+    // while (ob_get_level() > 0) {
+    //     ob_end_clean();
+    // }
+    // @ini_set('zlib.output_compression', 'Off');
     $file_name = $_FILES['file']['name'];
     $file_tmp_path = $_FILES['file']['tmp_name'];
     $ref_file_name = $_FILES['ref-file']['name'];
@@ -74,391 +64,299 @@ if (isset($_POST['submit'])) {
 
     $spreadsheet = IOFactory::load($file_path);
     $sheet = $spreadsheet->setActiveSheetIndex(0);
-
-    $create_sheet = new SpreadSheet();
-    $new_sheet = $create_sheet->getActiveSheet();
+    $sheet1 = $sheet->toArray(null, false, false, false);
+    $sheet = $spreadsheet->setActiveSheetIndex(1);
+    $sheet2 = $sheet->toArray(null, false, false, false);
+    $spreadsheet->disconnectWorksheets();
+    unset($spreadsheet, $sheet);
 
     $ref_spread_sheet = IOFactory::load($ref_file);
     $ref_sheet = $ref_spread_sheet->getActiveSheet();
+    $ref_sheet1 = $ref_sheet->rangeToArray('A1:I200', false, false, false);  // ['A'=>..., 'B'=>..., ...]
 
+    $ref_spread_sheet->disconnectWorksheets();
+    unset($ref_spread_sheet, $ref_sheet);
+    //gc_collect_cycles();
+    //gc_collect_cycles();
+    $create_sheet = new SpreadSheet();
+    $postage_sheet = $create_sheet->getActiveSheet();
     $final_spread_sheet = new SpreadSheet();
-    $final_sheet = $final_spread_sheet->getActiveSheet();
+    $new_ref_sheet = $final_spread_sheet->getActiveSheet();
 
-    foreach (range('A', 'Z') as $columnID) {
-        $new_sheet->getColumnDimension($columnID)->setAutoSize(true);
+    foreach (range('A', 'T') as $columnID) {
+        $postage_sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
-    foreach (range('A', 'Z') as $columnID) {
-        $final_sheet->getColumnDimension($columnID)->setAutoSize(true);
+    foreach (range('A', 'T') as $columnID) {
+        $new_ref_sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
-    /* NEW SHEET HEADER */
-    $new_sheet->mergeCells('A1:H1');
-    $new_sheet->setCellValue('A1', 'Transaction Log Detail Report');
-    $new_sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-    $new_sheet->getStyle('A1')->getFont()->setBold(true);
+    $postage_sheet->mergeCells('A1:H1');
+    $postage_sheet->setCellValue('A1', 'Transaction Log Detail Report');
+    $postage_sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+    $postage_sheet->getStyle('A1')->getFont()->setBold(true);
 
-    $new_sheet->getStyle('A2')->getFont()->setBold(true);
+    $postage_sheet->getStyle('A2')->getFont()->setBold(true);
     $first_day = date('M-01-Y', strtotime('first day of last month'));
     $last_day = date('M-t-Y', strtotime('last day of last month'));
     $date = 'Date Range: ' . $first_day . ' to ' . $last_day;
-    $new_sheet->setCellValue('A2', $date);
+    $postage_sheet->setCellValue('A2', $date);
 
-    $final_sheet->setCellValue('A1', 'Account');
-    $final_sheet->setCellValue('B1', 'Pieces');
-    $final_sheet->setCellValue('C1', 'Postage');
-    $final_sheet->setCellValue('D1', 'Fee Amount');
-    $final_sheet->setCellValue('E1', 'Surcharge');
-    $final_sheet->setCellValue('F1', 'BRM');
-    $final_sheet->setCellValue('G1', 'BULK');
-    $final_sheet->setCellValue('H1', 'Total Charged');
-    $final_sheet->setCellValue('K1', 'Mailcode');
-    $final_sheet->setCellValue('L1', 'Fund');
-    $final_sheet->setCellValue('M1', 'Dept');
-    $final_sheet->setCellValue('N1', 'ACCT');
-    $final_sheet->setCellValue('O1', 'Program');
-    $final_sheet->setCellValue('P1', 'Proj');
-    $final_sheet->setCellValue('Q1', 'Class');
-    $final_sheet->setCellValue('R1', 'TOTAL');
-
-
-
-    $highest_row = $sheet->getHighestRow();
-    $new = null;
-    $index = 4;
-    $header_index = 4;
-    $count = 0;
-    $class_of_mail_sums = [];
-    $ref_sheet_array = [];
+    $new_ref_sheet->setCellValue('A1', 'Account');
+    $new_ref_sheet->setCellValue('B1', 'Pieces');
+    $new_ref_sheet->setCellValue('C1', 'Postage');
+    $new_ref_sheet->setCellValue('D1', 'Fee Amount');
+    $new_ref_sheet->setCellValue('E1', 'Surcharge');
+    $new_ref_sheet->setCellValue('F1', 'BRM');
+    $new_ref_sheet->setCellValue('G1', 'BULK');
+    $new_ref_sheet->setCellValue('H1', 'Total Charged');
+    $new_ref_sheet->setCellValue('K1', 'Mailcode');
+    $new_ref_sheet->setCellValue('L1', 'Fund');
+    $new_ref_sheet->setCellValue('M1', 'Dept');
+    $new_ref_sheet->setCellValue('N1', 'ACCT');
+    $new_ref_sheet->setCellValue('O1', 'Program');
+    $new_ref_sheet->setCellValue('P1', 'Proj');
+    $new_ref_sheet->setCellValue('Q1', 'Class');
+    $new_ref_sheet->setCellValue('R1', 'TOTAL');
 
     foreach (range('A', 'H') as $column) {
-        $new_sheet->getStyle($column . '3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $new_sheet->getStyle($column . '3')
+        $postage_sheet->getStyle($column . '3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $postage_sheet->getStyle($column . '3')
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
             ->setARGB('FFD3D3D3');
     }
-    $new_sheet->setCellValue('A3', "Account");
-    $new_sheet->setCellValue('B3', "Date");
-    $new_sheet->setCellValue('C3', "Class of Mail");
-    $new_sheet->setCellValue('D3', "Total Postage Pieces");
-    $new_sheet->setCellValue('E3', "Postage");
-    $new_sheet->setCellValue('F3', "Fees");
-    $new_sheet->setCellValue('G3', "Surcharge Amount");
-    $new_sheet->setCellValue('H3', "Total Charged");
+    $postage_sheet->setCellValue('A3', "Account");
+    $postage_sheet->setCellValue('B3', "Date");
+    $postage_sheet->setCellValue('C3', "Class of Mail");
+    $postage_sheet->setCellValue('D3', "Total Postage Pieces");
+    $postage_sheet->setCellValue('E3', "Postage");
+    $postage_sheet->setCellValue('F3', "Fees");
+    $postage_sheet->setCellValue('G3', "Surcharge Amount");
+    $postage_sheet->setCellValue('H3', "Total Charged");
 
-    $start_of_data = 4;
-    $ref_highest_row = $ref_sheet->getHighestRow();
-    $final_index = 2;
-    for ($i = 8; $i < $highest_row; $i++) {
-        $a = (int)substr(
-            $sheet->getCell('A' . $i + 1)->getValue(),
-            0,
-            strlen($sheet->getCell('A' . $i + 1)->getValue())
-        );
+    $postage_pieces = [];
+    $rows = [];
+    $data_to_write = [];
 
-
-
-        if ($new !== $a && ($a !== '' || $a !== null) && $a !== 0 && (int)$a !== 9000) {
-            $header_index += $count;
-            $count = 0;
-            $new_sheet->setCellValue('A' . $index, $a);
-            $new_sheet->getStyle('A' . $index)
-                ->getFill()
-                ->setFillType(Fill::FILL_SOLID)
-                ->getStartColor()
-                ->setARGB('000000');
-            $new_sheet->getStyle('A' . $index)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-
-            $new_sheet->getStyle('B' . $index)
-                ->getFill()
-                ->setFillType(Fill::FILL_SOLID)
-                ->getStartColor()
-                ->setARGB('000000');
-            $new_sheet->getStyle('B' . $index)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-
-            $new_sheet->mergeCells('C' . $index . ':H' . $index);
-            $new_sheet->getStyle('C' . $index)
-                ->getFill()
-                ->setFillType(Fill::FILL_SOLID)
-                ->getStartColor()
-                ->setARGB('000000');
-            for ($j = 0; $j < $ref_highest_row; $j++) {
-                if ($a === (int)$ref_sheet->getCell('A' . $j + 1)->getValue()) {
-                    $ref_c = $ref_sheet->getCell('C' . $j + 1)->getValue();
-                    $ref_d = $ref_sheet->getCell('D' . $j + 1)->getValue();
-                    $ref_e = $ref_sheet->getCell('E' . $j + 1)->getValue();
-                    //echo $a . ' ' . $ref_c . ' ' . $ref_d . ' ' . $ref_e . '<br>';
-                    // $final_sheet->setCellValue('A' . $final_index, $a);
-                    // $final_sheet->setCellValue('L' . $final_index, $ref_c);
-                    // $final_sheet->setCellValue('M' . $final_index, $ref_d);
-                    // $final_sheet->setCellValue('N' . $final_index, $ref_e);
-                    // $final_index++;
-
-                    $ref_sheet_array[] = [$a, $ref_c, $ref_d, $ref_e];
-                    break;
-                }
-            }
-            $new = $a;
-            $acc_nums[$index] = $new;
-            $index++;
-            $count++;
-        } else {
-            if ((int)$a === 9000) {
-                continue;
-            }
-        }
-        $b = $sheet->getCell('B' . $i + 1)->getValue();
-        $g = $sheet->getCell('G' . $i + 1)->getValue();
-        if ($b === '' || $b === NULL || $g === 'No Class') {
+    for ($i = 7; $i < count($sheet1); $i++) {
+        if ((int)$sheet1[$i][0] === 9000) {
             continue;
         }
-        foreach (range('B', 'H') as $column) {
-            $new_sheet
-                ->getStyle($column . $index)
-                ->getBorders()
-                ->getOutline()
-                ->setBorderStyle(Border::BORDER_THICK)
-                ->setColor(new Color('FFD3D3D3'));
-        }
-        $new_sheet->setCellValue('B' . $index, $b);
-
-        $new_sheet->setCellValue('C' . $index, $g);
-
-        $l = $sheet->getCell('L' . $i + 1)->getValue();
-        $new_sheet->setCellValue('D' . $index, $l);
-
-
-        $m = (float)substr($sheet->getCell('M' . $i + 1)->getValue(), 0, strlen($sheet->getCell('M' . $i + 1)->getValue()));
-        if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
-            $class_of_mail_sums[$new] += $l;
-        }
-        $new_sheet->setCellValue('B' . $header_index, "Postage Pieces Charge: $" . $class_of_mail_sums[$new] * $postage_fee);
-        $new_sheet->setCellValue('E' . $index, "$" . $m);
-
-        $n = $sheet->getCell('N' . $i + 1)->getValue();
-        $new_sheet->setCellValue('F' . $index, "$" . $n);
-
-        $o = $sheet->getCell('O' . $i + 1)->getValue();
-        $new_sheet->setCellValue('G' . $index, "$" . $o);
-
-        $p = $sheet->getCell('P' . $i + 1)->getValue();
-        $new_sheet->setCellValue('H' . $index, "$" . $p);
-        $index++;
-        $count++;
-    }
-    try {
-        //$index = 4;
-        $sheet = $spreadsheet->setActiveSheetIndex(1);
-        $highest_row = $sheet->getHighestRow();
-
-        for ($i = 8; $i < $highest_row; $i++) {
-            $a = (int)substr(
-                $sheet->getCell('A' . $i + 1)->getValue(),
-                0,
-                strlen($sheet->getCell('A' . $i + 1)->getValue())
-            );
-
-
-
-            if ($new !== $a && ($a !== '' || $a !== null) && $a !== 0 && (int)$a !== 9000) {
-                $header_index += $count;
-                $count = 0;
-                $new_sheet->setCellValue('A' . $index, $a);
-                $new_sheet->getStyle('A' . $index)
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('000000');
-                $new_sheet->getStyle('A' . $index)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-
-                $new_sheet->getStyle('B' . $index)
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('000000');
-                $new_sheet->getStyle('B' . $index)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-
-                $new_sheet->mergeCells('C' . $index . ':H' . $index);
-                $new_sheet->getStyle('C' . $index)
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('000000');
-                for ($j = 0; $j < $ref_highest_row; $j++) {
-                    if ($a === (int)$ref_sheet->getCell('A' . $j + 1)->getValue()) {
-                        $ref_c = $ref_sheet->getCell('C' . $j + 1)->getValue();
-                        $ref_d = $ref_sheet->getCell('D' . $j + 1)->getValue();
-                        $ref_e = $ref_sheet->getCell('E' . $j + 1)->getValue();
-                        //echo $a . ' ' . $ref_c . ' ' . $ref_d . ' ' . $ref_e . '<br>';
-                        // $final_sheet->setCellValue('L' . $final_index, $ref_c);
-                        // $final_sheet->setCellValue('M' . $final_index, $ref_d);
-                        // $final_sheet->setCellValue('N' . $final_index, $ref_e);
-                        // $final_index++;
-
-                        $ref_sheet_array[] = [$a, $ref_c, $ref_d, $ref_e];
-                        break;
-                    }
+        if (!empty($sheet1[$i][0])) {
+            //$header_index += $count;
+            $account = trim((int) $sheet1[$i][0]);
+            $start = $i + 1;
+        } else {
+            if (!empty($account)) {
+                if (empty($postage_pieces[$account])) {
+                    $postage_pieces[$account] = 0.00;
                 }
-                $new = $a;
-                $acc_nums[$index] = $new;
-                $index++;
-                $count++;
-            } else {
-                if ((int)$a === 9000) {
+                if ($sheet1[$i][6] === 'No Class') {
                     continue;
                 }
+                $data_to_write[$account][] = [$sheet1[$i][1], $sheet1[$i][6], $sheet1[$i][11], $sheet1[$i][12], $sheet1[$i][13], $sheet1[$i][14], $sheet1[$i][15]];
+
+                $g = $sheet1[$i][6];
+                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
+                    $postage_pieces[$account] += ((float) $sheet1[$i][11] * $postage_fee);
+                }
             }
-            $b = $sheet->getCell('B' . $i + 1)->getValue();
-            $g = $sheet->getCell('G' . $i + 1)->getValue();
-            if ($b === '' || $b === NULL || $g === 'No Class') {
-                continue;
+        }
+    }
+    for ($i = 8; $i < count($sheet2); $i++) {
+        if ((int)$sheet2[$i][0] === 9000) {
+            continue;
+        }
+        if (!empty($sheet2[$i][0])) {
+            $account = trim((int) $sheet2[$i][0]);
+            $start = $i + 1;
+        } else {
+            if (!empty($account)) {
+                if (empty($postage_pieces[$account])) {
+                    $postage_pieces[$account] = 0.00;
+                }
+                if ($sheet2[$i][6] === 'No Class') {
+                    continue;
+                }
+                $data_to_write[$account][] = [$sheet2[$i][1], $sheet2[$i][6], $sheet2[$i][11], $sheet2[$i][12], $sheet2[$i][13], $sheet2[$i][14], $sheet2[$i][15]];
+
+                $g = $sheet2[$i][6];
+                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
+                    $postage_pieces[$account] += ((float) $sheet2[$i][11] * $postage_fee);
+                }
             }
-            foreach (range('B', 'H') as $column) {
-                $new_sheet
-                    ->getStyle($column . $index)
+        }
+    }
+    ksort($postage_pieces);
+    $keys = array_keys($postage_pieces);
+    $start_of_data = 4;
+    foreach ($keys as $index => $row) {
+        if (empty($data_to_write[$row])) {
+            continue;
+        }
+        $postage_sheet->setCellValue("A" . $start_of_data, $row);
+        $postage_sheet->setCellValue("B" . $start_of_data, $postage_pieces[$row]);
+        $postage_sheet->getStyle('A' . $start_of_data)
+            ->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setARGB('000000');
+        $postage_sheet->getStyle('A' . $start_of_data)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
+
+        $postage_sheet->getStyle('B' . $start_of_data)
+            ->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setARGB('000000');
+        $postage_sheet->getStyle('B' . $start_of_data)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
+        
+        $start_of_data++;
+
+        foreach ($data_to_write[$row] as $info) {
+            echo $info[0] . ' ' . $row . "<br>";
+            $postage_sheet->setCellValue("B" . $start_of_data, $info[0]);
+            foreach (range('A', 'H') as $column) {
+                $postage_sheet
+                    ->getStyle($column . $start_of_data)
                     ->getBorders()
                     ->getOutline()
                     ->setBorderStyle(Border::BORDER_THICK)
                     ->setColor(new Color('FFD3D3D3'));
             }
-            $new_sheet->setCellValue('B' . $index, $b);
+            $postage_sheet->setCellValue("C" . $start_of_data, $info[1]);
+            $postage_sheet->setCellValue("D" . $start_of_data, $info[2]);
+            $postage_sheet->setCellValue("E" . $start_of_data, $info[3]);
+            $postage_sheet->setCellValue("F" . $start_of_data, $info[4]);
+            $postage_sheet->setCellValue("G" . $start_of_data, $info[5]);
+            $postage_sheet->setCellValue("H" . $start_of_data, $info[6]);
+            $start_of_data++;
+        }
+    }
 
-            $new_sheet->setCellValue('C' . $index, $g);
-
-            $l = $sheet->getCell('L' . $i + 1)->getValue();
-            $new_sheet->setCellValue('D' . $index, $l);
-
-
-            $m = (float)substr($sheet->getCell('M' . $i + 1)->getValue(), 0, strlen($sheet->getCell('M' . $i + 1)->getValue()));
-            if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
-                $class_of_mail_sums[$new] += $l;
+    $ref_index = 2;
+    $last_index = count($postage_pieces) + 1;
+    $new_ref_sheet->setCellValue('A' . $last_index, 'Grand Total');
+    $new_ref_sheet->setCellValue('B' . $last_index, 0);
+    $new_ref_sheet->setCellValue('C' . $last_index, '-');
+    $new_ref_sheet->setCellValue('D' . $last_index, '-');
+    $new_ref_sheet->setCellValue('E' . $last_index, '-');
+    $new_ref_sheet->setCellValue('F' . $last_index, '-');
+    $new_ref_sheet->setCellValue('G' . $last_index, '-');
+    $new_ref_sheet->setCellValue('H' . $last_index, '-');
+    $new_ref_sheet->setCellValue('L' . $last_index, 'BK001');
+    $new_ref_sheet->setCellValue('N' . $last_index, '107800');
+    $new_ref_sheet->setCellValue('Q' . $last_index, 'C1060');
+    foreach (range('B', 'H') as $column) {
+        $postage_sheet
+            ->getStyle($column . $last_index)
+            ->getBorders()
+            ->getOutline()
+            ->setBorderStyle(Border::BORDER_THICK)
+            ->setColor(new Color('FFD3D3D3'));
+    }
+    $range   = "A1:H{$last_index}";
+    $new_ref_sheet->getStyle($range)->applyFromArray([
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+                'color'       => ['argb' => 'FF000000'], // ARGB (FF = opaque)
+            ],
+        ],
+    ]);
+    $range   = "K1:R{$last_index}";
+    $new_ref_sheet->getStyle($range)->applyFromArray([
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+                'color'       => ['argb' => 'FF000000'], // ARGB (FF = opaque)
+            ],
+        ],
+    ]);
+    foreach ($keys as $index => $key) {
+        if (empty($data_to_write[$key])) {
+            continue;
+        }
+        foreach ($ref_sheet1 as $ref) {
+            if ($ref[0] === $key) {
+                $new_ref_sheet->setCellValue('A' . $ref_index, $key);
+                $new_ref_sheet->setCellValue('L' . $ref_index, $ref[2]);
+                $new_ref_sheet->setCellValue('M' . $ref_index, $ref[3]);
+                $new_ref_sheet->setCellValue('N' . $ref_index, $ref[4]);
+                $ref_index++;
             }
-            $new_sheet->setCellValue('B' . $header_index, "Postage Pieces Charge: $" . $class_of_mail_sums[$new] * $postage_fee);
-            $new_sheet->setCellValue('E' . $index, "$" . $m);
-
-            $n = $sheet->getCell('N' . $i + 1)->getValue();
-            $new_sheet->setCellValue('F' . $index, "$" . $n);
-
-            $o = $sheet->getCell('O' . $i + 1)->getValue();
-            $new_sheet->setCellValue('G' . $index, "$" . $o);
-
-            $p = $sheet->getCell('P' . $i + 1)->getValue();
-            $new_sheet->setCellValue('H' . $index, "$" . $p);
-            $index++;
-            $count++;
         }
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    }
-}
-if (isset($_POST['submit'])) {
-    $sorted_array = bubbleSort($ref_sheet_array);
-    foreach (range('A', 'H') as $column) {
-        foreach (range(1, count($sorted_array) + 1) as $count) {
-            $final_sheet
-                ->getStyle($column . $count)
-                ->getBorders()
-                ->getOutline()
-                ->setBorderStyle(Border::BORDER_THIN)
-                ->setColor(new Color('000000'));
-        }
-    }
-    foreach (range('K', 'R') as $column) {
-        foreach (range(1, count($sorted_array) + 1) as $count) {
-            $final_sheet
-                ->getStyle($column . $count)
-                ->getBorders()
-                ->getOutline()
-                ->setBorderStyle(Border::BORDER_THIN)
-                ->setColor(new Color('000000'));
-        }
-    }
-    foreach ($sorted_array as $row) {
-        $final_sheet->setCellValue('A' . $final_index, $row[0]);
-        $final_sheet->setCellValue('L' . $final_index, $row[1]);
-        $final_sheet->setCellValue('M' . $final_index, $row[2]);
-        $final_sheet->setCellValue('N' . $final_index, $row[3]);
-        $final_index++;
-    }
-    $final_sheet->setCellValue('A' . $final_index, 'Grand Total');
-    $final_sheet->setCellValue('B' . $final_index, 0);
-    $final_sheet->setCellValue('C' . $final_index, '-');
-    $final_sheet->setCellValue('D' . $final_index, '-');
-    $final_sheet->setCellValue('E' . $final_index, '-');
-    $final_sheet->setCellValue('F' . $final_index, '-');
-    $final_sheet->setCellValue('G' . $final_index, '-');
-    $final_sheet->setCellValue('H' . $final_index, '-');
-    $final_sheet->setCellValue('L' . $final_index, 'BK001');
-    $final_sheet->setCellValue('N' . $final_index, '107800');
-    $final_sheet->setCellValue('Q' . $final_index, 'C1060');
-
-
-    foreach (range('A', 'H') as $column) {
-        $final_sheet
-            ->getStyle($column . $final_index)
-            ->getBorders()
-            ->getOutline()
-            ->setBorderStyle(Border::BORDER_THIN)
-            ->setColor(new Color('000000'));
-        $final_sheet->getStyle($column . $final_index)
-            ->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->getStartColor()
-            ->setARGB('FFD3D3D3');
-        $final_sheet->getStyle($column . $final_index)->getFont()->setBold(true);
-    }
-    foreach (range('K', 'R') as $column) {
-        $final_sheet
-            ->getStyle($column . $final_index)
-            ->getBorders()
-            ->getOutline()
-            ->setBorderStyle(Border::BORDER_THIN)
-            ->setColor(new Color('000000'));
-        $final_sheet->getStyle($column . $final_index)
-            ->getFill()
-            ->setFillType(Fill::FILL_SOLID)
-            ->getStartColor()
-            ->setARGB('FFD3D3D3');
-    }
-
-    if (headers_sent($file, $line)) {
-        echo ("Headers already sent in $file on line $line — this will corrupt XLSX output.");
     }
     $last_month = date('M-Y', strtotime("-1 Month"));
     $t1 = tempnam(sys_get_temp_dir(), 'rpt1_');
     $t2 = tempnam(sys_get_temp_dir(), 'rpt2_');
+
     $w1 = new Xlsx($create_sheet);
     $w1->setPreCalculateFormulas(false);
     $w1->save($t1);
+    $create_sheet->disconnectWorksheets();
+    unset($w1, $create_sheet);
 
     $w2 = new Xlsx($final_spread_sheet);
     $w2->setPreCalculateFormulas(false);
     $w2->save($t2);
+    $final_spread_sheet->disconnectWorksheets();
+    unset($w2, $final_spread_sheet);
 
     $zip_path = tempnam(sys_get_temp_dir(), 'zip_');
     $zip = new ZipArchive();
-    $zip->open($zip_path, ZipArchive::OVERWRITE);
-    $last_month = date('M-Y', strtotime('-1 month'));
-    $zip->addFile($t1, "Transaction Detail Report $last_month.xlsx");
-    $zip->addFile($t2, "Postage Report $last_month.xlsx");
-    $zip->close();
+    $opened = $zip->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+    if ($opened !== true) {
+        http_response_code(500);
+        die('Zip open failed: ' . $opened);
+    }
 
-    // Stream the zip
-    $zip_name = "Reports_$last_month.zip";
+
+    if (!$zip->addFile($t1, "Transaction Detail Report {$last_month}.xlsx")) {
+        http_response_code(500);
+        die('Failed to add t1');
+    }
+    if (!$zip->addFile($t2, "Postage Report {$last_month}.xlsx")) {
+        http_response_code(500);
+        die('Failed to add t2');
+    }
+    if (!$zip->close()) {
+        http_response_code(500);
+        die('Zip close failed');
+    }
+
+    // 3) stream it cleanly
+    $size = filesize($zip_path);
+    if (!$size) {
+        http_response_code(500);
+        die('Empty zip');
+    }
+
+    // kill any prior output/buffers and disable compression
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    ini_set('zlib.output_compression', 'Off');
+
+    // headers
+    $zip_name = "Reports_{$last_month}.zip";
     header('Content-Type: application/zip');
+    header('Content-Transfer-Encoding: binary');
     header('Content-Disposition: attachment; filename="' . $zip_name . '"');
-    header('Content-Length: ' . filesize($zip_path));
+    header('Content-Length: ' . $size);
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('Pragma: public');
-    readfile($zip_path);
 
-    // Clean up
+    // stream
+    $fp = fopen($zip_path, 'rb');
+    fpassthru($fp);
+    fclose($fp);
+
+    // cleanup
     @unlink($t1);
     @unlink($t2);
     @unlink($zip_path);
     exit;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -467,7 +365,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mona's Excel Insert</title>
-    <?php include_once "../navbar.php"; ?>
+    <?php include_once "navbar.php"; ?>
 </head>
 <style>
     * {
@@ -489,7 +387,7 @@ if (isset($_POST['submit'])) {
 
 <body class="mona-report">
     <div class="form">
-        <form action="monas-report.php" enctype="multipart/form-data" method="POST">
+        <form action="new-monas-report.php" enctype="multipart/form-data" method="POST">
             <label for="file">Upload Scanner Report</label><br>
             <input type="file" name="file" id="file_name" accept=".xlsx, .xls" required><br>
             <label for="ref-file">Upload Reference File</label><br>
