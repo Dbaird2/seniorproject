@@ -123,9 +123,13 @@ try {
             echo "<br>Tag " . $data['data']['RxpLOF3XrE'];
             $dept_id = $data['data']['5c3qSm88bs'];
             $room_loc = $data['data']['6JHs3W0-CL'];
+            $dept_id = substr($dept_id, 0, 6);
+            if (preg_match('/^D/', $dept_id)) {
+                echo "<br>Dept Id Format Good<br>";
+            }
             if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
-                echo "<br>" . $bldg_id . "<br>";
+                echo "<br>Bldg Id " . $bldg_id . "<br>";
             }
             try {
                 if (!empty($data['data']['SBu1DONXk2'])) {
