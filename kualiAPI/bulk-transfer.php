@@ -3,10 +3,10 @@ include_once "../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT check_out_time, kuali_key FROM kuali_table";
+$select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['check_out_time'] ?? 0;
+$raw_ms = (int)$result['bulk_transfer_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
 $apikey = $result['kuali_key'];
