@@ -235,17 +235,17 @@ if (isset($_POST['submit'])) {
 
     $ref_index = 2;
     $last_index = count($postage_pieces) + 1;
-    $new_ref_sheet->setCellValue('A' . $last_index, 'Grand Total');
-    $new_ref_sheet->setCellValue('B' . $last_index, 0);
-    $new_ref_sheet->setCellValue('C' . $last_index, '-');
-    $new_ref_sheet->setCellValue('D' . $last_index, '-');
-    $new_ref_sheet->setCellValue('E' . $last_index, '-');
-    $new_ref_sheet->setCellValue('F' . $last_index, '-');
-    $new_ref_sheet->setCellValue('G' . $last_index, '-');
-    $new_ref_sheet->setCellValue('H' . $last_index, '-');
-    $new_ref_sheet->setCellValue('L' . $last_index, 'BK001');
-    $new_ref_sheet->setCellValue('N' . $last_index, '107800');
-    $new_ref_sheet->setCellValue('Q' . $last_index, 'C1060');
+    $new_ref_sheet->setCellValue('A' . $last_index+1, 'Grand Total');
+    $new_ref_sheet->setCellValue('B' . $last_index+1, 0);
+    $new_ref_sheet->setCellValue('C' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('D' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('E' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('F' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('G' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('H' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('L' . $last_index+1, 'BK001');
+    $new_ref_sheet->setCellValue('N' . $last_index+1, '107800');
+    $new_ref_sheet->setCellValue('Q' . $last_index+1, 'C1060');
     foreach (range('B', 'H') as $column) {
         $postage_sheet
             ->getStyle($column . $last_index)
