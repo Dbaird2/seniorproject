@@ -39,7 +39,7 @@ try {
         $check_stmt = $dbh->prepare($check_recent_audits);
 
         if (isset($_SESSION['info'][5])) {
-            $id = $_SESSION['info'][5];
+            $id = (int)$_SESSION['info'][5];
         } else {
             if ($audit_id === 1) {
                 $id = $id_results['curr_self_id'];

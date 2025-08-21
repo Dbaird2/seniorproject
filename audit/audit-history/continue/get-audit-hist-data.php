@@ -16,7 +16,7 @@ if (isset($_POST)) {
         6 => 'omgmt',
         7 => 'SPA',
         8 => 'SPA',
-        9 => 'o-SPA'
+        9 => 'oSPA'
     };
     try {
         $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";

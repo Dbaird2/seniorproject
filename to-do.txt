@@ -5,6 +5,8 @@ add delete features for assets/user (bldg-department done)
 
 put in tickets via botman conversation
 
+fix updating continue audit updating
+
 
             KUALI TO DO
 make editing of asset in Ajax.php
