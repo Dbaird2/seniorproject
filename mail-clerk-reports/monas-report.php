@@ -282,6 +282,16 @@ if (isset($_POST['submit'])) {
                 $new_ref_sheet->setCellValue('L' . $ref_index, $ref[2]);
                 $new_ref_sheet->setCellValue('M' . $ref_index, $ref[3]);
                 $new_ref_sheet->setCellValue('N' . $ref_index, $ref[4]);
+                if (!empty($ref[5]) {
+                    $new_ref_sheet->setCellValue('O' . $ref_index, $ref[5]);
+                }
+                if (!empty($ref[6]) {
+                    $new_ref_sheet->setCellValue('P' . $ref_index, $ref[6]);
+                }
+                if (!empty($ref[7]) {
+                    $new_ref_sheet->setCellValue('Q' . $ref_index, $ref[7]);
+                }
+
                 $ref_index++;
             }
         }
