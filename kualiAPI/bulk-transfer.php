@@ -113,6 +113,10 @@ try {
     foreach ($edges as $index => $edge) {
         $update_time = $edge['node']['meta']['createdAt'];
 
+        if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
+            echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
+            continue;
+        }
         $tags = $edge['node']['data']['JZ-q3J19dw']['data'];
         foreach ($tags as $index => $data) {
             $tag = $data['data']['RxpLOF3XrE'];
@@ -175,6 +179,10 @@ try {
             $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+
+            $update_kuali_time = "UPDATE kuali_table SET bulk_transfer_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali_time);
+            $update_stmt->execute([":time"=>$update_time]);
         }
 
 

@@ -342,7 +342,7 @@ foreach ($result as $row) {
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_asset_info.php" method="post">
+                                <form action="change_dept_info.php" method="post">
 <input type="hidden" id="old_dept" name="old_dept">
 <input type="hidden" id="old_name" name="old_name">
 <input type="hidden" id="old_cust" name="old_cust">
@@ -363,7 +363,7 @@ foreach ($result as $row) {
                                     <label for="location">Manager:</label>
                                     <input type="text" id="manager" name="manager" value="<?= $manager ?>">
                                     <br>
-                                    <button type="submit">Update Room</button>
+                                    <button type="submit" name="dept">Update Room</button>
                                 </form>
                             </div>
                             <div class="modal-footer">

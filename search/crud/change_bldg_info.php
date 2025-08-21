@@ -8,16 +8,18 @@ if (isset($_POST['submit'])) {
     $old_loc =trim($_POST['old_room_loc']);
     $old_tag =trim($_POST['old_room_tag']);
 
-    $new_id = (int)trim($_POST['']);
-    $new_name =trim($_POST['']);
-    $new_loc =trim($_POST['']);
-    $new_tag =trim($_POST['']);
+    $new_id = (int)trim($_POST['bldg_id']);
+    $new_name =trim($_POST['name']);
+    $new_loc =trim($_POST['room_loc']);
+    $new_tag =trim($_POST['room_tag']);
 
     try {
         $set_array = [];
         $bldg_params = [":old_name"=>$old_name];
         $bldg_params[":old_id"]= $old_id;
+        $bldg_id_change = false;
         if ($new_id !== '' && $new_id !== $old_id) {
+            $bldg_id_change = true;
             $set_array[] = "bldg_id = :bldg_id";
             $bldg_params[":bldg_id"] = $new_id;
         }
@@ -61,6 +63,11 @@ if (isset($_POST['submit'])) {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute($params);
             }
+        }
+        if ($bldg_id_change === true) {
+            $update_rooms = "UPDATE room_table set bldg_id = :bldg_id WHERE bldg_id = :old_bldg_id";
+            $update_stmt = $dbh->prepare($update_rooms);
+            $update_stmt->execute([':bldg_id'=>$bldg_id, ":old_bldg_id"=>$old_bldg_id]);
         }
     } catch (PDOException $e) {
         error_log("Error " . $e->getMessage());

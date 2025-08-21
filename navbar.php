@@ -44,6 +44,8 @@
     <a href="https://dataworks-7b7x.onrender.com/add/add-dept.php" class="dropdown-element">Department</a>
     <a href="https://dataworks-7b7x.onrender.com/add/add-bldg.php" class="dropdown-element">Building/Rooms</a>
 </span>
+</span>
+<?php } ?>
   <span class="dropdown2">
   <a  href="#">Inventory<svg width="13" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -53,7 +55,6 @@
   <a href="https://dataworks-7b7x.onrender.com/asset-manager/asset-ui.php" class="dropdown-element">Track Assets</a>
 </span>
 </span>
-<?php } ?>
 <h4 class="">Management</h4>
 <a href="https://dataworks-7b7x.onrender.com/auth/settings/settings.php">Settings</a>
 <a href="https://dataworks-7b7x.onrender.com/auth/logout.php">Logout</a>

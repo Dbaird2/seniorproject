@@ -7,17 +7,19 @@ put in tickets via botman conversation
 
 
             KUALI TO DO
-make editing of dept,asset in Ajax.php
+make editing of asset in Ajax.php
 
-update location from PROPERTY TRANSFER FORM & BULK TRANSFER FORM
+update location from PROPERTY TRANSFER FORM
 
-update endpoint for forms
+update endpoint for forms in search.php
 
            ML SUPPORT
 ML python/php
 
 
             NEEDS TESTING
+update location from BULK TRANSFER FORM
+
 dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
 
 get EQUIPMENT CHECKOUT / RETURN FORM data for auditing and display in when
@@ -29,4 +31,5 @@ fix audit insert to not make dupes
 
 update room addition form for room tag 
 
-make editing of users,bldg in Ajax.php
+edit of users,bldg,dept in Ajax.php
+

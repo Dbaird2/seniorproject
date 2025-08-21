@@ -10,10 +10,10 @@ if (isset($_POST)) {
     $audit_type = match ($audit_id) {
         1 => 'cust',
         2 => 'cust',
-        3 => '0-cust',
+        3 => 'ocust',
         4 => 'mgmt',
         5 => 'mgmt',
-        6 => 'o-mgmt',
+        6 => 'omgmt',
         7 => 'SPA',
         8 => 'SPA',
         9 => 'o-SPA'
