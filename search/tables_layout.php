@@ -256,7 +256,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                     <label for="location">Room Tag:</label>
                                     <input type="text" id="room_tag" name="room_tag" value="<?= $room_tag ?>">
                                     <br>
-                                    <button type="submit">Update Room</button>
+                                    <button type="submit" name="bldg">Update Room</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -483,7 +483,7 @@ foreach ($result as $row) {
                                         <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept_row ?>">
                                         <br>
                                     <?php } ?>
-                                    <button type="submit" name="submit">Update User</button>
+                                    <button type="submit" name="user">Update User</button>
                                 </form>
                             </div>
                             <div class="modal-footer">

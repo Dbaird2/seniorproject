@@ -2,7 +2,7 @@
 include_once "../../config.php";
 check_auth("high");
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['bldg'])) {
     $old_id =(int)trim($_POST['old_bldg_id']);
     $old_name =trim($_POST['old_name']);
     $old_loc =trim($_POST['old_room_loc']);

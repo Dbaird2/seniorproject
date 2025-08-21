@@ -1,7 +1,7 @@
 <?php
 include_once "../../config.php";
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['user'])) {
     $new_dept = trim($_POST['dept_ids']);
     $new_role = trim($_POST['role']);
     $old_dept = trim($_POST['old_dept']);
