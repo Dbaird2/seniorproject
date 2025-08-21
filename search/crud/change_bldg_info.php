@@ -67,7 +67,7 @@ if (isset($_POST['bldg'])) {
         if ($bldg_id_change === true) {
             $update_rooms = "UPDATE room_table set bldg_id = :bldg_id WHERE bldg_id = :old_bldg_id";
             $update_stmt = $dbh->prepare($update_rooms);
-            $update_stmt->execute([':bldg_id'=>$bldg_id, ":old_bldg_id"=>$old_bldg_id]);
+            $update_stmt->execute([':bldg_id'=>$new_id, ":old_bldg_id"=>$old_id]);
         }
     } catch (PDOException $e) {
         error_log("Error " . $e->getMessage());
