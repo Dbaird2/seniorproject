@@ -55,7 +55,7 @@ if (isset($_POST['bldg'])) {
         }
         if (!empty($set_array)) {
             $set_room = implode(', ', $set_array);
-            $select_q = "SELECT room_loc, room_tag  FROM bldg_table WHERE room_tag = :new_tag";
+            $select_q = "SELECT room_loc, room_tag  FROM room_table WHERE room_tag = :new_tag";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":new_tag"=>$new_tag]);
             if ($select_stmt->rowCount() <= 0) {
