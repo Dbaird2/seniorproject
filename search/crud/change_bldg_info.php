@@ -3,15 +3,15 @@ include_once "../../config.php";
 check_auth("high");
 
 if (isset($_POST['bldg'])) {
-    $old_id =(int)trim($_POST['old_bldg_id']);
-    $old_name =trim($_POST['old_name']);
-    $old_loc =trim($_POST['old_room_loc']);
-    $old_tag =trim($_POST['old_room_tag']);
+    $old_id = (int)trim($_POST['old_bldg_id']);
+    $old_name = trim($_POST['old_name']);
+    $old_loc = trim($_POST['old_room_loc']);
+    $old_tag = (int)trim($_POST['old_room_tag']);
 
     $new_id = (int)trim($_POST['bldg_id']);
-    $new_name =trim($_POST['name']);
-    $new_loc =trim($_POST['room_loc']);
-    $new_tag =trim($_POST['room_tag']);
+    $new_name = trim($_POST['name']);
+    $new_loc = trim($_POST['room_loc']);
+    $new_tag = (int)trim($_POST['room_tag']);
 
     try {
         if ($old_id !== $new_id && !empty($new_id)) {
@@ -29,9 +29,9 @@ if (isset($_POST['bldg'])) {
             $bldg_stmt->execute([":new_bldg"=>$new_name, ":old_bldg"=>$old_name]);
         }
         if ($old_loc !== $new_loc && !empty($new_loc)) {
-            $update_room = "UPDATE room_table SET room_loc = :new_loc WHERE room_loc = :old_loc";
+            $update_room = "UPDATE room_table SET room_loc = :new_loc WHERE room_loc = :old_loc AND room_tag = :old_tag";
             $room_stmt = $dbh->prepare($update_room);
-            $room_stmt->execute([":new_loc"=>$new_loc, ":old_loc"=>$old_loc]);
+            $room_stmt->execute([":new_loc"=>$new_loc, ":old_loc"=>$old_loc, ":old_tag"=>$old_tag]);
         }
         if ($old_tag !== $new_tag && !empty($new_tag)) {
             $update_room = "UPDATE room_table SET room_tag = :new_tag WHERE room_tag = :old_tag";

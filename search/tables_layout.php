@@ -239,10 +239,10 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                             </div>
                             <div class="modal-body">
                                 <form action="crud/change_bldg_info.php" method="post">
-<input type="hidden" id="old_bldg_id" name="old_bldg_id">
-<input type="hidden" id="old_name" name="old_name">
-<input type="hidden" id="old_room_loc" name="old_room_loc">
-<input type="hidden" id="old_room_tag" name="old_room_tag">
+                                <input type="hidden" id="old_bldg_id" name="old_bldg_id" value="<?= $bldg_id ?>">
+                                <input type="hidden" id="old_name" name="old_name" value="<?= $bldg_name ?>">
+                                <input type="hidden" id="old_room_loc" name="old_room_loc" value="<?= $room_num ?>">
+                                <input type="hidden" id="old_room_tag" name="old_room_tag" value="<?= $room_tag?>">
                                     <label for="asset_tag">Building ID:</label>
                                     <input type="number" id="bldg_id" name="bldg_id" value="<?= $bldg_id ?>">
                                     <br>
