@@ -31,7 +31,7 @@ if (isset($_POST['bldg'])) {
             $set_bldg = implode(', ', $set_array);
             $select_q = "SELECT bldg_id, bldg_name  FROM bldg_table WHERE bldg_id = :bldg_id OR bldg_name = :bldg_name";
             $select_stmt = $dbh->prepare($select_q);
-            $select_stmt->execute([":bldg_id"=>$new_name, ":bldg_name"=>$bldg_name]);
+            $select_stmt->execute([":bldg_id"=>$old_id, ":bldg_name"=>$new_name]);
             if ($select_stmt->rowCount() <= 0) {
                 $update_q = "UPDATE bldg_table SET " . $set_bldg . ' WHERE bldg_id = :old_id OR bldg_name = :old_name';
                 $update_stmt = $dbh->prepare($update_q);
