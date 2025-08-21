@@ -116,7 +116,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_asset_info.php" method="post">
+                                <form action="crud/change_asset_info.php" method="post">
 <input type="hidden" id="old_tag" name="old_tag">
 <input type="hidden" id="old_name" name="old_name">
 <input type="hidden" id="old_dept" name="old_dept">
@@ -238,7 +238,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_bldg_info.php" method="post">
+                                <form action="crud/change_bldg_info.php" method="post">
 <input type="hidden" id="old_bldg_id" name="old_bldg_id">
 <input type="hidden" id="old_name" name="old_name">
 <input type="hidden" id="old_room_loc" name="old_room_loc">
@@ -342,7 +342,7 @@ foreach ($result as $row) {
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_dept_info.php" method="post">
+                                <form action="crud/change_dept_info.php" method="post">
 <input type="hidden" id="old_dept" name="old_dept">
 <input type="hidden" id="old_name" name="old_name">
 <input type="hidden" id="old_cust" name="old_cust">
@@ -450,7 +450,7 @@ foreach ($result as $row) {
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="change_user_info.php" method="post">
+                                <form action="crud/change_user_info.php" method="post">
                                     <input type="hidden" id="old_dept" name="old_dept" value=<?= $dept ?>>
                                     <label for="asset_tag">Username:</label>
                                     <input type="text" id="username" name="username" value="<?= $username ?>" readonly>
