@@ -50,7 +50,7 @@ if (isset($_POST['bldg'])) {
             $room_params[":new_loc"] = $new_loc;
         }
         if ($new_tag !== '' && $new_tag !== $old_tag) {
-            $set_array[] = "new_tag = :new_tag";
+            $set_array[] = "room_tag = :new_tag";
             $room_params[":new_tag"] = $new_tag;
         }
         if (!empty($set_array)) {
@@ -61,7 +61,7 @@ if (isset($_POST['bldg'])) {
             if ($select_stmt->rowCount() <= 0) {
                 $update_q = "UPDATE room_table SET " . $set_room . ' WHERE room_tag = :old_tag';
                 $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute($params);
+                $update_stmt->execute($room_params);
             }
         }
         if ($bldg_id_change === true) {
