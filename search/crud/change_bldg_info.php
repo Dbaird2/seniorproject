@@ -29,11 +29,11 @@ if (isset($_POST['bldg'])) {
         }
         if (!empty($set_array)) {
             $set_bldg = implode(', ', $set_array);
-            $select_q = "SELECT bldg_id, bldg_name  FROM bldg_table WHERE bldg_id = :bldg_id OR bldg_name = :bldg_name";
+            $select_q = "SELECT bldg_id, bldg_name  FROM bldg_table WHERE bldg_id = :bldg_id AND bldg_name = :bldg_name";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":bldg_id"=>$old_id, ":bldg_name"=>$new_name]);
-            if ($select_stmt->rowCount() <= 0) {
-                $update_q = "UPDATE bldg_table SET " . $set_bldg . ' WHERE bldg_id = :old_id OR bldg_name = :old_name';
+            if ($select_stmt->rowCount() > 0) {
+                $update_q = "UPDATE bldg_table SET " . $set_bldg . ' WHERE bldg_id = :old_id AND bldg_name = :old_name';
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute($params);
             }
@@ -45,20 +45,20 @@ if (isset($_POST['bldg'])) {
     try {
         $set_array = [];
         $room_params = [":old_tag"=>$old_tag];
-        if ($new_loc !== '' && $new_loc !== $old_loc) {
+        if (!empty($new_loc) && $new_loc !== $old_loc) {
             $set_array[] = "room_loc = :new_loc";
             $room_params[":new_loc"] = $new_loc;
         }
-        if ($new_tag !== '' && $new_tag !== $old_tag) {
+        if (!empty($new_tag) && $new_tag !== $old_tag) {
             $set_array[] = "room_tag = :new_tag";
             $room_params[":new_tag"] = $new_tag;
         }
         if (!empty($set_array)) {
             $set_room = implode(', ', $set_array);
-            $select_q = "SELECT room_loc, room_tag  FROM room_table WHERE room_tag = :new_tag";
+            $select_q = "SELECT room_loc, room_tag FROM room_table WHERE room_tag = :new_tag";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":new_tag"=>$new_tag]);
-            if ($select_stmt->rowCount() <= 0) {
+            if ($select_stmt->rowCount() > 0) {
                 $update_q = "UPDATE room_table SET " . $set_room . ' WHERE room_tag = :old_tag';
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute($room_params);
