@@ -25,7 +25,11 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $highest_row = (int)$_SESSION['info'][0];
-$keys = array_keys($_SESSION['data'][1]);
+$key_index = -1;
+while (!isset($_SESSION['data'][$key_index]) {
+    $key_index++;
+}
+$keys = array_keys($_SESSION['data'][$key_index]);
 
 $file_path = $_SESSION['info'][2];
 $file_name = $_SESSION['info'][4];
