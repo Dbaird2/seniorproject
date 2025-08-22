@@ -158,6 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
       } else {
         $blank_msg = "File cannot be empty 1";
+        echo "<pre>";
+        var_dump($_SESSION['data']);
+        echo "</pre>";
       }
     } else {
       unset($_SESSION['data']);
