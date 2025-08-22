@@ -18,6 +18,11 @@ try {
     while (!preg_match('/^D\d+/', $dept, $matches)) {
         $dept = $_SESSION['data'][$index]["Dept"];
     }
+    if (empty($dept)) {
+        echo json_encode(['status' => 'failure', "Message" => 'Fail on dept ID grabbing']);
+        exit;
+    }
+
 
     $audit_id = match ($audit_type) {
         'cust' => 1,

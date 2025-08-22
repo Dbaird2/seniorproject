@@ -26,8 +26,17 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $highest_row = (int)$_SESSION['info'][0];
 $key_index = -1;
+$key_found = true;
 while (!isset($_SESSION['data'][$key_index])) {
     $key_index++;
+    if ($key_index >= 50) {
+        $key_found = false;
+        break;
+    }
+}
+if ($key_found === false) {
+    header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?error=key_fail");
+    exit;
 }
 $keys = array_keys($_SESSION['data'][$key_index]);
 
