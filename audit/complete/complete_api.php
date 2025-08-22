@@ -7,7 +7,7 @@ try {
     header("Access-Control-Allow-Headers: Content-Type");
     require_once "../../config.php";
 
-    check_auth('high');
+    check_auth();
 
     $result = json_decode(file_get_contents("php://input"), true);
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
@@ -15,7 +15,7 @@ try {
     $audit_type = $_SESSION['info'][3];
     $index = 0;
     $dept = '';
-    while (!(preg_match('/^D\d+/', $dept, $matches)) {
+    while (!preg_match('/^D\d+/', $dept, $matches)) {
         $dept = $_SESSION['data'][$index]["Dept"];
     }
 
