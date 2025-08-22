@@ -13,9 +13,8 @@ try {
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
-    $dept = $_SESSION['data'][0]["Dept"];
-    $index = 1;
-    while ($dept === '' || $dept === NULL) {
+    $index = 0;
+    while (!(preg_match('/^D\d+/', $dept, $matches, PREG_UNMATCH_AS_NULL)) {
         $dept = $_SESSION['data'][$index]["Dept"];
     }
 
