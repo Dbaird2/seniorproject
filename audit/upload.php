@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
     if (count($data) >= 2) {
       $header_index = 0;
-      if (empty($data[0][5]) {
+      if (empty($data[0][5])) {
         $header_index = 1;
         unset($data[0]);
       }
