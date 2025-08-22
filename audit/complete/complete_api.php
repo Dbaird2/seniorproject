@@ -14,7 +14,8 @@ try {
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
     $index = 0;
-    while (!(preg_match('/^D\d+/', $dept, $matches, PREG_UNMATCH_AS_NULL)) {
+    $dept = '';
+    while (!(preg_match('/^D\d+/', $dept, $matches)) {
         $dept = $_SESSION['data'][$index]["Dept"];
     }
 
