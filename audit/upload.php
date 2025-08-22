@@ -149,7 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
       $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name];
       if (isset($_SESSION['data'][-1]) || isset($_SESSION['data'][0])) {
-        $keys = array_keys($_SESSION['data'][1]);
+          try {
+              $keys = array_keys($_SESSION['data'][-1]);
+          } catch (Exception $e) {
+              $keys = array_keys($_SESSION['data'][0];
+          }
         if (!in_array("Tag Number", $keys)) {
           $blank_msg = "Headers cannot be found";
         } else {
