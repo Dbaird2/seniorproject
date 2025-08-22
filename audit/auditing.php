@@ -26,7 +26,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $highest_row = (int)$_SESSION['info'][0];
 $key_index = -1;
-while (!isset($_SESSION['data'][$key_index]) {
+while (!isset($_SESSION['data'][$key_index])) {
     $key_index++;
 }
 $keys = array_keys($_SESSION['data'][$key_index]);
