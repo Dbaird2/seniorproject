@@ -402,7 +402,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
             <div class="audit-type-card self">
 
                 <div class="audit-type-header">
-                    <div class="audit-type-title">Self Audits</div>
+                    <div class="audit-type-title">Previous Self Audits</div>
                     <div class="audit-badge self">Self Assessment</div>
                 </div>
                 <div class="completion-bar">
@@ -427,7 +427,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
             <div class="audit-type-card mgmt">
 
                 <div class="audit-type-header">
-                    <div class="audit-type-title">Management Audits</div>
+                    <div class="audit-type-title">Previous Management Audits</div>
                     <div class="audit-badge mgmt">Management</div>
                 </div>
                 <div class="completion-bar">

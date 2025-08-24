@@ -5,7 +5,7 @@ add delete features for assets/user (bldg-department done)
 
 put in tickets via botman conversation
 
-fix updating continue audit updating
+fix updating continue audit
 
 
             KUALI TO DO

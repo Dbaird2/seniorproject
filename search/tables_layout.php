@@ -436,7 +436,8 @@ foreach ($result as $row) {
         $f_name = htmlspecialchars($row['f_name'] ?? '', ENT_QUOTES);
         $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
         $dept = trim($row['dept_id'], '{}');
-        $dept = explode(',', $dept);
+        $dept2 = explode(',', $dept);
+        $dept = str_replace('"', '' ,$row['dept_id']);
 
 ?>
                 <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
@@ -451,22 +452,26 @@ foreach ($result as $row) {
                             </div>
                             <div class="modal-body">
                                 <form action="crud/change_user_info.php" method="post">
-                                    <input type="hidden" id="old_dept" name="old_dept" value=<?= $dept ?>>
+
+                                    <?php foreach ($dept2 as $index=>$dept_row) { ?>
+                                    <input type="hidden" id="old_dept" name="old_dept[]" value=<?= $dept_row ?>>
+<?php } ?>
                                     <label for="asset_tag">Username:</label>
                                     <input type="text" id="username" name="username" value="<?= $username ?>" readonly>
                                     <br>
                                     <label for="name">Email:</label>
-                                    <input type="text" id="email" name="email" value="<?= $email ?>"readonly>
+                                    <input type="text" id="email" name="email" value="<?= $email ?>">
                                     <br>
 
                                     <label for="room_loc">User Role:</label>
                                     <input type="text" id="old_role" name="old_role" value="<?= $u_role ?>" readonly>
 <br>
+                                    <label for="room_loc">Change Role to:</label>
                                     <select id="role" name="role">
                                         <option value="management">Management</option>
                                         <option value="admin">Admin</option>
-                                        <option value="user">user</option>
-                                        <option value="custodian" selected>Custodian</option>
+                                        <option value="user" selected>User</option>
+                                        <option value="custodian">Custodian</option>
 </select>
                                     <br>
                                     <label for="location">Last Login:</label>
@@ -478,11 +483,9 @@ foreach ($result as $row) {
                                     <label for="location">Last Name:</label>
                                     <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
-                                    <?php foreach ($dept as $index=>$dept_row) { ?>
-                                        <label for="location">Department ID:</label>
-                                        <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept_row ?>">
-                                        <br>
-                                    <?php } ?>
+                                    <label for="location">Department ID:</label>
+                                    <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept_row ?>">
+                                    <br>
                                     <button type="submit" name="user">Update User</button>
                                 </form>
                             </div>
