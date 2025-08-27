@@ -375,6 +375,42 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
 <?php } ?>
                 </div>
             </div>
+<?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
+<div class="ticket-box">
+        <div class="app" aria-label="Recent tickets">
+            <header>
+                <div class="title"><span class="dot" aria-hidden="true"></span> Recent Tickets</div>
+                <div class="controls">
+                    <input id="search" type="search" placeholder="Search subject/text/email" aria-label="Search tickets" />
+                    <select id="status" aria-label="Filter by status">
+                        <option value="">All statuses</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Incomplete">Incomplete</option>
+                    </select>
+                    <select id="type" aria-label="Filter by type">
+                        <option value="">All types</option>
+                        <option>Asset</option>
+                        <option>Department</option>
+                        <option>Building</option>
+                        <option>Room</option>
+                        <option>Other</option>
+                    </select>
+                    <button id="refresh">Refresh</button>
+                </div>
+            </header>
+
+            <section class="feed" aria-live="polite">
+                <div id="list" class="scroll"></div>
+                <div class="footer">
+                    <div><span id="count">0</span> tickets · auto-updates</div>
+                    <div>
+                        <button id="loadMore">Load older</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+<?php } ?>
         </div>
         <!-- Audit Overdue Type Overview -->
         <div class="audit-overview">
@@ -637,6 +673,214 @@ function switchChart(type) {
                 chart.draw(data, options);
             }
         </script>
+<script>
+        // ===== Configuration =====
+        const API_URL = '/api/tickets.php'; // Adjust to your backend endpoint
+
+        // ===== Utilities =====
+        const el = (sel) => document.querySelector(sel);
+        const fmtTime = (iso) => new Date(iso).toLocaleString();
+        const initials = (email) => (email?.[0] || '?').toUpperCase();
+
+        // ===== Render =====
+        function ticketBadge(status) {
+            if (!status) return '';
+            const cls = status.toLowerCase() === 'complete' ? 'success' : 'warn';
+            return `<span class="badge ${cls}">${status}</span>`;
+        }
+
+        function typeBadge(type) {
+            return type ? `<span class="badge">${type}</span>` : '';
+        }
+
+        function ticketItem(t) {
+            return `
+        <article class="ticket" data-id="${t.id}">
+          <div class="row">
+            <div class="who">
+              <div class="avatar" title="${t.email}">${initials(t.email)}</div>
+              <div>
+                <div>${t.email || 'unknown@local'}</div>
+                <div class="when" title="${t.date_added}">${fmtTime(t.date_added)}</div>
+              </div>
+            </div>
+            <div class="badges">
+              ${typeBadge(t.ticket_type || t.type)}
+              ${ticketBadge(t.ticket_status)}
+            </div>
+          </div>
+          <div class="info">${escapeHtml(t.info || '')}</div>
+        </article>`;
+        }
+
+        function render(list) {
+            const wrap = el('#list');
+            if (!list.length) {
+                wrap.innerHTML = `<div class="empty">No tickets yet.</div>`;
+                el('#count').textContent = '0';
+                return;
+            }
+            wrap.innerHTML = list.map(ticketItem).join('');
+            el('#count').textContent = list.length;
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // ===== Data fetching =====
+        async function fetchTickets({
+            q = '',
+            status = '',
+            type = '',
+            beforeId = null,
+            limit = 25
+        } = {}) {
+            const params = new URLSearchParams();
+            if (q) params.set('q', q);
+            if (status) params.set('status', status);
+            if (type) params.set('type', type);
+            if (beforeId) params.set('before_id', beforeId);
+            params.set('limit', limit);
+
+            try {
+                const res = await fetch(`${API_URL}?${params.toString()}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                // Expecting: { tickets: [ {id, email, ticket_type, date_added, info, ticket_status}, ... ] }
+                if (Array.isArray(data)) return data; // or plain array
+                if (data && Array.isArray(data.tickets)) return data.tickets;
+                return mockData();
+            } catch (err) {
+                console.warn('Falling back to mock data:', err);
+                return mockData();
+            }
+        }
+
+        // ===== Pagination helpers =====
+        let current = [];
+        async function loadInitial() {
+            const q = el('#search').value.trim();
+            const status = el('#status').value;
+            const type = el('#type').value;
+            current = await fetchTickets({
+                q,
+                status,
+                type,
+                limit: 25
+            });
+            // Newest first; UI is column-reverse, but keep data in descending order too
+            current.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+            render(current);
+        }
+
+        async function loadMore() {
+            if (!current.length) {
+                await loadInitial();
+                return;
+            }
+            const last = current[current.length - 1];
+            const older = await fetchTickets({
+                beforeId: last.id,
+                limit: 25
+            });
+            const map = new Map(current.map(t => [t.id, t]));
+            for (const t of older) {
+                if (!map.has(t.id)) current.push(t);
+            }
+            current.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+            render(current);
+        }
+
+        // ===== Auto-refresh (polling) =====
+        let pollId;
+
+        function startPolling() {
+            stopPolling();
+            pollId = setInterval(async () => {
+                const q = el('#search').value.trim();
+                const status = el('#status').value;
+                const type = el('#type').value;
+                const latestId = current[0]?.id;
+                const fresh = await fetchTickets({
+                    q,
+                    status,
+                    type,
+                    limit: 25
+                });
+                // Merge by id
+                const byId = new Map(current.map(t => [t.id, t]));
+                for (const t of fresh) {
+                    byId.set(t.id, t);
+                }
+                current = Array.from(byId.values()).sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
+                render(current);
+            }, 15000); // 15s
+        }
+
+        function stopPolling() {
+            if (pollId) clearInterval(pollId);
+        }
+
+        // ===== Wire up UI =====
+        el('#refresh').addEventListener('click', loadInitial);
+        el('#loadMore').addEventListener('click', loadMore);
+        el('#search').addEventListener('input', debounce(loadInitial, 300));
+        el('#status').addEventListener('change', loadInitial);
+        el('#type').addEventListener('change', loadInitial);
+        console.log(el);
+
+        function debounce(fn, ms = 250) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn(...args), ms);
+            };
+        }
+
+        // ===== Demo fallback data (used when API not available) =====
+        function mockData() {
+            const now = Date.now();
+            const sample = [{
+                    id: 101,
+                    email: 'jane.doe@example.com',
+                    ticket_type: 'Asset',
+                    date_added: new Date(now - 60_000).toISOString(),
+                    info: 'Asset 21440 missing from room D102. Please verify.',
+                    ticket_status: 'Incomplete'
+                },
+                {
+                    id: 102,
+                    email: 'sam.lee@example.com',
+                    ticket_type: 'Room',
+                    date_added: new Date(now - 120_000).toISOString(),
+                    info: 'Room 3B temperature sensor offline since 5pm.',
+                    ticket_status: 'Incomplete'
+                },
+                {
+                    id: 103,
+                    email: 'dbaird2@csub.edu',
+                    ticket_type: 'Department',
+                    date_added: new Date(now - 3600_000).toISOString(),
+                    info: '21441 is part of outreach department; inventory mismatch.',
+                    ticket_status: 'Complete'
+                },
+            ];
+            return sample;
+        }
+
+        // Kick things off
+        loadInitial().then(startPolling);
+    </script>
 </body>
 
 </html>
