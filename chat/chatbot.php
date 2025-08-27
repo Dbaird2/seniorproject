@@ -56,8 +56,10 @@ class OnboardingConversation extends Conversation
             ->callbackId('create_database')
             ->addButtons([
                 Button::create('Asset')->value('asset'),
-                Button::create('Department')->value('dept'),
-                Button::create('Other')->value('other'),
+                Button::create('Building')->value('Building'),
+                Button::create('Room')->value('Room'),
+                Button::create('Department')->value('Department'),
+                Button::create('Other')->value('Other'),
             ]);
         $this->ask($question, function (Answer $answer) {
             // Detect if button was clicked:
@@ -76,10 +78,11 @@ class OnboardingConversation extends Conversation
         $this->ask('What seems to be the issue?', function (Answer $answer) {
             // Detect if button was clicked:
             $this->response = $answer->getText();
-            $this->say('Thank you for your ticket. Someone at distribution services will take care of it');
-            $insert_q = "INSERT INTO ticket_table (type, input) VALUES (?, ?)";
+            $this->say('Thank you. Your ticket was received and will be reviewed by asset management.');
+            $insert_q = "INSERT INTO ticket_table (email, type, input, ticket_status) VALUES (?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute([$this->selected_text, $answer->getText()]);
+            $insert_stmt->execute([$_SESSION['email'], $this->selected_text, $answer->getText(), 'Incomplete']);
+
         });
     }
     public function run()

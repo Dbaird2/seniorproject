@@ -257,6 +257,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                     <input type="text" id="room_tag" name="room_tag" value="<?= $room_tag ?>">
                                     <br>
                                     <button type="submit" name="bldg">Update Room</button>
+                                    <button type="submit" name="delete">Delete Room</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -363,7 +364,8 @@ foreach ($result as $row) {
                                     <label for="location">Manager:</label>
                                     <input type="text" id="manager" name="manager" value="<?= $manager ?>">
                                     <br>
-                                    <button type="submit" name="dept">Update Room</button>
+                                    <button type="submit" name="dept">Update Department</button>
+                                    <button type="submit" name="dept">Delete Department</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -484,9 +486,10 @@ foreach ($result as $row) {
                                     <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
                                     <label for="location">Department ID:</label>
-                                    <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept_row ?>">
+                                    <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept ?>">
                                     <br>
                                     <button type="submit" name="user">Update User</button>
+                                    <button type="submit" name="ddeletee">Delete User</button>
                                 </form>
                             </div>
                             <div class="modal-footer">

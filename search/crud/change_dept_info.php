@@ -17,6 +17,18 @@ if (isset($_POST['dept'])) {
     $set_array = [];
     $where_array = [];
     $count = 0;
+    if (isset($_POST['delete'])) {
+        try {
+            $delete_q = "DELETE FROM department WHERE dept_id = :dept";
+            $delete_stmt = $dbh->prepare($delete_q);
+            $delete_stmt->execute([":dept"=>$old_dept_id]);
+            header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
+            exit;
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+        }
+    }
+
     try {
         if ($old_cust !== $new_cust) {
             $new_cust_array = str_getcsv($new_cust, ',', '"');

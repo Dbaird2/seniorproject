@@ -5,7 +5,7 @@ add delete features for assets/user (bldg-department done)
 
 put in tickets via botman conversation
 
-fix updating continue audit
+make a with who for auditing table
 
 
             KUALI TO DO
@@ -20,6 +20,8 @@ ML python/php
 
 
             NEEDS TESTING
+fix updating continue audit
+
 update location from BULK TRANSFER FORM
 
 dispose assets from EQUIPMENT LOSS/STOLEN/DESTROYED & BULK PSR FORM & PSR FORM
