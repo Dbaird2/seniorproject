@@ -370,7 +370,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
                         </svg>
-                        Mona's Monthly Report
+                        Mailclerk's Monthly Report
                     </button>
 <?php } ?>
                 </div>
@@ -485,38 +485,6 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 </div>
             </div>
         </div>
-
-        <!-- Department Alerts & Notifications -->
-        <!-- <div class="department-alerts">
-            <div class="alerts-header">
-                <div class="alerts-title">
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M10,21H14A2,2 0 0,1 12,23A2,2 0 0,1 10,21M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21" />
-                    </svg>
-                    <h3>Department Audit Alerts</h3>
-                </div>
-                <span class="alert-badge"><?php echo $self_audits_in_progress + $mgmt_audits_in_progress; ?></span>
-            </div>
-            <div class="alert-items">
-                <div class="alert-item">
-                    <div class="alert-title">🚨 IT Department - Self Audit Overdue</div>
-                    <div class="alert-time">Due 3 months ago - Requires immediate attention</div>
-                </div>
-                <div class="alert-item warning">
-                    <div class="alert-title">⚠️ HR Department - SPA Audit Due</div>
-                    <div class="alert-time">Special Purpose Audit scheduled for next month</div>
-                </div>
-                <div class="alert-item info">
-                    <div class="alert-title">ℹ️ Finance Department - FDN Audit Completed</div>
-                    <div class="alert-time">Foundation audit completed successfully last week</div>
-                </div>
-                <div class="alert-item warning">
-                    <div class="alert-title">📋 Operations - Management Audit Pending</div>
-                    <div class="alert-time">Awaiting management review and approval</div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <script>
         function handleAction(action) {
@@ -855,25 +823,9 @@ function switchChart(type) {
                     email: 'jane.doe@example.com',
                     ticket_type: 'Asset',
                     date_added: new Date(now - 60_000).toISOString(),
-                    info: 'Asset 21440 missing from room D102. Please verify.',
-                    ticket_status: 'Incomplete'
-                },
-                {
-                    id: 102,
-                    email: 'sam.lee@example.com',
-                    ticket_type: 'Room',
-                    date_added: new Date(now - 120_000).toISOString(),
-                    info: 'Room 3B temperature sensor offline since 5pm.',
-                    ticket_status: 'Incomplete'
-                },
-                {
-                    id: 103,
-                    email: 'dbaird2@csub.edu',
-                    ticket_type: 'Department',
-                    date_added: new Date(now - 3600_000).toISOString(),
-                    info: '21441 is part of outreach department; inventory mismatch.',
+                    info: 'No tickets at this time.',
                     ticket_status: 'Complete'
-                },
+                }
             ];
             return sample;
         }

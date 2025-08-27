@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 require_once '../config.php';
 
-$limit = max(1, min(50, (int)($_GET['limit'] ?? 25)));
+$limit  = max(1, min(50, (int)($_GET['limit'] ?? 25)));
 $q      = trim($_GET['q']     ?? '');
 $status = trim($_GET['status'] ?? '');
 $type   = trim($_GET['type']  ?? '');
@@ -17,11 +17,11 @@ if ($q !== '') {
     $bind[':q'] = "%$q%";
 }
 if ($status !== '') {
-    $sql .= " AND ticket_status = :status";
+    $sql .= " AND status = :status";
     $bind[':status'] = $status;
 }
 if ($type !== '') {
-    $sql .= " AND (ticket_type = :type OR \"type\" = :type)";
+    $sql .= " AND (type = :type)";
     $bind[':type'] = $type;
 }
 if ($before !== null) {
