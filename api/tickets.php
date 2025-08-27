@@ -30,7 +30,7 @@ if ($before !== null) {
 }
 
 $sql .= " ORDER BY date_added DESC, id DESC LIMIT :limit";
-$stmt = $pdo->prepare($sql);
+$stmt = $dbh->prepare($sql);
 foreach ($bind as $k => $v) $stmt->bindValue($k, $v);
 $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $stmt->execute();
