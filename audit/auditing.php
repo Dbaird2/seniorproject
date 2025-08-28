@@ -9,9 +9,6 @@ if (empty($_SESSION['info']) && empty($_SESSION['data'])) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?msg=NoRecentAudit");
     exit;
 }
-echo "<pre>";
-var_dump($_SESSION['data']);
-echo "</pre>";
 
 
 ini_set('display_errors', '1');

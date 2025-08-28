@@ -32,7 +32,7 @@ if (isset($_POST)) {
     $index = 0;
     foreach ($audit_data as $row) {
 
-        if ($row['Tag Number'] !== '' && $row['Tag Number'] !== NULL && $row['Tag Number'] !== 'Tag Number') {
+        if (!empty($row['Tag Number'])) {
             $_SESSION['data'][$index]['Unit'] = $row['Unit'] ?? '';
             $_SESSION['data'][$index]['Tag Number'] = $row['Tag Number'];
             $_SESSION['data'][$index]['Descr'] = $row['Descr'] ?? '';
@@ -51,7 +51,11 @@ if (isset($_POST)) {
         }
     }
     unset($_SESSION['info']);
+    echo "<pre>";
+    var_dump($_SESSION['data']);
+    var_dump($audit_data);
+    echo "</pre>";
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
-    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    exit;
+    //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    //exit;
 } 
