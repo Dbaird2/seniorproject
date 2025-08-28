@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if (!res.ok) {
             const text = await res.text();
-            throw new Error (`HTTP ${res.status]: ${text}`);
+            throw new Error (`HTTP ${res.status}: ${text}`);
         }
     })
 });
