@@ -74,7 +74,7 @@ class OnboardingConversation extends Conversation
             require_once __DIR__ . '/../config.php'; // defines $dbh each request
             $this->response = $answer->getText();
             $this->say('Thank you. Your ticket was received and will be reviewed by asset management.');
-            $insert_q = "INSERT INTO ticket_table (email, type, input, ticket_status) VALUES (?, ?, ?, ?)";
+            $insert_q = "INSERT INTO ticket_table (email, type, info, ticket_status) VALUES (?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert_q);
             $insert_stmt->execute([$_SESSION['email'], $this->selected_text, $answer->getText(), 'Incomplete']);
 
