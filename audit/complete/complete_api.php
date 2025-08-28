@@ -75,7 +75,7 @@ try {
             try {
                 $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, audited_with) VALUES (?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $result['audited_with']);
+                $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $result['audited_with']]);
 
                 echo json_encode(['status' => 'success', 'message' => 'Insert audit id ' . $audit_id]);
             } catch (PDOException $e) {
