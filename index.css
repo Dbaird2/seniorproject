@@ -580,6 +580,7 @@ header {
 }
 
 .scroll {
+    font-weight:600;
     overflow: auto;
     padding: 12px;
     display: flex;
@@ -591,7 +592,7 @@ header {
 .ticket {
     display: grid;
     gap: 8px;
-    background: linear-gradient(180deg, #0d1528, #0b1220);
+    background: lightblue;
     border: 1px solid var(--chip-border);
     border-radius: 14px;
     padding: 12px;
@@ -630,6 +631,7 @@ header {
 }
 
 .badge {
+    font-weight: 600;
     padding: 3px 8px;
     border-radius: 999px;
     border: 1px solid var(--chip-border);
