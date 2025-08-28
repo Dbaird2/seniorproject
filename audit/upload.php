@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
       }
       /* SHEET HAS 2 ROW HEADERS */
       if (!isset($data[0])) {
-        $skipped = 2;
+        $skipped = 1;
         foreach ($data as $index => $row) {
 
           if ($index === 0) {
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
       /* SHEET HAS 1 ROW HEADER */
       } else if ($continue === false) {
-        $skipped = 1;
+        $skipped = 0;
         foreach ($data as $index => $row) {
           if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
             $skipped++;
