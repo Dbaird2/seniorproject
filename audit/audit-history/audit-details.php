@@ -66,6 +66,7 @@ ob_start();
             <tr class="odd">
                 <th>Department</th>
                 <th>Auditor</th>
+                <th>Audited With</th>
                 <th>Audit ID</th>
             </tr>
         </thead>
@@ -76,6 +77,7 @@ ob_start();
             echo "<tr class='$color'>";
             echo "<td>" . $audit_details['dept_id'] . "</td>";
             echo "<td>" . $audit_details['auditor'] . "</td>";
+            echo "<td>" . $audit_details['audited_with'] ?? '' . "</td>";
             echo "<td>" . date('Y-m-d H:i:s', strtotime((string) $audit_details['finished_at'])) . "</td>";
             echo "</tr>";
             
