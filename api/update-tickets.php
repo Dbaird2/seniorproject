@@ -1,9 +1,9 @@
 <?php
 
-if (isset($_POST['id'])) {
+if (isset($_GET['id'])) {
     require_once "../config.php";
-    $id = $_POST['id'];
-    $action = $_POST['action'];
+    $id = $_GET['id'];
+    $action = $_GET['action'];
 
     if ($action === 'delete') {
         try {
