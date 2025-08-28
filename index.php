@@ -490,11 +490,12 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
 
     <script>
 async function updateTicket(id, action) {
-    const API_URL = '/api/update-tickets.php'; // Adjust to your backend endpoint
+    const API_URL = '/api/update-tickets.php';
     const params = new URLSearchParams();
     if (id) params.set('id', id);
     if (action) params.set('action', action);
 
+    console.log('params: ' + params);
     try {
         const res = await fetch(`${API_URL}?${params.toString()}`, {
         headers: {
