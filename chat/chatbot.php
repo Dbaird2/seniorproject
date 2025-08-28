@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../config.php';
 require '../vendor/autoload.php';
 
 // use BotMan\BotMan\BotMan;
