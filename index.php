@@ -376,6 +376,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 </div>
             </div>
 <?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
+            <div class="actions-section">
 <div class="ticket-box">
         <div class="app" aria-label="Recent tickets">
             <header>
@@ -410,6 +411,7 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
             </section>
         </div>
     </div>
+</div>
 <?php } ?>
         </div>
         <!-- Audit Overdue Type Overview -->
