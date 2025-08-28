@@ -489,6 +489,26 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
         </div>
 
     <script>
+async function updateTicket(id, action) {
+    const API_URL = '/api/update-tickets.php'; // Adjust to your backend endpoint
+    const params = new URLSearchParams();
+    if (id) params.set('id', id);
+    if (action) params.set('action', action);
+
+    try {
+        const res = await fetch(`${API_URL}?${params.toString()}`, {
+        headers: {
+        'Accept': 'application/json'
+    }
+    });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+    } catch (err) {
+        console.warn('Error updating ticket:', err);
+    }
+}
+
+
         function handleAction(action) {
             const actions = {
                 'schedule-audit': () => {
@@ -675,8 +695,8 @@ function switchChart(type) {
               </div>
             </div>
             <div class="badges">
-              <button value="${t.id}" name="complete-ticket" id="complete">Complete</button>
-              <button value="${t.id}" name="delete-ticket" id="delete">Delete</button>
+              <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'completed')">Complete</button>
+              <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'delete')">Delete</button>
               ${typeBadge(t.ticket_type || t.type)}
               ${ticketBadge(t.ticket_status)}
             </div>

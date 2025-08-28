@@ -349,18 +349,21 @@ addNewInput();
 addNewInput();
 });
 document.addEventListener("DOMContentLoaded", () => {
-const complete_audit_btn = document.getElementById('complete-audit');
-complete_audit_btn.addEventListener("click", (e) => {
-url = "https://dataworks-7b7x.onrender.com/audit/complete/complete_api.php";
-fetch(url, {
-method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'
-}
-})
-    .then(res => res.json())
-    .then(res => console.log(res))
-})
+    const complete_audit_btn = document.getElementById('complete-audit');
+    complete_audit_btn.addEventListener("click", async () => {
+        let audited_with = prompt("Did anyone help with the audit?");
+        audited_with = audited_with.trim();
+        url = "https://dataworks-7b7x.onrender.com/audit/complete/complete_api.php";
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify ({ audited_with })
+        });
+        if (!res.ok) {
+            const text = await res.text();
+            throw new Error (`HTTP ${res.status]: ${text}`);
+        }
+    })
 });
 
 document.querySelector('.table').addEventListener('change', function(e) {

@@ -96,7 +96,9 @@ try {
         $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
         $lifecycle = 10;
         foreach ($tag_data as $tag) {
-            $tag_num = $tag['data']['1SI4ghT1Jt'];
+            if (!empty($tag['data']['1SI4ghT1Jt'])) {
+                $tag_num = $tag['data']['1SI4ghT1Jt'];
+            }
             if (
                 preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
                 preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||

@@ -1,4 +1,5 @@
 <?php
+require_once "../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
@@ -7,6 +8,7 @@ $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['asset_addition_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
+
 
 
 $apikey = $result['kuali_key'];
