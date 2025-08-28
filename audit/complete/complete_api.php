@@ -13,6 +13,7 @@ try {
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
+    $audited_with = $_POST['audited_with'];
     $index = 0;
     $dept = '';
     while (!preg_match('/^D\d+/', $dept, $matches)) {
@@ -64,7 +65,7 @@ try {
             try {
                 $update_q = "UPDATE audit_history SET audited_with = :with, finished_at = CURRENT_TIMESTAMP, auditor = :auditor, audit_data = :audit_data WHERE audit_id = :audit_id AND dept_id = :dept_id";
                 $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":with"=>$result['audited_with'], ":audit_id" => $id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
+                $update_stmt->execute([":with"=>$audited_with, ":audit_id" => $id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
             } catch (PDOException $e) {
                 echo json_encode(['status' => 'failure', "Message" => 'Fail on update ' . $e->getMessage()]);
                 exit;
@@ -75,7 +76,7 @@ try {
             try {
                 $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, audited_with) VALUES (?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $result['audited_with']]);
+                $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $audited_with]);
 
                 echo json_encode(['status' => 'success', 'message' => 'Insert audit id ' . $audit_id]);
             } catch (PDOException $e) {
