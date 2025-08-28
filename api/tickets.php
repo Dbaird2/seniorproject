@@ -8,7 +8,7 @@ $status = trim($_GET['status'] ?? '');
 $type   = trim($_GET['type']  ?? '');
 $before = isset($_GET['before_id']) ? (int)$_GET['before_id'] : null;
 
-$sql = "SELECT id, email, ticket_type, date_added, info, ticket_status
+$sql = "SELECT id, email, type, date_added, info, ticket_status
         FROM ticket_table WHERE 1=1";
 $bind = [];
 
