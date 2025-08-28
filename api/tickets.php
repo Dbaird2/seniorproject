@@ -17,7 +17,7 @@ if ($q !== '') {
     $bind[':q'] = "%$q%";
 }
 if ($status !== '') {
-    $sql .= " AND status = :status";
+    $sql .= " AND ticket_status = :status";
     $bind[':status'] = $status;
 }
 if ($type !== '') {
