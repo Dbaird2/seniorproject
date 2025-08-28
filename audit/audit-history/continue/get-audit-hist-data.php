@@ -51,11 +51,7 @@ if (isset($_POST)) {
         }
     }
     unset($_SESSION['info']);
-    echo "<pre>";
-    var_dump($_SESSION['data']);
-    var_dump($audit_data);
-    echo "</pre>";
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
-    //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    //exit;
+    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    exit;
 } 
