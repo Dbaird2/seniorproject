@@ -832,7 +832,17 @@ function switchChart(type) {
 
         // Kick things off
         loadInitial().then(startPolling);
+        var botmanWidget = {
+        frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
+            chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
+            introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+            title: "Chatbot",
+            mainColor: "#ADD8E6",
+            bubbleBackground: "#ADD8E6",
+            placeholderText: "Type your question here..."
+        };
     </script>
+      <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
 </body>
 
 </html>

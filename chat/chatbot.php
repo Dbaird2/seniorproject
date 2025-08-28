@@ -1,8 +1,5 @@
 <?php
-include_once "../config.php";
-ini_set('display_errors', 1);
-error_reporting(E_ALL & ~E_DEPRECATED);
-
+session_start();
 require '../vendor/autoload.php';
 
 // use BotMan\BotMan\BotMan;
@@ -32,12 +29,9 @@ if (!is_dir($cacheDir)) {
 $psr6  = new FilesystemAdapter('botman', 0, $cacheDir);
 $cache = new BotManSymfonyCache($psr6);
 
-// ---- Your driver config (example: WebDriver)
 $config = [
-    // put your driver configs here if needed
 ];
 
-// ---- Create BotMan with the cache
 
 DriverManager::loadDriver(WebDriver::class);
 
@@ -77,6 +71,7 @@ class OnboardingConversation extends Conversation
 
         $this->ask('What seems to be the issue?', function (Answer $answer) {
             // Detect if button was clicked:
+            require_once __DIR__ . '/../config.php'; // defines $dbh each request
             $this->response = $answer->getText();
             $this->say('Thank you. Your ticket was received and will be reviewed by asset management.');
             $insert_q = "INSERT INTO ticket_table (email, type, input, ticket_status) VALUES (?, ?, ?, ?)";
