@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../config.php';
 require '../vendor/autoload.php';
 
 // use BotMan\BotMan\BotMan;
@@ -40,7 +40,7 @@ class OnboardingConversation extends Conversation
 {
     protected $ticket_type;
     protected $response;
-
+    protected $email;
     protected $selected_text;
 
     public function startTicket()
@@ -49,7 +49,7 @@ class OnboardingConversation extends Conversation
             ->fallback('Unable to create a new database')
             ->callbackId('create_database')
             ->addButtons([
-                Button::create('Asset')->value('asset'),
+                Button::create('Asset')->value('Asset'),
                 Button::create('Building')->value('Building'),
                 Button::create('Room')->value('Room'),
                 Button::create('Department')->value('Department'),
@@ -57,26 +57,39 @@ class OnboardingConversation extends Conversation
             ]);
         $this->ask($question, function (Answer $answer) {
             // Detect if button was clicked:
-            $selected_value = $answer->getValue(); // will be either 'yes' or 'no'
-            $this->selected_text = $answer->getText(); // will be either 'Of course' or 'Hell no!'
-            $this->askQuestion();
+            $selected_value = $answer->getValue(); 
+            $this->selected_text = $answer->getText();
+            $this->askEmail();
         });
-        // $response->getText()
-        //header("Location: http://localhost:3000/index.php");
+    }
 
+    public function askEmail()
+    {
+        $this->ask('Could you provide your email', function (Answer $answer) {
+            // Detect if button was clicked:
+            require_once __DIR__ . '/../config.php'; 
+            $this->email = $_SESSION['email'] ?? 'Failed to grab user info';
+            if (empty($this->email)) {
+                $this->say('I could not detect your login.');
+                return;
+            }
+            $this->email = $answer->getText();
+            $this->askQuestion();
 
+        });
+    
     }
     public function askQuestion()
     {
 
         $this->ask('What seems to be the issue?', function (Answer $answer) {
             // Detect if button was clicked:
-            require_once __DIR__ . '/../config.php'; // defines $dbh each request
+            require_once __DIR__ . '/../config.php'; 
             $this->response = $answer->getText();
             $this->say('Thank you. Your ticket was received and will be reviewed by asset management.');
             $insert_q = "INSERT INTO ticket_table (email, type, info, ticket_status) VALUES (?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute([$_SESSION['email'], $this->selected_text, $answer->getText(), 'Incomplete']);
+            $insert_stmt->execute([$this->email, $this->selected_text, $answer->getText(), 'Incomplete']);
 
         });
     }

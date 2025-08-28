@@ -837,7 +837,7 @@ function switchChart(type) {
         var botmanWidget = {
         frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
             chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
-            introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+            introMessage: "👋 Hello! I'm Chatbot. Reply with help for a list of things I can do!",
             title: "Chatbot",
             mainColor: "#ADD8E6",
             bubbleBackground: "#ADD8E6",
