@@ -10,6 +10,9 @@ if (empty($_SESSION['info']) && empty($_SESSION['data'])) {
     exit;
 }
 
+echo "<pre>";
+var_dump($_SESSION['data']);
+echo "</pre>";
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
