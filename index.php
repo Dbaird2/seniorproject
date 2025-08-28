@@ -675,6 +675,8 @@ function switchChart(type) {
               </div>
             </div>
             <div class="badges">
+              <button value="${t.id}" name="complete-ticket" id="complete">Complete</button>
+              <button value="${t.id}" name="delete-ticket" id="delete">Delete</button>
               ${typeBadge(t.ticket_type || t.type)}
               ${ticketBadge(t.ticket_status)}
             </div>
