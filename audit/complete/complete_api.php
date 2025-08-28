@@ -13,7 +13,7 @@ try {
     $content_type = $_SERVER["CONTENT_TYPE"] ?? '';
     $audit_data = $_SESSION['data'];
     $audit_type = $_SESSION['info'][3];
-    $audited_with = $_POST['audited_with'];
+    $audited_with = $result['audited_with'];
     $index = 0;
     $dept = '';
     while (!preg_match('/^D\d+/', $dept, $matches)) {
