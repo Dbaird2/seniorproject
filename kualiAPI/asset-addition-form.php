@@ -137,7 +137,7 @@ try {
             $name = $tag['data']['wnpc592QUl'];
             $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
             $s_stmt = $dbh->prepare($select_q);
-            $s_stmt = $s_stmt->execute([":tag" => $tag_num]);
+            $s_stmt->execute([":tag" => $tag_num]);
             $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
             if (!$tag_taken) {
                 $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po) VALUES
