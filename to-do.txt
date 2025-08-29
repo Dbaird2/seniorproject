@@ -1,19 +1,24 @@
             TO DO
-style in asset-ui, modal
+maybe add landing page
+
+always styling (asset-ui.php, modals)
 
 add delete features for assets/user (bldg-department done)
 
-put in tickets via botman conversation
+help pages for faq
 
-make a with who for auditing table
+make complete audit a page that you can check what forms to use by asset and mass send
+them, then save the document ids to db, then check once a day to see if all
+documents are complete. Once all are complete then change audit to complete.
 
+create endpoints for phone fetch request
+
+fix manage-profiles.php page
 
             KUALI TO DO
-make editing of asset in Ajax.php
-
 update location from PROPERTY TRANSFER FORM
 
-update endpoint for forms in search.php
+make property transfer, PSR, check out kuali forms from search page
 
            ML SUPPORT
 ML python/php

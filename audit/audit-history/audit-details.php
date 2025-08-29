@@ -67,7 +67,7 @@ ob_start();
                 <th>Department</th>
                 <th>Auditor</th>
                 <th>Audited With</th>
-                <th>Audit ID</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>

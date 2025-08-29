@@ -55,9 +55,10 @@ function deleteProfile(profile_name) {
     });
 }
 function adminDeleteProfile(data) {
-    const array = data.split("`").map(item => item.trim());
+    const array = data.split(" ").map(item => item.trim());
     const email = array[0];
     const profile_name = array[1];
+    console.log(array);
     
     if (profile_name.length <= 0 || profile_name.trim() === '' || !profile_name) {
         return;
