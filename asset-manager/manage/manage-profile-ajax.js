@@ -67,7 +67,7 @@ function adminDeleteProfile(data) {
         method: 'POST',
         url: 'profile-crud/admin-remove-profile.php',
         data: {
-            email: email
+            email: email,
             profile_name: profile_name
         },
         success: function () {
