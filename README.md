@@ -12,4 +12,4 @@ URL: https://dataworks-7b7x.onrender.com
 - Uses Redis, botman, phpmailer, postgres(PDO).
 - Hosted by render.com
 ## 🚀 Usage Instructions
-We have made it so that only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
+Only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
