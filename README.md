@@ -12,4 +12,21 @@ URL: https://dataworks-7b7x.onrender.com
 - Uses Redis, botman, phpmailer, postgres(PDO).
 - Hosted by render.com
 ## 🚀 Usage Instructions
+<<<<<<< HEAD
 Only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
+=======
+We have made it so that only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
+## To Do
+- Add a Landing Page
+- Add delete features for assets and users
+- Help pages 
+- Complete audit page so you can check the type of form needed for each asset,
+insert into db the actionId's, check once a day to see if they're complete if
+all are complete, then change audit to complete
+- Create endpoints for phone fetch requests
+- Fix manage-profiles page
+- Update location from TRANSFER FORMS (waiting on form fix)
+- Create TRANSFER, PSR, and CHECK-OUT forms from search page
+## Needs testing
+- Audit updating
+- Updates from KUALI 

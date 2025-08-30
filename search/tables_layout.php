@@ -153,6 +153,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
+                                    <button type="submit" onclick="deleteUser(<?= $safe_tag ?>, 'asset')" name="delete">Delete Asset</button>
                                     <button type="submit">Update Asset</button>
                                 </form>
                             </div>
@@ -256,8 +257,8 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                     <label for="location">Room Tag:</label>
                                     <input type="text" id="room_tag" name="room_tag" value="<?= $room_tag ?>">
                                     <br>
+                                    <button type="submit" onclick="deleteUser(<?= $room_tag ?>, 'room')" name="delete">Delete Room</button>
                                     <button type="submit" name="bldg">Update Room</button>
-                                    <button type="submit" name="delete">Delete Room</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -364,8 +365,8 @@ foreach ($result as $row) {
                                     <label for="location">Manager:</label>
                                     <input type="text" id="manager" name="manager" value="<?= $manager ?>">
                                     <br>
+                                    <button type="submit" onclick="deleteUser(<?= $dept_id ?>, 'dept')" name="delete">Delete Department</button>
                                     <button type="submit" name="dept">Update Department</button>
-                                    <button type="submit" name="dept">Delete Department</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -488,8 +489,8 @@ foreach ($result as $row) {
                                     <label for="location">Department ID:</label>
                                     <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept ?>">
                                     <br>
+                                    <button type="submit" onclick="deleteUser(<?= htmlspecialchars($email, ENT_QUOTES) ?>, 'user')" name="delete">Delete User</button>
                                     <button type="submit" name="user">Update User</button>
-                                    <button type="submit" name="ddeletee">Delete User</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -502,3 +503,27 @@ foreach ($result as $row) {
 <?php
 }
 ?>
+<script>
+async function deleteUser(data, type) {
+    const API_URL = '/api/delete.php';
+    const params = new URLSearchParams();
+    const user = 'user-delete';
+    if (type) params.set('type', type);
+    if (data) params.set('data', data);
+
+    try {
+        const res = await fetch (`${API_URL}?${params.toString()}`, {
+        headers: {
+        'Accept': 'application/json';
+    }
+    });
+        if (!res.ok) throw new Error (`HTTP ${res.status}`);
+        const data = await res.json();
+    } catch (err) {
+        console.warn('Error deleting user:', err);
+    }
+}
+
+
+
+</script>

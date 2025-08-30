@@ -18,7 +18,7 @@ require_once '../../config.php';
     $stmt->execute([":email" => $email]);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
 
-    $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile WHERE email != :email";
+    $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile";
     $stmt = $dbh->prepare($select_q);
     $stmt->execute([":email" => $email]);
     $result2 = $stmt->fetchColumn();
