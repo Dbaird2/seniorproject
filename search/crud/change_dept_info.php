@@ -17,8 +17,9 @@ if (isset($_POST['dept'])) {
     $set_array = [];
     $where_array = [];
     $count = 0;
-    if (isset($_POST['delete'])) {
+    if (isset($_POST['delete-dept'])) {
         try {
+
             $delete_q = "DELETE FROM department WHERE dept_id = :dept";
             $delete_stmt = $dbh->prepare($delete_q);
             $delete_stmt->execute([":dept"=>$old_dept_id]);

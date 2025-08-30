@@ -153,7 +153,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
-                                    <button type="submit" onclick="deleteUser(<?= $safe_tag ?>, 'asset')" name="delete">Delete Asset</button>
+                                    <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
                                     <button type="submit">Update Asset</button>
                                 </form>
                             </div>
@@ -257,7 +257,7 @@ $room_tag = htmlspecialchars($row['room_tag'] ?? '', ENT_QUOTES);
                                     <label for="location">Room Tag:</label>
                                     <input type="text" id="room_tag" name="room_tag" value="<?= $room_tag ?>">
                                     <br>
-                                    <button type="submit" onclick="deleteUser(<?= $room_tag ?>, 'room')" name="delete">Delete Room</button>
+                                    <button type="submit" value="<?= $room_tag ?>" name="delete-room">Delete Room</button>
                                     <button type="submit" name="bldg">Update Room</button>
                                 </form>
                             </div>
@@ -365,7 +365,7 @@ foreach ($result as $row) {
                                     <label for="location">Manager:</label>
                                     <input type="text" id="manager" name="manager" value="<?= $manager ?>">
                                     <br>
-                                    <button type="submit" onclick="deleteUser(<?= $dept_id ?>, 'dept')" name="delete">Delete Department</button>
+                                    <button type="submit" value="<?= $dept_id ?>" name="delete-dept">Delete Department</button>
                                     <button type="submit" name="dept">Update Department</button>
                                 </form>
                             </div>
@@ -440,7 +440,7 @@ foreach ($result as $row) {
         $l_name = htmlspecialchars($row['l_name'] ?? '', ENT_QUOTES);
         $dept = trim($row['dept_id'], '{}');
         $dept2 = explode(',', $dept);
-        $dept = str_replace('"', '' ,$row['dept_id']);
+        $dept = str_replace('"', '' ,$dept);
 
 ?>
                 <div id="modal<?= $username ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $username; ?>" aria-hidden="true">
@@ -489,7 +489,7 @@ foreach ($result as $row) {
                                     <label for="location">Department ID:</label>
                                     <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept ?>">
                                     <br>
-                                    <button type="submit" onclick="deleteUser(<?= htmlspecialchars($email, ENT_QUOTES) ?>, 'user')" name="delete">Delete User</button>
+                                    <button type="submit" value="<?= $email ?>" name="delete-user">Delete User</button>
                                     <button type="submit" name="user">Update User</button>
                                 </form>
                             </div>
@@ -503,27 +503,5 @@ foreach ($result as $row) {
 <?php
 }
 ?>
-<script>
-async function deleteUser(data, type) {
-    const API_URL = '/api/delete.php';
-    const params = new URLSearchParams();
-    const user = 'user-delete';
-    if (type) params.set('type', type);
-    if (data) params.set('data', data);
-
-    try {
-        const res = await fetch (`${API_URL}?${params.toString()}`, {
-        headers: {
-        'Accept': 'application/json';
-    }
-    });
-        if (!res.ok) throw new Error (`HTTP ${res.status}`);
-        const data = await res.json();
-    } catch (err) {
-        console.warn('Error deleting user:', err);
-    }
-}
 
 
-
-</script>

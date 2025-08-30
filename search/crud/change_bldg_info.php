@@ -12,6 +12,13 @@ if (isset($_POST['bldg'])) {
     $new_name = trim($_POST['name']);
     $new_loc = trim($_POST['room_loc']);
     $new_tag = (int)trim($_POST['room_tag']);
+    if (isset($_POST['delete-room'])) {
+        $delete_q = "DELETE FROM room_table WHERE room_tag = :tag";
+        $delete_stmt = $dbh->prepare($delete_q);
+        $delete_stmt->execute([':tag'=>$old_tag]);
+        header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
+        exit;
+    }
 
     try {
         if ($old_id !== $new_id && !empty($new_id)) {

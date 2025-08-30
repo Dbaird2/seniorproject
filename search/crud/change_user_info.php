@@ -7,9 +7,9 @@ if (isset($_POST['user'])) {
     $old_dept = trim($_POST['old_dept']);
     $old_role = trim($_POST['old_role']);
     $email = trim($_POST['email']);
-
+    $delete = false;
     try {
-        if (isset($_POST['delete'])) {
+        if (isset($_POST['delete-user'])) {
             $delete_q = "DELETE FROM user_table WHERE email = :email";
             $delete_stmt = $dbh->prepare($delete_q);
             $delete_stmt->execute([':email'=>$email]);
