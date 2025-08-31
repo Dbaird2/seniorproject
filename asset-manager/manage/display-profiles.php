@@ -20,11 +20,10 @@ require_once '../../config.php';
 
     $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile";
     $stmt = $dbh->prepare($select_q);
-    $stmt->execute([":email" => $email]);
-    $result2 = $stmt->fetchColumn();
-    
+    $stmt->execute();
+    $result2 = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-        ?>
+?>
     <section class="tables">
 
         <table>
