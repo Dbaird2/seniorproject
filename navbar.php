@@ -64,7 +64,6 @@
     <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg></a>
   <span class="dropdown-content2">
-    <a href="https://dataworks-7b7x.onrender.com/admin/edit-user.php" class="dropdown-element">Edit User</a>
     <a href="https://dataworks-7b7x.onrender.com/auth/signup.php" class="dropdown-element">Signup User</a>
   </span>
 </span>
@@ -126,7 +125,6 @@
     </svg>
   </a>
   <span class="dropdown-content">
-    <a href="https://dataworks-7b7x.onrender.com/admin/edit-user.php" class="dropdown-element">Edit User</a>
     <a href="https://dataworks-7b7x.onrender.com/auth/signup.php"class="dropdown-element">Signup User</a>
   </span>
 </span></li>

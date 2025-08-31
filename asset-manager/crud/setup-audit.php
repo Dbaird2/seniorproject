@@ -31,7 +31,7 @@ if (isset($_GET['profile_name'])) {
             $_SESSION['data'][$index]['Serial ID'] = $row['serial_num'];
             $_SESSION['data'][$index]['Location'] = $row['bldg_id']. '-'.$row['room_loc'];
             $_SESSION['data'][$index]['VIN'] = '';
-            $_SESSION['data'][$index]['Custodian'] = trim(trim($row['custodian'], '"'), "{}");
+            $_SESSION['data'][$index]['Custodian'] = $row['custodian'] ?? '';
             $_SESSION['data'][$index]['Dept'] = $row['dept_id'];
             $_SESSION['data'][$index]['PO No.'] = $row['po'];
             $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
