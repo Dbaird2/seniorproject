@@ -117,13 +117,13 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                             </div>
                             <div class="modal-body">
                                 <form action="crud/change_asset_info.php" method="post">
-<input type="hidden" id="old_tag" name="old_tag">
-<input type="hidden" id="old_name" name="old_name">
-<input type="hidden" id="old_dept" name="old_dept">
-<input type="hidden" id="old_room_tag" name="old_room_tag">
-<input type="hidden" id="old_sn" name="old_sn">
-<input type="hidden" id="old_price" name="old_price">
-<input type="hidden" id="old_po" name="old_po">
+                                <input type="hidden" id="old_tag" name="old_tag" value="<?= $safe_tag ?>">
+                                <input type="hidden" id="old_name" name="old_name" value="<?= $safe_name?>">
+                                <input type="hidden" id="old_dept" name="old_dept" value="<?= $safe_deptid ?>">
+                                <input type="hidden" id="old_room_tag" name="old_room_tag" value="<?= $safe_room ?>">
+                                <input type="hidden" id="old_sn" name="old_sn" value="<?= $safe_serial ?>">
+                                <input type="hidden" id="old_price" name="old_price" value="<?= $safe_price ?>">
+                                <input type="hidden" id="old_po" name="old_po" value="<?= $safe_po ?>">
 <input type="hidden" id="old_status" name="old_status">
                                     <label for="asset_tag">Asset Tag:</label>
                                     <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>">
@@ -345,10 +345,10 @@ foreach ($result as $row) {
                             </div>
                             <div class="modal-body">
                                 <form action="crud/change_dept_info.php" method="post">
-<input type="hidden" id="old_dept" name="old_dept">
-<input type="hidden" id="old_name" name="old_name">
-<input type="hidden" id="old_cust" name="old_cust">
-<input type="hidden" id="old_manager" name="old_manager">
+                                <input type="hidden" id="old_dept" name="old_dept" value="<?= $dept_id ?>">
+                                <input type="hidden" id="old_name" name="old_name" value="<?= $dept_name ?>">
+                                <input type="hidden" id="old_cust" name="old_cust" value="<?= $custodian ?>">
+                                <input type="hidden" id="old_manager" name="old_manager" value="<?= $manager ?>">
                                     <label for="asset_tag">Department ID:</label>
                                     <input type="text" id="dept" name="dept" value="<?= $dept_id ?>">
                                     <br>
@@ -455,6 +455,13 @@ foreach ($result as $row) {
                             </div>
                             <div class="modal-body">
                                 <form action="crud/change_user_info.php" method="post">
+                                <input type="hidden" id="old_email" name="old_email" value="<?= $email ?>">
+                                <input type="hidden" id="old_name" name="old_name" value="<?= $username?>">
+                                <input type="hidden" id="old_dept" name="old_dept" value="<?= $dept ?>">
+                                <input type="hidden" id="old_role" name="old_role" value="<?= $u_role ?>">
+                                <input type="hidden" id="old_f_name" name="old_f_name" value="<?= $f_name ?>">
+                                <input type="hidden" id="old_l_name" name="old_l_name" value="<?= $l_name ?>">
+                                <input type="hidden" id="old_po" name="old_po" value="<?= $safe_po ?>">
 
                                     <?php foreach ($dept2 as $index=>$dept_row) { ?>
                                     <input type="hidden" id="old_dept" name="old_dept[]" value=<?= $dept_row ?>>

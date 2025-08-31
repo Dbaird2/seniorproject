@@ -6,7 +6,7 @@ if (isset($_POST['user'])) {
     $new_role = trim($_POST['role']);
     $old_dept = trim($_POST['old_dept']);
     $old_role = trim($_POST['old_role']);
-    $email = trim($_POST['email']);
+    $email = trim($_POST['old_email']);
     $delete = false;
     try {
         if (isset($_POST['delete-user'])) {
