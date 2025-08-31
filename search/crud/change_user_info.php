@@ -1,24 +1,26 @@
 <?php
 include_once "../../config.php";
+try {
+    if (isset($_POST['delete-user'])) {
+        $delete_q = "DELETE FROM user_table WHERE email = :email";
+        $delete_stmt = $dbh->prepare($delete_q);
+        $delete_stmt->execute([':email'=>$email]);
+        header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
+        exit;
+    }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+    header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
+    exit;
+}
 
 if (isset($_POST['user'])) {
     $new_dept = trim($_POST['dept_ids']);
     $new_role = trim($_POST['role']);
-    $old_dept = trim($_POST['old_dept']);
+    $old_dept = $_POST['old_dept'];
     $old_role = trim($_POST['old_role']);
     $email = trim($_POST['old_email']);
     $delete = false;
-    try {
-        if (isset($_POST['delete-user'])) {
-            $delete_q = "DELETE FROM user_table WHERE email = :email";
-            $delete_stmt = $dbh->prepare($delete_q);
-            $delete_stmt->execute([':email'=>$email]);
-            header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
-            exit;
-        }
-    } catch (PDOException $e) {
-        error_log($e->getMessage());
-    }
     try {
         if (!empty($new_dept) && $new_dept !== $old_dept) {
             $update_q = "UPDATE user_table SET dept_id = :dept::VARCHAR[] WHERE email = :email";
@@ -36,4 +38,5 @@ if (isset($_POST['user'])) {
         exit;
     }
 }
+header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
 exit;

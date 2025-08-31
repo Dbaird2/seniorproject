@@ -461,7 +461,6 @@ foreach ($result as $row) {
                                 <input type="hidden" id="old_role" name="old_role" value="<?= $u_role ?>">
                                 <input type="hidden" id="old_f_name" name="old_f_name" value="<?= $f_name ?>">
                                 <input type="hidden" id="old_l_name" name="old_l_name" value="<?= $l_name ?>">
-                                <input type="hidden" id="old_po" name="old_po" value="<?= $safe_po ?>">
 
                                     <?php foreach ($dept2 as $index=>$dept_row) { ?>
                                     <input type="hidden" id="old_dept" name="old_dept[]" value=<?= $dept_row ?>>
