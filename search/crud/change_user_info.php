@@ -2,6 +2,7 @@
 include_once "../../config.php";
 try {
     if (isset($_POST['delete-user'])) {
+        $email = trim($_POST['old_email']);
         $delete_q = "DELETE FROM user_table WHERE email = :email";
         $delete_stmt = $dbh->prepare($delete_q);
         $delete_stmt->execute([':email'=>$email]);
