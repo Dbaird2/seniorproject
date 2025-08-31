@@ -2,6 +2,18 @@
 include_once "../../config.php";
 check_auth("high");
 
+if (isset($_POST['delete-dept'])) {
+    try {
+        $old_dept_id = $_POST['old_dept'];
+        $delete_q = "DELETE FROM department WHERE dept_id = :dept";
+        $delete_stmt = $dbh->prepare($delete_q);
+        $delete_stmt->execute([":dept"=>$old_dept_id]);
+        header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
+        exit;
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+    }
+}
 if (isset($_POST['dept'])) {
     $old_dept_id = $_POST['old_dept'];
     $old_dept_name = $_POST['old_name'];
