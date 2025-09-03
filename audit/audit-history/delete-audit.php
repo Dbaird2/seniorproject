@@ -10,7 +10,7 @@ $audit_id = $_GET['audit_id'] ?? '';
 $select = "SELECT audit_id, auditor, dept_id FROM audit_history WHERE dept_id = :dept_id AND auditor = :auditor AND audit_id = :audit_id";
 $stmt = $dbh->prepare($select);
 $stmt->execute([":dept_id"=>$dept_id, ":auditor"=>$auditor, ":audit_id"=>$audit_id]);
-if ($stmt->rowCount === 1) {
+if ($stmt->rowCount() === 1) {
     $delete = "DELETE FROM audit_history WHERE dept_id = :dept_id AND auditor = :auditor AND audit_id = :audit_id";
     $stmt = $dbh->prepare($delete);
     $stmt->execute([":dept_id"=>$dept_id, ":auditor"=>$auditor, ":audit_id"=>$audit_id]);
