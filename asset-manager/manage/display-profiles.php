@@ -7,7 +7,7 @@ require_once '../../config.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile Management</title>
 </head>
 
 <body>
@@ -18,10 +18,12 @@ require_once '../../config.php';
     $stmt->execute([":email" => $email]);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
 
-    $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile";
-    $stmt = $dbh->prepare($select_q);
-    $stmt->execute();
-    $result2 = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    if (in_array($_SESSION['role'], ['admin', 'management'], true)) {
+        $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile";
+        $stmt = $dbh->prepare($select_q);
+        $stmt->execute();
+        $result2 = $stmt->fetchALL(PDO::FETCH_ASSOC);
+    }
 
 ?>
     <section class="tables">
@@ -46,17 +48,19 @@ require_once '../../config.php';
             <table>
                 <thead>
                     <tr>
-                        <th>Users Profiles</th>
+                        <th>Other Users Profiles</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($result2 as $row) { ?>
+<?php 
+        foreach ($result2 as $row) { ?>
                         <tr>
-                            <?php
-    $row['profiles'] = trim($row['profiles'], "()");
-    $row['profiles'] = explode(",", $row['profiles']);
-    $email = $row['profiles'][0];
-    $profile = trim(trim(trim($row['profiles'][1], '""')), '"'); ?>
+<?php
+            $row['profiles'] = trim($row['profiles'], "()");
+        $row['profiles'] = explode(",", $row['profiles']);
+        $email = $row['profiles'][0];
+        $profile = trim(trim(trim($row['profiles'][1], '""')), '"'); ?>
+        <td><input type="text" value="<?= $email ?>" readonly><?= $email ?></td><br>
                             <td><input type="text" id="<?= $email ?>" value="<?= $profile ?>" readonly></td>
                             <td><button class="audit" value="<?= $email . ' ' . $profile ?>">Audit</button></td>
                             <td><button class="admin-delete-profile" value="<?= $email . ' ' . $profile ?>">Delete</button></td>
@@ -64,7 +68,7 @@ require_once '../../config.php';
                     <?php } ?>
                 </tbody>
              </table>
-         <?php } ?>
+<?php } ?>
       </section>
      </body>
 

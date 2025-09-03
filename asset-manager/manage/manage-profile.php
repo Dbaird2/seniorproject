@@ -29,7 +29,6 @@ check_auth();?>
             </header>
         </section>
         <div class="page2">
-            <h2 style="text-align:center;">Your Profiles</h2>
 
             <div id="display-profiles"></div>
         </div>

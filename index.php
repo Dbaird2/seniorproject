@@ -817,7 +817,7 @@ function switchChart(type) {
                 }
                 current = Array.from(byId.values()).sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
                 render(current);
-            }, 15000); // 15s
+            }, 20000); // 15s
         }
 
         function stopPolling() {
