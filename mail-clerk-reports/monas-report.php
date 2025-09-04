@@ -140,7 +140,7 @@ if (isset($_POST['submit'])) {
     $data_to_write = [];
     $skipped = 0;
     for ($i = 7; $i < count($sheet1); $i++) {
-        if ((int)$sheet1[$i-$skipped][0] === 9000 && empty($sheet1[$i][0]) {
+        if ((int)$sheet1[$i-$skipped][0] === 9000 && empty($sheet1[$i][0])) {
             $skipped++;
             continue;
         }

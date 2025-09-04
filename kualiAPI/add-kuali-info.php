@@ -171,7 +171,7 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
                 $mail->addAddress($email, 'User');
                 $mail->Subject = 'Account Auto Create';
                 $mail->Body    = '<p><strong>This email is to notify you of your automatic account creation for dataworks<strong>. <br>Dataworks is Senior Project group project designed to help with auditing and asset tracking.
-            Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu.</p><br>
+            Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu for more info.</p><br>
         <a href="https://dataworks-7b7x.onrender.com">Dataworks Link</a>';
                 $mail->AltBody = 'Click this link to access Dataworks...';
 
