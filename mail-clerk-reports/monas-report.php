@@ -159,7 +159,7 @@ if (isset($_POST['submit'])) {
                 $data_to_write[$account][] = [$sheet1[$i][1], $sheet1[$i][6], $sheet1[$i][11], $sheet1[$i][12], $sheet1[$i][13], $sheet1[$i][14], $sheet1[$i][15]];
 
                 $g = $sheet1[$i][6];
-                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
+                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE) && !preg_match('/(Correction)/', $g, $matches, PREG_OFFSET_CAPTURE) ) {
                     $postage_pieces[$account] += ((float) $sheet1[$i][11] * $postage_fee);
                 }
             }
