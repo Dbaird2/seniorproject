@@ -18,21 +18,23 @@ if (isset($_POST)) {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":profile"=>$name,":email"=>$email]);
         if ($select_stmt->rowCount() <= 0) {
-        $insert_q = "INSERT INTO user_asset_profile (email, profile_name) VALUES (?, ?)";
-        try {
-            $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute([$email, $name]);
-        } catch (PDOException $e) {
-            echo json_encode(['failed'=>'inserting']);
-            error_log("Failed adding profile " . $e->getMessage() . ' profile_name value ' . $name);
+            $insert_q = "INSERT INTO user_asset_profile (email, profile_name) VALUES (?, ?)";
+            try {
+                $insert_stmt = $dbh->prepare($insert_q);
+                $insert_stmt->execute([$email, $name]);
+                echo json_encode(['status' => 'success']);
+                exit;
+            } catch (PDOException $e) {
+                echo json_encode(['failed'=>'inserting']);
+                error_log("Failed adding profile " . $e->getMessage() . ' profile_name value ' . $name);
+                exit;
+            }
+        } else {
+            echo json_encode(["status" => "failed", "Reason" => "Profile Limit reached"]);
             exit;
         }
     } else {
-        echo json_encode(["status" => "failed", "Reason" => "Profile Limit reached"]);
-        exit;
-    }
-    } else {
         echo json_encode(["status"=>"failed", "reason"=> "Profile Name Already Used"]);
         exit;
+    }
 }
-

@@ -404,9 +404,6 @@ $mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_com
                 <div id="list" class="scroll"></div>
                 <div class="footer">
                     <div><span id="count">0</span> tickets · auto-updates</div>
-                    <div>
-                        <button id="loadMore">Load older</button>
-                    </div>
                 </div>
             </section>
         </div>
@@ -776,24 +773,6 @@ function switchChart(type) {
             render(current);
         }
 
-        async function loadMore() {
-            if (!current.length) {
-                await loadInitial();
-                return;
-            }
-            const last = current[current.length - 1];
-            const older = await fetchTickets({
-                beforeId: last.id,
-                limit: 25
-            });
-            const map = new Map(current.map(t => [t.id, t]));
-            for (const t of older) {
-                if (!map.has(t.id)) current.push(t);
-            }
-            current.sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
-            render(current);
-        }
-
         // ===== Auto-refresh (polling) =====
         let pollId;
 
@@ -817,7 +796,7 @@ function switchChart(type) {
                 }
                 current = Array.from(byId.values()).sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
                 render(current);
-            }, 20000); // 15s
+            }, 1000); // 15s
         }
 
         function stopPolling() {
@@ -826,7 +805,6 @@ function switchChart(type) {
 
         // ===== Wire up UI =====
         el('#refresh').addEventListener('click', loadInitial);
-        el('#loadMore').addEventListener('click', loadMore);
         el('#search').addEventListener('input', debounce(loadInitial, 300));
         el('#status').addEventListener('change', loadInitial);
         el('#type').addEventListener('change', loadInitial);

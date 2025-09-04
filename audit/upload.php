@@ -7,6 +7,10 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+$get_depts = "SELECT dept_id, dept_name FROM department";
+$stmt = $dbh->prepare($get_depts);
+$stmt->execute();
+$depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $blank_msg = '';
 check_auth();

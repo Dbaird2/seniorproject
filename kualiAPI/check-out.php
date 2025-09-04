@@ -78,16 +78,21 @@ try {
         $update_time = $edge['node']['meta']['createdAt'];
         $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
         $check_out = $check_in = false;
+        $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
         if ($check_out_type === 'Checking Out Equipment') {
             $dept = $edge['node']['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
-            $borrower = $edge['node']['data']['J06VDujK2F']['displayName'] ?? 'Unknown Borrower';
+            $borrower = $edge['node']['data']['JsHBzpz-AT']['displayName'] ?? $edge['node']['data']['JXLJ_AOov-']['displayName'];
+            $borrow_array = explode(" ", $borrower);
+
+            $borrower = $borrow_array[0] . " " . $borrow_array[count($borrow_array) - 2];
+
             $info = "CHCKD," . $dept . ' ' . $borrower;
             $check_out = true;
         } else {
             $check_in = true;
         }
 
-        $tag = $edge['node']['data']['AvjKneaxPz'][1]['jswe8fMFPT'];
+        $tag = $edge['node']['data']['AvjKneaxPz'][1]['jswe8fMFPT'] ?? $edge['node']['data']['BOZIA6hewQ'];
 
         if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
             echo "<br>Tag field empty<br>";
