@@ -71,7 +71,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 
 $spa_id = 0;
 $self_ids = $mgmt_ids = $overdue_ids = [];
-$self_prog_count = $mgmt_prog_count = $mgmt_over_prog_count [];
+$self_prog_count = $mgmt_prog_count = $mgmt_over_prog_count = [];
 $self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
 $mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
 $overdue_prog_count['In Progress'] = $overdue_prog_count['Complete'] = 0;

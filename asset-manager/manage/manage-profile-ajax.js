@@ -25,8 +25,8 @@ function addProfile() {
         data: {
             profile_name: profile_name
         },
-        success: function () {
-            console.log('Successfully added profile');
+        success: function (res) {
+            console.log('Successfully added profile', res);
             displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
