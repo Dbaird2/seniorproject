@@ -115,7 +115,7 @@ foreach ($audit_progress as $index => $row) {
             }
         }
     }
-    if ($row['audit_id'] === $curr_mgmt_id)) {
+    if ($row['audit_id'] === $curr_mgmt_id) {
         if (!in_array($row['dept_id'], $mgmt_ids)) {
             $mgmt_prog_count[$row['audit_status']]++;
             $mgmt_ids[] = [
