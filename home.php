@@ -44,8 +44,8 @@ $spa_status_data[] = ["Audit Status", "Count"];
 
 $status_count['In Progress'] = $status_count['Complete'] = 0;    
 $status_count['Incomplete'] = $total_departments;
-$status_over_count['In Progress'] = $status_over_count['Complete'] = 0;    
-$status_over_count['Incomplete'] = $total_departments;
+$mgmt_status_over_count['In Progress'] = $status_over_count['Complete'] = 0;    
+$mgmt_status_over_count['Incomplete'] = $total_departments;
 
 $self_status_count['In Progress'] = $self_status_count['Complete'] = 0;
 $self_status_count['Incomplete'] = $total_departments;
@@ -71,7 +71,7 @@ $spa_status_data[] = ['Incomplete', $spa_status_count['Incomplete']];
 
 $spa_id = 0;
 $self_ids = $mgmt_ids = $overdue_ids = [];
-$self_prog_count = $mgmt_prog_count = $mgmt_over_prog_count = [];
+$self_prog_count = $mgmt_prog_count = $mgmt_over_prog_count [];
 $self_prog_count['In Progress'] = $self_prog_count['Complete'] = 0;
 $mgmt_prog_count['In Progress'] = $mgmt_prog_count['Complete'] = 0;
 $overdue_prog_count['In Progress'] = $overdue_prog_count['Complete'] = 0;
@@ -90,8 +90,8 @@ foreach ($audit_progress as $index => $row) {
         $spa_over_status_count['Incomplete']--;
         break;
     case $old_mgmt_id:
-        $mgmt_over_status_count[$row['audit_id']]++;
-        $mgmt_over_status_count['Incomplete']--;
+        $mgmt_status_over_count[$row['audit_status']]++;
+        $mgmt_status_over_count['Incomplete']--;
         break;
     case $old_self_id:
         $self_over_status_count[$row['audit_status']]++;
