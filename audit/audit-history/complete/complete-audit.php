@@ -11,7 +11,7 @@ if (isset($_GET['dept_id'])) {
     if ($audit_id === 3) {
         $id = $curr_results['curr_self_id'] === 1 ? 2 : 1;
         $delete_q = "DELETE FROM audit_history WHERE audit_id = :id AND dept_id = :dept_id";
-        $delete_smt  = $dbh->prepare($delete_q);
+        $delete_stmt  = $dbh->prepare($delete_q);
         $delete_stmt->execute([":id"=>$id,":dept_id"=>$dept_id]);
 
         $update_q = "UPDATE audit_history SET audit_status = 'Complete', audit_id = :id WHERE audit_id = :audit_id AND dept_id = :dept_id";
@@ -20,7 +20,7 @@ if (isset($_GET['dept_id'])) {
     } else if ($audit_id === 6) {
         $id = $curr_results['curr_self_id'] === 4 ? 5 : 4;
         $delete_q = "DELETE FROM audit_history WHERE audit_id = :id AND dept_id = :dept_id";
-        $delete_smt  = $dbh->prepare($delete_q);
+        $delete_stmt  = $dbh->prepare($delete_q);
         $delete_stmt->execute([":id"=>$id,":dept_id"=>$dept_id]);
 
         $update_q = "UPDATE audit_history SET audit_status = 'Complete', audit_id = :id WHERE dept_id = :dept_id AND audit_id = :audit_id";
@@ -29,7 +29,7 @@ if (isset($_GET['dept_id'])) {
     } else if ($audit_id === 9) {
         $id = $curr_results['curr_self_id'] === 7 ? 8 : 7;
         $delete_q = "DELETE FROM audit_history WHERE audit_id = :id AND dept_id = :dept_id";
-        $delete_smt  = $dbh->prepare($delete_q);
+        $delete_stmt  = $dbh->prepare($delete_q);
         $delete_stmt->execute([":id"=>$id,":dept_id"=>$dept_id]);
 
         $update_q = "UPDATE audit_history SET audit_status = 'Complete', audit_id = :id WHERE dept_id = :dept_id AND audit_id = :audit_id";

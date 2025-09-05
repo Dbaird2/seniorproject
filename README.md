@@ -14,7 +14,6 @@ URL: https://dataworks-7b7x.onrender.com
 ## 🚀 Usage Instructions
 Only Management can give and create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
 ## To Do
-- Add a Landing Page
 - Add delete features for assets and users
 - Help pages 
 - Complete audit page so you can check the type of form needed for each asset,
