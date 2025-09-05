@@ -19,9 +19,14 @@ $due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
 
 $spa_due = $due_dates['spa_due'] ?? '2026-07-01';
 $old_spa_id = (int)$due_dates['curr_spa_id'] === 8 ? 9 : 8;
+$curr_spa_id = (int)$due_dates['curr_spa_id]';
+
 $self_due = $due_dates['self_due'] ?? '2026-07-01';
+$curr_self_id = (int)$due_dates['curr_self_id]';
 $old_self_id = (int)$due_dates['curr_self_id'] === 1 ? 2 : 1;
+
 $mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
+$curr_mgmt_id = (int)$due_dates['curr_mgmt_id]';
 $old_mgmt_id = (int)$due_dates['curr_mgmt_id'] === 4 ? 5 : 4;
 
 /* GET AUDITS */
@@ -97,7 +102,7 @@ foreach ($audit_progress as $index => $row) {
         $spa_over_status_count['Incomplete']--;
         break;
     }
-    if (in_array($row['audit_id'], [1, 2])) {
+    if ($row['audit_id'] === $curr_self_id) {
         if (!in_array($row['dept_id'], $self_ids)) {
             $self_prog_count[$row['audit_status']]++;
             $self_ids[] = [
@@ -110,7 +115,7 @@ foreach ($audit_progress as $index => $row) {
             }
         }
     }
-    if (in_array($row['audit_id'], [4, 5])) {
+    if ($row['audit_id'] === $curr_mgmt_id)) {
         if (!in_array($row['dept_id'], $mgmt_ids)) {
             $mgmt_prog_count[$row['audit_status']]++;
             $mgmt_ids[] = [
@@ -123,7 +128,7 @@ foreach ($audit_progress as $index => $row) {
             }
         }
     }
-    if (in_array($row['audit_id'], [7, 8])) {
+    if ($row['audit_id'] === $curr_spa_id)) {
         if ($spa_id === 0) {
             $spa_status = $row['audit_status'] ?? 'Incomplete';
             $spa_id = $row['audit_id'];
@@ -165,8 +170,8 @@ $self_prev_audits_in_progress = $self_over_prog_count['In Progress'] ?? 0;
 
 $mgmt_audits_in_progress = $mgmt_prog_count['In Progress'] ?? 0;
 $mgmt_audits_complete = $mgmt_prog_count['Complete'] ?? 0;
-$mgmt_prev_audits_complete = $status_over_count['Complete'];
-$mgmt_prev_audits_in_progress = $status_over_count['In Progress'] ?? 0;
+$mgmt_prev_audits_complete = $mgmt_status_over_count['Complete'];
+$mgmt_prev_audits_in_progress = $mgmt_status_over_count['In Progress'] ?? 0;
 
 $spa_status = $spa_id === 0 ? 'Incomplete' : $spa_status;
 $spa_completion_status = $spa_status === 'Complete' ? 100 : 50;
