@@ -1,9 +1,9 @@
 <?php
 include_once "../../../config.php";
-if (isset($_POST)) {
+if (isset($_POST['profile_name'])) {
     $email = $_SESSION['email'];
     $name = trim($_POST['profile_name']);
-    $select_q = "SELECT COUNT(*) as profile_count from user_asset_profile WHERE email = :email";
+    $select_q = "SELECT COUNT(DISTINCT(profile_name, email)) from user_asset_profile WHERE email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([$email]);
@@ -13,7 +13,7 @@ if (isset($_POST)) {
         echo json_encode(['failed'=>'selecting']);
         exit;
     }
-    if ((int) $count['profile_count'] <= 6) {
+    if ((int) $count['profile_count'] <= 8) {
         $select_q = "SELECT profile_name, email from user_asset_profile WHERE profile_name = :profile AND email = :email";
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":profile"=>$name,":email"=>$email]);
