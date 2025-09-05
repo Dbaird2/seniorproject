@@ -11,6 +11,10 @@ include_once ("../../config.php");
 </head>
 <body>
 <?php
+$get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
+$curr_stmt = $dbh->query($get_curr_ids);
+$curr_stmt->execute();
+$curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
 $search = $_POST['search'];
 $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
 $and = $status_search === '' ? '' : ' AND ';
@@ -40,17 +44,34 @@ $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tbody>
 <?php
 $i= 0;
-$audit_type = [
-    1 => 'Self Audit',
-    2 => 'Self Audit',
-    3 => 'Overdue Self Audit',
-    4 => 'Management Audit',
-    5 => 'Management Audit',
-    6 => 'Overdue Management Audit',
-    7 => 'SPA Audit',
-    8 => 'SPA Audit',
-    9 => 'Overdue SPA Audit'
-];
+if ($curr_results['curr_self_id'] === 1) {
+    $audit_type[1] = 'Self Audit';
+    $audit_type[2] = 'Previous Self Audit';
+    $audit_type[3] = 'Overdue Self Audit';
+} else {
+    $audit_type[1] = 'Previosu Self Audit';
+    $audit_type[2] = 'Self Audit';
+    $audit_type[3] = 'Overdue Self Audit';
+}
+if ($curr_results['curr_mgmt_id'] === 4) {
+    $audit_type[4] = 'Management Audit';
+    $audit_type[5] = 'Previous Management Audit';
+    $audit_type[6] = 'Overdue Management Audit';
+} else {
+    $audit_type[4] = 'Previosu Management Audit';
+    $audit_type[5] = 'Management Audit';
+    $audit_type[6] = 'Overdue Management Audit';
+}
+if ($curr_results['curr_spa_id'] === 8) {
+    $audit_type[7] = 'SPA Audit';
+    $audit_type[8] = 'Previous SPA Audit';
+    $audit_type[9] = 'Overdue SPA Audit';
+} else {
+    $audit_type[7] = 'Previosu SPA Audit';
+    $audit_type[8] = 'SPA Audit';
+    $audit_type[9] = 'Overdue SPA Audit';
+}
+
 foreach ($audits as $row) {
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
         echo "<tr class='$color'>";

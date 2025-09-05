@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             LEFT JOIN department d ON a.dept_id = d.dept_id
             WHERE dept_name = :name ORDER BY a.asset_tag";
         $select_stmt = $dbh->prepare($select_q);
-        $select_stmt->execute([":profile_name"=>$profile,":email"=>$email]);
+        $select_stmt->execute([":name"=>$profile]);
         $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         unset($_SESSION['data']);
         unset($_SESSION['info']);
@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     background: linear-gradient(135deg, #6dd5ed, #2193b0);
     border-radius: 15px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    height: calc(var(--folder-H) * 2.2);
+    height: calc(var(--folder-H) * 3);
     position: relative;
     width: 100%;
   }
@@ -458,7 +458,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
           Choose a file
         </label>
 <h3><br>OR<br></h3>
-<input list="dept-ids" type="search" name="list-type">
+<input class="form-input" list="dept-ids" type="search" name="list-type" placeholder="Search Dept Name">
 <datalist id="dept-ids" id="list" name="list">
 <?php foreach ($depts as $dept) { ?>
 <option value="<?= $dept['dept_name'] ?>"><?= $dept['dept_name'] ?></option>

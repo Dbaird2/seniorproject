@@ -18,7 +18,7 @@ if (isset($_GET['dept_id'])) {
         $update_stmt = $dbh->prepare($update_q);
         $update_stmt->execute([":id"=>$id,":dept_id"=>$dept_id, ":audit_id"=>$audit_id]);
     } else if ($audit_id === 6) {
-        $id = $curr_results['curr_self_id'] === 4 ? 5 : 4;
+        $id = $curr_results['curr_mgmt_id'] === 4 ? 5 : 4;
         $delete_q = "DELETE FROM audit_history WHERE audit_id = :id AND dept_id = :dept_id";
         $delete_stmt  = $dbh->prepare($delete_q);
         $delete_stmt->execute([":id"=>$id,":dept_id"=>$dept_id]);
@@ -27,7 +27,7 @@ if (isset($_GET['dept_id'])) {
         $update_stmt = $dbh->prepare($update_q);
         $update_stmt->execute([":id"=>$id,":dept_id"=>$dept_id, ":audit_id"=>$audit_id]);
     } else if ($audit_id === 9) {
-        $id = $curr_results['curr_self_id'] === 7 ? 8 : 7;
+        $id = $curr_results['curr_spa_id'] === 7 ? 8 : 7;
         $delete_q = "DELETE FROM audit_history WHERE audit_id = :id AND dept_id = :dept_id";
         $delete_stmt  = $dbh->prepare($delete_q);
         $delete_stmt->execute([":id"=>$id,":dept_id"=>$dept_id]);
