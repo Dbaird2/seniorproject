@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
                 if ($stmt->execute([$user_check['email']])) {
-                    header("location: https://dataworks-7b7x.onrender.com/index.php");
+                    header("location: https://dataworks-7b7x.onrender.com/home.php");
                 } else {
                     error_log("Error updating last_login");
                 }

@@ -4,7 +4,8 @@ if (isset($_POST)) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
     $get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
-    $curr_stmt = $dbh->query($get_curr_ids)->execute();
+    $curr_stmt = $dbh->query($get_curr_ids);
+    $curr_stmt->execute();
     $curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($audit_id === 3) {
