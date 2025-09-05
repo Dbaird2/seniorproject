@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSUB IMS</title>
+<?php include_once "navbar.php"; ?> 
 </head>
 <style>
     body,
@@ -41,10 +42,6 @@
         <source src="videos/runners_rise.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-    <div class="content">
-        <h1>Welcome</h1>
-        <p><a href="auth/login.php">Click Here</a> to login.</p>
-    </div>
 </body>
 
 </html>
