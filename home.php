@@ -19,14 +19,14 @@ $due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
 
 $spa_due = $due_dates['spa_due'] ?? '2026-07-01';
 $old_spa_id = (int)$due_dates['curr_spa_id'] === 8 ? 9 : 8;
-$curr_spa_id = (int)$due_dates['curr_spa_id]';
+$curr_spa_id = (int)$due_dates['curr_spa_id'];
 
 $self_due = $due_dates['self_due'] ?? '2026-07-01';
-$curr_self_id = (int)$due_dates['curr_self_id]';
+$curr_self_id = (int)$due_dates['curr_self_id'];
 $old_self_id = (int)$due_dates['curr_self_id'] === 1 ? 2 : 1;
 
 $mgmt_due = $due_dates['mgmt_due'] ?? '2026-07-01';
-$curr_mgmt_id = (int)$due_dates['curr_mgmt_id]';
+$curr_mgmt_id = (int)$due_dates['curr_mgmt_id'];
 $old_mgmt_id = (int)$due_dates['curr_mgmt_id'] === 4 ? 5 : 4;
 
 /* GET AUDITS */
