@@ -128,7 +128,7 @@ foreach ($audit_progress as $index => $row) {
             }
         }
     }
-    if ($row['audit_id'] === $curr_spa_id)) {
+    if ($row['audit_id'] === $curr_spa_id) {
         if ($spa_id === 0) {
             $spa_status = $row['audit_status'] ?? 'Incomplete';
             $spa_id = $row['audit_id'];
