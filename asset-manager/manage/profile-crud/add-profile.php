@@ -3,7 +3,7 @@ include_once "../../../config.php";
 if (isset($_POST['profile_name'])) {
     $email = $_SESSION['email'];
     $name = trim($_POST['profile_name']);
-    $select_q = "SELECT COUNT(DISTINCT(profile_name, email)) from user_asset_profile WHERE email = :email";
+    $select_q = "SELECT COUNT(DISTINCT(profile_name, email)) as profile_count from user_asset_profile WHERE email = :email";
     try {
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([$email]);

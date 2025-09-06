@@ -88,104 +88,107 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
-function addInfo($display_name, $full_name, $email, $id, $school_id, $signature, $role = 'custodian', $dept_id = 'D21560')
+function addInfo($display_name, $full_name, $email, $id, $school_id, $signature, $dept_form_id, $documentSetId, $role = 'custodian', $dept_name, $dept_id = 'D21560')
 {
     global $dbh;
-    try {
-        $select_q = "SELECT * FROM kuali_info WHERE id = ?";
-        $select_stmt = $dbh->prepare($select_q);
-        $select_stmt->execute([$id]);
-    } catch (PDOException $e) {
-        error_log("SELECT kuali_info error: " . $e->getMessage());
+
+    //UPDATE DEPARTMENT
+    $dept_select = "SELECT dept_id, document_set_id, form_id, custodian, dept_manager WHERE dept_id = :dept";
+    $dept_stmt = $dbh->prepare($dept_select);
+    $dept_stmt->execute([":dept"]);
+
+    if ($dept_stmt->rowCount() === 1) {
+        $dept_result->fetch(PDO::FETCH_ASSOC);
+        $update_sql = "UPDATE department set ";
+        $params = [];
+        $set_array = [];
+        if ($dept_result['document_set_id'] !== $documentSetId || empty($dept_result['document_set_id'])) {
+            // DEPT DOCUMENT NOT SET OR OUTDATED
+            $set_array[] = "document_set_id = :set_id";
+            $set_array[] = "form_id = :form_id";
+            $params[":form_id"] = $dept_form_id;
+            $params[":document_set_id"] = $documentSetId;
+        }
+        if (empty($dept_result['custodian']) && $role = 'custodian') {
+            $set_array[] = "ARRAY_APPEND(custodian, :custodian)";
+            $params[":custodian"] = $full_name;
+        }
+        if (empty($dept_result['dept_manager']) && $role = 'manager') {
+            $set_array[] = "dept_manager = :manager";
+            $params[":manager"] = $full_name;
+        }
+        $set = implode(", ", $set_array);
+        $update_sql .= $set . " WHERE dept_id = :dept_id";
+        $params[":dept_id"] = $dept_id;
+        $dept_stmt = $dbh->prepare($update_sql);
+        $dept_stmt->execute($params);
+    } else {
+        // DEPARTMENT DOES NOT EXIST
+        $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id VALUES (?, ?, ?, ?, ?, ?)"; 
+        $dept_stmt = $dbh->prepare($dept_insert);
+        if
+        $dept_stmt->execute([$dept_id, $dept_name, $full_name
     }
-    if ($select_stmt->rowCount() < 1) {
-        try {
-            $insert_q = "INSERT INTO kuali_info (id, display_name, full_name, email, school_id, signature, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute([$id, $display_name, $full_name, $email, $school_id, $signature, '.{' . $dept_id . '}']);
-        } catch (PDOException $e) {
-            error_log("INSERT kuali_info error: " . $e->getMessage());
+
+    // UPDATE USER
+    $user_select = "SELECT email, u_role, form_id, school_id FROM user_table WHERE email = :email";
+    $user_stmt = $dbh->prepare($user_select);
+    $user_stmt->execute([":email"]);
+    if ($user_stmt->rowCount() === 1) {
+        // USER EXISTS CHECK FOR UPDATES
+        $user_result = $user_stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($user_result['form_id']) || $user_result['form_id'] !== $id) {
+            $user_update = "UPDATE user_table SET form_id = :form_id, school_id = :school_id WHERE email = :email";
+            $user_stmt = $dbh->prepare($user_update);
+            $user_stmt->execute([":form_id"=>$id, ":school_id"=>$school_id, ":email"=>$email]);
         }
     } else {
-        try {
-            $update_q = "UPDATE kuali_info SET signature = ?, dept_id = ARRAY_APPEND(dept_id, ?) WHERE id = ?";
-            $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([$display_name, $full_name, $email, $school_id, $signature, $dept_id, $id]);
-        } catch (PDOException $e) {
-            error_log("UPDATE kuali_info error: " . $e->getMessage());
-        }
-    }
-    if ($dept_id !== 'D21560') {
-        try {
-            $select = "SELECT dept_id, email FROM user_table WHERE email = ?";
-            $select_stmt = $dbh->prepare($select);
-            $select_stmt->execute([$email]);
-        } catch (PDOException $e) {
-            error_log("SELECT user_table error: " . $e->getMessage());
+        // USER DOES NOT EXIST CREATE ACCOUNT
+        if ($role === 'admin' || $role === 'management') {
             return;
         }
-        if ($select_stmt->rowCount() > 0) {
-            $dept_id = $select_stmt->fetch(PDO::FETCH_ASSOC)['dept_id'];
-            // $dept_id = {'D21560','D10101'}
-            $dept_id = trim($dept_id, '{}');
-            $dept_id_array = explode(',', $dept_id);
-            if (in_array($dept_id, $dept_id_array)) {
-                // Department ID already exists
-                return;
-            } else {
-                try {
-                    $update = "UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, ?) WHERE email = ?";
-                    $update_stmt = $dbh->prepare($update);
-                    $update_stmt->execute([$dept_id, $email]);
-                } catch (PDOException $e) {
-                    error_log("UPDATE user_table error: " . $e->getMessage());
-                    return;
-                }
-            }
+        $user_insert = ", pw, email, u_role, f_name, l_name, dept_id, form_id, school_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $user_stmt = $dbh->prepare($user_insert);
+        $username_array = explode("@", $email);
+        $name_array = explode(" ", $full_name);
+        if (in_array($role, ['custodian', 'manager'])) {
+            $u_role = 'custodian';
         } else {
-            $name_array = explode(' ', $full_name);
-            $size = count($name_array);
-            try {
-                $pw = randomPassword();
-                $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
-                $insert = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-                $insert_stmt = $dbh->prepare($insert);
-                $insert_stmt->execute([$name_array[0] . '_' . $name_array[$size - 1], $hashed_pw, $email, 'admin', $name_array[0], $name_array[$size - 1], '{' . $dept_id . '}', $role]);
-            } catch (PDOException $e) {
-                error_log("INSERT user_table error: " . $e->getMessage());
-                return;
-            }
+            $u_role = 'management';
+        }
+        $user_stmt->execute([$username_array[0], $u_role, $name_array[0], $name_array[1], $dept_id, $id, $school_id]);
+        try {
+            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'dasonbaird25@gmail.com';
+            $mail->Password   = $_SESSION['app_pass'];
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+            $mail->isHTML(true);
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
+            $mail->addAddress($email, 'User');
+            $mail->Subject = 'Account Auto Create';
+            $mail->Body    = '<p><strong>This email is to notify you of your automatic account creation for dataworks<strong>. <br>Dataworks is Senior Project group project designed to help with auditing and asset tracking.
+                Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu for more info.</p><br>
+                <a href="https://dataworks-7b7x.onrender.com">Dataworks Link</a>';
+            $mail->AltBody = 'Click this link to access Dataworks...';
 
-            try {
-                $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'dasonbaird25@gmail.com';
-                $mail->Password   = $_SESSION['app_pass'];
-                $mail->SMTPSecure = 'tls';
-                $mail->Port       = 587;
-                $mail->isHTML(true);
-                $mail->CharSet = 'UTF-8';
-                $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
-                $mail->addAddress($email, 'User');
-                $mail->Subject = 'Account Auto Create';
-                $mail->Body    = '<p><strong>This email is to notify you of your automatic account creation for dataworks<strong>. <br>Dataworks is Senior Project group project designed to help with auditing and asset tracking.
-            Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu for more info.</p><br>
-        <a href="https://dataworks-7b7x.onrender.com">Dataworks Link</a>';
-                $mail->AltBody = 'Click this link to access Dataworks...';
-
-                $mail->send();
-            } catch (Exception $e) {
-                error_log("Error sending email: " . $e->getMessage());
-                return;
-            }
+            $mail->send();
+        } catch (Exception $e) {
+            error_log("Error sending email: " . $e->getMessage());
+            return;
         }
     }
+
+
 }
 try {
     foreach ($edges as $index => $edge) {
         $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
+        $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
         $update_time = $edge['node']['meta']['createdAt'];
         if (isset($edge['node']['data']['XhBe3DNaU4'])) {
             // NEW CUSTODIAN
@@ -207,7 +210,7 @@ try {
                 $c_signature = $edge['node']['data']['XhBe3DNaU4']['signedName'];
             }
 
-            addInfo($c_display_name, $c_full_name, $c_email, $c_id, $c_school_id, $c_signature, $role = 'custodian',  $dept_id);
+            addInfo($c_display_name, $c_full_name, $c_email, $c_id, $c_school_id, $c_signature, $role = 'custodian', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['Oe0m5rZUcD'])) {
             // PERSON FILLING OUT FORM
@@ -231,7 +234,7 @@ try {
                 $m_signature = $edge['node']['data']['Oe0m5rZUcD']['signedName'];
             }
 
-            addInfo($m_display_name, $m_full_name, $m_email, $m_id, $m_school_id, $m_signature, $role = 'admin', $m_dept_id);
+            addInfo($m_display_name, $m_full_name, $m_email, $m_id, $m_school_id, $m_signature, $role = 'admin','DISTRIBUTION', $m_dept_id);
         }
         if (isset($edge['node']['data']['Ut5TV4CKpt'])) {
             // TRAINER
@@ -254,7 +257,7 @@ try {
                 $d_signature = $edge['node']['data']['Ut5TV4CKpt']['signedName'];
             }
 
-            addInfo($d_display_name, $d_full_name, $d_email, $d_id, $d_school_id, $d_signature, $role = 'admin');
+            addInfo($d_display_name, $d_full_name, $d_email, $d_id, $d_school_id, $d_signature, $role = 'admin', 'DISTRIBUTION');
         }
         if (isset($edge['node']['data']['04PgxWqAbE'])) {
             // MANAGER/DEAN
@@ -277,7 +280,7 @@ try {
                 $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
             }
 
-            addInfo($m4_display_name, $m4_full_name, $m4_email, $m4_id, $m4_school_id, $m4_signature, $role = 'manager', $dept_id);
+            addInfo($m4_display_name, $m4_full_name, $m4_email, $m4_id, $m4_school_id, $m4_signature, $role = 'manager', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
             // MANAGER/DEAN
@@ -288,10 +291,10 @@ try {
             $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
             $m2_signature = $m2_display_name;
 
-            addInfo($m2_display_name, $m2_full_name, $m2_email, $m2_id, $m2_school_id, $m2_signature, $role = 'manager', $dept_id);
+            addInfo($m2_display_name, $m2_full_name, $m2_email, $m2_id, $m2_school_id, $m2_signature, $role = 'manager', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
-            // MANAGER/DEAN
+            // CUSTODIAN
             $m3_display_name =  $m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName'];
             $m3_email = $edge['node']['data']['kS_kp-Oo1y']['email'];
 
@@ -299,7 +302,7 @@ try {
             $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
             $m3_signature = $m3_display_name;
 
-            addInfo($m3_display_name, $m3_full_name, $m3_email, $m3_id, $m3_school_id, $m3_signature, $role = 'manager', $dept_id);
+            addInfo($m3_display_name, $m3_full_name, $m3_email, $m3_id, $m3_school_id, $m3_signature, $role = 'custodian', $dept_name, $dept_id);
         }
         $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
         $update_stmt = $dbh->prepare($update_q);

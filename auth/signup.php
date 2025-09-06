@@ -15,6 +15,7 @@ $user_err = $email_err = $f_name_err = $l_name_err = '';
 $pw_err = $cpw_err = $dept_err = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $status_type = $_POST['status_type'];
     $user_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
     $email_err = (($email = $_POST['email'] ?? '') != '') ? "" : "Empty Email Field";
     $f_name = $_POST['f_name'] ?? '';
@@ -68,8 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$err) {
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id) 
-        VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[]);";
+        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, status_type) 
+        VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[], :status_type);";
         $stmt = $dbh->prepare($stmt);
         $full_name = $f_name . " " . $l_name;
         $dept_id_array = array_map('trim', $dept_id_array);
@@ -80,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
                 ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
-                ':dept'=>$dept_pg_array])) {
+                ':dept'=>$dept_pg_array, ":status_type"=>$status_type])) {
                 if ($role === 'custodian') {
                     $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
                     $dept_stmt = $dbh->prepare($dept_cust);
@@ -594,6 +595,14 @@ include_once("../navbar.php");
                             <option value="custodian">Custodian</option>
                             <option value="management">Management</option>
                             <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="status_type">Position</label>
+                        <select class="form-select" name="status_type" id="status_type" required>
+                            <option value="Staff">Staff</option>
+                            <option value="Faculty">Faculty</option>
+                            <option value="Student">Student</option>
                         </select>
                     </div>
                 </div>

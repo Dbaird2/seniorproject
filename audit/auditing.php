@@ -414,10 +414,13 @@ document.addEventListener("input", function(e) {
     let tab = 5;
     if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F') {
         tab++;
-        if (value[1] === 'P') {
+        if (value[1] === 'P' || value[1] === 'R') {
             tab++;
-        } else if (value[1] === 'T' && value[2] === 'U') {
-            tab += 2;
+        } else if (value[1] === 'T') {
+            tab++;
+        }
+        if (value[2] == 'U' || value[2] === 'C') {
+            tab++;
         }
     }
     if (value.length >= tab) {

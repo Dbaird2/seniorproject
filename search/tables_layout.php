@@ -153,6 +153,55 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
+<select name="disposed" id="disposed">
+                            <option value="in-service">In Service</option>
+                            <option value="disposed">Disposed</option>
+                        </select>
+                        <select name="reason" id="reason">
+                            <option value=""></option>
+                            <option value="lsd">Lost/Stolen/Damaged</option>
+                            <option value="psr">Proper Disposal</option>
+                        </select>
+                        <br>
+                        <label for="check-form">Check Form (if applicable):</label><br>
+                        <select name="check-forms" id="check-form">
+                            <option value=""></option>
+                            <option value="out">Check Out</option>
+                            <option value="in">Check In</option>
+                        </select>
+                        <select name="condition" id="condition">
+                            <option value=""></option>
+                            <option value="new">New</option>
+                            <option value="good">Good</option>
+                            <option value="used">Used</option>
+                            <option value="damaged">Damaged</option>
+                        </select>
+                        <select name="device" id="device">
+                            <option value=""></option>
+                            <option value="laptop">Laptop</option>
+                            <option value="desktop">Desktop</option>
+                            <option value="tablet">Tablet</option>
+                        </select>
+                        <select name="dept" id="dept">
+                            <option value=""></option>
+                            <?php foreach ($dept2 as $id) { ?>
+                                <option value="<?= $id ?>"><?= $id ?></option>
+                            <?php } ?>
+                        </select>
+                        <input type="search" list="check-form-names" name="check-form-names" id="check-form-names" placeholder="Start typing a name...">
+                        <datalist id="check-form-names">
+<?php
+        $select = "SELECT full_name, dept_id FROM kuali_info ORDER BY full_name ASC";
+        $select_stmt = $dbh->prepare($select);
+        $select_stmt->execute();
+        $users = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($users as $user) {
+            $full_name = $user['full_name'];
+?>
+                                <option value="<?= $full_name ?>"><?= $full_name ?> (<?= $user['dept_id'] ?>)</option>
+                            <?php } ?>
+                        </datalist>
+                        <br>
                                     <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
                                     <button type="submit">Update Asset</button>
                                 </form>
