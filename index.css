@@ -4,14 +4,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
-body {
-  font-family: "Source Sans Pro", sans-serif;
-  line-height: 1.6;
-  color: #475569;
-  background-color: #ffffff;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -19,15 +11,6 @@ body {
 }
 
 /* Typography */
-h1,
-h2,
-h3,
-h4 {
-  font-family: "Playfair Display", serif;
-  font-weight: 700;
-  line-height: 1.2;
-  color: #164e63;
-}
 
 h1 {
   font-size: 3.5rem;
@@ -344,12 +327,6 @@ h4 {
 }
 
 /* CTA Section */
-.cta {
-  padding: 6rem 0;
-  background: linear-gradient(135deg, #164e63 0%, #0c3a4a 100%);
-  color: #ffffff;
-  text-align: center;
-}
 
 .cta-content h2 {
   color: #ffffff;
