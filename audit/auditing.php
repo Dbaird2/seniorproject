@@ -9,6 +9,9 @@ if (empty($_SESSION['info']) && empty($_SESSION['data'])) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?msg=NoRecentAudit");
     exit;
 }
+echo "<pre>";
+var_dump($_SESSION['data']);
+echo "</pre>";
 
 
 ini_set('display_errors', '1');
@@ -80,11 +83,11 @@ if (isset($_POST['create'])) {
 <html>
 
 <head>
+<title>Auditing <?= $_SESSION['info'][2] ?></title>
     <?php include_once("../navbar.php"); ?>
     <style>
     </style>
     <link rel="stylesheet" href="auditing.css" media="all">
-    <title>Asset Management Excel</title>
 </head>
 <?php
 $worksheet = NULL;
