@@ -370,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-document.querySelect('.table').addEventListener('click', function(e) {
+document.querySelector('.table').addEventListener('click', function(e) {
     if (e.target.classList.contains('delete')) {
         const params = new URLSearchParams({
             tag: e.target.value
@@ -394,7 +394,7 @@ document.querySelect('.table').addEventListener('click', function(e) {
     } else {
         console.log("Could not get info", e.target.classList.contains("delete"));
     }
-}
+});
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
