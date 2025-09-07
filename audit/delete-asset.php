@@ -10,7 +10,7 @@ if (isset($_POST['tag'])) {
         }
     }
     $_SESSION['data'] = array_values($_SESSION['data']);
-    echo json_encode(["status"=>"Successfully deleted asset"]);
+    echo json_encode(["status"=>"Successfully deleted asset", "data"=>$_SESSION['data']]);
     exit;
 }
 echo json_encode(["status"=>"Failed to delete asset"]);
