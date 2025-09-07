@@ -374,7 +374,8 @@ document.querySelector('.table').addEventListener('click', function(e) {
     if (e.target.classList.contains('delete')) {
         const params = new URLSearchParams({
             tag: e.target.value
-        });
+    });
+        console.log(params);
         url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
         const response = confirm("Are you sure you want to delete this asset");
         if (response) {
