@@ -370,10 +370,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-document.querySelectorAll('.delete').addEventListener('click', function(e) {
+document.querySelectorAll('.delete').forEach(el => {
+el.addEventListener('click', function(e) {
     e.preventDefault();
     const params = new URLSearchParams({
-    tag: e.target.id
+    tag: this.id
     });
     console.log(e.target.value);
     url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
@@ -392,7 +393,7 @@ document.querySelectorAll('.delete').addEventListener('click', function(e) {
     } else {
         console.log("User declined");
     }
-    
+
 });
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
