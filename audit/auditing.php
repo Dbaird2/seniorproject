@@ -391,8 +391,7 @@ function deleteAsset(tag) {
     } else {
         console.log("User declined");
     }
-});
-});
+};
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
