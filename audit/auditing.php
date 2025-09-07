@@ -370,8 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-document.querySelector('.table').addEventListener('click', function(e) {
-    if (e.target.classList.contains('delete')) {
+document.querySelector('.delete').addEventListener('click', function(e) {
         const params = new URLSearchParams({
             tag: e.target.value
     });
@@ -392,9 +391,7 @@ document.querySelector('.table').addEventListener('click', function(e) {
         } else {
             console.log("User declined");
         }
-    } else {
-        console.log("Could not get info", e.target.classList.contains("delete"), e.target.value);
-    }
+    
 });
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
