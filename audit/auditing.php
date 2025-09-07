@@ -387,7 +387,7 @@ function deleteAsset(tag) {
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error ', error));
-        location.reload();
+        //location.reload();
     } else {
         console.log("User declined");
     }
@@ -524,7 +524,7 @@ function filterTable() {
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[1];
+        td = tr[i].getElementsByTagName("td")[2];
         if (td) {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
@@ -543,7 +543,7 @@ function filterAssetStatus() {
     table = document.querySelector(".table");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
+        td = tr[i].getElementsByTagName("td")[3];
         if (td && filter === 'X') {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
