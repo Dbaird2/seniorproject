@@ -232,6 +232,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
             <table class="table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Row</th>
                         <th>Tags</th>
                         <th>Found</th>
@@ -274,7 +275,7 @@ foreach ($data_slice as $index => $row) {
     $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
     $po = htmlspecialchars($row["PO No."] ?? "");
     echo "<tr class='{$color_class}'>
-        <td class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "' name='delete'>&#215;</td>
+        <td><a name='delete' href='#' class'delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</a></td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
         <td class='{$match}'>{$found_tag}</td>
@@ -314,7 +315,7 @@ function loadMoreRows() {
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
         tr.innerHTML = `
             <td class=${match}>${300 + index + 1}</td>
-                <td class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</td>
+                <td><a href="#" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</a></td>
                 <td class=${match}>${row["Tag Number"]}</td>
                 <td class=${match}>${row["Tag Status"]}</td>
                 <td class=${match}>${row["Descr"]}</td>
