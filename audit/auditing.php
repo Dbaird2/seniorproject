@@ -275,7 +275,7 @@ foreach ($data_slice as $index => $row) {
     $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
     $po = htmlspecialchars($row["PO No."] ?? "");
     echo "<tr class='{$color_class}'>
-        <td><a name='delete' href='#' class'delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</a></td>
+        <td><a name='delete' href='#' class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</a></td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
         <td class='{$match}'>{$found_tag}</td>
