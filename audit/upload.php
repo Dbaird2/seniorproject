@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             LEFT JOIN department d ON a.dept_id = d.dept_id
             WHERE dept_name = :name ORDER BY a.asset_tag";
         $select_stmt = $dbh->prepare($select_q);
-        $select_stmt->execute([":name"=>$profile]);
+        $select_stmt->execute([":name"=>$name]);
         $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         unset($_SESSION['data']);
         unset($_SESSION['info']);
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $highest_row++;
             }
         }
-        $_SESSION['info'] = [$highest_row, NULL, $profile, 'cust', $profile];
+        $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
         header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     }
