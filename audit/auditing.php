@@ -393,7 +393,7 @@ el.addEventListener('click', function(e) {
     } else {
         console.log("User declined");
     }
-
+});
 });
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
