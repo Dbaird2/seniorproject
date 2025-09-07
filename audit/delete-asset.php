@@ -2,8 +2,8 @@
 include_once "../config.php";
 check_auth();
 
-if (isset($_POST['delete'])) {
-    $tag = $_POST['delete'];
+if (isset($_POST['tag'])) {
+    $tag = $_POST['tag'];
     foreach ($_SESSION['data'] as $key => $row) {
         if ($row["Tag Number"] === $tag) {
             unset($_SESSION['data'][$key]);
