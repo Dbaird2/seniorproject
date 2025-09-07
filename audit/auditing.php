@@ -376,7 +376,7 @@ document.querySelector('.table').addEventListener('click', function(e) {
             tag: e.target.value
         });
         url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
-        const reponse = confirm("Are you sure you want to delete this asset");
+        const response = confirm("Are you sure you want to delete this asset");
         if (response) {
             fetch(url, {
             method: 'POST', 
@@ -385,7 +385,7 @@ document.querySelector('.table').addEventListener('click', function(e) {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
         })
-            .then(res =>res.json())
+            .then(res => res.json())
             .then(data => console.log(data))
             .catch(error => console.error('Error ', error));
         } else {
