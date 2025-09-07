@@ -372,9 +372,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 document.querySelector('.delete').addEventListener('click', function(e) {
         const params = new URLSearchParams({
-            tag: e.target.value
+            tag: e.target.id
     });
-        console.log(params);
+        console.log(e.target.value);
         url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
         const response = confirm("Are you sure you want to delete this asset");
         if (response) {
