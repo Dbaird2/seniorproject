@@ -275,7 +275,7 @@ foreach ($data_slice as $index => $row) {
     $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
     $po = htmlspecialchars($row["PO No."] ?? "");
     echo "<tr class='{$color_class}'>
-        <td><a name='delete' href='#' class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</a></td>
+        <td><button onclick='deleteAsset({$tag});' name='delete'  class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</button></td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
         <td class='{$match}'>{$found_tag}</td>
@@ -314,8 +314,8 @@ function loadMoreRows() {
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
         tr.innerHTML = `
+                <td><button onclick="deleteAsset(${row["Tag Number"]})" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
             <td class=${match}>${300 + index + 1}</td>
-                <td><a href="#" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</a></td>
                 <td class=${match}>${row["Tag Number"]}</td>
                 <td class=${match}>${row["Tag Status"]}</td>
                 <td class=${match}>${row["Descr"]}</td>
@@ -370,13 +370,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-document.querySelectorAll('.delete').forEach(el => {
-el.addEventListener('click', function(e) {
-    e.preventDefault();
+function deleteAsset(tag) {
     const params = new URLSearchParams({
-    tag: this.id
+    tag: tag
     });
-    console.log(e.target.value);
     url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
     const response = confirm("Are you sure you want to delete this asset");
     if (response) {
