@@ -119,6 +119,11 @@
 .row-odd {
     background-color: #f0f8ff;
 }
+.row-even a,
+.row-odd a {
+    color: black;
+    text-decoration: none;
+}
 #inputContainer {
     max-height:70vh;
     overflow-y: auto;

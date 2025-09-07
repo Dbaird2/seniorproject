@@ -390,6 +390,7 @@ el.addEventListener('click', function(e) {
         .then(res => res.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error ', error));
+        location.reload();
     } else {
         console.log("User declined");
     }
