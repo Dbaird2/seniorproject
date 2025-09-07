@@ -391,7 +391,7 @@ function deleteAsset(tag) {
         .then(data => console.log(data))
         .catch(error => console.error('Error ', error));
         //location.reload();
-        window.location.href = window.location.pathname;
+        //window.location.href = 'https"//dataworks-7b7x.onrender.com/audit/auditing.php';
     } else {
         console.log("User declined");
     }
