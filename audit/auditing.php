@@ -274,9 +274,10 @@ foreach ($data_slice as $index => $row) {
     $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
     $po = htmlspecialchars($row["PO No."] ?? "");
     echo "<tr class='{$color_class}'>
+        <td class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "' name='delete'>&#215;</td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
-        <td  class='{$match}'>{$found_tag}</td>
+        <td class='{$match}'>{$found_tag}</td>
         <td class='{$match}'>{$descr}</td>
         <td>{$serial}</td>
         <td>{$location}</td>
@@ -313,6 +314,7 @@ function loadMoreRows() {
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
         tr.innerHTML = `
             <td class=${match}>${300 + index + 1}</td>
+                <td class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</td>
                 <td class=${match}>${row["Tag Number"]}</td>
                 <td class=${match}>${row["Tag Status"]}</td>
                 <td class=${match}>${row["Descr"]}</td>
@@ -367,11 +369,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-
+document.querySelect('.table').addEventListener('click', function(e) {
+    if (e.target.classList.contains('delete')) {
+        const params = new URLSearchParams({
+            tag: e.target.value
+        });
+        url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
+        const reponse = confirm("Are you sure you want to delete this asset");
+        if (response) {
+            fetch(url, {
+            method: 'POST', 
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+        })
+            .then(res =>res.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error ', error));
+        } else {
+            console.log("User declined");
+        }
+    } else {
+        console.log("Could not get info", e.target.classList.contains("delete"));
+    }
+}
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
-        tag: e.target.id,
+            tag: e.target.id,
             room: e.target.value
     });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
