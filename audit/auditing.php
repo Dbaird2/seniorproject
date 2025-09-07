@@ -371,26 +371,27 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 });
 document.querySelector('.delete').addEventListener('click', function(e) {
-        const params = new URLSearchParams({
-            tag: e.target.id
+    e.preventDefault();
+    const params = new URLSearchParams({
+    tag: e.target.id
     });
-        console.log(e.target.value);
-        url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
-        const response = confirm("Are you sure you want to delete this asset");
-        if (response) {
-            fetch(url, {
-            method: 'POST', 
-                body: params,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error ', error));
-        } else {
-            console.log("User declined");
-        }
+    console.log(e.target.value);
+    url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
+    const response = confirm("Are you sure you want to delete this asset");
+    if (response) {
+        fetch(url, {
+        method: 'POST', 
+            body: params,
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    })
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error ', error));
+    } else {
+        console.log("User declined");
+    }
     
 });
 document.querySelector('.table').addEventListener('change', function(e) {
