@@ -370,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
-document.querySelector('.delete').addEventListener('click', function(e) {
+document.querySelectorAll('.delete').addEventListener('click', function(e) {
     e.preventDefault();
     const params = new URLSearchParams({
     tag: e.target.id
