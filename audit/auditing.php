@@ -277,8 +277,9 @@ foreach ($data_slice as $index => $row) {
     $department = htmlspecialchars($row["Dept"] ?? "");
     $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
     $po = htmlspecialchars($row["PO No."] ?? "");
+    $encoded_tag = json_encode($tag);
     echo "<tr class='{$color_class}'>
-        <td><button onclick='deleteAsset({$tag});' name='delete'  class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</button></td>
+        <td><button onclick='deleteAsset({$encoded_tag});' name='delete'  class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</button></td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
         <td class='{$match}'>{$found_tag}</td>
