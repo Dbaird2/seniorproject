@@ -15,10 +15,7 @@ $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $blank_msg = '';
 check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
-    if (isset($_POST['list-type'])) {
+    if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
         $select_q = "SELECT a.asset_tag, a.asset_name, a.bus_unit,
             a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
@@ -65,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
         }
         $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
-        //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-        //exit;
+        header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+        exit;
     }
 
     $file_tmp_path = $_FILES['file']['tmp_name'];

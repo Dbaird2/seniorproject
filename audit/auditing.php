@@ -392,7 +392,7 @@ document.querySelector('.table').addEventListener('click', function(e) {
             console.log("User declined");
         }
     } else {
-        console.log("Could not get info", e.target.classList.contains("delete"));
+        console.log("Could not get info", e.target.classList.contains("delete"), e.target.value);
     }
 });
 document.querySelector('.table').addEventListener('change', function(e) {
