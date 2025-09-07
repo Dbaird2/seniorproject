@@ -388,6 +388,7 @@ function deleteAsset(tag) {
         .then(data => console.log(data))
         .catch(error => console.error('Error ', error));
         //location.reload();
+        window.location.href = window.location.pathname;
     } else {
         console.log("User declined");
     }
