@@ -136,6 +136,7 @@ foreach ($audits as $row) {
             echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>Delete</a></td>";
         }
         echo "</tr>";
+    }
 }
 ?>
         </tbody>
