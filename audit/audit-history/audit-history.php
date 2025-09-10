@@ -73,6 +73,48 @@ if ($curr_results['curr_spa_id'] === 8) {
 }
 
 foreach ($audits as $row) {
+    if (in_array($audit_type[(int)$row['audit_id']], ['SPA Audit', 'Management Audit', 'Self Audit'], true)) {
+        $color = ($i++ % 2 == 0) ? 'even' : 'odd';
+        echo "<tr class='$color'>";
+        echo "<td><a href='#'>".$row['dept_id']."</a></td>";
+        echo "<td>" . $row['auditor'] . "</td>";
+        echo "<td>" . date('Y-m-d H:i:s', strtotime($row['finished_at'])) . "</td>";
+        echo "<td>" . $row['audit_status'] . "</td>";
+        echo "<td>" . $audit_type[(int)$row['audit_id']] . "</td>";
+    if ($row['audit_status'] === 'In Progress') {
+        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3]))) {
+            echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
+        }
+        if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
+            echo "<td><a href='complete/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
+        }
+    }
+        echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>PDF</a></td>";
+        echo "<td><a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>Excel</a></td>";
+        if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
+            echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>Delete</a></td>";
+        }
+        echo "</tr>";
+    }
+}
+?>
+        </tbody>
+    </table>
+        <table class="is-history" id="is-history">
+        <thead>
+            <tr class="odd">
+                <th>Department</th>
+                <th>Auditor</th>
+                <th>Audit Timestamp</th>
+                <th>Audit Status</th>
+                <th>Audit Type</th>
+            </tr>
+        </thead>
+        <tbody>
+<?php
+
+foreach ($audits as $row) {
+    if (in_array($audit_type[(int)$row['audit_id']], ['Previous SPA Audit', 'Previous Management Audit', 'Previous Self Audit','Overdue SPA Audit', 'Overdue Management Audit', 'Overdue Self Audit'], true)) {
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
         echo "<tr class='$color'>";
         echo "<td><a href='#'>".$row['dept_id']."</a></td>";
