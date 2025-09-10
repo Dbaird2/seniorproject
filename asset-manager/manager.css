@@ -1,3 +1,4 @@
+/*
 .is-manager li,
 .is-manager a,
 .is-manager button {
@@ -68,4 +69,272 @@
 }
 textarea {
     resize:both;
+}
+*/
+/* Added modern styling with improved color scheme and layout */
+.is-manager li,
+.is-manager a,
+.is-manager button {
+  font-weight: 500;
+  font-size: 13px;
+  color: #edf0f1;
+  text-decoration: none;
+}
+
+.is-manager header {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 10%;
+}
+
+.nav-ui {
+  list-style: none;
+}
+
+.nav-ui li {
+  display: inline-block;
+  padding: 0px 20px;
+  transition: all 0.3s ease 0s;
+}
+
+.nav-ui li a {
+  transition: all 0.3s ease 0s;
+}
+
+.nav-ui li a:hover {
+  color: #0088a9;
+}
+
+.is-manager button {
+  margin-left: 20px;
+  padding: 9px 25px;
+  background-color: #003594;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
+
+.is-manager button:hover {
+  background-color: rgba(0, 136, 169, 0.83);
+  transform: translateY(-2px);
+}
+
+/* Modern background and layout */
+.is-ajax,
+.is-manager {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+}
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Modern action buttons styling */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-excel {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.btn-pdf {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+  color: white;
+}
+
+.btn-audit {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  color: #212529;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+/* Modern table container and styling */
+.table-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  font-size: 14px;
+}
+
+.modern-table thead {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.modern-table th {
+  padding: 16px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+}
+
+.modern-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  vertical-align: middle;
+}
+
+.modern-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.modern-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.05);
+  transform: scale(1.001);
+}
+
+.modern-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Asset tag styling */
+.asset-tag {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Modern textarea styling */
+.asset-note {
+  width: 100%;
+  min-width: 150px;
+  min-height: 60px;
+  padding: 8px 12px;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  resize: both;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.asset-note:focus {
+  outline: none;
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.asset-note::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Empty state styling */
+.empty-state {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 60px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+}
+
+.empty-state h3 {
+  color: #667eea;
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 200px;
+    justify-content: center;
+  }
+
+  .table-container {
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .modern-table {
+    font-size: 12px;
+  }
+
+  .modern-table th,
+  .modern-table td {
+    padding: 10px 8px;
+  }
+
+  .asset-note {
+    min-width: 120px;
+    min-height: 50px;
+  }
 }

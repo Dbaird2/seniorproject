@@ -6,7 +6,7 @@ if (isset($_POST)) {
     $profile = $_POST['profile_name'];
     $email = $_SESSION['email'];
 
-    $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,
+    $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,a.serial_num,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
     FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
@@ -33,18 +33,28 @@ if (isset($_POST)) {
 </head>
 
 <body class="is-ajax">
-
+    <div class="page-container">
 <?php if ($result) { ?>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= urlencode($profile) ?>'"><button id="excel">Excel Sheet</button></a>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= urlencode($profile) ?>'"><button id="pdf">PDF</button></a>
-        <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/setup-audit.php?profile_name='<?= urlencode($profile) ?>'"><button id="pdf">Audit</button></a>
-    <table class="table">
+<div class="action-buttons">
+                <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/excel-download.php?profile_name='<?= urlencode($profile) ?>'">
+                    <button class="btn btn-excel">📊 Excel Sheet</button>
+                </a>
+                <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/pdf-download.php?profile_name='<?= urlencode($profile) ?>'">
+                    <button class="btn btn-pdf">📄 PDF</button>
+                </a>
+                <a href="https://dataworks-7b7x.onrender.com/asset-manager/crud/setup-audit.php?profile_name='<?= urlencode($profile) ?>'">
+                    <button class="btn btn-audit">🔍 Audit</button>
+                </a>
+            </div>
+ <div class="table-container">
+     <table class="modern-table">
         <thead>
             <tr>
                 <th>Row</th>
                 <th>Business Unit</th>
                 <th>Asset Tag</th>
                 <th>Asset Name</th>
+                <th>Serial Number</th>
                 <th>Room Tag</th>
                 <th>Room Location</th>
                 <th>Building</th>
@@ -58,22 +68,32 @@ if (isset($_POST)) {
                 <tr>
                     <td><?= $index + 1 ?></td>
                     <td><?= $row['bus_unit'] ?></td>
-                    <td><?= $row['asset_tag'] ?></td>
+                    <td><span class="asset-tag"><?= $row['asset_tag'] ?></span></td>
                     <td><?= $row['asset_name'] ?></td>
+        <td><?= $row['serial_num'] ?></td>
                     <td><?= $row['room_tag'] ?></td>
                     <td><?= $row['room_loc'] ?></td>
                     <td><?= $row['bldg_name'] ?></td>
                     <td><?= $row['dept_id'] ?></td>
                     <td><?= $row['po'] ?></td>
-                    <td><button id="delete-asset" class='asset-row' value="<?= $row['asset_tag'] ?>">Delete</button></td>
-                    <td><textarea name="notes" class='asset-note' id="<?=$row['asset_tag']?>"><?= $row['asset_note'] ?? 'Notes' ?></textarea></td>
+                    <td>
+                        <button id="delete-asset" class='btn btn-delete asset-row' value="<?= $row['asset_tag'] ?>">🗑️ Delete</button>
+                    </td>
+                    <td>
+                        <textarea name="notes" class='asset-note' id="<?=$row['asset_tag']?>" placeholder="Add notes..."><?= $row['asset_note'] ?? '' ?></textarea>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
+</div>
 <?php } else { ?>
-    <h3>No assets in profile.</h3>
+        <div class="empty-state">
+                <h3>📋 No assets in profile</h3>
+                <p>This profile doesn't contain any assets yet.</p>
+            </div>
 <?php } ?>
+</div>
 </body>
 
 </html>
