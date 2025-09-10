@@ -71,9 +71,9 @@ if ($curr_results['curr_spa_id'] === 8) {
     $audit_type[8] = 'SPA Audit';
     $audit_type[9] = 'Overdue SPA Audit';
 }
-
 foreach ($audits as $row) {
     if (in_array($audit_type[(int)$row['audit_id']], ['SPA Audit', 'Management Audit', 'Self Audit'], true)) {
+        $count++;
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
         echo "<tr class='$color'>";
         echo "<td><a href='#'>".$row['dept_id']."</a></td>";
@@ -97,6 +97,20 @@ foreach ($audits as $row) {
         echo "</tr>";
     }
 }
+    if ($i === 0) {
+        $color = ($i++ % 2 == 0) ? 'even' : 'odd';
+        echo "<tr class='$color'>";
+        echo "<td>No Current Audits Completed/In Progress</td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+    }
 ?>
         </tbody>
     </table>
@@ -112,7 +126,7 @@ foreach ($audits as $row) {
         </thead>
         <tbody>
 <?php
-
+$i = 0;
 foreach ($audits as $row) {
     if (in_array($audit_type[(int)$row['audit_id']], ['Previous SPA Audit', 'Previous Management Audit', 'Previous Self Audit','Overdue SPA Audit', 'Overdue Management Audit', 'Overdue Self Audit'], true)) {
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
@@ -138,6 +152,20 @@ foreach ($audits as $row) {
         echo "</tr>";
     }
 }
+    if ($i === 0) {
+        $color = ($i++ % 2 == 0) ? 'even' : 'odd';
+        echo "<tr class='$color'>";
+        echo "<td>No Previous Audits Completed/In Progress</td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+    }
 ?>
         </tbody>
     </table>
