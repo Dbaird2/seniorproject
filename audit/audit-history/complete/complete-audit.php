@@ -40,11 +40,17 @@ if (isset($_GET['dept_id'])) {
             $update_q = "UPDATE audit_history SET audit_status = 'Complete', finished_at = CURRENT_TIMESTAMP WHERE dept_id = :dept_id AND audit_id = :audit_id";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
+            header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?type=success&dept=".urlencode($dept_id));
+            exit;
         } catch (PDOException $e) {
             error_log("Error updating: " . $e-getMessage());
             exit;
         }
     }
+    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?type=failure&dept=".urlencode($dept_id));
+    exit;
+
 }
+header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?type=failure&reason=GET_NOT_SET");
 exit;
 

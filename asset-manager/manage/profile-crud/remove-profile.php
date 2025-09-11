@@ -1,6 +1,6 @@
 <?php
 include_once "../../../config.php";
-if (isset($_POST)) {
+if (isset($_POST['profile_name'])) {
     $email = $_SESSION['email'];
     $name = trim($_POST['profile_name']);
 

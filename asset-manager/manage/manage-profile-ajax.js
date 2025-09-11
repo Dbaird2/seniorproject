@@ -100,6 +100,28 @@ function renameProfile(new_name_raw, old_name) {
         }
     });
 }
+
+function auditProfile(profile, email) {
+    if (profile === '' || profile === null || email === '' || email === null) {
+        return;
+    }
+    $.ajax({
+        method: 'POST',
+        url: "profile-crud/audit-other-profile.php",
+        data: {
+            profile: profile,
+            email: email
+        },
+        success: function (res) {
+            console.log(res);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
+        
+
 $(document).ready(function () {
     $('#add-profile').off('click').on('click', addProfile);
 });
@@ -108,6 +130,14 @@ if (!window.rename_profile) {
         const row = $(this).closest('tr');
         const profile_name = row.find('input[type="text"]').val();
         renameProfile(profile_name, this.value);
+    });
+    window.rename_profile = true;
+}
+if (!window.audit_profile) {
+    $(document).on('click', '.audit', function (e) {
+        const email = $(this).data('email');
+        const profile = $(this).data('profile');
+        auditProfile(profile, email);
     });
     window.rename_profile = true;
 }

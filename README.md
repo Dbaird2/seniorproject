@@ -22,6 +22,8 @@ all are complete, then change audit to complete
 - Create endpoints for phone fetch requests
 - Update location from TRANSFER FORMS (waiting on form fix)
 - Create TRANSFER, PSR, and CHECK-OUT forms from search page
+- Make auditing from other users profiles functionality work & make profile
+  viewer as well
 ## Needs testing
 - Audit updating
 - Updates from KUALI 

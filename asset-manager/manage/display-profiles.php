@@ -62,8 +62,8 @@ require_once '../../config.php';
         $profile = trim(trim(trim($row['profiles'][1], '""')), '"'); ?>
         <td><p readonly><?= $email ?></p></td><br>
                             <td><input type="text" id="<?= $email ?>" value="<?= $profile ?>" readonly></td>
-                            <td><button class="audit" value="<?= $email . ' ' . $profile ?>">Audit</button></td>
-                            <td><button class="admin-delete-profile" value="<?= $email . ' ' . $profile ?>">Delete</button></td>
+                            <td><button type="button" class="audit" data-email="<?= $email ?>" data-profile="<?= $profile ?>">Audit</button></td>
+                            <td><button type="button" data-email="<?= $email ?>" data-profile="<?= $profile ?>" class="admin-delete-profile" value="<?= $email . ' ' . $profile ?>">Delete</button></td>
                         </tr>
                     <?php } ?>
                 </tbody>

@@ -98,7 +98,7 @@ foreach ($audits as $row) {
     }
 }
     if ($i === 0) {
-        $color = ($i++ % 2 == 0) ? 'even' : 'odd';
+        $color = ($i % 2 == 0) ? 'even' : 'odd';
         echo "<tr class='$color'>";
         echo "<td>No Current Audits Completed/In Progress</td>";
         echo "<td></td>";
@@ -110,6 +110,7 @@ foreach ($audits as $row) {
         echo "<td></td>";
         echo "<td></td>";
         echo "<td></td>";
+        echo "</tr>";
     }
 ?>
         </tbody>
@@ -165,6 +166,7 @@ foreach ($audits as $row) {
         echo "<td></td>";
         echo "<td></td>";
         echo "<td></td>";
+        echo "</tr>";
     }
 ?>
         </tbody>
