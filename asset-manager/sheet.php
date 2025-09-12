@@ -33,8 +33,8 @@ if (isset($_POST['profile_name'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script type="text/javascript" src="asset-ajax.js"></script>
-    <link rel="stylesheet" href="manager.css">
+    <script type="text/javascript" src="https://dataworks-7b7x.onrender.com/asset-manager/asset-ajax.js"></script>
+    <link rel="stylesheet" href="https://dataworks-7b7x.onrender.com/asset-manager/manager.css">
 </head>
 
 <body class="is-ajax">
