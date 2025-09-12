@@ -129,6 +129,10 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $note_array = $filtered_notes;
         $time_array = $filtered_times;
         $room_array = $filtered_rooms;
+        unset($filtered_tags);
+        unset($filtered_notes);
+        unset($filtered_times);
+        unset($filtered_rooms);
         if (count($array) > 0) {
             foreach ($array as $index => $tag) {
                 $found = 0;
@@ -156,18 +160,26 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                     if ($result) {
                         $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
+                    $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
+                    $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
+                    $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                    $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
                         $_SESSION['data'][$total_count]["Descr"] = $result['asset_name'];
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
                         $_SESSION['data'][$total_count]["VIN"] =  '';
-                        $_SESSION['data'][$total_count]["Custodian"] =  trim($result['custodian'], '{}');
+                        $_SESSION['data'][$total_count]["Custodian"] =  trim(trim($result['custodian'], '{}'), '"');
                         $_SESSION['data'][$total_count]["Dept"] = $result['dept_id'];
                         $_SESSION['data'][$total_count]["PO No."] =  $result['po'];
                         $_SESSION['data'][$total_count]["Acq Date"] =  $result['date_added'];
                         $_SESSION['data'][$total_count]["COST Total Cost"] =  $result['asset_price'];
                     } else {
                         $_SESSION['data'][$total_count]["Unit"] =  '';
+                    $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
+                    $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
+                    $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                    $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
                         $_SESSION['data'][$total_count]["Descr"] = '';
                         $_SESSION['data'][$total_count]["Serial ID"] = '';
@@ -179,10 +191,6 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["Acq Date"] =  '';
                         $_SESSION['data'][$total_count]["COST Total Cost"] =  '';
                     }
-                    $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
-                    $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
-                    $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
-                    $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                     $total_count++;
                 }
             }
