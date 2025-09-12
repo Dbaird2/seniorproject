@@ -11,6 +11,23 @@ function displayProfiles() {
         }
     });
 }
+function viewProfile(profile, email) {
+    
+    $.ajax({
+        method: 'POST',
+        url: 'display-profiles.php',
+        body: {
+            profile_name: profile,
+            email: email
+        }
+        success: function (html) {
+            $('#modal-view').html(html).show();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+}
 function addProfile() {
     const profile_name_raw = document.getElementById('display-name').value;
     const profile_name = profile_name_raw.trim();
@@ -156,9 +173,11 @@ if (!window.admin_delete_profile) {
     window.admin_delete_profile = true;
 }
 
-if (!window.audit_profile) {
-    $(document).on('click', '.audit', function (e) {
-        auditProfile(this.value);
+if (!window.view_profile) {
+    $(document).on('click', '.view', function (e) {
+        const email = $(this).data('email');
+        const profile = $(this).data('profile');
+        viewProfile(profile, email);
     });
-    window.audit_profile = true;
+    window.view_profile = true;
 }

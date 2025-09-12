@@ -2,9 +2,14 @@
 require_once '../config.php';
 check_auth();
 $result = NULL;
-if (isset($_POST)) {
+if (isset($_POST['profile_name'])) {
     $profile = $_POST['profile_name'];
-    $email = $_SESSION['email'];
+    if (isset($_POST['email'])) {
+        $email = $_POST['email'];
+    } else {
+        $email = $_SESSION['email'];
+    }
+
 
     $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,a.serial_num,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note

@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
     foreach (range('A', 'T') as $columnID) {
         $new_ref_sheet->getColumnDimension($columnID)->setAutoSize(true);
     }
-    $postage_sheet->mergeCells('A1:H1');
+    $postage_sheet->mergeCells('A1:I1');
     $postage_sheet->setCellValue('A1', 'Transaction Log Detail Report');
     $postage_sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
     $postage_sheet->getStyle('A1')->getFont()->setBold(true);
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
     $new_ref_sheet->setCellValue('E1', 'Surcharge');
     $new_ref_sheet->setCellValue('F1', 'BRM');
     $new_ref_sheet->setCellValue('G1', 'BULK');
-    $new_ref_sheet->setCellValue('H1', 'Total Charged');
+    $new_ref_sheet->setCellValue('I1', 'Total Charged');
     $new_ref_sheet->setCellValue('K1', 'Mailcode');
     $new_ref_sheet->setCellValue('L1', 'Fund');
     $new_ref_sheet->setCellValue('M1', 'Dept');
@@ -133,7 +133,7 @@ if (isset($_POST['submit'])) {
     $postage_sheet->setCellValue('E3', "Postage");
     $postage_sheet->setCellValue('F3', "Fees");
     $postage_sheet->setCellValue('G3', "Surcharge Amount");
-    $postage_sheet->setCellValue('H3', "Total Charged");
+    $postage_sheet->setCellValue('I3', "Total Charged");
 
     $postage_pieces = [];
     $rows = [];
@@ -229,7 +229,7 @@ if (isset($_POST['submit'])) {
             $postage_sheet->setCellValue("E" . $start_of_data, $info[3]);
             $postage_sheet->setCellValue("F" . $start_of_data, $info[4]);
             $postage_sheet->setCellValue("G" . $start_of_data, $info[5]);
-            $postage_sheet->setCellValue("H" . $start_of_data, $info[6]);
+            $postage_sheet->setCellValue("I" . $start_of_data, $info[6]);
             $start_of_data++;
         }
     }
@@ -244,10 +244,11 @@ if (isset($_POST['submit'])) {
     $new_ref_sheet->setCellValue('F' . $last_index+1, '-');
     $new_ref_sheet->setCellValue('G' . $last_index+1, '-');
     $new_ref_sheet->setCellValue('H' . $last_index+1, '-');
+    $new_ref_sheet->setCellValue('I' . $last_index+1, '=SUM(I4, I'.$last_index);
     $new_ref_sheet->setCellValue('L' . $last_index+1, 'BK001');
     $new_ref_sheet->setCellValue('N' . $last_index+1, '107800');
     $new_ref_sheet->setCellValue('Q' . $last_index+1, 'C1060');
-    foreach (range('B', 'H') as $column) {
+    foreach (range('B', 'I') as $column) {
         $postage_sheet
             ->getStyle($column . $last_index)
             ->getBorders()
@@ -255,7 +256,7 @@ if (isset($_POST['submit'])) {
             ->setBorderStyle(Border::BORDER_THICK)
             ->setColor(new Color('FFD3D3D3'));
     }
-    $range   = "A1:H{$last_index}";
+    $range   = "A1:I{$last_index}";
     $new_ref_sheet->getStyle($range)->applyFromArray([
         'borders' => [
             'allBorders' => [
@@ -292,6 +293,7 @@ if (isset($_POST['submit'])) {
                 if (!empty($ref[7])) {
                     $new_ref_sheet->setCellValue('Q' . $ref_index, $ref[7]);
                 }
+                $new_ref_sheet->setCellValue('I'.$ref_index, "=SUM(F".$ref_index.", G".$ref_index.",H".$ref_index.")");
 
                 $ref_index++;
             }

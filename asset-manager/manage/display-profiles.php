@@ -63,13 +63,43 @@ require_once '../../config.php';
         <td><p readonly><?= $email ?></p></td><br>
                             <td><input type="text" id="<?= $email ?>" value="<?= $profile ?>" readonly></td>
                             <td><button type="button" class="audit" data-email="<?= $email ?>" data-profile="<?= $profile ?>">Audit</button></td>
+                            <td><button type="button" class="view" data-email="<?= $email ?>" data-profile="<?= $profile ?>">View</button></td>
                             <td><button type="button" data-email="<?= $email ?>" data-profile="<?= $profile ?>" class="admin-delete-profile" value="<?= $email . ' ' . $profile ?>">Delete</button></td>
                         </tr>
                     <?php } ?>
                 </tbody>
              </table>
+        <div class="modal">
+            <div id="modal-view" class="modal"></div>
+        </div>
 <?php } ?>
       </section>
      </body>
+        <script>
+// Get the modal
+var modal = document.getElementById("modal");
 
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
 </html>
