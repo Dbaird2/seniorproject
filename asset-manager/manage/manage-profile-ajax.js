@@ -22,6 +22,7 @@ function viewProfile(profile, email) {
         },
         success: function (html) {
             $('#modal-view').html(html).show();
+             modal.style.display = "block";
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);

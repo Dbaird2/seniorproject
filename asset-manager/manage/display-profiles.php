@@ -69,29 +69,22 @@ require_once '../../config.php';
                     <?php } ?>
                 </tbody>
              </table>
-        <div class="modal">
-            <div id="modal-view" class="modal">
+<?php } ?>
+        <div class="modal" id="myModal">
+            <div id="modal-content">
                 <span class="close">&times;</span>
                 <div id="modal-view"></div>
             </div>
         </div>
-<?php } ?>
       </section>
      </body>
         <script>
 // Get the modal
-var modal = document.getElementById("modal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("view");
+var modal = document.getElementById("myModal");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
