@@ -244,7 +244,7 @@ if (isset($_POST['submit'])) {
     $new_ref_sheet->setCellValue('F' . $last_index+1, '-');
     $new_ref_sheet->setCellValue('G' . $last_index+1, '-');
     $new_ref_sheet->setCellValue('H' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('I' . $last_index+1, '=SUM(I4, I'.$last_index . ')');
+    $new_ref_sheet->setCellValue('I' . $last_index+1, '=SUM(I2:I'.$last_index . ')');
     $new_ref_sheet->setCellValue('L' . $last_index+1, 'BK001');
     $new_ref_sheet->setCellValue('N' . $last_index+1, '107800');
     $new_ref_sheet->setCellValue('Q' . $last_index+1, 'C1060');
@@ -294,6 +294,7 @@ if (isset($_POST['submit'])) {
                     $new_ref_sheet->setCellValue('Q' . $ref_index, $ref[7]);
                 }
                 $new_ref_sheet->setCellValue('I'.$ref_index, "=SUM(F".$ref_index.", G".$ref_index.",H".$ref_index.")");
+                $new_ref_sheet->setCellValue('R'.$ref_index, "=(I".$ref_index)");
 
                 $ref_index++;
             }
