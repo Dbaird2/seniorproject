@@ -19,7 +19,7 @@ function viewProfile(profile, email) {
         body: {
             profile_name: profile,
             email: email
-        }
+        },
         success: function (html) {
             $('#modal-view').html(html).show();
         },
