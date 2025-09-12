@@ -45,10 +45,11 @@ require_once '../../config.php';
             </tbody>
         </table>
         <?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
-            <table>
+            <table class="admin-table">
                 <thead>
                     <tr>
                         <th>Other Users Profiles</th>
+                        <th><input type="text" id="my-input" onchange="filterTable()" placeholder="Search for email..."</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,6 +97,24 @@ window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
+}
+function filterTable() {
+    var input, filter, table, tr, td, i, txt_value;
+    input = document.getElementById("my-input");
+    filter = input.value.toUpperCase();
+    table = document.querySelector(".admin-table");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txt_value = td.textContent || td.innerText;
+            if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
 }
 </script>
 </html>

@@ -15,7 +15,7 @@ function viewProfile(profile, email) {
     
     $.ajax({
         method: 'POST',
-        url: 'httpsL//dataworks-7b7x.onrender.com/asset-manager/sheet.php',
+        url: 'https://dataworks-7b7x.onrender.com/asset-manager/sheet.php',
         body: {
             profile_name: profile,
             email: email
