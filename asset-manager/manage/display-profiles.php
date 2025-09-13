@@ -49,7 +49,7 @@ require_once '../../config.php';
                 <thead>
                     <tr>
                         <th>Other Users Profiles</th>
-                        <th><input type="text" id="my-input" onchange="filterTable()" placeholder="Search for email..."</th>
+                        <th>Search Emails<br><input type="text" id="my-input" onchange="filterTable()" placeholder="Search for email..."</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,7 +63,6 @@ require_once '../../config.php';
         $profile = trim(trim(trim($row['profiles'][1], '""')), '"'); ?>
         <td><p readonly><?= $email ?></p></td><br>
                             <td><input type="text" id="<?= $email ?>" value="<?= $profile ?>" readonly></td>
-                            <td><button type="button" class="audit" data-email="<?= $email ?>" data-profile="<?= $profile ?>">Audit</button></td>
                             <td><button type="button" class="view" data-email="<?= $email ?>" data-profile="<?= $profile ?>">View</button></td>
                             <td><button type="button" data-email="<?= $email ?>" data-profile="<?= $profile ?>" class="admin-delete-profile" value="<?= $email . ' ' . $profile ?>">Delete</button></td>
                         </tr>

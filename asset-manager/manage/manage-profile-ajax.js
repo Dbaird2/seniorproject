@@ -109,8 +109,8 @@ function renameProfile(new_name_raw, old_name) {
             old_name: old_name,
             new_name: new_name
         },
-        success: function () {
-            console.log('Successfully renamed profile');
+        success: function (res) {
+            console.log(res);
             displayProfiles();
         },
         error: function (jqXHR, textStatus, errorThrown) {
