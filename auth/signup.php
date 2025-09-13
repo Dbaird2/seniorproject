@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$err) {
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, status_type) 
+        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, position) 
         VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[], :status_type);";
         $stmt = $dbh->prepare($stmt);
         $full_name = $f_name . " " . $l_name;
@@ -591,6 +591,7 @@ include_once("../navbar.php");
                     <div class="form-group">
                         <label class="form-label" for="role">User Role</label>
                         <select class="form-select" name="role" id="role" required>
+                            <option value="student">Student</option>
                             <option value="user">User</option>
                             <option value="custodian">Custodian</option>
                             <option value="management">Management</option>

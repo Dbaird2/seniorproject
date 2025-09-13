@@ -153,10 +153,13 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
-<select name="disposed" id="disposed">
-                            <option value="in-service">In Service</option>
-                            <option value="disposed">Disposed</option>
-                        </select>
+<!-- EQUIP LOSS STOLEN -->
+
+<!-- CHECK OUT -->
+
+<!-- TRANSFER -->
+
+<!-- PSR -->
                         <select name="reason" id="reason">
                             <option value=""></option>
                             <option value="lsd">Lost/Stolen/Damaged</option>

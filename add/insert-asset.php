@@ -3,20 +3,22 @@ require_once("../config.php");
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-$tag = $_POST['tag'] ?? '';
-$descr = $_POST['descr'] ?? '';
-$sn = $_POST['sn'] ?? '';
-$po = (int)$_POST['po'] ?? '';
-$model = $_POST['model'] ?? '';
-$acq_date = str_replace("-", "/", $_POST['acq']) ?? '';
-$profile = $_POST['profile'] ?? '';
-$dept_id = $_POST['dept-id'] ?? '';
-$room_name = $_POST['room-loc'] ?? '';
-$bldg_name = $_POST['bldg-name'] ?? '';
-$notes = $_POST['notes'] ?? '';
-$type = $_POST['type'] ?? '';
 
 if (isset($_POST['add'])) {
+    $tag = $_POST['tag'] ?? '';
+    $descr = $_POST['descr'] ?? '';
+    $sn = $_POST['sn'] ?? '';
+    $po = (int)$_POST['po'] ?? '';
+    $model = $_POST['model'] ?? '';
+    $acq_date = str_replace("-", "/", $_POST['acq']) ?? '';
+    $profile = $_POST['profile'] ?? '';
+    $dept_id = $_POST['dept-id'] ?? '';
+    $room_name = $_POST['room-loc'] ?? '';
+    $bldg_name = $_POST['bldg-name'] ?? '';
+    $type = $_POST['type'] ?? '';
+    $type2 = $_POST['type2'] ?? '';
+    $make = $_POST['make'] ?? '';
+
     $column = $params = [];
     $question_marks = ['?', '?', '?', '?', '?', '?'];
     $column[] = "asset_tag";
@@ -35,6 +37,11 @@ if (isset($_POST['add'])) {
         $params[] = $model;
         $question_marks[] = '?';
     }
+    if ($make !== '') {
+        $column[] = "make";
+        $params[] = $model;
+        $question_marks[] = '?';
+    }
     if ($sn !== '') {
         $column[] = "serial_num";
         $params[] = $sn;
@@ -45,9 +52,9 @@ if (isset($_POST['add'])) {
         $params[] = $type;
         $question_marks[] = '?';
     }
-    if ($notes !== '') {
-        $column[] = "asset_notes";
-        $params[] = $notes;
+    if ($type2 !== '') {
+        $column[] = "type2";
+        $params[] = $type2;
         $question_marks[] = '?';
     }
     try {
@@ -73,10 +80,12 @@ if (isset($_POST['add'])) {
             $insert_q = "INSERT INTO asset_info ($column) VALUES ($question_marks)";
             $insert_stmt = $dbh->prepare($insert_q);
             $insert_stmt->execute($params);
-        } else {
-        }
+       }
     } catch (PDOException $e) {
+        error_log($e->getMessage());
+        exit;
     }
 } else {
+    exit;
 }
 

@@ -119,10 +119,15 @@ check_auth('high');
         }
 </style>
 <?php
-$query = "SELECT * FROM bldg_table AS B NATURAL JOIN room_table AS R";
+$query = "SELECT DISTINCT bldg_name FROM bldg_table";
 $stmt = $dbh->prepare($query);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$query = "SELECT DISTINCT dept_id FROM dept_table";
+$stmt = $dbh->prepare($query);
+$stmt->execute();
+$dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 /*$result = [["dept_id" => "D21560", "bldg_name" => "DISTRIBUTION"]];*/
 ?>
 
@@ -141,14 +146,27 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <input type="text" name="tag" class="input" placeholder="Ex: 12345" required>
                                         </div>
                                         <div class="input-container">
-                                                <label for="descr">Asset Description</label>
+                                                <label for="descr">Description</label>
                                                 <input type="text" name="descr" class="input" placeholder="Ex: DELL LATITUDE 5450" required>
 
                                         </div>
                                         <div class="input-container">
-                                                <label for="type">Asset Type</label>
-                                                <input type="text" name="type" class="input" placeholder="Ex: Equipment">
-
+                                                <label for="type2">Type</label>
+                                                <select name="type2" class="input" required>
+                                                    <option value="Laptop">Laptop</option>
+                                                    <option value="Tablet">Tablet</option>
+                                                    <option value="Desktop">Desktop</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                        </div>
+                                        <div class="input-container">
+                                                <label for="type">Asset Category</label>
+                                                <select name="type" class="input" required>
+                                                    <option value="Equipment">Equipment</option>
+                                                    <option value="Property">Property</option>
+                                                    <option value="Fleet">Fleet</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                         </div>
                                         <div class="input-container">
                                                 <label for="acq">Acquisiton Date: </label>
@@ -161,9 +179,12 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                         </div>
                                         <div class="input-container">
-                                                <label for="model">Asset Model</label>
+                                                <label for="model">Model</label>
                                                 <input type="text" name="model" class="input" placeholder="Ex: DELL">
-
+                                        </div>
+                                        <div class="input-container">
+                                                <label for="make">Make</label>
+                                                <input type="text" name="make" class="input" placeholder="Ex: LATITUDE">
                                         </div>
                                         <div class="input-container">
                                                 <label for="cost">Total Cost</label>
@@ -174,7 +195,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <label class="" for="dept-id">Department ID</label>
                                                 <input class="input" placeholder="Department ID" type="search" name="dept-id" id="dept-id" list="dept-ids" autocomplete="off">
                                                 <datalist id="dept-ids">
-                                                        <?php foreach ($result as $dept) { ?>
+                                                        <?php foreach ($dept_result as $dept) { ?>
                                                                 <option value="<?= $dept["dept_id"] ?>"><?= $dept["dept_id"] ?></option>
                                                         <?php } ?>
                                                 </datalist>
@@ -201,10 +222,6 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <label for="po">Purchase Order</label>
                                                 <input type="text" name="po" class="input" placeholder="Purchase Order" required>
 
-                                        </div>
-                                        <div class="input-container">
-                                                <label for="notes">Notes<br></label>
-                                                <textarea class="input bigger-input" type="text" id="notes" name="notes" placeholder="Ex: 12345"></textarea>
                                         </div>
                                         <div class="btn-container">
                                                 <button name="add">Submit</button>

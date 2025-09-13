@@ -105,7 +105,7 @@ function displayTable() {
             $("#display-table").html(html).show();
             $(".quick-buttons").show();
             $("#restart").show();
-            $("#nav-ui").show();
+            $("#nav-ui2").show();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);

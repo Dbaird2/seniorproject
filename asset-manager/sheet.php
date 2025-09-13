@@ -55,6 +55,7 @@ if (isset($_POST['profile_name'])) {
      <table class="modern-table">
         <thead>
             <tr>
+                <th></th>
                 <th>Row</th>
                 <th>Business Unit</th>
                 <th>Asset Tag</th>
@@ -65,12 +66,20 @@ if (isset($_POST['profile_name'])) {
                 <th>Building</th>
                 <th>Department ID</th>
                 <th>PO</th>
+                <th><input name="search-asset" type="text"></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <?php
             foreach ($result as $index => $row) { ?>
-                <tr>
+                <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>">
+                    <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange="changeBackgroundColor(<?= json_encode($row['asset_tag']) ?>,this.value)">
+                            <option value=""></option>
+                            <option value="#FF4747">Red</option>
+                            <option value="#90EE90">Green</option>
+                            <option value="#ADD8E6">Blue</option>
+                        </select></td>
                     <td><?= $index + 1 ?></td>
                     <td><?= $row['bus_unit'] ?></td>
                     <td><span class="asset-tag"><?= $row['asset_tag'] ?></span></td>
@@ -99,6 +108,34 @@ if (isset($_POST['profile_name'])) {
             </div>
 <?php } ?>
 </div>
+ <script>
+        function changeBackgroundColor(assetTag, color) {
+            const rows = document.querySelectorAll("tr");
+            rows.forEach(row => {
+                if (row.id === String(assetTag)) {
+                    row.style.backgroundColor = color;
+                }
+            });
+        }
+function filterTable() {
+    var input, filter, table, tr, td, i, txt_value;
+    input = document.getElementById("search-asset");
+    filter = input.value.toUpperCase();
+    table = document.querySelector(".monder-table");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+            txt_value = td.textContent || td.innerText;
+            if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+    </script>
 </body>
 
 </html>
