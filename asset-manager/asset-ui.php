@@ -79,7 +79,7 @@ check_auth();
 
             </div>
         </header>
-        <nav id="nav-ui" style="place-self: center;">
+        <nav id="nav-ui2" style="place-self: center;">
             <ul class="nav-ui">
                 <li>
                     <input type="search" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">

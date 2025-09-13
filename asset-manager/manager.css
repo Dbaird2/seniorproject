@@ -91,20 +91,24 @@ textarea {
   padding: 30px 10%;
 }
 
+.nav-ui2,
 .nav-ui {
   list-style: none;
 }
 
+.nav-ui2 li,
 .nav-ui li {
   display: inline-block;
   padding: 0px 20px;
   transition: all 0.3s ease 0s;
 }
 
+.nav-ui2 li a,
 .nav-ui li a {
   transition: all 0.3s ease 0s;
 }
 
+.nav-ui2 li a:hover,
 .nav-ui li a:hover {
   color: #0088a9;
 }
@@ -345,6 +349,6 @@ textarea {
 #restart {
     display: none;
 }
-#nav-ui {
+#nav-ui2 {
     display:none;
 }
