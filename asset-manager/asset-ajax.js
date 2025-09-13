@@ -103,6 +103,9 @@ function displayTable() {
         },
         success: function (html) {
             $("#display-table").html(html).show();
+            $(".quick-buttons").show();
+            $("#restart").show();
+            $("#nav-ui").show();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);

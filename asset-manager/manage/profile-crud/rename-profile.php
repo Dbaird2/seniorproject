@@ -10,7 +10,7 @@ if (isset($_POST['old_name'])) {
     try {
         $update_stmt = $dbh->prepare($update_q);
         $update_stmt->execute([":old_name" => $old_name, ":email" => $email, ":new_name" => $new_name]);
-        echo json_encode(["status"=>"success"]);
+        echo json_encode(["status"=>"success", "old_name"=>$old_name, "new_name"=>$new_name]);
         exit;
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());

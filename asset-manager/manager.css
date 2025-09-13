@@ -110,6 +110,7 @@ textarea {
 }
 
 .is-manager button {
+    margin-left:0px;
   margin-left: 20px;
   padding: 9px 25px;
   background-color: #003594;
@@ -337,4 +338,13 @@ textarea {
     min-width: 120px;
     min-height: 50px;
   }
+}
+.quick-buttons {
+    display:none;
+}
+#restart {
+    display: none;
+}
+#nav-ui {
+    display:none;
 }
