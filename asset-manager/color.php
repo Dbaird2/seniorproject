@@ -1,4 +1,5 @@
 <?php
+require_once "../config.php";
 header('Content-Type: application/json');
 
 $json = file_get_contents('php://input');

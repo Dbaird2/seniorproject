@@ -76,9 +76,9 @@ if (isset($_POST['profile_name'])) {
                 <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>" style=`background-color: {$row['color']}`>
                 <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange='changeBackgroundColor(<?= json_encode($row["asset_tag"]) ?>,this.value, <?= json_encode($profile) ?>)'>
                             <option value=""></option>
-                            <option value="#FF796F">Red</option>
-                            <option value="#90EE90">Green</option>
-                            <option value="#ADD8E6">Blue</option>
+                            <option value="#FF796F">R</option>
+                            <option value="#90EE90">G</option>
+                            <option value="#ADD8E6">B</option>
                         </select></td>
                     <td><?= $index + 1 ?></td>
                     <td><?= $row['bus_unit'] ?></td>
@@ -136,6 +136,7 @@ function filterTable() {
     filter = input.value.toUpperCase();
     table = document.querySelector(".modern-table");
     tr = table.getElementsByTagName("tr");
+    console.log(input, tr);
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[3];
         if (td) {
