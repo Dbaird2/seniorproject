@@ -73,8 +73,8 @@ if (isset($_POST['profile_name'])) {
         <tbody>
             <?php
             foreach ($result as $index => $row) { ?>
-                <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>">
-                    <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange="changeBackgroundColor(<?= json_encode($row['asset_tag']) ?>,this.value)">
+                <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>" style=`background-color: {$row['color']}`>
+                <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange="changeBackgroundColor(<?= json_encode($row['asset_tag']) ?>,this.value, <?= json_encode($profile) ?>)">
                             <option value=""></option>
                             <option value="#FF4747">Red</option>
                             <option value="#90EE90">Green</option>
@@ -109,14 +109,27 @@ if (isset($_POST['profile_name'])) {
 <?php } ?>
 </div>
  <script>
-        function changeBackgroundColor(assetTag, color) {
-            const rows = document.querySelectorAll("tr");
-            rows.forEach(row => {
-                if (row.id === String(assetTag)) {
-                    row.style.backgroundColor = color;
+                function changeBackgroundColor(assetTag, color, profile) {
+                    const rows = document.querySelectorAll("tr");
+                    rows.forEach(row => {
+                    if (row.id === String(assetTag)) {
+                        row.style.backgroundColor = color;
+                    }
+                    });
+                    fetch('https://dataworks-7b7x.onrender.com/asset-manager/color.php', {
+                    method: 'POST',
+                        headers: {'Content-type': 'application/json' },
+                        body: JSON.stringify({
+                        asset_tag: asset_tag,
+                            color: color,
+                            profile_name: profile 
+                    })
+                    }).then(response=>response.json())
+                        .then(result => {
+                        console.log("result", result)
+                    })
+                        .catch(e => console.error(e));
                 }
-            });
-        }
 function filterTable() {
     var input, filter, table, tr, td, i, txt_value;
     input = document.getElementById("search-asset");
@@ -135,7 +148,15 @@ function filterTable() {
         }
     }
 }
-    </script>
+asset = <?= json_encode($result) ?>;
+
+const rows = document.querySelectorAll("tr");
+rows.forEach(row => {
+if (row.id === String(assetTag)) {
+    row.style.backgroundColor = color;
+}
+
+</script>
 </body>
 
 </html>
