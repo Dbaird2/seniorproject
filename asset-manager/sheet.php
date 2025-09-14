@@ -11,7 +11,7 @@ if (isset($_POST['profile_name'])) {
     }
 
 
-    $select_q = "SELECT p.asset_tag, a.asset_name, a.bus_unit,a.serial_num,
+    $select_q = "SELECT p.color, p.asset_tag, a.asset_name, a.bus_unit,a.serial_num,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
     FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
     JOIN room_table r ON a.room_tag = r.room_tag
@@ -72,8 +72,12 @@ if (isset($_POST['profile_name'])) {
         </thead>
         <tbody>
             <?php
-            foreach ($result as $index => $row) { ?>
-                <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>" style=`background-color: {$row['color']}`>
+foreach ($result as $index => $row) { 
+    if (!empty($row['color'])) { ?>
+        <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>" style='background-color: <?= trim($row['color'] ?? '') ?>'>
+        <?php } else { ?>
+        <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>">
+        <?php } ?>
                 <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange='changeBackgroundColor(<?= json_encode($row["asset_tag"]) ?>,this.value, <?= json_encode($profile) ?>)'>
                             <option value=""></option>
                             <option value="#FF796F">R</option>
@@ -136,7 +140,6 @@ function filterTable() {
     filter = input.value.toUpperCase();
     table = document.querySelector(".modern-table");
     tr = table.getElementsByTagName("tr");
-    console.log(input, tr);
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[3];
         if (td) {
