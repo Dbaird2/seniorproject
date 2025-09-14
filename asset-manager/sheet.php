@@ -134,7 +134,7 @@ function filterTable() {
     var input, filter, table, tr, td, i, txt_value;
     input = document.getElementById("search-asset");
     filter = input.value.toUpperCase();
-    table = document.querySelector(".monder-table");
+    table = document.querySelector(".modern-table");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];
