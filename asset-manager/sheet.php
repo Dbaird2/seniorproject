@@ -66,7 +66,7 @@ if (isset($_POST['profile_name'])) {
                 <th>Building</th>
                 <th>Department ID</th>
                 <th>PO</th>
-                <th><input name="search-asset" type="text"></th>
+                <th><input id="search-asset" type="text"></th>
                 <th></th>
             </tr>
         </thead>

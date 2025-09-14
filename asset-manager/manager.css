@@ -263,7 +263,7 @@ textarea {
 
 /* Modern textarea styling */
 .asset-note {
-  width: 100%;
+  width: 85%;
   min-width: 150px;
   min-height: 60px;
   padding: 8px 12px;
@@ -351,4 +351,7 @@ textarea {
 }
 #nav-ui2 {
     display:none;
+}
+#search-asset {
+    width: 50%;
 }
