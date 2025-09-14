@@ -109,10 +109,10 @@ if (isset($_POST['profile_name'])) {
 <?php } ?>
 </div>
  <script>
-                function changeBackgroundColor(assetTag, color, profile) {
+                function changeBackgroundColor(asset_tag, color, profile) {
                     const rows = document.querySelectorAll("tr");
                     rows.forEach(row => {
-                    if (row.id === String(assetTag)) {
+                    if (row.id === String(asset_tag)) {
                         row.style.backgroundColor = color;
                     }
                     });
