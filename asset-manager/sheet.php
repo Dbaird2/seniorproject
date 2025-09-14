@@ -148,13 +148,6 @@ function filterTable() {
         }
     }
 }
-asset = <?= json_encode($result) ?>;
-
-const rows = document.querySelectorAll("tr");
-rows.forEach(row => {
-if (row.id === String(assetTag)) {
-    row.style.backgroundColor = color;
-}
 
 </script>
 </body>
