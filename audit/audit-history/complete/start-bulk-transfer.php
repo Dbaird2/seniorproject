@@ -1,10 +1,6 @@
 <?php 
 require_once "../../../config.php";
-
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-if (isset($_POST)) {
+if (isset($_POST['dept_id'])) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
     $audit_type = match ($audit_id) {
@@ -54,6 +50,5 @@ if (isset($_POST)) {
     }
     unset($_SESSION['info']);
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
-    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
     exit;
-} 

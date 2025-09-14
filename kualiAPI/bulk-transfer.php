@@ -137,14 +137,40 @@ try {
             }
             try {
                 if (!empty($data['data']['SBu1DONXk2'])) {
-                    $bldg_id = match (trim($data['data']['SBu1DONXk2'])) {
-                        'Science 1' => 30,
-                        'Science 2' => 36,
-                        'Science 3' => 48,
-                        'CENT PLANT OUTSIDE', 'CENT PLANT' => 11,
-                        'LIBRARY' => 43,
-                        'Student Union' => 53
+                    try {
+                        if (!empty(trim($data['data']['SBu1DONXk2'])) {
+                            $bldg_name = $data['data']['SBu1DONXk2'];
+                        } else {
+                            $bldg_name = $data['data']['BC0E2hOKv3'];
+                        }
+                        
+                        $bldg_id = match (strtolower(trim($bldg_name))) {
+                            'science 1', 'sci i', 'science i' => 30,
+                            'science 2', 'sci ii', 'science ii' => 36,
+                            'science 3', 'sci iii', 'science iii' => 48,
+                            'cent plant outside', 'cent plant' => 11,
+                            'library', 'lib' => 43,
+                            'student union', 'su' => 53,
+                            'student housing', 'sh' => 54,
+                            'public safety', 'upd' => 60,
+                            'well core' => 58,
+                            'visual art', 'visual arts' => 82,
+                            'ua', 'university advancement' => 7,
+                            'testing', 'testing center' => 155,
+                            'sa', 'student affairs' => 91,
+                            'satellite plant' => 56,
+                            'runner express', 're' => 79,
+                            'rohan' => 29,
+                            'rivendell' => 27,
+                            'administration' => 9,
+                            'administration east' => 5,
+                            'administration west' => 8,
+                            'administrative computing services' => 136,
+                            'antelope valley' => 140
                     };
+                    } catch (Exception $e) {
+                        echo "Building name did not match. Skipping\n";
+                        continue;
                 }
             } catch (Exception $e) {
                 echo $e->getMessage();

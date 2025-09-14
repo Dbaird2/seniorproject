@@ -108,6 +108,8 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $scanned_notes[] = ($found === true && $_SESSION['data'][$found_at]['Found Note'] !== '') ? $_SESSION['data'][$found_at]['Found Note'] : '';
         $scanned_times[] = ($found === true && $_SESSION['data'][$found_at]['Found Timestamp'] !== '') ? $_SESSION['data'][$found_at]['Found Timestamp'] : $_POST['dynamicTime'][$index];
         $scanned_rooms[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Tag'] !== '') ? $_SESSION['data'][$found_at]['Found Room Tag'] : $_POST['room-tag'];
+        $scanned_room_nums[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Number'] !== '') ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
+        $scanned_bldg[] = ($found === true && $_SESSION['data'][$found_at]['Found Building Name'] !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
     }
 
     $seen_tags = [];
@@ -122,17 +124,29 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
             $filtered_notes[] = $scanned_notes[$i];
             $filtered_times[] = $scanned_times[$i];
             $filtered_rooms[] = $scanned_rooms[$i];
+            $filtered_room_nums[] = $scanned_room_nums[$i];
+            $filtered_bldg[] = $scanned_bldg[$i];
         }
     }
+    unset($scanned_tags);
+    unset($scanned_notes);
+    unset($scanned_times);
+    unset($scanned_rooms);
+    unset($scanned_room_nums);
+    unset($scanned_bldg);
     if (count($filtered_tags) > 0) {
         $array = $filtered_tags;
         $note_array = $filtered_notes;
         $time_array = $filtered_times;
         $room_array = $filtered_rooms;
+        $room_num_array = $filtered_room_nums;
+        $bldg_array = $filtered_bldg;
         unset($filtered_tags);
         unset($filtered_notes);
         unset($filtered_times);
         unset($filtered_rooms);
+        unset($filtered_room_nums);
+        unset($filtered_bldg);
         if (count($array) > 0) {
             foreach ($array as $index => $tag) {
                 $found = 0;
@@ -142,6 +156,8 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     if ($tag === $row["Tag Number"] && $row["Tag Status"] !== 'Extra') {
                         $_SESSION['data'][$data_index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$data_index]['Found Room Tag'] = $room_array[$index];
+                        $_SESSION['data'][$data_index]['Found Room Number'] = $room_num_array[$index];
+                        $_SESSION['data'][$data_index]['Found Building Name'] = $bldg_array[$index];
                         $_SESSION['data'][$data_index]['Found Note'] = $note_array[$index];
                         $_SESSION['data'][$data_index]['Found Timestamp'] = $time_array[$index];
                         $found = 1;
@@ -160,11 +176,13 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                     if ($result) {
                         $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
-                    $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
-                    $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
-                    $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
-                    $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
+                        $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
+                        $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
+                        $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
+                        $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
+                        $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                        $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Descr"] = $result['asset_name'];
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
@@ -176,11 +194,13 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["COST Total Cost"] =  $result['asset_price'];
                     } else {
                         $_SESSION['data'][$total_count]["Unit"] =  '';
-                    $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
-                    $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
-                    $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
-                    $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
+                        $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
+                        $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
+                        $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
+                        $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
+                        $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                        $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Descr"] = '';
                         $_SESSION['data'][$total_count]["Serial ID"] = '';
                         $_SESSION['data'][$total_count]["Location"] =  '';
@@ -197,11 +217,13 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         }
     }
 }
-
-
+$select_bldgs = "SELECT * FROM bldg_table";
+$select_stmt = $dbh->query($select_bldgs);
+$bldgs = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <body>
+<div id="snackbar"></div>
     <div class=" is-search">
         <div class="wrapper">
 
@@ -217,7 +239,14 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         </label>
         <div id="insert-tags-div">
             <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-                <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag" autofocus accesskey="a">
+                <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag" required>
+                <input type="search" list="bldg-names" name="bldg-name" id="bldg-name" required>
+                <datalist id="bldg-names">
+                    <?php foreach($bldgs as $bldg) { ?>
+                        <option value="<?= $bldg['bldg_name'] ?>">
+                    <?php } ?>
+                </datalist>
+                <input type="text" name="room-number" id="room-number" placeholder="Room Number" required>
                 <div id="inputContainer"></div>
 
                 <input type="hidden" name="data" id="data">
@@ -323,7 +352,7 @@ function loadMoreRows() {
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
         match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
         tr.innerHTML = `
-                <td><button onclick="deleteAsset(${row["Tag Number"]})" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
+            <td><button onclick="deleteAsset(${row["Tag Number"]})" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
             <td class=${match}>${300 + index + 1}</td>
                 <td class=${match}>${row["Tag Number"]}</td>
                 <td class=${match}>${row["Tag Status"]}</td>
@@ -368,46 +397,70 @@ document.addEventListener("DOMContentLoaded", () => {
         url = "https://dataworks-7b7x.onrender.com/audit/complete/complete_api.php";
         const res = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify ({ audited_with })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify ({ audited_with })
+            });
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error (`HTTP ${res.status}: ${text}`);
+            } else {
+                console.log(res);
+            }
+        })
+        const room_tag = document.getElementById("room-tag")
+        room_tag.addEventListener("focusout", async () {
+            url = "https://dataworks-7b7x.onrender.com/audit/get-bldg-info.php";
+            const res2 = await fetch(url, {
+            method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify ({ room_tag })
+            });
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error (`HTTP ${res.status}: ${text}`);
+            } else {
+                console.log(res);
+                const data = await res.json();
+                if (data['bldg_name'] !== '' || data['bldg_name'] !== null) {
+                    const room_number = document.getElementById('room-number');
+                    room_number.value = data['room_number'];
+                    const bldg_name = document.getElementById('bldg-name');
+                    bldg_name.value = data['bldg_name'];
+                } else {
+                    toast("Room Tag Not Found in Database");
+                }
+            }
         });
-        if (!res.ok) {
-            const text = await res.text();
-            throw new Error (`HTTP ${res.status}: ${text}`);
-        } else {
-            console.log(res);
-        }
-    })
 });
 function deleteAsset(tag) {
     const params = new URLSearchParams({
     tag: tag
-    });
-    url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
-    const response = confirm("Are you sure you want to delete this asset");
-    if (response) {
-        fetch(url, {
-        method: 'POST', 
-            body: params,
-            headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error ', error));
-        //location.reload();
-        setTimeout(() => {
-            window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
-        }, 500);
-    } else {
-        console.log("User declined");
-    }
+});
+url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
+const response = confirm("Are you sure you want to delete this asset");
+if (response) {
+    fetch(url, {
+    method: 'POST', 
+        body: params,
+        headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+}
+})
+    .then(res => res.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error ', error));
+    //location.reload();
+    setTimeout(() => {
+    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
+    }, 500);
+} else {
+    console.log("User declined");
+}
 };
 document.querySelector('.table').addEventListener('change', function(e) {
     if (e.target.classList.contains('room')) {
         const params = new URLSearchParams({
-            tag: e.target.id,
+        tag: e.target.id,
             room: e.target.value
     });
         url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
@@ -575,6 +628,12 @@ function filterAssetStatus() {
             }
         }
     }
+}
+function toast(message) {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  x.textContent = message();
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
       </script>
       <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>

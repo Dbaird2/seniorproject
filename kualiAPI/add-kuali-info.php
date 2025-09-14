@@ -93,7 +93,7 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
     global $dbh;
 
     //UPDATE DEPARTMENT
-    $dept_select = "SELECT dept_id, document_set_id, form_id, custodian, dept_manager WHERE dept_id = :dept";
+    $dept_select = "SELECT dept_id, document_set_id, form_id, custodian, dept_manager from department WHERE dept_id = :dept";
     $dept_stmt = $dbh->prepare($dept_select);
     $dept_stmt->execute([":dept"]);
 
@@ -124,7 +124,7 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
         $dept_stmt->execute($params);
     } else {
         // DEPARTMENT DOES NOT EXIST
-        $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id VALUES (?, ?, ?, ?, ?, ?)"; 
+        $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?)"; 
         $dept_stmt = $dbh->prepare($dept_insert);
         if
         $dept_stmt->execute([$dept_id, $dept_name, $full_name

@@ -50,11 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 if (!empty($info)) {
                     $_SESSION['data'][$index]['Tag Status'] = 'Found';
                     $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
+                    $_SESSION['data'][$index]['Found Room Number'] = '';
+                    $_SESSION['data'][$index]['Found Building Name'] = '';
                     $_SESSION['data'][$index]['Found Note'] = $info[1];
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 } else {
                     $_SESSION['data'][$index]['Tag Status'] = '';
                     $_SESSION['data'][$index]['Found Room Tag'] = '';
+                    $_SESSION['data'][$index]['Found Room Number'] = '';
+                    $_SESSION['data'][$index]['Found Building Name'] = '';
                     $_SESSION['data'][$index]['Found Note'] = '';
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 }
