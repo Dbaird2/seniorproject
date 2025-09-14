@@ -74,7 +74,7 @@ if (isset($_POST['profile_name'])) {
             <?php
             foreach ($result as $index => $row) { ?>
                 <tr id="<?php echo htmlspecialchars($row['asset_tag']); ?>" style=`background-color: {$row['color']}`>
-                <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange="changeBackgroundColor(<?= json_encode($row['asset_tag']) ?>,this.value, <?= json_encode($profile) ?>)">
+                <td><select name="color" id="<?= htmlspecialchars($row['asset_tag']) ?>-color" onchange='changeBackgroundColor(<?= json_encode($row["asset_tag"]) ?>,this.value, <?= json_encode($profile) ?>)'>
                             <option value=""></option>
                             <option value="#FF4747">Red</option>
                             <option value="#90EE90">Green</option>
