@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Oirigin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
 include_once "../config.php";
 
 

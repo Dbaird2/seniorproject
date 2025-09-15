@@ -246,7 +246,7 @@ $bldgs = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
                         <option value="<?= $bldg['bldg_name'] ?>">
                     <?php } ?>
                 </datalist>
-                <input type="text" name="room-number" id="room-number" placeholder="Room Number" required>
+                <input type="text" name="room-number" id="room-number" placeholder="Room Number" required><br>
                 <div id="inputContainer"></div>
 
                 <input type="hidden" name="data" id="data">
@@ -415,12 +415,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify ({ room_tag: room_tag })
             });
-            if (!res.ok) {
-                const text = await res.text();
+            if (!res2.ok) {
+                const text = await res2.text();
                 throw new Error (`HTTP ${res.status}: ${text}`);
             } else {
-                console.log(res);
-                const data = await res.json();
+                console.log(res2);
+                const data = await res2.json();
                 if (data['bldg_name'] !== '' || data['bldg_name'] !== null) {
                     const room_number = document.getElementById('room-number');
                     room_number.value = data['room_number'];
