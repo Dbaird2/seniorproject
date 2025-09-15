@@ -1,4 +1,6 @@
 <?php
+require_once "../config.php";
+check_auth();
 $decoded_data = file_get_contents('php://input');
 $data = json_decode($decoded_data);
 
