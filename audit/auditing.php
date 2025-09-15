@@ -413,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const res2 = await fetch(url, {
             method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify ({ room_tag })
+                body: JSON.stringify ({ room_tag: room_tag })
             });
             if (!res.ok) {
                 const text = await res.text();
@@ -632,7 +632,7 @@ function filterAssetStatus() {
 function toast(message) {
   var x = document.getElementById("snackbar");
   x.className = "show";
-  x.textContent = message();
+  x.textContent = message;
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
       </script>
