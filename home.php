@@ -197,8 +197,8 @@ $mgmt_completion_rate = $mgmt_per;
 $self_completion_status = (int)($self_audits_complete / $total_departments)*100 === 0 ? 0 : (int)($self_audits_complete / $total_departments)*100;
 $mgmt_completion_status = (int)($mgmt_audits_complete / $total_departments)*100 === 0 ? 0 : (int)($mgmt_audits_complete / $total_departments)*100;
 
-$self_prev_completion_status = (int)($self_prev_audits_complete / $total_departments) * 100 ?? 1;
-$mgmt_prev_completion_status = (int)($mgmt_prev_audits_complete / $total_departments)*100 ?? 1;
+$self_prev_completion_status = ($self_prev_audits_complete / $total_departments) * 100 ?? 1;
+$mgmt_prev_completion_status = ($mgmt_prev_audits_complete / $total_departments)*100 ?? 1;
 echo $mgmt_prev_completion_status . " " . $mgmt_prev_audits_complete . " " . $total_departments . "<br>";
 
 ?>

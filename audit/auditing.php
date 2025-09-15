@@ -111,6 +111,41 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $scanned_room_nums[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Number'] !== '') ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
         $scanned_bldg[] = ($found === true && $_SESSION['data'][$found_at]['Found Building Name'] !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
     }
+    $select_tag = "SELECT * FROM bldg_table b JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
+    $select_stmt = $dbh->prepare($select_tag);
+    $select_stmt->execute([":tag"=>$_POST['room_tag']);
+    if ($select_stmt->rowCount() < 1) {
+        // ROOM TAG DOES NOT EXIST
+        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
+        $select_stmt = $dbh->prepare($select_room_loc);
+        $select_stmt->execute([":loc"=>$_POST['room-number']]);
+        $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
+        try {
+            $bldg_id_stmt = $dbh->prepare($get_bldg_id);
+            $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']);
+            $bldg_id = $bldg_id_stmt->fetchColumn();
+        } catch (PDOException) {
+            $message = "Error Building Name Does NOT Exist";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+            exit;
+        }
+        if ($select_stmt->rowCount() < 1) {
+            // ROOM LOC ALSO DOES NOT EXIST
+
+            $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
+            $insert_stmt = $dbh->prepare($insert_room);
+            $insert_stmt->execute([$bldg_id, $_POST['room-number'], $_POST['room-tag']]);
+            $message = "Added room number and room tag to database";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+        } else {
+            $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
+            $update_stmt = $dbh->prepare($update_room_tag);
+            $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$_POST['bldg-name']]);
+            $message = "Updated room tag";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+        }
+    }
+
 
     $seen_tags = [];
     $filtered_tags = [];
@@ -430,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     room_number.value = data['room_number'];
                     const bldg_name = document.getElementById('bldg-name');
                     bldg_name.value = data['bldg_name'];
-                    toast("Error getting data from database");
+                    toast("Successfully got building info");
                 } else {
                     toast("Room Tag Not Found in Database");
                 }
