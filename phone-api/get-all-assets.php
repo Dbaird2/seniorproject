@@ -13,6 +13,7 @@ if (isset($_POST)) {
             JOIN bldg_table AS b ON r.bldg_id = b.bldg_id";
     $select_stmt = $dbh->query($select);
     $data = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode("data" =>$data);
+    echo json_encode(["data" =>$data]);
     exit;
 }
+
