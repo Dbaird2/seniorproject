@@ -409,15 +409,19 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         const room_tag = document.getElementById("room-tag")
         room_tag.addEventListener("focusout", async () => {
+            tag = (room_tag.value || "").trim();
+            if (!tag) return;
+
             url = "https://dataworks-7b7x.onrender.com/audit/get-bldg-info.php";
             const res2 = await fetch(url, {
             method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify ({ room_tag: room_tag })
+                body: JSON.stringify ({ room_tag: tag })
             });
             if (!res2.ok) {
                 const text = await res2.text();
-                throw new Error (`HTTP ${res.status}: ${text}`);
+                throw new Error (`HTTP ${res2.status}: ${text}`);
+                toast("Error getting data from database");
             } else {
                 console.log(res2);
                 const data = await res2.json();
@@ -426,6 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     room_number.value = data['room_number'];
                     const bldg_name = document.getElementById('bldg-name');
                     bldg_name.value = data['bldg_name'];
+                    toast("Error getting data from database");
                 } else {
                     toast("Room Tag Not Found in Database");
                 }
