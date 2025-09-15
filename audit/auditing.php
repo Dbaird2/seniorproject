@@ -408,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
         const room_tag = document.getElementById("room-tag")
-        room_tag.addEventListener("focusout", async () {
+        room_tag.addEventListener("focusout", async () => {
             url = "https://dataworks-7b7x.onrender.com/audit/get-bldg-info.php";
             const res2 = await fetch(url, {
             method: 'POST',
