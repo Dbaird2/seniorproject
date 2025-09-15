@@ -111,9 +111,9 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $scanned_room_nums[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Number'] !== '') ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
         $scanned_bldg[] = ($found === true && $_SESSION['data'][$found_at]['Found Building Name'] !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
     }
-    $select_tag = "SELECT * FROM bldg_table b JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
+    $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
     $select_stmt = $dbh->prepare($select_tag);
-    $select_stmt->execute([":tag"=>$_POST['room_tag']);
+    $select_stmt->execute([":tag"=>$_POST['room_tag']]);
     if ($select_stmt->rowCount() < 1) {
         // ROOM TAG DOES NOT EXIST
         $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
@@ -122,7 +122,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
         try {
             $bldg_id_stmt = $dbh->prepare($get_bldg_id);
-            $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']);
+            $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']]);
             $bldg_id = $bldg_id_stmt->fetchColumn();
         } catch (PDOException) {
             $message = "Error Building Name Does NOT Exist";
