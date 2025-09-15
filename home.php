@@ -194,11 +194,11 @@ $spa_completion_rate = $spa_per;
 $self_completion_rate = $self_per;
 $mgmt_completion_rate = $mgmt_per;
 
-$self_completion_status = (int)(($total_departments - $self_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $self_audits_complete) / $total_departments);
-$mgmt_completion_status = (int)(($total_departments - $mgmt_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $mgmt_audits_complete) / $total_departments);
+$self_completion_status = (int)($self_audits_complete / $total_departments)*100 === 0 ? 0 : (int)($self_audits_complete / $total_departments)*100;
+$mgmt_completion_status = (int)($mgmt_audits_complete / $total_departments)*100 === 0 ? 0 : (int)($mgmt_audits_complete / $total_departments)*100;
 
-$self_prev_completion_status = (int)(($total_departments - $self_prev_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $self_prev_audits_complete) / $total_departments);
-$mgmt_prev_completion_status = (int)(($total_departments - $mgmt_prev_audits_complete) / $total_departments) === 1 ? 0 : (int)(($total_departments - $mgmt_prev_audits_complete) / $total_departments);
+$self_prev_completion_status = (int)($self_prev_audits_complete / $total_departments) * 100 === 0 ? 0 : (int)($self_prev_audits_complete / $total_departments) * 100;
+$mgmt_prev_completion_status = (int)($mgmt_prev_audits_complete / $total_departments)*100 === 1 ? 0 : (int)($mgmt_prev_audits_complete / $total_departments) * 100;
 
 ?>
 
@@ -801,7 +801,7 @@ function switchChart(type) {
                 }
                 current = Array.from(byId.values()).sort((a, b) => new Date(b.date_added) - new Date(a.date_added));
                 render(current);
-            }, 1000); // 15s
+            }, 6000); // 15s
         }
 
         function stopPolling() {

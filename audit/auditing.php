@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 console.log(res2);
                 const data = await res2.json();
-                if (data['bldg_name'] !== '' || data['bldg_name'] !== null) {
+                if (data['bldg_name'] !== '' && data['bldg_name'] !== null) {
                     const room_number = document.getElementById('room-number');
                     room_number.value = data['room_number'];
                     const bldg_name = document.getElementById('bldg-name');

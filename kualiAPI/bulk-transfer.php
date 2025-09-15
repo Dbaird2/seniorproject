@@ -138,7 +138,7 @@ try {
             try {
                 if (!empty($data['data']['SBu1DONXk2'])) {
                     try {
-                        if (!empty(trim($data['data']['SBu1DONXk2'])) {
+                        if (!empty(trim($data['data']['SBu1DONXk2']))) {
                             $bldg_name = $data['data']['SBu1DONXk2'];
                         } else {
                             $bldg_name = $data['data']['BC0E2hOKv3'];

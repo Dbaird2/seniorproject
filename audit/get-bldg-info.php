@@ -8,9 +8,9 @@ try {
     $select_stmt->execute([":tag"=>$data['room_tag']]);
     $bldg_data = $select_stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    echo json_encode('bldg_name'=>'', 'status'=>'failed'.$e->getMessage());
+    echo json_encode(['bldg_name'=>'', 'status'=>'failed'.$e->getMessage()]);
     exit;
 }
-echo json_encode("bldg_name"=>$bldg_data['bldg_name'], "room_number"=>$bldg_data['room_loc'],'bldg_id'=>$bldg_data['bldg_id']);
+echo json_encode(["bldg_name"=>$bldg_data['bldg_name'], "room_number"=>$bldg_data['room_loc'],'bldg_id'=>$bldg_data['bldg_id']]);
 exit;
 
