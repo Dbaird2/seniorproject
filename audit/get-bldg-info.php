@@ -2,7 +2,7 @@
 require_once "../config.php";
 check_auth();
 $decoded_data = file_get_contents('php://input');
-$data = json_decode($decoded_data);
+$data = json_decode($decoded_data, true);
 
 $select = "SELECT b.bldg_id, b.bldg_name, r.room_tag, r.room_loc from room_table r left join bldg_table b on r.bldg_id = b.bldg_id where room_tag = :tag";
 try {
