@@ -37,6 +37,7 @@ $apikey = $result['kuali_key'];
 if (!$apikey) {
     die("No API key found for user.");
 }
+
 $select = "SELECT * FROM kuali_info WHERE email = :email";
 $select_stmt = $dbh->prepare($select);
 $select_stmt->bindParam(':email', $email);
