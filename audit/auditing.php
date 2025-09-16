@@ -144,8 +144,43 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
             $message = "Updated room tag";
             echo "<script type='text/javascript'>toast('$message');</script>";
         }
-    }
+    } else {
+        // ROOM TAG EXISTS
+        $select_max = "SELECT MAX(room_tag) FROM room_table";
+        $select_stmt =$dbh->query($select_max);
+        $max_room = (int)$select_stmt->fetchColumn() + 1;
+        $update_old_room = "UPDATE room_table SET room_tag = :max WHERE room_tag = :tag";
+        $update_old_room_stmt = $dbh->prepare($update_old_room);
+        $update_old_room_stmt->execute([":max"=>$max_room, ":tag"=>$_POST['room-tag']);
+        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
+        $select_stmt = $dbh->prepare($select_room_loc);
+        $select_stmt->execute([":loc"=>$_POST['room-number']]);
+        $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
+        try {
+            $bldg_id_stmt = $dbh->prepare($get_bldg_id);
+            $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']]);
+            $bldg_id = $bldg_id_stmt->fetchColumn();
+        } catch (PDOException) {
+            $message = "Error Building Name Does NOT Exist";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+            exit;
+        }
+        if ($select_stmt->rowCount() < 1) {
+            // ROOM LOC ALSO DOES NOT EXIST
 
+            $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
+            $insert_stmt = $dbh->prepare($insert_room);
+            $insert_stmt->execute([$bldg_id, $_POST['room-number'], $_POST['room-tag']]);
+            $message = "Added room number and room tag to database";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+        } else {
+            $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
+            $update_stmt = $dbh->prepare($update_room_tag);
+            $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$_POST['bldg-name']]);
+            $message = "Updated room tag";
+            echo "<script type='text/javascript'>toast('$message');</script>";
+        }
+    }
 
     $seen_tags = [];
     $filtered_tags = [];
