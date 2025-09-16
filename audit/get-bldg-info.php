@@ -13,6 +13,6 @@ try {
     echo json_encode(['bldg_name'=>'', 'status'=>'failed'.$e->getMessage()]);
     exit;
 }
-echo json_encode(["bldg_name"=>$bldg_data['bldg_name'], "room_number"=>$bldg_data['room_loc'],'bldg_id'=>$bldg_data['bldg_id']]);
+echo json_encode(["bldg_name"=>$bldg_data['bldg_name']?? null , "room_number"=>$bldg_data['room_loc'] ?? null,'bldg_id'=>$bldg_data['bldg_id'] ?? null]);
 exit;
 

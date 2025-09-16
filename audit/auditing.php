@@ -113,7 +113,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
     }
     $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
     $select_stmt = $dbh->prepare($select_tag);
-    $select_stmt->execute([":tag"=>$_POST['room_tag']]);
+    $select_stmt->execute([":tag"=>$_POST['room-tag']]);
     if ($select_stmt->rowCount() < 1) {
         // ROOM TAG DOES NOT EXIST
         $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
