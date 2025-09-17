@@ -731,8 +731,8 @@ function toast(message) {
 document.getElementById('dynamicForm').addEventListener('submit', function(e) {
     e.preventDefault();
     let input = document.getElementById('bldg-name').value;
-    let option = [...document.querySelectorAll('#bldg-names option')].map( 0 => o.value);
-    if (!option.include(input)) {
+    let option = [...document.querySelectorAll('#bldg-names option')].map(o => o.value);
+    if (!option.includes(input)) {
         alert("Invalid Building Name");
     } else {
         e.target.submit();
