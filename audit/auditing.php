@@ -151,7 +151,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $max_room = (int)$select_stmt->fetchColumn() + 1;
         $update_old_room = "UPDATE room_table SET room_tag = :max WHERE room_tag = :tag";
         $update_old_room_stmt = $dbh->prepare($update_old_room);
-        $update_old_room_stmt->execute([":max"=>$max_room, ":tag"=>$_POST['room-tag']);
+        $update_old_room_stmt->execute([":max"=>$max_room, ":tag"=>$_POST['room-tag']]);
         $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
         $select_stmt = $dbh->prepare($select_room_loc);
         $select_stmt->execute([":loc"=>$_POST['room-number']]);
