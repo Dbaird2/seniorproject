@@ -130,7 +130,12 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                 $bldg_id_stmt = $dbh->prepare($get_bldg_id);
                 $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']]);
                 $bldg_id = $bldg_id_stmt->fetchColumn();
-            } catch (PDOException) {
+                if (empty($bldg_id)) {
+                    $message = "Error Building Name Does NOT Exist";
+                    echo "<script type='text/javascript'>toast('$message');</script>";
+                    exit;
+                }
+            } catch (PDOException $e) {
                 $message = "Error Building Name Does NOT Exist";
                 echo "<script type='text/javascript'>toast('$message');</script>";
                 exit;
@@ -324,10 +329,10 @@ $bldgs = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         <div id="insert-tags-div">
             <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
                 <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag" required>
-                <input type="search" list="bldg-names" name="bldg-name" id="bldg-name" required>
+                <input list="bldg-names" name="bldg-name" id="bldg-name" required>
                 <datalist id="bldg-names">
                     <?php foreach($bldgs as $bldg) { ?>
-                        <option value="<?= $bldg['bldg_name'] ?>">
+                        <option value="<?= htmlspecialchars($bldg['bldg_name']) ?>">
                     <?php } ?>
                 </datalist>
                 <input type="text" name="room-number" id="room-number" placeholder="Room Number" required><br>
