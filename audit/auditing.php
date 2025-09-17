@@ -140,7 +140,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         } else {
             $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
             $update_stmt = $dbh->prepare($update_room_tag);
-            $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$_POST['bldg-name']]);
+            $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$bldg_id]);
             $message = "Updated room tag";
             echo "<script type='text/javascript'>toast('$message');</script>";
         }
