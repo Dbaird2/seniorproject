@@ -129,7 +129,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         }
         // CHECK IF ROOM LOCATION EXISTS
         $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
-        $select_stmt = $dbh->prepare($select_room_loc);
+        $check_loc = $dbh->prepare($select_room_loc);
         $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
         if ($check_loc->rowCount() < 1) {
             // ROOM LOC ALSO DOES NOT EXIST
@@ -173,7 +173,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         }
         // CHECK IF ROOM LOCATION EXISTS
         $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
-        $select_stmt = $dbh->prepare($select_room_loc);
+        $check_loc = $dbh->prepare($select_room_loc);
         $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
         if ($check_loc->rowCount() < 1) {
             // ROOM LOC ALSO DOES NOT EXIST
