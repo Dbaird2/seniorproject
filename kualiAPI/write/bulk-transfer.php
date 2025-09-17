@@ -28,12 +28,74 @@ foreach ($data as $tag) {
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
-$select = "SELECT kuali_key FROM user_table WHERE email = :email";
+$select = "SELECT kuali_key, f_name, l_name FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
 $select_stmt = $dbh->query($select);
 $select_stmt->execute([":email" => $email]);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $apikey = $result['kuali_key'];
+$full_name = $result['f_name'] . ' ' . $result['l_name'];
+
+$get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust FROM department d WHERE dept_id = :dept_id";
+$get_cust_stmt = $dbh->prepare($get_dept_custodians);
+$get_cust_stmt->execute([":dept_id"=>$dept_id]);
+$custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$cust_count = count($custodians);
+switch ($cust_count) {
+case 1:
+    $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+    $cust_name_split = explode($custodians[0]['cust'], " ");
+    try {
+        $get_cust_stmt = $dbh->prepare($get_cust_info);
+        $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']);
+        $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
+            // SEARCH CUST IN KUALI
+            
+        }
+    } catch (PDOException $e) {
+        // CUST DID NOT MATCH
+        die("Custodian not in DB");
+        // SEARCH CUST IN KUALI
+    }
+    $cust_1 = [
+        "displayName" => $custodians[0]['cust'],
+        "email" => $cust_info['email'],
+        "firstName": $cust_name_split[0],
+        "id": $cust_info['form_id'],
+        "label": $custodians[0]['cust'],
+        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
+        "schoolId": $cust_info['school_id'],
+        "username": $cust_info['username']
+    ]
+case 2:
+    $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+    $cust_name_split = explode($custodians[1]['cust'], " ");
+    try {
+        $get_cust_stmt = $dbh->prepare($get_cust_info);
+        $get_cust_stmt->execute([":full_name"=>$custodians[1]['cust']);
+        $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
+            // SEARCH CUST IN KUALI
+            
+        }
+    } catch (PDOException $e) {
+        // CUST DID NOT MATCH
+        die("Custodian not in DB");
+        // SEARCH CUST IN KUALI
+    }
+    $cust_2 = [
+        "displayName" => $custodians[1]['cust'],
+        "email" => $cust_info['email'],
+        "firstName": $cust_name_split[0],
+        "id": $cust_info['form_id'],
+        "label": $custodians[0]['cust'],
+        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
+        "schoolId": $cust_info['school_id'],
+        "username": $cust_info['username']
+    ]
+}
 if (!$apikey) {
     die("No API key found for user.");
 }
@@ -117,29 +179,39 @@ if (!$action_id || !$document_id) {
 if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
+foreach ($transfer_data as $index => $data) {
+    $vin = false;
+    if (!empty) $vin = true;
+    if ($vin) {
+    $json_form[] = [
+        "data" => [
+            "2OhJaMhWaL"=> null,
+            "5c3qSm88bs"=> $dept_id,
+            "6JHs3W0-CL"=> $data['Found Room Number'],
+            "RxpLOF3XrE"=> $data['Tag Number'],
+            "SBu1DONXk2"=> $dept_name,
+            "_pHzQVxouz"=> $new_custodian_full_name,
+            "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['VIN']
+        ]
+    ]
+    } else {
+    $json_form[] = [
+        "data" => [
+            "2OhJaMhWaL"=> null,
+            "5c3qSm88bs"=> $dept_id,
+            "6JHs3W0-CL"=> $data['Found Room Number'],
+            "RxpLOF3XrE"=> $data['Tag Number'],
+            "SBu1DONXk2"=> $dept_name,
+            "_pHzQVxouz"=> $new_custodian_full_name,
+            "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['Serial ID']
+        ]
+    ]
+
+    }
+}
+
+}
 $now = new DateTime();
-$asset_condition  = match ($condition) {
-'Good' => '63N9VVbdk',
-    'Used' => '2zmA7sZQnX',
-    'New' => 'PMMV9ld3ML',
-    default => 'Unknown',
-};
-$check_type = match ($check_form_type) {
-'Checking Out Equipment' => 'Nwnp1xzbH',
-    'Returning Equipment' => 'z0IRqD2_Z',
-    default => 'Unknown',
-};
-$asset_type = match ($device) {
-'Laptop' => 'XMtnWYKFx',
-    'Tablet' => '-wWkrsS_A_',
-    'Desktop' => 'UHFK_j1G7L',
-    default => 'Unknown',
-};
-$for_whom = match ($role) {
-'Myself' => 'fK-8m6dzx',
-    'Someone else' => 'y89ptC2TA',
-    default => 'Unknown',
-};
 $now->format('Y-m-d H:i:s');
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String) 
@@ -147,34 +219,13 @@ $submit_form = json_encode([
 'variables' => [
     'documentId' => $document_id,
     'data' => [
-        'e0fZiLYomu' => "fK-8m6dzx",
-        'aUVT1BLN6V' => "XMtnWYKFx", 
-        'UTQZbrKiio' => "63N9VVbdk", 
-        'fyaCF8g3Uh' => 'Nwnp1xzbH', 
-        'J06VDujK2F' => 'Bella Ramirez',
-        '-StvOCXWsX' => '08/08/2025',
-        'Smva-ICjnV' => '9001 Stockdale Highway',
-        'XE0n2IZXBC' => 'Bakersfield',
-        'BOZIA6hewQ' => '12345678',
-        'jYTHHgL10M' => '12345SA',
-        'cQOz4UQ0rQ' => 'DELL Laptop',
-        "isFMbCuv8e" => [
-            "data" => [
-                "AkMeIWWhoj" => "Chemistry & Biochemistry",
-                "IOw4-l7NsM" => "D10320"
-            ],
-            "documentSetId" => "67b77932c4c6216b449c7a72",
-            "id" => "67b77932c4c6216b449c7a73",
-            "label" => "Chemistry & Biochemistry"
+        "_GODY1FjEy" => [
+            "id"=> "9A_6UOlDb",
+            "label"=> "From one department to another department "
         ],
-        "J06VDujK2F" => [
-            "displayName" => "Bella Ramirez",
-            "email" => "bramirez82@csub.edu",
-            "firstName" => "Bella",
-            "id" => "661190f37d856f68bf9e663e",
-            "lastName" => "Ramirez",
-            "schoolId" => "201552642",
-        ],
+            "VFp8qQLrUk": $full_name,
+        "JZ-q3J19dw"=> ["data"=> $json_form],
+
 
         'NdN80WJusb' => [                     
             'displayName' => 'Jesse Bergkamp',
