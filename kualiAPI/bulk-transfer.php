@@ -171,6 +171,7 @@ try {
                     } catch (Exception $e) {
                         echo "Building name did not match. Skipping\n";
                         continue;
+                    }
                 }
             } catch (Exception $e) {
                 echo $e->getMessage();
