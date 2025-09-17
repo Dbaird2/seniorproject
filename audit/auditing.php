@@ -124,7 +124,6 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $select_stmt->execute([":tag"=>$_POST['room-tag']]);
         if ($select_stmt->rowCount() < 1) {
             // ROOM TAG DOES NOT EXIST
-            echo "IF ";
             $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
             try {
                 $bldg_id_stmt = $dbh->prepare($get_bldg_id);
@@ -729,6 +728,16 @@ function toast(message) {
   x.textContent = message;
   setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
+document.getElementById('dynamicForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let input = document.getElementById('bldg-name').value;
+    let option = [...document.querySelectorAll('#bldg-names option')].map( 0 => o.value);
+    if (!option.include(input)) {
+        alert("Invalid Building Name");
+    } else {
+        e.target.submit();
+    }
+});
       </script>
       <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </div>
