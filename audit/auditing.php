@@ -117,9 +117,6 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
     if ($select_stmt->rowCount() < 1) {
         // ROOM TAG DOES NOT EXIST
             echo "IF ";
-        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
-        $select_stmt = $dbh->prepare($select_room_loc);
-        $select_stmt->execute([":loc"=>$_POST['room-number']]);
         $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
         try {
             $bldg_id_stmt = $dbh->prepare($get_bldg_id);
@@ -130,7 +127,11 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
             echo "<script type='text/javascript'>toast('$message');</script>";
             exit;
         }
-        if ($select_stmt->rowCount() < 1) {
+        // CHECK IF ROOM LOCATION EXISTS
+        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
+        $select_stmt = $dbh->prepare($select_room_loc);
+        $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
+        if ($check_loc->rowCount() < 1) {
             // ROOM LOC ALSO DOES NOT EXIST
 
             echo "IF INSERT";
@@ -159,10 +160,6 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $update_old_room = "UPDATE room_table SET room_tag = :max WHERE room_tag = :tag";
         $update_old_room_stmt = $dbh->prepare($update_old_room);
         $update_old_room_stmt->execute([":max"=>$max_room, ":tag"=>$_POST['room-tag']]);
-        // CHECK IF ROOM LOCATION EXISTS
-        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc";
-        $select_stmt = $dbh->prepare($select_room_loc);
-        $select_stmt->execute([":loc"=>$_POST['room-number']]);
 
         $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
         try {
@@ -174,7 +171,11 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
             echo "<script type='text/javascript'>toast('$message');</script>";
             exit;
         }
-        if ($select_stmt->rowCount() < 1) {
+        // CHECK IF ROOM LOCATION EXISTS
+        $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
+        $select_stmt = $dbh->prepare($select_room_loc);
+        $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
+        if ($check_loc->rowCount() < 1) {
             // ROOM LOC ALSO DOES NOT EXIST
             echo "ELSE INSERT";
             $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
