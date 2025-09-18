@@ -39,6 +39,7 @@ include_once "../../../config.php";
                 </select>
             </th>
         </tr>
+<?php } ?>
     </tbody>
 </table>
 <button id="submit">Submit Bulk Transfer</button>

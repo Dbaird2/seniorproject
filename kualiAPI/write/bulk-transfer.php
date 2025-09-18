@@ -1,5 +1,5 @@
 <?php
-require_once "../../config.php"
+require_once "../../config.php";
 include_once "../../vendor/autoload.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -8,11 +8,11 @@ if (!isset($_POST)) {
     die("Not submitted yet.");
 }
 $encoded_data = file_get_contents('php://input');
-/* $data = [ 
+/* $data = [
  *      [0 => '1234']
  *      ];
- */      
-$data = json_decode($encoded_data);
+ */
+$data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 foreach ($data as $tag) {
     if ($_SESSION['data'] === $tag) {
@@ -59,131 +59,162 @@ case 1:
     $cust_name_split = explode($custodians[0]['cust'], " ");
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']);
+        $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-            // SEARCH CUST IN KUALI
-            
-        }
+                // SEARCH CUST IN KUALI
+                searchName($custodian[0]['cust']);
+                $get_cust_stmt = $dbh->prepare($get_cust_info);
+                $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
+                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            }
     } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        die("Custodian not in DB");
-        // SEARCH CUST IN KUALI
-    }
+            // CUST DID NOT MATCH
+            searchName($custodian[0]['cust']);
+            $get_cust_stmt = $dbh->prepare($get_cust_info);
+            $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
+            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            // SEARCH CUST IN KUALI
+        }
     $cust_1 = [
         "displayName" => $custodians[0]['cust'],
         "email" => $cust_info['email'],
-        "firstName": $cust_name_split[0],
-        "id": $cust_info['form_id'],
-        "label": $custodians[0]['cust'],
-        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
-        "schoolId": $cust_info['school_id'],
-        "username": $cust_info['username']
-    ]
+        "firstName"=> $cust_name_split[0],
+        "id"=> $cust_info['form_id'],
+        "label"=> $custodians[0]['cust'],
+        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+        "schoolid"=> $cust_info['school_id'],
+        "username"=> $cust_info['username']
+    ];
 case 2:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
     $cust_name_split = explode($custodians[1]['cust'], " ");
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[1]['cust']);
+        $get_cust_stmt->execute([":full_name"=>$custodians[1]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-            // SEARCH CUST IN KUALI
-            
-        }
+                // SEARCH CUST IN KUALI
+                searchName($custodian[1]['cust']);
+                $get_cust_stmt = $dbh->prepare($get_cust_info);
+                $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
+                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            }
     } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        die("Custodian not in DB");
-        // SEARCH CUST IN KUALI
-    }
+            // CUST DID NOT MATCH
+            searchName($custodian[1]['cust']);
+            $get_cust_stmt = $dbh->prepare($get_cust_info);
+            $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
+            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            // SEARCH CUST IN KUALI
+        }
     $cust_2 = [
         "displayName" => $custodians[1]['cust'],
         "email" => $cust_info['email'],
-        "firstName": $cust_name_split[0],
-        "id": $cust_info['form_id'],
-        "label": $custodians[1]['cust'],
-        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
-        "schoolId": $cust_info['school_id'],
-        "username": $cust_info['username']
-    ]
+        "firstName"=> $cust_name_split[0],
+        "id"=> $cust_info['form_id'],
+        "label"=> $custodians[1]['cust'],
+        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+        "schoolId"=> $cust_info['school_id'],
+        "username"=> $cust_info['username']
+    ];
 case 3:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
     $cust_name_split = explode($custodians[2]['cust'], " ");
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[2]['cust']);
+        $get_cust_stmt->execute([":full_name"=>$custodians[2]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-            // SEARCH CUST IN KUALI
-            
-        }
+                // SEARCH CUST IN KUALI
+                searchName($custodian[2]['cust']);
+                $get_cust_stmt = $dbh->prepare($get_cust_info);
+                $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
+                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            }
     } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        die("Custodian not in DB");
-        // SEARCH CUST IN KUALI
-    }
+            // CUST DID NOT MATCH
+            searchName($custodian[2]['cust']);
+            $get_cust_stmt = $dbh->prepare($get_cust_info);
+            $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
+            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            // SEARCH CUST IN KUALI
+        }
     $cust_3 = [
         "displayName" => $custodians[2]['cust'],
         "email" => $cust_info['email'],
-        "firstName": $cust_name_split[0],
-        "id": $cust_info['form_id'],
-        "label": $custodians[2]['cust'],
-        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
-        "schoolId": $cust_info['school_id'],
-        "username": $cust_info['username']
-    ]
+        "firstName"=> $cust_name_split[0],
+        "id"=> $cust_info['form_id'],
+        "label"=> $custodians[2]['cust'],
+        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+        "schoolId"=> $cust_info['school_id'],
+        "username"=> $cust_info['username']
+    ];
 case 4:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
     $cust_name_split = explode($custodians[3]['cust'], " ");
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[3]['cust']);
+        $get_cust_stmt->execute([":full_name"=>$custodians[3]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
             // SEARCH CUST IN KUALI
-            
+            searchName($custodian[3]['cust']);
+                $get_cust_stmt = $dbh->prepare($get_cust_info);
+                $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
+                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+
         }
     } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        die("Custodian not in DB");
-        // SEARCH CUST IN KUALI
-    }
+            // CUST DID NOT MATCH
+            searchName($custodian[3]['cust']);
+            $get_cust_stmt = $dbh->prepare($get_cust_info);
+            $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
+            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            // SEARCH CUST IN KUALI
+        }
     $cust_4 = [
         "displayName" => $custodians[3]['cust'],
         "email" => $cust_info['email'],
-        "firstName": $cust_name_split[0],
-        "id": $cust_info['form_id'],
-        "label": $custodians[3]['cust'],
-        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
-        "schoolId": $cust_info['school_id'],
-        "username": $cust_info['username']
-    ]
+        "firstName"=> $cust_name_split[0],
+        "id"=> $cust_info['form_id'],
+        "label"=> $custodians[3]['cust'],
+        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+        "schoolId"=> $cust_info['school_id'],
+        "username"=> $cust_info['username']
+    ];
 case 5:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
     $cust_name_split = explode($custodians[4]['cust'], " ");
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[4]['cust']);
+        $get_cust_stmt->execute([":full_name"=>$custodians[4]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-            // SEARCH CUST IN KUALI
-            
-        }
+                // SEARCH CUST IN KUALI
+                searchName($custodian[4]['cust']);
+                $get_cust_stmt = $dbh->prepare($get_cust_info);
+                $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
+                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            }
     } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        die("Custodian not in DB");
-        // SEARCH CUST IN KUALI
-    }
+            // CUST DID NOT MATCH
+            searchName($custodian[4]['cust']);
+            $get_cust_stmt = $dbh->prepare($get_cust_info);
+            $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
+            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            // SEARCH CUST IN KUALI
+        }
     $cust_5 = [
         "displayName" => $custodians[4]['cust'],
         "email" => $cust_info['email'],
-        "firstName": $cust_name_split[0],
-        "id": $cust_info['form_id'],
-        "label": $custodians[4]['cust'],
-        "lastName": $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' $cust_name_split[3] ?? '',
-        "schoolId": $cust_info['school_id'],
-        "username": $cust_info['username']
-    ]
+        "firstName"=> $cust_name_split[0],
+        "id"=> $cust_info['form_id'],
+        "label"=> $custodians[4]['cust'],
+        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+        "schoolId"=> $cust_info['school_id'],
+        "username"=> $cust_info['username']
+    ];
 }
 if (!$apikey) {
     die("No API key found for user.");
@@ -260,7 +291,7 @@ if (!$action_id) {
 }
 foreach ($transfer_data as $index => $data) {
     $vin = false;
-    if (!empty) $vin = true;
+    if (!empty($data['VIN'])) $vin = true;
     if ($vin) {
         $json_form[] = [
             "data" => [
@@ -272,7 +303,7 @@ foreach ($transfer_data as $index => $data) {
                 "_pHzQVxouz"=> $new_custodian_full_name,
                 "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['VIN']
             ]
-        ]
+            ];
     } else {
         $json_form[] = [
             "data" => [
@@ -284,7 +315,7 @@ foreach ($transfer_data as $index => $data) {
                 "_pHzQVxouz"=> $new_custodian_full_name,
                 "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['Serial ID']
             ]
-        ]
+            ];
     }
 }
 $reason = "Updating Department inventory after conducting " . $dept_id . " audit.";
@@ -292,7 +323,7 @@ $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
 $submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String) 
+    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
 'variables' => [
     'documentId' => $document_id,
@@ -313,7 +344,7 @@ $submit_form = json_encode([
             "signedName"=> $full_name,
             "userId"=> $form_id
         ],
-        "K3p03X2Jvx": "Updating Department inventory after conducting D23026 audit. ",
+        "K3p03X2Jvx"=> "Updating Department inventory after conducting D23026 audit. ",
     ],
     'actionId' => $action_id,
     'status' => 'completed'
@@ -345,7 +376,7 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
-function ($search_name = '', $key = '') 
+function searchName($search_name = '', $key = '')
 {
     global $dbh;
     $subdomain = "csub";
@@ -400,7 +431,7 @@ function ($search_name = '', $key = '')
         if ($select_stmt->rowCount() <= 0) {
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
-            
+
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
             $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'User', $hashed_pw]);
@@ -453,4 +484,3 @@ function ($search_name = '', $key = '')
         }
     }
 }
-

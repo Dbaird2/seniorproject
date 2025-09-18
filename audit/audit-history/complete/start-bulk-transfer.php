@@ -1,6 +1,6 @@
 <?php 
 require_once "../../../config.php";
-if (isset($_POST['dept_id'])) {
+if (isset($_GET['dept_id'])) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
     $audit_type = match ($audit_id) {
@@ -52,3 +52,7 @@ if (isset($_POST['dept_id'])) {
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
     exit;
+}
+    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
+    exit;
+

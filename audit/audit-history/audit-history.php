@@ -142,7 +142,7 @@ foreach ($audits as $row) {
             echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
         }
         if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-            echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Complete Audit</a></td>";
+            echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Complete Audit</a></td>";
         }
     }
         echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>PDF</a></td>";
