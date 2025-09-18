@@ -34,7 +34,7 @@ $subdomain = "csub";
 $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
 $select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":email" => $email]);
+$select_stmt->execute([":email" => $_SESSION['email']]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $apikey = $submitter_info['kuali_key'] ?? '';
 if (empty($apikey)) {
@@ -411,7 +411,7 @@ function searchName($search_name = '')
         "Authorization: Bearer {$apikey}",
     );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    json_encode([
+    $kuali_json = json_encode([
     'query' => 'query ($query: String) {
         usersConnection(args: { query: $query }) {
             edges {
@@ -423,7 +423,7 @@ function searchName($search_name = '')
         'query' => $search_name
     ]
 ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
 
     //for debug only!
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
