@@ -54,6 +54,7 @@ $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust FRO
 $get_cust_stmt = $dbh->prepare($get_dept_custodians);
 $get_cust_stmt->execute([":dept_id"=>$dept_id]);
 $custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
+$dept_name = $custodians[0]['dept_name'];
 
 $cust_count = count($custodians);
 switch ($cust_count) {
@@ -303,31 +304,18 @@ if (!$action_id) {
 foreach ($transfer_data as $index => $data) {
     $vin = false;
     if (!empty($data['VIN'])) $vin = true;
-    if ($vin) {
-        $json_form[] = [
-            "data" => [
-                "2OhJaMhWaL"=> null,
-                "5c3qSm88bs"=> $dept_id,
-                "6JHs3W0-CL"=> $data['Found Room Number'],
-                "RxpLOF3XrE"=> $data['Tag Number'],
-                "SBu1DONXk2"=> $dept_name,
-                "_pHzQVxouz"=> $new_custodian_full_name,
-                "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['VIN']
-            ]
-            ];
-    } else {
-        $json_form[] = [
-            "data" => [
-                "2OhJaMhWaL"=> null,
-                "5c3qSm88bs"=> $dept_id,
-                "6JHs3W0-CL"=> $data['Found Room Number'],
-                "RxpLOF3XrE"=> $data['Tag Number'],
-                "SBu1DONXk2"=> $dept_name,
-                "_pHzQVxouz"=> $new_custodian_full_name,
-                "vOI5qaQ5hL"=> $data['Descr'] . ' - ' . $data['Serial ID']
-            ]
-            ];
-    }
+    $json_form = [];
+    $json_form[] = [
+        "data" => [
+            "2OhJaMhWaL"=> null,
+            "5c3qSm88bs"=> (string)$dept_id,
+            "6JHs3W0-CL"=> (string)$data['Found Room Number'],
+            "RxpLOF3XrE"=> (string)$data['Tag Number'],
+            "SBu1DONXk2"=> (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
+            "_pHzQVxouz"=> (string)$custodians[0]['cust'],
+            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? (string)$data['VIN'] : (string)$data['Serial ID'])
+        ]
+    ];
 }
 $reason = "Updating Department inventory after conducting " . $dept_id . " audit.";
 $now = new DateTime();
@@ -441,7 +429,7 @@ function searchName($search_name = '')
         $username = $info['node']['username'];
         $f_name = $info['node']['firstName'];
         $l_name = $info['node']['lastName'];
-        $schoolid = $info['node']['schoolid'];
+        $schoolid = $info['node']['schoolId'];
         if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name)))  {
             continue;
         }
