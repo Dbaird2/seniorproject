@@ -7,6 +7,7 @@ if (isset($_GET['dept_id'])) {
     $curr_stmt = $dbh->query($get_curr_ids);
     $curr_stmt->execute();
     $curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
+    /*
 
     if ($audit_id === 3) {
         $id = $curr_results['curr_self_id'] === 1 ? 2 : 1;
@@ -47,6 +48,7 @@ if (isset($_GET['dept_id'])) {
             exit;
         }
     }
+     */
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?type=failure&dept=".urlencode($dept_id));
     exit;
 

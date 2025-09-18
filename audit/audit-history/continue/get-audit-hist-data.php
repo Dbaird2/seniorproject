@@ -58,7 +58,7 @@ if (isset($_POST)) {
         header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     } else {
-        header("Location: https://dataworks-7b7x.onrender.com/audit//audit-history/complete/select-forms.php");
+        header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
         exit;
     }
 } 
