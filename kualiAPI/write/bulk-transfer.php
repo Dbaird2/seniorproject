@@ -45,7 +45,7 @@ $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $school_id = $submitter_info['school_id'] ?? '';
 $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
-if (empty($school_id) || empty($form_id) {
+if (empty($school_id)) || empty($form_id)) {
     searchName($full_name);
 }
 
