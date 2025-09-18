@@ -43,8 +43,11 @@ if (empty($apikey)) {
 $display_name = $submitter_info['username'];
 $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $school_id = $submitter_info['school_id'] ?? '';
-$signature = $submitter_info['signature'] ?? '';
+$signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
+if (empty($school_id) || empty($form_id) {
+    searchName($full_name);
+}
 
 
 $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust FROM department d WHERE dept_id = :dept_id";
@@ -387,8 +390,11 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
-function searchName($search_name = '', $key = '')
+function searchName($search_name = '')
 {
+    $name_array = explode(' ' ,$search_name);
+    $user_f_name = $name_array[0];
+    $user_l_name = $name_array[1] . ' ' . $name_array[2] ?? '' . ' ' . $name_array[3] ?? '' . ' ' . $name_array[4] ?? '';
     global $dbh;
     $subdomain = "csub";
 
@@ -435,6 +441,9 @@ function searchName($search_name = '', $key = '')
         $f_name = $info['node']['firstName'];
         $l_name = $info['node']['lastName'];
         $schoolid = $info['node']['schoolid'];
+        if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name)))  {
+            continue;
+        }
         // CHECK DB
         $select = "SELECT * from user_table WHERE email = :email";
         $select_stmt = $dbh->prepare($select);
@@ -490,8 +499,10 @@ function searchName($search_name = '', $key = '')
                 $params[":form"] = $id;
             }
             $update .= " WHERE email = :email";
-            $update_stmt = $dbh->prepare($update);
-            $update_stmt->execute($params);
+            if ($count > 0) {
+                $update_stmt = $dbh->prepare($update);
+                $update_stmt->execute($params);
+            }
         }
     }
 }
