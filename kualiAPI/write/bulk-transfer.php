@@ -33,7 +33,7 @@ $subdomain = "csub";
 // SUBMITTER INFO
 $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
-$select_stmt = $dbh->query($select);
+$select_stmt = $dbh->prepare($select);
 $select_stmt->execute([":email" => $email]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $apikey = $submitter_info['kuali_key'] ?? '';
