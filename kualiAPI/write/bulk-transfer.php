@@ -318,15 +318,17 @@ $now->format('Y-m-d H:i:s');
 
 $ms_time = round(microtime(true) * 1000);
 
-echo json_encode([$ms_time, $document_id, $full_name,
+echo json_encode([$ms_time
+    ,$document_id
+    ,$full_name
     ,$cust_1
-    ,$cust_2
     ,$json_form
     ,$reason
     ,$action_id
     ,$now
     ,$form_id
 ]);
+exit;
 
 /*
 $submit_form = json_encode([
