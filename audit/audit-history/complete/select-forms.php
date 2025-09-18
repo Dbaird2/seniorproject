@@ -60,7 +60,7 @@ include_once "../../../config.php";
                     bulk_psr_tags.push(type.dataset.tag);
                 } else if (val == 'psr') {
                     psr_tags.push(type.dataset.tag);
-                } else if (val == 'check-out) {
+                } else if (val == 'check-out') {
                     out_tags.push(type.dataset.tag);
                 } else if (val == 'check-in') {
                     in_tags.push(type.dataset.tag);
