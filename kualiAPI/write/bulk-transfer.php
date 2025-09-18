@@ -330,6 +330,8 @@ $reason = "Updating Department inventory after conducting " . $dept_id . " audit
 $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
+$ms_time = round(microtime(true) * 1000);
+
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -353,6 +355,7 @@ $submit_form = json_encode([
             "userId"=> $form_id
         ],
         "K3p03X2Jvx"=> "Updating Department inventory after conducting D23026 audit. ",
+        "R-jIGrtlfO"=> $ms_time,
     ],
     'actionId' => $action_id,
     'status' => 'completed'
