@@ -8,7 +8,7 @@ if (isset($_POST)) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
     $audit_type = match ($audit_id) {
-        1 => 'cust',
+    1 => 'cust',
         2 => 'cust',
         3 => 'ocust',
         4 => 'mgmt',
@@ -54,7 +54,7 @@ if (isset($_POST)) {
     }
     unset($_SESSION['info']);
     $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
-    if (empty($_GET['complete'] && $_GET['complete'] !== true) {
+    if (empty($_GET['complete']) && $_GET['complete'] !== true) {
         header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     } else {
