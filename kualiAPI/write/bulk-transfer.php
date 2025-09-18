@@ -482,7 +482,7 @@ function searchName($search_name = '')
             }
         } else {
             $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
-            $update = "UPDATE user_info SET ";
+            $update = "UPDATE user_table SET ";
             $count = 0;
             $params = [":email"=>$email];
             if (empty($user['school_id'])) {
