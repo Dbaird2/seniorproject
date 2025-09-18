@@ -258,10 +258,8 @@ $resp = curl_exec($curl);
 
 $decoded_data = json_decode($resp, true);
 $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-echo $action_id . "<br>";
 curl_close($curl);
 
-echo "PART 2 <BR>";
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_POST, true);
@@ -279,16 +277,13 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
 var_dump($resp);
-echo "<br>";
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
 
-echo $document_id . "<br>";
 curl_close($curl);
 
 
-echo "<br>PART 3 <br>";
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_POST, true);
@@ -323,6 +318,17 @@ $now->format('Y-m-d H:i:s');
 
 $ms_time = round(microtime(true) * 1000);
 
+echo json_encode([$ms_time, $document_id, $full_name,
+    ,$cust_1
+    ,$cust_2
+    ,$json_form
+    ,$reason
+    ,$action_id
+    ,$now
+    ,$form_id
+]);
+
+/*
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -360,8 +366,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
 curl_close($curl);
 var_dump($resp);
-echo "<br>documentId: $document_id<br>";
-
+ */
 function randomPassword()
 {
     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';

@@ -46,27 +46,27 @@ check_auth("high");
 </table>
 <button id="submit">Submit Forms</button>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const btn = document.getElementById("submit").addEventListener("click", async () => {
-            let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [];
-            const forms_needed = document.querySelectorAll('.forms-needed');
+document.addEventListener("DOMContentLoaded", function() {
+    const btn = document.getElementById("submit").addEventListener("click", async () => {
+    let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [];
+    const forms_needed = document.querySelectorAll('.forms-needed');
 
-            forms_needed.forEach((type) => {
-                const val = type.value;
-                if (val == 'bulk-transfer') {
-                    bulk_t_tags.push(type.dataset.tag);
-                } else if (val == 'transfer') {
-                    t_tags.push(type.dataset.tag);
-                } else if (val == 'bulk-psr') {
-                    bulk_psr_tags.push(type.dataset.tag);
-                } else if (val == 'psr') {
-                    psr_tags.push(type.dataset.tag);
-                } else if (val == 'check-out') {
-                    out_tags.push(type.dataset.tag);
-                } else if (val == 'check-in') {
-                    in_tags.push(type.dataset.tag);
-                } 
-            });
+    forms_needed.forEach((type) => {
+    const val = type.value;
+    if (val == 'bulk-transfer') {
+        bulk_t_tags.push(type.dataset.tag);
+    } else if (val == 'transfer') {
+        t_tags.push(type.dataset.tag);
+    } else if (val == 'bulk-psr') {
+        bulk_psr_tags.push(type.dataset.tag);
+    } else if (val == 'psr') {
+        psr_tags.push(type.dataset.tag);
+    } else if (val == 'check-out') {
+        out_tags.push(type.dataset.tag);
+    } else if (val == 'check-in') {
+        in_tags.push(type.dataset.tag);
+    } 
+    });
         /*
             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
             const out_res = await fetch(url, {
@@ -127,23 +127,31 @@ check_auth("high");
             } else {
                 console.log(t_res);
             }
-            */   
-        if (bulk_t_tags.length !== 0) {
-            url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
-            const bulk_t_res = await fetch(url, {
-            method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ bulk_t_tags })
-            });
-            if (!bulk_t_res.ok) {
+         */   
+    if (bulk_t_tags.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
+        const bulk_t_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ bulk_t_tags })
+        });
+        if (!bulk_t_res.ok) {
+            const text = await bulk_t_res.text();
+            throw new Error(`HTTP ${bulk_t_res.status}: ${text}`);
+        } else {
+            // If your PHP returns JSON
+            try {
+                const data = await bulk_t_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+            } catch (e) {
+                // fallback to raw text
                 const text = await bulk_t_res.text();
-                throw new Error (`HTTP ${bulk_t_res.status}: ${text}`);
-            } else {
-                console.log(bulk_t_res);
+                console.log("bulk-transfer response (text):", text);
             }
         }
-        });
-    });
+    }
+});
+});
 </script>
 </body>
 </html>
