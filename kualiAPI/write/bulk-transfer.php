@@ -392,6 +392,7 @@ function randomPassword()
 }
 function searchName($search_name = '')
 {
+    global $apikey;
     $name_array = explode(' ' ,$search_name);
     $user_f_name = $name_array[0];
     $user_l_name = $name_array[1] . ' ' . $name_array[2] ?? '' . ' ' . $name_array[3] ?? '' . ' ' . $name_array[4] ?? '';
