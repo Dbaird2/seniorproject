@@ -84,14 +84,19 @@ case 1:
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         // SEARCH CUST IN KUALI
     }
+    $l_name = implode(' ', array_filter([
+        $cust_name_split[1] ?? '',
+        $cust_name_split[2] ?? '',
+        $cust_name_split[3] ?? '',
+    ], 'strlen'));
     $cust_1 = [
         "displayName" => $custodians[0]['cust'],
         "email" => $cust_info['email'],
         "firstName"=> $cust_name_split[0],
         "id"=> $cust_info['form_id'],
         "label"=> $custodians[0]['cust'],
-        "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
-        "schoolid"=> $cust_info['school_id'],
+        "lastName"=> $l_name,
+        "schoolId"=> $cust_info['school_id'],
         "username"=> $cust_info['username']
     ];
 case 2:
@@ -300,20 +305,20 @@ if (!$action_id || !$document_id) {
 if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
+$json_form = [];
 foreach ($transfer_data as $index => $data) {
     $vin = false;
     if (!empty($data['VIN'])) $vin = true;
-    $json_form = [];
-    $json_form[] = [
+    $json_form['data'][] = [
         "data" => [
-            "2OhJaMhWaL"=> null,
             "5c3qSm88bs"=> (string)$dept_id,
             "6JHs3W0-CL"=> (string)$data['Found Room Number'],
             "RxpLOF3XrE"=> (string)$data['Tag Number'],
             "SBu1DONXk2"=> (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
             "_pHzQVxouz"=> (string)$custodians[0]['cust'],
-            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? (string)$data['VIN'] : (string)$data['Serial ID'])
-        ]
+            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? (string)$data['VIN'] : (string)$data['Serial ID']),
+        ], 
+        'id'=>(string)$index,
     ];
 }
 $reason = "Updating Department inventory after conducting " . $dept_id . " audit.";
@@ -332,8 +337,8 @@ $submit_form = json_encode([
             "label"=> "From one department to another department "
         ],
         "VFp8qQLrUk"=> $full_name,
-        "Gf5oXuQkTBy"=> [ $cust_1 ],
-        "JZ-q3J19dw"=> ["data"=> $json_form],
+        "Gf5oXuQkTBy"=> $cust_1,
+        "JZ-q3J19dw"=> $json_form,
         "K3p03X2Jvx"=> $reason,
         "ne3KPx1Wy3"=> [
             "actionId"=> $action_id,
@@ -366,6 +371,7 @@ echo json_encode([$ms_time
     ,$action_id
     ,$now
     ,$form_id
+    ,$resp
 ]);
 exit;
 //var_dump($resp);
@@ -448,9 +454,9 @@ function searchName($search_name = '')
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 
-            $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw]);
+            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, $dept_id]);
             try {
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
