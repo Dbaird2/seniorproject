@@ -389,7 +389,6 @@ $submit_form = json_encode([
         "VFp8qQLrUk"=> $full_name,
         ...$custs,
         "JZ-q3J19dw"=> $json_form,
-        "K3p03X2Jvx"=> $reason,
         "ne3KPx1Wy3"=> [
             "actionId"=> $action_id,
             "date"=> $now,
@@ -398,7 +397,7 @@ $submit_form = json_encode([
             "signedName"=> $full_name,
             "userId"=> $form_id
         ],
-        "K3p03X2Jvx"=> "Updating Department inventory after conducting D23026 audit. ",
+        "K3p03X2Jvx"=> $reason,
         "R-jIGrtlfO"=> $ms_time,
     ],
     'actionId' => $action_id,
