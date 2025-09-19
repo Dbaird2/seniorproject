@@ -387,7 +387,7 @@ $submit_form = json_encode([
             "label"=> "From one department to another department "
         ],
         "VFp8qQLrUk"=> $full_name,
-        $custs,
+        ...$custs,
         "JZ-q3J19dw"=> $json_form,
         "K3p03X2Jvx"=> $reason,
         "ne3KPx1Wy3"=> [
