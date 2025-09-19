@@ -16,9 +16,9 @@ $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 foreach ($data as $tag) {
     foreach($_SESSION['data'] as $session) {
-        if ($session['Tag Number'] === $tag['Tag Number']) {
+        if ($session['Tag Number'] === $tag) {
             $transfer_data['Unit'][] = $session['Unit'];
-            $transfer_data['Tag Number'][] = $tag['Tag Number'];
+            $transfer_data['Tag Number'][] = $tag;
             $transfer_data['Descr'][] = $session['Descr'];
             $transfer_data['Serial ID'][] = $session['Serial ID'];
             $transfer_data['VIN'][] = $session['VIN'];
