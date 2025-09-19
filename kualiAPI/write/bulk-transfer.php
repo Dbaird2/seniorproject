@@ -17,15 +17,16 @@ $transfer_data = [[]];
 foreach ($data['bulk_t_tags'] as $tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag) {
-            $transfer_data['Unit'][] = $session['Unit'];
-            $transfer_data['Tag Number'][] = $tag;
-            $transfer_data['Descr'][] = $session['Descr'];
-            $transfer_data['Serial ID'][] = $session['Serial ID'];
-            $transfer_data['VIN'][] = $session['VIN'];
-            $transfer_data['Dept'][] = $session['Dept'];
-            $transfer_data['Found Room Number'][] = $session['Found Room Number'];
-            $transfer_data['Found Building Name'][] = $session['Found Building Name'];
-            $transfer_data['Found Note'][] = $session['Found Note'];
+            $transfer_data[]['Unit'] = $session['Unit'];
+            $transfer_data[]['Tag Number'] = $tag;
+            $transfer_data[]['Descr'] = $session['Descr'];
+            $transfer_data[]['Serial ID'] = $session['Serial ID'];
+            $transfer_data[]['VIN'] = $session['VIN'];
+            $transfer_data[]['Dept'] = $session['Dept'];
+            $transfer_data[]['Found Room Number'] = $session['Found Room Number'];
+            $transfer_data[]['Found Building Name'] = $session['Found Building Name'];
+            $transfer_data[]['Found Note'] = $session['Found Note'];
+            break;
         }
     }
 }
