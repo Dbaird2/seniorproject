@@ -67,14 +67,14 @@ case 1:
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
             // SEARCH CUST IN KUALI
-            searchName($custodian[0]['cust']);
+            searchName($custodians[0]['cust']);
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         }
     } catch (PDOException $e) {
         // CUST DID NOT MATCH
-        searchName($custodian[0]['cust']);
+        searchName($custodians[0]['cust']);
         $get_cust_stmt = $dbh->prepare($get_cust_info);
         $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -100,14 +100,14 @@ case 2:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
                 // SEARCH CUST IN KUALI
-                searchName($custodian[1]['cust']);
+                searchName($custodians[1]['cust']);
                 $get_cust_stmt = $dbh->prepare($get_cust_info);
                 $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
                 $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $e) {
             // CUST DID NOT MATCH
-            searchName($custodian[1]['cust']);
+            searchName($custodians[1]['cust']);
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -134,14 +134,14 @@ case 3:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
                 // SEARCH CUST IN KUALI
-                searchName($custodian[2]['cust']);
+                searchName($custodians[2]['cust']);
                 $get_cust_stmt = $dbh->prepare($get_cust_info);
                 $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
                 $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $e) {
             // CUST DID NOT MATCH
-            searchName($custodian[2]['cust']);
+            searchName($custodians[2]['cust']);
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -168,7 +168,7 @@ case 4:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
                 // SEARCH CUST IN KUALI
-                searchName($custodian[3]['cust']);
+                searchName($custodians[3]['cust']);
                 $get_cust_stmt = $dbh->prepare($get_cust_info);
                 $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
                 $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -176,7 +176,7 @@ case 4:
             }
         } catch (PDOException $e) {
             // CUST DID NOT MATCH
-            searchName($custodian[3]['cust']);
+            searchName($custodians[3]['cust']);
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -203,14 +203,14 @@ case 5:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
                 // SEARCH CUST IN KUALI
-                searchName($custodian[4]['cust']);
+                searchName($custodians[4]['cust']);
                 $get_cust_stmt = $dbh->prepare($get_cust_info);
                 $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
                 $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             }
         } catch (PDOException $e) {
             // CUST DID NOT MATCH
-            searchName($custodian[4]['cust']);
+            searchName($custodians[4]['cust']);
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
@@ -426,7 +426,7 @@ function searchName($search_name = '')
 
     $resp = curl_exec($curl);
     curl_close($curl);
-    var_dump($resp);
+    //var_dump($resp);
     $name_data = json_decode($resp, true);
     $name_edges = $name_data['data']['usersConnection']['edges'];
     foreach ($name_edges as $info) {
