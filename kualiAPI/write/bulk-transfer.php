@@ -14,7 +14,7 @@ $encoded_data = file_get_contents('php://input');
  */
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
-foreach ($data as $tag) {
+foreach ($data['bulk_t_tags'] as $tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag) {
             $transfer_data['Unit'][] = $session['Unit'];
@@ -29,11 +29,6 @@ foreach ($data as $tag) {
         }
     }
 }
-echo "<pre>";
-var_dump($data);
-var_dump($transfer_data);
-echo "</pre>";
-/*
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
@@ -337,7 +332,6 @@ echo json_encode([$ms_time
 ]);
 exit;
  */
-/*
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
