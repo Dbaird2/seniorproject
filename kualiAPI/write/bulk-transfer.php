@@ -15,16 +15,18 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 foreach ($data as $tag) {
-    if ($_SESSION['data'] === $tag) {
-        $transfer_data['Unit'][] = $_SESSION['Unit'];
-        $transfer_data['Tag Number'][] = $tag;
-        $transfer_data['Descr'][] = $_SESSION['Descr'];
-        $transfer_data['Serial ID'][] = $_SESSION['Serial ID'];
-        $transfer_data['VIN'][] = $_SESSION['VIN'];
-        $transfer_data['Dept'][] = $_SESSION['Dept'];
-        $transfer_data['Found Room Number'][] = $_SESSION['Found Room Number'];
-        $transfer_data['Found Building Name'][] = $_SESSION['Found Building Name'];
-        $transfer_data['Found Note'][] = $_SESSION['Found Note'];
+    foreach($_SESSION['data'] as $session) {
+        if ($session['Tag Number'] === $tag['Tag Number']) {
+            $transfer_data['Unit'][] = $session['Unit'];
+            $transfer_data['Tag Number'][] = $tag['Tag Number'];
+            $transfer_data['Descr'][] = $session['Descr'];
+            $transfer_data['Serial ID'][] = $session['Serial ID'];
+            $transfer_data['VIN'][] = $session['VIN'];
+            $transfer_data['Dept'][] = $session['Dept'];
+            $transfer_data['Found Room Number'][] = $session['Found Room Number'];
+            $transfer_data['Found Building Name'][] = $session['Found Building Name'];
+            $transfer_data['Found Note'][] = $session['Found Note'];
+        }
     }
 }
 $dept_id = $_SESSION['info'][2];
