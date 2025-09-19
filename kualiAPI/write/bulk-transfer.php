@@ -57,6 +57,7 @@ $custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
 $dept_name = $custodians[0]['dept_name'];
 
 $cust_count = count($custodians);
+$cust_1 = $cust_2 = $cust_3 = $cust_4 = $cust_5 = [];
 switch ($cust_count) {
 case 1:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
@@ -332,12 +333,45 @@ foreach ($transfer_data as $index => $data) {
             "RxpLOF3XrE"=> (string)$data['Tag Number'],
             "SBu1DONXk2"=> (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
             "_pHzQVxouz"=> (string)$custodians[0]['cust'],
-            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? (string)$data['VIN'] : (string)$data['Serial ID']),
+            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
         ], 
         'id'=>(string)$index,
     ];
 }
-$reason = "Updating Department inventory after conducting " . $dept_id . " audit.";
+$custs = [
+    "Gf5oXuQkTBy"=> $cust_1
+];
+if (!empty($cust_2)) {
+    $custs = [
+        "Gf5oXuQkTBy"=> $cust_1,
+        "i6O5npcOWj" => $cust_2
+    ];
+}
+if (!empty($cust_3)) {
+    $custs = [
+        "Gf5oXuQkTBy"=> $cust_1,
+        "i6O5npcOWj" => $cust_2,
+        "2W25abEJ4O" => $cust_3
+    ];
+}
+if (!empty($cust_4)) {
+    $custs = [
+        "Gf5oXuQkTBy"=> $cust_1,
+        "i6O5npcOWj" => $cust_2,
+        "2W25abEJ4O" => $cust_3,
+        "DZrHu6ITkF" => $cust_4
+    ];
+}
+if (!empty($cust_5)) {
+    $custs = [
+        "Gf5oXuQkTBy"=> $cust_1,
+        "i6O5npcOWj" => $cust_2,
+        "2W25abEJ4O" => $cust_3,
+        "DZrHu6ITkF" => $cust_4,
+        "_MkyBYDNix" => $cust_5
+    ];
+}
+$reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
 $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
@@ -353,7 +387,7 @@ $submit_form = json_encode([
             "label"=> "From one department to another department "
         ],
         "VFp8qQLrUk"=> $full_name,
-        "Gf5oXuQkTBy"=> $cust_1,
+        $custs,
         "JZ-q3J19dw"=> $json_form,
         "K3p03X2Jvx"=> $reason,
         "ne3KPx1Wy3"=> [
@@ -388,6 +422,8 @@ echo json_encode([$ms_time
     ,$now
     ,$form_id
     ,$resp
+    ,$dept_id
+    ,$_SESSION['info']
 ]);
 exit;
 //var_dump($resp);
