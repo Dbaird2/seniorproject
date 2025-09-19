@@ -30,8 +30,13 @@ foreach ($data['bulk_t_tags'] as $tag) {
         }
     }
 }
+echo "<pre>";
 var_dump($transfer_data);
 var_dump($data);
+var_dump($encoded_data);
+var_dump($_SESSION['data']);
+echo "</pre>";
+exit;
 /*
 $dept_id = $_SESSION['info'][2];
 
