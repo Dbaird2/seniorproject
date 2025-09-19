@@ -317,7 +317,7 @@ $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
 $ms_time = round(microtime(true) * 1000);
-
+/*
 echo json_encode([$ms_time
     ,$document_id
     ,$full_name
@@ -329,8 +329,7 @@ echo json_encode([$ms_time
     ,$form_id
 ]);
 exit;
-
-/*
+ */
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -367,8 +366,18 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 curl_close($curl);
-var_dump($resp);
- */
+echo json_encode([$ms_time
+    ,$document_id
+    ,$full_name
+    ,$cust_1
+    ,$json_form
+    ,$reason
+    ,$action_id
+    ,$now
+    ,$form_id
+]);
+exit;
+//var_dump($resp);
 function randomPassword()
 {
     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
