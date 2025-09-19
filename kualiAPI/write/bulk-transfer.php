@@ -30,6 +30,9 @@ foreach ($data['bulk_t_tags'] as $tag) {
         }
     }
 }
+var_dump($transfer_data);
+var_dump($data);
+/*
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
@@ -320,19 +323,6 @@ $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
 $ms_time = round(microtime(true) * 1000);
-/*
-echo json_encode([$ms_time
-    ,$document_id
-    ,$full_name
-    ,$cust_1
-    ,$json_form
-    ,$reason
-    ,$action_id
-    ,$now
-    ,$form_id
-]);
-exit;
- */
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -397,6 +387,8 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
+ */
+/*
 function searchName($search_name = '')
 {
     global $apikey;
@@ -514,3 +506,4 @@ function searchName($search_name = '')
         }
     }
 }
+ */

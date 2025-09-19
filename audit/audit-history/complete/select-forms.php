@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
         in_tags.push(type.dataset.tag);
     } 
     });
+    console.log(bulk_t_tags);
         /*
             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
             const out_res = await fetch(url, {
@@ -127,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 console.log(t_res);
             }
-         */   
     if (bulk_t_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
         const bulk_t_res = await fetch(url, {
@@ -149,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
+         */   
 });
 });
 </script>
