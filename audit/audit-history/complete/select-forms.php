@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 console.log(t_res);
             }
+         */
     if (bulk_t_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
         const bulk_t_res = await fetch(url, {
@@ -144,12 +145,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 const data = await bulk_t_res.json();
                 console.log("bulk-transfer response (JSON):", data);
             } catch {
-                const text = await clone.text();   // use the clone here
+                const text = await clone.text();  
                 console.log("bulk-transfer response (text):", text);
             }
         }
     }
-         */   
 });
 });
 </script>
