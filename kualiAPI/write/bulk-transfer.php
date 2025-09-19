@@ -14,30 +14,23 @@ $encoded_data = file_get_contents('php://input');
  */
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
+$index = 0;
 foreach ($data['bulk_t_tags'] as $tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag) {
-            $transfer_data[]['Unit'] = $session['Unit'];
-            $transfer_data[]['Tag Number'] = $tag;
-            $transfer_data[]['Descr'] = $session['Descr'];
-            $transfer_data[]['Serial ID'] = $session['Serial ID'];
-            $transfer_data[]['VIN'] = $session['VIN'];
-            $transfer_data[]['Dept'] = $session['Dept'];
-            $transfer_data[]['Found Room Number'] = $session['Found Room Number'];
-            $transfer_data[]['Found Building Name'] = $session['Found Building Name'];
-            $transfer_data[]['Found Note'] = $session['Found Note'];
+            $transfer_data[$index]['Unit'] = $session['Unit'];
+            $transfer_data[$index]['Tag Number'] = $tag;
+            $transfer_data[$index]['Descr'] = $session['Descr'];
+            $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
+            $transfer_data[$index]['VIN'] = $session['VIN'];
+            $transfer_data[$index]['Dept'] = $session['Dept'];
+            $transfer_data[$index]['Found Room Number'] = $session['Found Room Number'];
+            $transfer_data[$index]['Found Building Name'] = $session['Found Building Name'];
+            $transfer_data[$index++]['Found Note'] = $session['Found Note'];
             break;
         }
     }
 }
-echo "<pre>";
-var_dump($transfer_data);
-var_dump($data);
-var_dump($encoded_data);
-var_dump($_SESSION['data']);
-echo "</pre>";
-exit;
-/*
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
@@ -392,8 +385,6 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
- */
-/*
 function searchName($search_name = '')
 {
     global $apikey;
@@ -511,4 +502,3 @@ function searchName($search_name = '')
         }
     }
 }
- */
