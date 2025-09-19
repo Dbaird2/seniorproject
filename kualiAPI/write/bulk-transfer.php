@@ -64,7 +64,7 @@ $cust_count = count($custodians);
 switch ($cust_count) {
 case 1:
     $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-    $cust_name_split = explode($custodians[0]['cust'], " ");
+    $cust_name_split = explode(" ", $custodians[0]['cust']);
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
         $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']]);
@@ -97,7 +97,7 @@ case 1:
 case 2:
     if ($cust_count >= 2) {
         $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode($custodians[1]['cust'], " ");
+        $cust_name_split = explode(" " ,$custodians[1]['cust']);
         try {
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name"=>$custodians[1]['cust']]);
@@ -131,7 +131,7 @@ case 2:
 case 3:
     if ($cust_count >= 3) {
         $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode($custodians[2]['cust'], " ");
+        $cust_name_split = explode(" " ,$custodians[2]['cust']);
         try {
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name"=>$custodians[2]['cust']]);
@@ -165,7 +165,7 @@ case 3:
 case 4:
     if ($cust_count >= 4) {
         $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode($custodians[3]['cust'], " ");
+        $cust_name_split = explode(" ", $custodians[3]['cust']);
         try {
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name"=>$custodians[3]['cust']]);
@@ -200,7 +200,7 @@ case 4:
 case 5:
     if ($cust_count >= 5) {
         $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode($custodians[4]['cust'], " ");
+        $cust_name_split = explode(" ", $custodians[4]['cust']);
         try {
             $get_cust_stmt = $dbh->prepare($get_cust_info);
             $get_cust_stmt->execute([":full_name"=>$custodians[4]['cust']]);
