@@ -8,10 +8,6 @@ if (!isset($_POST)) {
     die("Not submitted yet.");
 }
 $encoded_data = file_get_contents('php://input');
-/* $data = [
- *      [0 => '1234']
- *      ];
- */
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 $index = 0;
@@ -122,13 +118,18 @@ case 2:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             // SEARCH CUST IN KUALI
         }
+        $l_name = implode(' ', array_filter([
+            $cust_name_split[1] ?? '',
+            $cust_name_split[2] ?? '',
+            $cust_name_split[3] ?? '',
+        ], 'strlen'));
         $cust_2 = [
             "displayName" => $custodians[1]['cust'],
             "email" => $cust_info['email'],
             "firstName"=> $cust_name_split[0],
             "id"=> $cust_info['form_id'],
             "label"=> $custodians[1]['cust'],
-            "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+            "lastName"=> $l_name,
             "schoolId"=> $cust_info['school_id'],
             "username"=> $cust_info['username']
         ];
@@ -156,13 +157,18 @@ case 3:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             // SEARCH CUST IN KUALI
         }
+        $l_name = implode(' ', array_filter([
+            $cust_name_split[1] ?? '',
+            $cust_name_split[2] ?? '',
+            $cust_name_split[3] ?? '',
+        ], 'strlen'));
         $cust_3 = [
             "displayName" => $custodians[2]['cust'],
             "email" => $cust_info['email'],
             "firstName"=> $cust_name_split[0],
             "id"=> $cust_info['form_id'],
             "label"=> $custodians[2]['cust'],
-            "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+            "lastName"=> $l_name,
             "schoolId"=> $cust_info['school_id'],
             "username"=> $cust_info['username']
         ];
@@ -191,13 +197,18 @@ case 4:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             // SEARCH CUST IN KUALI
         }
+        $l_name = implode(' ', array_filter([
+            $cust_name_split[1] ?? '',
+            $cust_name_split[2] ?? '',
+            $cust_name_split[3] ?? '',
+        ], 'strlen'));
         $cust_4 = [
             "displayName" => $custodians[3]['cust'],
             "email" => $cust_info['email'],
             "firstName"=> $cust_name_split[0],
             "id"=> $cust_info['form_id'],
             "label"=> $custodians[3]['cust'],
-            "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+            "lastName"=> $l_name,
             "schoolId"=> $cust_info['school_id'],
             "username"=> $cust_info['username']
         ];
@@ -225,13 +236,18 @@ case 5:
             $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
             // SEARCH CUST IN KUALI
         }
+        $l_name = implode(' ', array_filter([
+            $cust_name_split[1] ?? '',
+            $cust_name_split[2] ?? '',
+            $cust_name_split[3] ?? '',
+        ], 'strlen'));
         $cust_5 = [
             "displayName" => $custodians[4]['cust'],
             "email" => $cust_info['email'],
             "firstName"=> $cust_name_split[0],
             "id"=> $cust_info['form_id'],
             "label"=> $custodians[4]['cust'],
-            "lastName"=> $cust_name_split[1] . ' ' . $cust_name_split[2] ?? '' . ' ' . $cust_name_split[3] ?? '',
+            "lastName"=> $l_name,
             "schoolId"=> $cust_info['school_id'],
             "username"=> $cust_info['username']
         ];
@@ -413,17 +429,17 @@ function searchName($search_name = '')
     );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     $kuali_json = json_encode([
-    'query' => 'query ($query: String) {
+        'query' => 'query ($query: String) {
         usersConnection(args: { query: $query }) {
-            edges {
-                node { id displayName email username firstName lastName schoolId }
-            }
-        }
-    }',
+        edges {
+        node { id displayName email username firstName lastName schoolId }
+}
+}
+}',
     'variables' => [
         'query' => $search_name
     ]
-]);
+    ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
 
     //for debug only!

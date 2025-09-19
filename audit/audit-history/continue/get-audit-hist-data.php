@@ -53,10 +53,5 @@ foreach ($audit_data as $row) {
 }
 unset($_SESSION['info']);
 $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
-if (empty($_GET['complete']) && $_GET['complete'] !== true) {
-    header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-    exit;
-} else {
-    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
-    exit;
-}
+header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+exit;
