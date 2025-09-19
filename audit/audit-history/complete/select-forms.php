@@ -139,13 +139,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const text = await bulk_t_res.text();
             throw new Error(`HTTP ${bulk_t_res.status}: ${text}`);
         } else {
-            // If your PHP returns JSON
+            const clone = bulk_t_res.clone();
             try {
                 const data = await bulk_t_res.json();
                 console.log("bulk-transfer response (JSON):", data);
-            } catch (e) {
-                // fallback to raw text
-                const text = await bulk_t_res.text();
+            } catch {
+                const text = await clone.text();   // use the clone here
                 console.log("bulk-transfer response (text):", text);
             }
         }
