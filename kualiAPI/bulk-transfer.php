@@ -143,31 +143,10 @@ try {
                         } else {
                             $bldg_name = $data['data']['BC0E2hOKv3'];
                         }
-                        
-                        $bldg_id = match (strtolower(trim($bldg_name))) {
-                            'science 1', 'sci i', 'science i' => 30,
-                            'science 2', 'sci ii', 'science ii' => 36,
-                            'science 3', 'sci iii', 'science iii' => 48,
-                            'cent plant outside', 'cent plant' => 11,
-                            'library', 'lib' => 43,
-                            'student union', 'su' => 53,
-                            'student housing', 'sh' => 54,
-                            'public safety', 'upd' => 60,
-                            'well core' => 58,
-                            'visual art', 'visual arts' => 82,
-                            'ua', 'university advancement' => 7,
-                            'testing', 'testing center' => 155,
-                            'sa', 'student affairs' => 91,
-                            'satellite plant' => 56,
-                            'runner express', 're' => 79,
-                            'rohan' => 29,
-                            'rivendell' => 27,
-                            'administration' => 9,
-                            'administration east' => 5,
-                            'administration west' => 8,
-                            'administrative computing services' => 136,
-                            'antelope valley' => 140
-                    };
+                        $select_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
+                        $select_stmt = $dbh->prepare($select_bldg_id);
+                        $select_stmt->execute([":name"=>$bldg_name]);
+                        $bldg_id = $select_stmt->fetchColumn();
                     } catch (Exception $e) {
                         echo "Building name did not match. Skipping\n";
                         continue;
