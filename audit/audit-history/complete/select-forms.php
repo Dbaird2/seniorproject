@@ -32,7 +32,7 @@ check_auth();
             <td>
             <select name="form-type" id="form-<?=$row['Tag Number']?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                      <option value="">No Form Needed</option>
-                    <?php if (in_array($_SESSION['role'], ['admin', 'management']) { ?>
+                    <?php if (in_array($_SESSION['role'], ['admin', 'management'])) { ?>
                      <option value="bulk-transfer" >Bulk Transfer</option>
                     <?php } ?>
                      <option value="psr">Property Survey Report</option>
@@ -45,14 +45,14 @@ check_auth();
     REASON FOR DISPOSTAL
     DISPOSITION CODE
     -->
-    <td><select id="psr-code-<?=$row['Tag Number'] ?>"> 
+    <td class="psr-<?= $row['Tag Number']?>" style="display:none;"><select id="psr-code-<?=$row['Tag Number'] ?>"> 
             <option value=""/>
             <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)"/>
             <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)"/>
             <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10"/>
         </select>
             </td>
-            <td><select id="psr-reason-<?=$row['Tag Number'] ?>">
+            <td class="psr-<?= $row['Tag Number']?>" style="display:none;"><select id="psr-reason-<?=$row['Tag Number'] ?>">
                     <option value="" />
 </select>
 </td>
@@ -64,28 +64,28 @@ check_auth();
     DETAILED NARRATIVE
     REPORTED TO PUBLIC SAFETY
      -->
-     <td><select id="lsd-who-<?=$row['Tag Number'] ?>">
+     <td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-who-<?=$row['Tag Number'] ?>">
             <option value="" />
             <option value="Myself" />
             <option value="I am initiating this submission on behalf of" />
 </select>
 </td>
-<td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
 <select id="lsd-position-<?=$row['Tag Number'] ?>">
 <option value="" />
 <option value="Staff/Faculty" />
 <option value="Student" />
 </select>
 </td>
-<td><input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>"></td>
-<td><select id="lsd-type-<?=$row['Tag Number']?>">
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>"></td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-type-<?=$row['Tag Number']?>">
         <option value="">
         <option value="Lost">
         <option value="Stolen">
         <option value="Destroyed">
 </select></td>
-<td><textarea type="text" id="lsd-narrative-<?=$row['Tag Number']?>" placeholder="Detail Narrative" /></td>
-<td><select id="lsd-report-<?=$row['Tag Number']?>">
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><textarea type="text" id="lsd-narrative-<?=$row['Tag Number']?>" placeholder="Detail Narrative" /></td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-report-<?=$row['Tag Number']?>">
         <option value="">
         <option value="Yes">
         <option value="No">

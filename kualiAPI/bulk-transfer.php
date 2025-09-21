@@ -128,6 +128,7 @@ try {
             $dept_id = $data['data']['5c3qSm88bs'];
             $room_loc = $data['data']['6JHs3W0-CL'];
             $dept_id = substr($dept_id, 0, 6);
+            echo $dept_id . "<br>";
             if (preg_match('/^D/', $dept_id)) {
                 echo "<br>Dept Id Format Good<br>";
             }
@@ -155,40 +156,61 @@ try {
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-            // GET BLDG ID FROM BLDG NAME
-            $select_q = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
-            $select_stmt = $dbh->prepare($select_q);
-            $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
+            try{ 
+                // GET BLDG ID FROM BLDG NAME
+                $select_q = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
+                $select_stmt = $dbh->prepare($select_q);
+                $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
+            } catch (PDOException $e) {
+                echo "Error selecting bldg_name line 163 ".$e->getMessage();
+            }
             $room_tag_found = false;
             if ($select_stmt->rowCount() > 0) {
                 $room_tag = $select_stmt->fetchColumn();
                 $room_tag_found = true;
             } else {
-                $check_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_id = :bid";
-                $bldg_id_stmt = $dbh->prepare($check_bldg_id);
-                $bldg_id_stmt->execute([":bid" => $bldg_id]);
+                try {
+                    $check_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_id = :bid";
+                    $bldg_id_stmt = $dbh->prepare($check_bldg_id);
+                    $bldg_id_stmt->execute([":bid" => $bldg_id]);
+                } catch (PDOException $e) {
+                    echo "Error selecting bldg_id line 176 " . $e->getMessage();
+                }
                 if ($bldg_id_stmt->rowCount() > 0) {
-
-                    $update_room_table = "INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)";
-                    $update_stmt = $dbh->prepare($update_room_table);
-                    $update_stmt->execute([$bldg_id, $room_loc]);
-
-                    $get_room_tag = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
-                    $select_stmt = $dbh->prepare($get_room_tag);
-                    $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
-                    $room_tag = $select_stmt->fetchColumn();
+                    try {
+                        $update_room_table = "INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)";
+                        $update_stmt = $dbh->prepare($update_room_table);
+                        $update_stmt->execute([$bldg_id, $room_loc]);
+                    } catch (PDOException $e) {
+                        echo "error inserting line 185 " .$e->getMessage();
+                    }
+                    try {
+                        $get_room_tag = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
+                        $select_stmt = $dbh->prepare($get_room_tag);
+                        $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
+                        $room_tag = $select_stmt->fetchColumn();
+                    } catch (PDOException $e) {
+                        echo "error selecting room tag line 193 " . $e->getMessage();
+                    }
                 } else {
                     echo "Bldg id not found. Skipping<br>";
                     continue;
                 }
             }
-            $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
-            $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
-
-            $update_kuali_time = "UPDATE kuali_table SET bulk_transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$update_time]);
+            try {
+                $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
+                $update_stmt = $dbh->prepare($update_q);
+                $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+            } catch (PDOException $e) {
+                echo "error updating asset " . $e->getMessage();
+            }
+            try {
+                $update_kuali_time = "UPDATE kuali_table SET bulk_transfer_time = :time";
+                $update_stmt = $dbh->prepare($update_kuali_time);
+                $update_stmt->execute([":time"=>$update_time]);
+            } catch (PDOException $e) {
+                echo "error updating kuali_table " . $e->getMessage();
+            }
         }
 
 

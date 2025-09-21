@@ -107,7 +107,7 @@ try {
                 echo " Match Found <br>";
             } else continue;
 
-            $serial_num = $tag['data']['Wrnezf-g0C'];
+            $serial_num = $tag['data']['Wrnezf-g0C'] ?? '';
             $value = $tag['data']['QkRodcpQRN'];
             $length = strlen($value);
             $value = (float)substr_replace($value, '.', $length - 2, 0);

@@ -143,6 +143,8 @@ try {
                 $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po) VALUES
                     (?, ?, ?, ?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
+                $ms_date = $edge['node']['data']['meta']['workflowCompletedAt'] / 1000;
+                $date = date('m-d-y', $ms_date);
                 $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po]);
                 $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
                 $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
