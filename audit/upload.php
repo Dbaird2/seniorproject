@@ -17,13 +17,25 @@ check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
-        $select_q = "SELECT a.asset_tag, a.asset_name, a.bus_unit,
-            a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
-            d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
-            FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
-            LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
-            LEFT JOIN department d ON a.dept_id = d.dept_id
-            WHERE dept_name = :name ORDER BY a.asset_tag";
+        if ($name === 'SPA') {
+            $name = 'BKSPA';
+            $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
+                a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
+                d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
+                FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
+                LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
+                LEFT JOIN department d ON a.dept_id = d.dept_id
+                WHERE bus_unit = :name ORDER BY a.asset_tag";
+        } else {
+
+            $select_q = "SELECT a.found, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
+                a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
+                d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
+                FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
+                LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
+                LEFT JOIN department d ON a.dept_id = d.dept_id
+                WHERE dept_name = :name ORDER BY a.asset_tag";
+        }
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":name"=>$name]);
         $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -47,19 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $_SESSION['data'][$index]['PO No.'] = $row['po'];
                 $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
                 $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
+                if ($row['found'] === true) {
+                    $_SESSION['data'][$index]['Tag Status'] = 'Found';
+                    $_SESSION['data'][$index]['Found Note'] = 'Found at ' . $row['found_at']; 
+                }
                 if (!empty($info)) {
                     $_SESSION['data'][$index]['Tag Status'] = 'Found';
                     $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
                     $_SESSION['data'][$index]['Found Room Number'] = '';
                     $_SESSION['data'][$index]['Found Building Name'] = '';
-                    $_SESSION['data'][$index]['Found Note'] = $info[1];
+                    $_SESSION['data'][$index]['Found Note'] .= $info[1];
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 } else {
                     $_SESSION['data'][$index]['Tag Status'] = '';
                     $_SESSION['data'][$index]['Found Room Tag'] = '';
                     $_SESSION['data'][$index]['Found Room Number'] = '';
                     $_SESSION['data'][$index]['Found Building Name'] = '';
-                    $_SESSION['data'][$index]['Found Note'] = '';
+                    $_SESSION['data'][$index]['Found Note'] .= '';
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 }
                 $highest_row++;
@@ -142,11 +158,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $info = explode(",", $asset_notes);
                                 $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                 $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
                                 $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             }
@@ -178,11 +198,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $info = explode(",", $asset_notes);
                                 $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                 $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
                                 $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             }
@@ -465,6 +489,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 <input class="form-input" list="dept-ids" type="search" name="list-type" placeholder="Search Dept Name">
 <datalist id="dept-ids" id="list" name="list">
 <?php foreach ($depts as $dept) { ?>
+<option value="SPA Audit"></option>
 <option value="<?= $dept['dept_name'] ?>"><?= $dept['dept_name'] ?></option>
 <?php } ?>
 </datalist> 
