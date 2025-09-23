@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
 
-    forms_needed.forEach((type) => {
+    forms_needed.forEach(async (type) => {
     const val = type.value;
     if (val == 'bulk-transfer') {
         bulk_t_tags.push(type.dataset.tag);
