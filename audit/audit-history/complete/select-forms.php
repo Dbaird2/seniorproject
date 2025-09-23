@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     if (lsd_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
-        const psr_res = await fetch(url, {
+        const lsd_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ lsd_tags })
