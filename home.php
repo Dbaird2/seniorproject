@@ -5,11 +5,10 @@ check_auth();
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
 /* QUERIES */
-$dept_count_q = "SELECT DISTINCT(dept_id) AS total_depts FROM asset_info";
+$dept_count_q = "SELECT COUNT(DISTINCT(dept_id)) AS total_depts FROM asset_info";
 
 $dept_count_stmt = $dbh->query($dept_count_q);
-$dept_count_results = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
-$total_departments = $dept_count_results->rowCount() ?? 176;
+$total_departments = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
 
 /* GET FREQ DATA */
 $due_dates_q = "SELECT * FROM audit_freq";

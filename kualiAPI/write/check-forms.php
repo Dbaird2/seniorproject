@@ -318,44 +318,6 @@ if ($check_type === "Checking Out Equipment" && $form_type === "Someone Else") {
     'status' => 'completed'
 ]
     ]);
-} else if ($check_type === "Checking Out Equipment" && $form_type === "Myself") { // DONE
-    $submit_form = json_encode([
-        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        // NOTE
-        "0LZvRo9vT5"=> $note,
-        // TAG
-        "BOZIA6hewQ" => $tag,
-        // BORROWER SOMEONE ELSE
-        $borrower_graph_info,
-        // MS TIME STAMP
-        $check_type_date,
-        // MYSELF / SOMEONE ELSE
-        "e0fZiLYomu" => $form_type_combined,
-        // RETURNING / CHECK OUT
-        "fyaCF8g3Uh" => $check_type_combined,
-        "XE0n2IZXBC"=> "Bakersfield",
-        "Smva-ICjnV" => "9001 Stockdale Hwy. ",
-        // DESCRIPTION
-        "cQOz4UQ0rQ"=> $descr,
-        "jYTHHgL10M" => $serial_num,
-        "isFMbCuv8e" => $dept_part,
-        // FOR MYSELF
-        "JXLJ_AOov-" => $submitter_signature_data,
-        // CONDITION
-        "UTQZbrKiio" => $condition_combined,
-        // LAPTOP, TABLET, etc
-        "aUVT1BLN6V" => $asset_type_combined,
-        // MANAGER OR CUST
-        $authority_person,
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
-    ]);
 } else if ($check_type === "Checking Out Equipment" && $form_type === "Someone Else") { // DONE
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)

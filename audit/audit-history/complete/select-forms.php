@@ -21,7 +21,7 @@ check_auth();
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($data['data'] as $index => $row) { ?>
+        <?php foreach ($_SESSION['data'] as $index => $row) { ?>
         <tr>
             <td><?= $row['Unit'] ?></td>
             <td><?= $row['Tag Number'] ?></td>
@@ -31,7 +31,7 @@ check_auth();
             <td>
             <select name="form-type" id="form-<?=$row['Tag Number']?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                      <option value="">No Form Needed</option>
-                    <?php if (in_array($data['role'], ['admin', 'management'])) { ?>
+                    <?php if (in_array($_SESSION['role'], ['admin', 'management'])) { ?>
                      <option value="bulk-transfer" >Bulk Transfer</option>
                     <?php } ?>
                      <option value="psr">Property Survey Report</option>
