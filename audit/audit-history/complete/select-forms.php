@@ -9,7 +9,6 @@ check_auth();
 <?php include_once "../../../navbar.php"; ?>
 </head>
 <body>
-
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +21,7 @@ check_auth();
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($_SESSION['data'] as $index => $row) { ?>
+        <?php foreach ($data['data'] as $index => $row) { ?>
         <tr>
             <td><?= $row['Unit'] ?></td>
             <td><?= $row['Tag Number'] ?></td>
@@ -32,30 +31,31 @@ check_auth();
             <td>
             <select name="form-type" id="form-<?=$row['Tag Number']?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                      <option value="">No Form Needed</option>
-                    <?php if (in_array($_SESSION['role'], ['admin', 'management'])) { ?>
+                    <?php if (in_array($data['role'], ['admin', 'management'])) { ?>
                      <option value="bulk-transfer" >Bulk Transfer</option>
                     <?php } ?>
                      <option value="psr">Property Survey Report</option>
-                     <option value="psr">Equipment Loss/Stolen/Destroyed</option>
+                     <option value="lsd">Equipment Loss/Stolen/Destroyed</option>
                      <option value="check-out">Check Out</option>
                      <option value="check-in" >Check In</option>
                 </select>
             </td>
-<!--PSR INFO FROM USER 
+<!--PSR INFO FROM USER
     REASON FOR DISPOSTAL
     DISPOSITION CODE
     -->
-    <td class="psr-<?= $row['Tag Number']?>" style="display:none;"><select id="psr-code-<?=$row['Tag Number'] ?>"> 
-            <option value=""/>
-            <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)"/>
-            <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)"/>
-            <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10"/>
+    <td class="psr-<?= $row['Tag Number']?>" style="display:none;">
+<select id="psr-code-<?=$row['Tag Number'] ?>">
+            <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)">UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)</option>
+            <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)">VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED O    F)</option>
+            <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10">SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-W    ASTE USE # 10</option>
         </select>
             </td>
-            <td class="psr-<?= $row['Tag Number']?>" style="display:none;"><select id="psr-reason-<?=$row['Tag Number'] ?>">
-                    <option value="" />
-</select>
-</td>
+         <td class="psr-<?= $row['Tag Number']?>" style="display:none;">
+            <select id="psr-reason-<?=$row['Tag Number'] ?>">
+                    <option value=""></option>
+            </select>
+        </td>
 <!--EQUIP LSD INFO FROM USER
     MYSELF OR SOMEONE ELSE
     STAFF/FACULTY OR STUDENT
@@ -64,69 +64,175 @@ check_auth();
     DETAILED NARRATIVE
     REPORTED TO PUBLIC SAFETY
      -->
-     <td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-who-<?=$row['Tag Number'] ?>">
-            <option value="" />
-            <option value="Myself" />
-            <option value="I am initiating this submission on behalf of" />
+<div>
+     <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<select id="lsd-who-<?=$row['Tag Number'] ?>">
+            <option value="Myself">Myself</option>
+            <option value="someone-else">I am initiating this submission on behalf of</option>
 </select>
 </td>
 <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>">
+</td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
 <select id="lsd-position-<?=$row['Tag Number'] ?>">
-<option value="" />
-<option value="Staff/Faculty" />
-<option value="Student" />
+<option value="Staff/Faculty" >Staff/Faculty</option>
+<option value="Student">Student</option
 </select>
 </td>
-<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>"></td>
-<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-type-<?=$row['Tag Number']?>">
-        <option value="">
-        <option value="Lost">
-        <option value="Stolen">
-        <option value="Destroyed">
-</select></td>
-<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><textarea type="text" id="lsd-narrative-<?=$row['Tag Number']?>" placeholder="Detail Narrative" /></td>
-<td class="lsd-<?= $row['Tag Number']?>" style="display:none;"><select id="lsd-report-<?=$row['Tag Number']?>">
-        <option value="">
-        <option value="Yes">
-        <option value="No">
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<select id="lsd-condition-<?=$row['Tag Number']?>">
+        <option value="Lost">Lost</option>
+        <option value="Stolen">Stolen</option>
+        <option value="Destroyed">Destroyed</option>
+</select>
+</td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<textarea id="lsd-narrative-<?=$row['Tag Number']?>" placeholder="Detail Narrative">
+</textarea></td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<label>Reported to UPD?</label>
+<select id="upd-<?=$row['Tag Number']?>">
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
     </select>
 </td>
+</div>
+<!-- CHECK IN/OUT -->
+<div>
+<td class="check-out-<?= $row['Tag Number']?> check-in-<?=$row['Tag Number']?>" style="display:none;">
+<select class="who-<?=$row['Tag Number']?>">
+     <option value="myself">Myself</option>
+     <option value="someone-else">Someone Else</option>
+ </select>
+</td>
+<td class="check-out-<?= $row['Tag Number']?> check-in-<?=$row['Tag Number']?>">
+ <!-- SOMEONE ELSE -->
+ <input class="someone-else-<?= $row['Tag Number']?>" style="display:none;" type="text" name="full-name" id="full-name" placeholder="Full name of Borrower">
+</td>
+<td class="check-out-<?= $row['Tag Number']?> check-in-<?=$row['Tag Number']?>" style="display:none;">
+<select id="check-condition-<?=$row['Tag Number']?>">
+     <option value="new">New</option>
+     <option value="good">Good</option>
+     <option value="used">Used</option>
+     <option value="damanged">Damaged</option>
+ </select>
+<td class="check-out-<?= $row['Tag Number']?> check-in-<?=$row['Tag Number']?>" style="display:none;">
+<textarea id="check-notes-<?=$row['Tag Number']?>" placeholder="Notes..."></textarea>
+</td>
+</div>
        </tr>
 <?php } ?>
     </tbody>
 </table>
 <button id="submit">Submit Forms</button>
 <script>
+
 document.addEventListener("DOMContentLoaded", function() {
+    const forms_needed = document.querySelectorAll('.forms-needed');
+    forms_needed.forEach(form_type => {
+    form_type.addEventListener('change', () => {
+    console.log('Changed input', form_type, form_type.value);
+    const tag = form_type.dataset.tag;
+    const form_class = document.querySelectorAll('.'+form_type.value+'-'+form_type.dataset.tag);
+    console.log(form_class,tag);
+    if (form_type.value === 'check-out') {
+        someone_else = document.querySelector('.who-'+tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.querySelector('.someone-else-'+tag).style.display = 'inline';
+        } else {
+            document.querySelector('.someone-else-'+tag).style.display = 'none';
+        }
+
+        });
+        hideUI('check-in', tag);
+        hideUI('lsd', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+    }
+    if (form_type.value === 'check-in') {
+        someone_else = document.querySelector('.who-'+tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.querySelector('.someone-else-'+tag).style.display = 'inline';
+        } else {
+            document.querySelector('.someone-else-'+tag).style.display = 'none';
+        }
+
+        });
+        hideUI('check-in', tag);
+        hideUI('lsd', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+    }
+    if (form_type.value === 'psr') {
+        hideUI('check-in', tag);
+        hideUI('lsd', tag);
+        hideUI('check-out', tag);
+        hideUI('bulk-transfer', tag);
+    }
+    if (form_type.value === 'lsd') {
+        someone_else = document.getElementById('lsd-who-'+tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.getElementById('lsd-fill-for-'+tag).style.display = 'inline';
+        } else {
+            document.getElementById('lsd-fill-for-'+tag).style.display = 'none';
+        }
+        });
+        hideUI('check-in', tag);
+        hideUI('check-out', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+    }
+    if (form_type.value === 'bulk-transfer') {
+        hideUI('check-in', tag);
+        hideUI('check-out', tag);
+        hideUI('psr', tag);
+        hideUI('lsd', tag);
+    }
+    form_class.forEach(el => {
+    el.style.display = 'inline';
+    });
+    });
+    });
     const btn = document.getElementById("submit").addEventListener("click", async () => {
-    let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [];
+    let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
 
     forms_needed.forEach((type) => {
     const val = type.value;
     if (val == 'bulk-transfer') {
         bulk_t_tags.push(type.dataset.tag);
-    } else if (val == 'transfer') {
-        t_tags.push(type.dataset.tag);
-    } else if (val == 'bulk-psr') {
-        bulk_psr_tags.push(type.dataset.tag);
     } else if (val == 'psr') {
-        psr_tags.push(type.dataset.tag);
+        const reason = document.getElementById('psr-reason-'+type.dataset.tag);
+        const code = document.getElementById('psr-code-'+type.dataset.tag);
+
+        psr_tags.push([tag: type.dataset.tag, reason: reason, code: code);
     } else if (val == 'check-out') {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-        const check_type = document.getElementById('check-type-'+type.dataset.tag).value;
-        const borrower = document.getElementById('check-borrower-'+type.dataset.tag).value;
+        const check_type = document.querySelector('.who-'+type.dataset.tag).value;
+        const borrower = document.querySelector('.someonel-else-'+type.dataset.tag).value;
         const condition = document.getElementById('check-condition-'+type.dataset.tag).value;
         const notes = document.getElementById('check-notes-'+type.dataset.tag).value;
+        const split_name = borrower.split(' ');
+        if (check_type === 'Myself' && split_name < 2) {
+            document.getElementById('lsd-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
         const out_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ form_type: 'out',
-                                    tag: type.dataset.tag,
-                                    type: check_type,
-                                    borrower: borrower,
-                                    condition: condition,
-                                    notes: notes })
+            body: JSON.stringify({ form_type: 'Checking Out Equipment',
+            tag: type.dataset.tag,
+            type: check_type,
+            borrower: borrower,
+            condition: condition,
+            notes: notes })
         });
         if (!out_res.ok) {
             const text = await out_res.text();
@@ -143,51 +249,95 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     } else if (val == 'check-in') {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-        const check_type = document.getElementById('check-type-'+type.dataset.tag).value;
-        const borrower = document.getElementById('check-borrower-'+type.dataset.tag).value;
+        const check_type = document.querySelector('.who-'+type.dataset.tag).value;
+        const borrower = document.querySelector('.someonel-else-'+type.dataset.tag).value;
         const condition = document.getElementById('check-condition-'+type.dataset.tag).value;
         const notes = document.getElementById('check-notes-'+type.dataset.tag).value;
-            const in_res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    form_type: 'in', 
-                    tag: type.dataset.tag,
-                    type: check_type,
-                    borrower: borrower,
-                    condition: condition,
-                    notes: notes })
+        const split_name = borrower.split(' ');
+        if (check_type === 'Myself' && split_name < 2) {
+            document.getElementById('lsd-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
+        const in_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+            form_type: 'Returning Equipment', 
+                tag: type.dataset.tag,
+                type: check_type,
+                borrower: borrower,
+                condition: condition,
+                notes: notes })
         });
         if (!in_res.ok) {
-                const text = await in_res.text();
-                throw new Error (`HTTP ${in_res.status}: ${text}`);
-            } else {
-                const clone = in_res.clone();
-                try {
-                    const data = await in_res.json();
-                    console.log("Check in response (JSON):", data);
-                } catch {
-                    const text = await clone.text();  
-                    console.log("Check in response (text):", text);
-                }
+            const text = await in_res.text();
+            throw new Error (`HTTP ${in_res.status}: ${text}`);
+        } else {
+            const clone = in_res.clone();
+            try {
+                const data = await in_res.json();
+                console.log("Check in response (JSON):", data);
+            } catch {
+                const text = await clone.text();  
+                console.log("Check in response (text):", text);
             }
+        }
+    } else if (val === 'lsd') {
+        const who = document.getElementById('lsd-who-'+type.dataset.tag);
+        const borrower = document.getElementById('lsd-fill-for-'+type.dataset.tag);
+        const position = document.getElementById('lsd-position-'+type.dataset.tag);
+        const lsd = document.getElementById('lsd-condition-'+type.dataset.tag);
+        const reason = document.getElementById('lsd-narrative-'+type.dataset.tag);
+        const upd = document.getElementById('upd-'+type.dataset.tag);
+
+        lsd_tags.push([tag: type.dataset.tag, reason: reason, borrower: borrower, lsd: lsd, who: who, position: position, upd: upd);
     } 
     });
-    console.log(bulk_t_tags);
-            /*
-            url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
-            const psr_res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ psr_tags })
-            });
-            if (!psr_res.ok) {
-                const text = await psr_res.text();
-                throw new Error (`HTTP ${psr_res.status}: ${text}`);
-            } else {
-                console.log(psr_res);
+    console.log('bulk_tags', bulk_t_tags);
+    console.log('lsd', lsd_tags);
+    console.log('psr', psr_tags);
+    if (psr_tags.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
+        const psr_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lsd_tags })
+        });
+        if (!psr_res.ok) {
+            const text = await psr_res.text();
+            throw new Error(`HTTP ${psr_res.status}: ${text}`);
+        } else {
+            const clone = psr_res.clone();
+            try {
+                const data = await psr_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+            } catch {
+                const text = await clone.text();  
+                console.log("bulk-transfer response (text):", text);
             }
-         */
+        }
+    }
+    if (lsd_tags.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+        const psr_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ psr_tags })
+        });
+        if (!lsd_res.ok) {
+            const text = await lsd_res.text();
+            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
+        } else {
+            const clone = lsd_res.clone();
+            try {
+                const data = await lsd_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+            } catch {
+                const text = await clone.text();  
+                console.log("bulk-transfer response (text):", text);
+            }
+        }
+    }
     if (bulk_t_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
         const bulk_t_res = await fetch(url, {
@@ -209,11 +359,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
-});
+    });
 });
 </script>
 </body>
 </html>
-    
-    
-

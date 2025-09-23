@@ -58,7 +58,12 @@ $form_type_id = match ($form_type) {
 $form_type_combined = [
     "id" => $form_type_id,
     "label" => $form_type
-]; 
+];
+
+$check_type = match ($check_type) {
+    "check-in" => "Returning Equipment",
+    "check-out" => "Checking Out Equipment"
+};
 
 $check_type_id = match ($check_type) {
 "Returning Equipment" => "",
@@ -198,7 +203,7 @@ $headers = array(
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 $data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68c73600df46a3027d2bd386"
+"appId": "68bf09aaadec5e027fe35187"
       }}';
 
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
