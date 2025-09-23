@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
     const btn = document.getElementById("submit").addEventListener("click", async () => {
-    let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd = [];
+    let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd_tags = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
 
     forms_needed.forEach(async (type) => {
