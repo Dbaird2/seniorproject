@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 $dept_count_q = "SELECT COUNT(DISTINCT(dept_id)) AS total_depts FROM asset_info";
 
 $dept_count_stmt = $dbh->query($dept_count_q);
-$total_departments = $dept_count_stmt->fetch(PDO::FETCH_ASSOC);
+$total_departments = $dept_count_stmt->fetchColumn();
 
 /* GET FREQ DATA */
 $due_dates_q = "SELECT * FROM audit_freq";
