@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const reason = document.getElementById('psr-reason-'+type.dataset.tag);
         const code = document.getElementById('psr-code-'+type.dataset.tag);
 
-        psr_tags.push([tag: type.dataset.tag, reason: reason, code: code);
+        psr_tags.push([tag: type.dataset.tag, reason: reason, code: code]);
     } else if (val == 'check-out') {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
         const check_type = document.querySelector('.who-'+type.dataset.tag).value;
@@ -299,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const reason = document.getElementById('lsd-narrative-'+type.dataset.tag);
         const upd = document.getElementById('upd-'+type.dataset.tag);
 
-        lsd_tags.push([tag: type.dataset.tag, reason: reason, borrower: borrower, lsd: lsd, who: who, position: position, upd: upd);
+        lsd_tags.push([tag: type.dataset.tag, reason: reason, borrower: borrower, lsd: lsd, who: who, position: position, upd: upd]);
     } 
     });
     console.log('bulk_tags', bulk_t_tags);
