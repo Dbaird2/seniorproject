@@ -128,6 +128,15 @@ check_auth();
 <button id="submit">Submit Forms</button>
 <script>
 
+function hideUI(type, tag)
+{
+    const form = document.querySelectorAll('.'+type+'-'+tag);
+    form.forEach(el => {
+        el.style.display = 'none';
+    });
+
+    return;
+};
 document.addEventListener("DOMContentLoaded", function() {
     const forms_needed = document.querySelectorAll('.forms-needed');
     forms_needed.forEach(form_type => {
@@ -221,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const notes = document.getElementById('check-notes-'+type.dataset.tag).value;
         const split_name = borrower.split(' ');
         if (check_type === 'Myself' && split_name < 2) {
-            document.getElementById('lsd-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
+            document.getElementById('check-out-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
             exit;
         }
         const out_res = await fetch(url, {
@@ -255,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const notes = document.getElementById('check-notes-'+type.dataset.tag).value;
         const split_name = borrower.split(' ');
         if (check_type === 'Myself' && split_name < 2) {
-            document.getElementById('lsd-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
+            document.getElementById('check-in-borrower-msg-'+type.dataset.tag).textContent = 'Incorrect Name Format';
             exit;
         }
         const in_res = await fetch(url, {
