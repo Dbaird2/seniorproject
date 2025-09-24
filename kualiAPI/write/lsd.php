@@ -9,25 +9,27 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
-$transfer_data = [[]];
+$someone_data = [[]];
+$myself_data = [[]];
 $index = 0;
 echo json_encode(['tags'=>$data]);
-exit;
 foreach ($data['lsd_tags'] as $tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag['tag']) {
-            $transfer_data[$index]['Unit'] = $session['Unit'];
-            $transfer_data[$index]['Tag Number'] = $tag;
-            $transfer_data[$index]['Descr'] = $session['Descr'];
-            $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
-            $transfer_data[$index]['VIN'] = $session['VIN'];
-            $transfer_data[$index]['Dept'] = $session['Dept'];
-            $transfer_data[$index]['Found Room Number'] = $session['Found Room Number'];
-            $transfer_data[$index]['Found Building Name'] = $session['Found Building Name'];
-            $transfer_data[$index++]['Found Note'] = $session['Found Note'];
-            break;
+            if ($tag['who'] === 'Myself') {
+                $myself_data[$index]['Unit'] = $session['Unit'];
+                $myself_data[$index]['Tag Number'] = $tag;
+                $myself_data[$index]['Descr'] = $session['Descr'];
+                $myself_data[$index]['Serial ID'] = $session['Serial ID'];
+                $myself_data[$index]['VIN'] = $session['VIN'];
+                $myself_data[$index]['Dept'] = $session['Dept'];
+                $myself_data[$index]['Found Room Number'] = $session['Found Room Number'];
+                $myself_data[$index]['Found Building Name'] = $session['Found Building Name'];
+                $myself_data[$index++]['Found Note'] = $session['Found Note'];
+            } else if ($tag['who'] === 'Someone Else' && !empty($tag['borrower'])) {
+
         }
-    }
+}
 }
 /*
 $dept_id = $_SESSION['info'][2];

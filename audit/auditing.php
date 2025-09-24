@@ -266,9 +266,9 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                     $select_stmt->execute([":tag" => $tag]);
                     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                     if ($result) {
-                        $update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
+                        /*$update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($select_q);
-                        $update_stmt->execute([":tag" => $tag, ':dept'=>$_SESSION['info'][2]]);
+                        $update_stmt->execute([":tag" => $tag, ':dept'=>$_SESSION['info'][2]]);*/
                         $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
                         $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';

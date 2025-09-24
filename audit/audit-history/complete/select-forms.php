@@ -71,7 +71,7 @@ check_auth();
             <option value="someone-else">I am initiating this submission on behalf of</option>
 </select>
 </td>
-<td class="lsd-fill-for-<?= $row['Tag Number']?>" style="display:none;">
+<td class="lsd-fill-<?= $row['Tag Number']?>" style="display:none;">
 <input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>" placeholder="Full Name">
 </td>
 <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
@@ -188,9 +188,11 @@ document.addEventListener("DOMContentLoaded", function() {
         someone_else.addEventListener('change', () => {
         console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
-            document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
+            document.querySelector('lsd-fill-'+tag).style.display = 'inline';
+            console.log(document.querySelector('lsd-fill-'+tag));
+
         } else {
-            document.querySelector('lsd-fill-for-'+tag).style.display = 'none';
+            document.querySelector('lsd-fill-'+tag).style.display = 'none';
         }
         });
         hideUI('check-in', tag);

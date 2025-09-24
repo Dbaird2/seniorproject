@@ -161,8 +161,9 @@ try {
                 $select_q = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
                 $select_stmt = $dbh->prepare($select_q);
                 $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
+
             } catch (PDOException $e) {
-                echo "Error selecting bldg_name line 163 ".$e->getMessage();
+                echo "Error selecting room_tag line 163 ".$e->getMessage() . "<br>";
             }
             $room_tag_found = false;
             if ($select_stmt->rowCount() > 0) {
@@ -174,15 +175,15 @@ try {
                     $bldg_id_stmt = $dbh->prepare($check_bldg_id);
                     $bldg_id_stmt->execute([":bid" => $bldg_id]);
                 } catch (PDOException $e) {
-                    echo "Error selecting bldg_id line 176 " . $e->getMessage();
+                    echo "Error selecting bldg_id line 176 " . $e->getMessage() . "<br>";
                 }
-                if ($bldg_id_stmt->rowCount() > 0) {
+                if ($bldg_id_stmt->rowCount() <= 0) {
                     try {
                         $update_room_table = "INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)";
                         $update_stmt = $dbh->prepare($update_room_table);
                         $update_stmt->execute([$bldg_id, $room_loc]);
                     } catch (PDOException $e) {
-                        echo "error inserting line 185 " .$e->getMessage();
+                        echo "error inserting line 185 " .$e->getMessage() . "<br>";
                     }
                     try {
                         $get_room_tag = "SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :rloc";
@@ -190,10 +191,10 @@ try {
                         $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
                         $room_tag = $select_stmt->fetchColumn();
                     } catch (PDOException $e) {
-                        echo "error selecting room tag line 193 " . $e->getMessage();
+                        echo "error selecting room tag line 193 " . $e->getMessage() . "<br>";
                     }
                 } else {
-                    echo "Bldg id not found. Skipping<br>";
+                    echo "<br>Bldg id not found. Skipping<br>";
                     continue;
                 }
             }
