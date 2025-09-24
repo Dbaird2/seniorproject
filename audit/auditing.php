@@ -241,10 +241,13 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                 $in_session = 0;
 
                 foreach ($_SESSION['data'] as $data_index => $row) {
+
                     if ($tag === $row["Tag Number"] && $row["Tag Status"] !== 'Extra') {
+                        /*
                         $update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($select_q);
                         $update_stmt->execute([":tag" => $row["Tag Number"], ':dept'=>$_SESSION['info'][2]]);
+                         */
                         $_SESSION['data'][$data_index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$data_index]['Found Room Tag'] = $room_array[$index];
                         $_SESSION['data'][$data_index]['Found Room Number'] = $room_num_array[$index];
