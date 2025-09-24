@@ -71,8 +71,8 @@ check_auth();
             <option value="someone-else">I am initiating this submission on behalf of</option>
 </select>
 </td>
-<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
-<input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>">
+<td class="lsd-fill-for-<?= $row['Tag Number']?>" style="display:none;">
+<input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>" placeholder="Full Name">
 </td>
 <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
 <select id="lsd-position-<?=$row['Tag Number'] ?>">
@@ -188,9 +188,9 @@ document.addEventListener("DOMContentLoaded", function() {
         someone_else.addEventListener('change', () => {
         console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
-            document.getElementById('lsd-fill-for-'+tag).style.display = 'inline';
+            document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
         } else {
-            document.getElementById('lsd-fill-for-'+tag).style.display = 'none';
+            document.querySelector('lsd-fill-for-'+tag).style.display = 'none';
         }
         });
         hideUI('check-in', tag);
@@ -218,8 +218,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (val == 'bulk-transfer') {
         bulk_t_tags.push(type.dataset.tag);
     } else if (val == 'psr') {
-        const reason = document.getElementById('psr-reason-'+type.dataset.tag);
-        const code = document.getElementById('psr-code-'+type.dataset.tag);
+        const reason = document.getElementById('psr-reason-'+type.dataset.tag).value;
+        const code = document.getElementById('psr-code-'+type.dataset.tag).value;
 
         psr_tags.push({tag: type.dataset.tag, reason: reason, code: code});
     } else if (val == 'check-out') {
@@ -292,12 +292,12 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     } else if (val === 'lsd') {
-        const who = document.getElementById('lsd-who-'+type.dataset.tag);
-        const borrower = document.getElementById('lsd-fill-for-'+type.dataset.tag);
-        const position = document.getElementById('lsd-position-'+type.dataset.tag);
-        const lsd = document.getElementById('lsd-condition-'+type.dataset.tag);
-        const reason = document.getElementById('lsd-narrative-'+type.dataset.tag);
-        const upd = document.getElementById('upd-'+type.dataset.tag);
+        const who = document.getElementById('lsd-who-'+type.dataset.tag).value;
+        const borrower = document.getElementById('lsd-fill-for-'+type.dataset.tag).value;
+        const position = document.getElementById('lsd-position-'+type.dataset.tag).value;
+        const lsd = document.getElementById('lsd-condition-'+type.dataset.tag).value;
+        const reason = document.getElementById('lsd-narrative-'+type.dataset.tag).value;
+        const upd = document.getElementById('upd-'+type.dataset.tag).value;
 
         lsd_tags.push({tag: type.dataset.tag, reason: reason, borrower: borrower, lsd: lsd, who: who, position: position, upd: upd});
     } 

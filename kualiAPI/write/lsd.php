@@ -11,6 +11,8 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 $index = 0;
+echo json_encode(['tags'=>$data]);
+exit;
 foreach ($data['lsd_tags'] as $tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag['tag']) {
