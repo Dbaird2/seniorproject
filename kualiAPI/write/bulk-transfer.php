@@ -410,6 +410,18 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
+$resp_data = json_decode($resp, true);
+$id = $resp_data['data'['app']['documentConnection']['edges'][0]['node']['id'];
+$tag = $transfer_data[0]['Tag Number'];
+$doc_id = '68c73600df46a3027d2bd386';
+$input_array = $tag. ',' . $id . ',' . $doc_id . ',in-progress'; 
+
+$dept = $data['dept_id'][0];
+$audit_id = $data['audit_id'][0];
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+$update_stmt = $dbh->prepare($update);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+
 curl_close($curl);
 echo json_encode([$ms_time
     ,$document_id
@@ -423,9 +435,11 @@ echo json_encode([$ms_time
     ,$resp
     ,$dept_id
     ,$_SESSION['info']
+    ,$update_stmt
 ]);
 exit;
 //var_dump($resp);
+
 function randomPassword()
 {
     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';

@@ -5,7 +5,7 @@ check_auth();
 <!DOCTYPE html>
 <html>
 <head>
-<title>Extra Tags Audit</title>
+<title>Form Submissions <?= $_SESSION['info'][2] . ' ' . $_SESSION['info'][3] ?></title>
 <?php include_once "../../../navbar.php"; ?>
 </head>
 <body>
@@ -130,7 +130,7 @@ function hideUI(type, tag)
 {
     const form = document.querySelectorAll('.'+type+'-'+tag);
     form.forEach(el => {
-        el.style.display = 'none';
+    el.style.display = 'none';
     });
 
     return;
@@ -212,6 +212,30 @@ document.addEventListener("DOMContentLoaded", function() {
     const btn = document.getElementById("submit").addEventListener("click", async () => {
     let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd_tags = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
+    const dept_id = <?= json_encode($_SESSION['info'][2] ?>;
+    const audit_id = <?= json_encode($_SESSION['info'][5] ?>;
+    const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
+    method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+        dept_id: dept_id,
+            audit_id: audit_id
+    })
+    });
+    if (!form_submitted.ok) {
+        const text = await form_submitted.text();
+        throw new Error (`HTTP ${form_submitted.status}: ${text}`);
+    } else {
+        const clone = form_submitted.clone();
+        try {
+            const data = await form_submitted.json();
+            console.log("Update DB response (JSON):", data);
+        } catch {
+            const text = await clone.text();  
+            console.log("Update DB response (text):", text);
+        }
+    }
+
 
     forms_needed.forEach(async (type) => {
     const val = type.value;
@@ -241,6 +265,8 @@ document.addEventListener("DOMContentLoaded", function() {
             type: check_type,
             borrower: borrower,
             condition: condition,
+            dept_id: dept_id,
+            audit_id: audit_id,
             notes: notes })
         });
         if (!out_res.ok) {
@@ -276,6 +302,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 type: check_type,
                 borrower: borrower,
                 condition: condition,
+                dept_id: dept_id,
+                audit_id: audit_id,
                 notes: notes })
         });
         if (!in_res.ok) {
@@ -303,7 +331,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const lsd_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: type.dataset.tag, who: who, borrower: borrower, position: position, lsd: lsd, reason: reason, upd: upd })
+            body: JSON.stringify({ tag: type.dataset.tag, who: who, borrower: borrower, position: position, lsd: lsd, reason: reason, 
+            dept_id: dept_id,
+            audit_id: audit_id,
+            upd: upd })
         });
         if (!lsd_res.ok) {
             const text = await lsd_res.text();
@@ -328,7 +359,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const psr_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ psr_tags })
+            body: JSON.stringify({ psr_tags,
+            dept_id: dept_id,
+            audit_id: audit_id
+        })
         });
         if (!psr_res.ok) {
             const text = await psr_res.text();
@@ -344,33 +378,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
-    if (lsd_tags.length !== 0) {
-        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
-        const lsd_res = await fetch(url, {
-        method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lsd_tags })
-        });
-        if (!lsd_res.ok) {
-            const text = await lsd_res.text();
-            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
-        } else {
-            const clone = lsd_res.clone();
-            try {
-                const data = await lsd_res.json();
-                console.log("bulk-transfer response (JSON):", data);
-            } catch {
-                const text = await clone.text();  
-                console.log("bulk-transfer response (text):", text);
-            }
-        }
-    }
     if (bulk_t_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
         const bulk_t_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bulk_t_tags })
+            body: JSON.stringify({ bulk_t_tags,
+            dept_id: dept_id,
+            audit_id: audit_id
+        })
         });
         if (!bulk_t_res.ok) {
             const text = await bulk_t_res.text();

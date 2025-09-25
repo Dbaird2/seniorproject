@@ -19,11 +19,11 @@ $search = $_POST['search'];
 $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
 $and = $status_search === '' ? '' : ' AND ';
 if ($search === 'all') {
-    $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status FROM audit_history ORDER BY finished_at DESC"; 
+    $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_submitted FROM audit_history ORDER BY finished_at DESC"; 
     $stmt = $dbh->prepare($select_query);
     $stmt->execute();
 } else {
-    $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status FROM audit_history WHERE dept_id LIKE :search ORDER BY finished_at DESC";
+    $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_subbmited FROM audit_history WHERE dept_id LIKE :search ORDER BY finished_at DESC";
     $search = '%' . $search . '%';
     $stmt = $dbh->prepare($select_query);
     $stmt->execute([':search' => $search]);
@@ -86,7 +86,10 @@ foreach ($audits as $row) {
             echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
         }
         if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-            echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Complete Audit</a></td>";
+            echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Start Forms</a></td>";
+        }
+        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) && $row['forms_submitted'] === true) {
+            echo "<td><a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
         }
     }
         echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>PDF</a></td>";
@@ -142,7 +145,10 @@ foreach ($audits as $row) {
             echo "<td><a href='continue/get-audit-hist-data.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Continue Audit</a></td>";
         }
         if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-            echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Complete Audit</a></td>";
+            echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Start Forms</a></td>";
+        }
+        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) && $row['forms_submitted'] === true) {
+            echo "<td><a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
         }
     }
         echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($row['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row['audit_id'])) . "&auditor=".htmlspecialchars(urlencode($row['auditor']))."'>PDF</a></td>";

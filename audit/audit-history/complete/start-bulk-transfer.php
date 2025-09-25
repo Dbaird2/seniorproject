@@ -15,7 +15,7 @@ $audit_type = match ($audit_id) {
     9 => 'oSPA'
 };
 try {
-    $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
+    $select_q = "SELECT auditor, audit_data, forms_submitted FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
     $select_stmt = $dbh->prepare($select_q);
     $select_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
     $data = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -49,7 +49,7 @@ foreach ($audit_data as $row) {
     }
 }
 unset($_SESSION['info']);
-$_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id];
+$_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id, $data['forms_submitted']];
 header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
 exit;
 
