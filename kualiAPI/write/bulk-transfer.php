@@ -504,10 +504,10 @@ function searchName($search_name = '')
         if ($select_stmt->rowCount() <= 0) {
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
-/*
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
             $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, $_SESSION['info'][2]]);
+/*
             try {
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
