@@ -19,7 +19,7 @@ foreach ($data['psr_tags'] as $tag) {
         if ($session['Tag Number'] === $tag['tag']) {
             $select = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
             $stmt = $dbh->prepare($select);
-            $stmt->execute(":tag"=>$tag['tag'];
+            $stmt->execute([":tag"=>$tag['tag']]);
             $type = $stmt->fetchColumn();
             if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
                 $its = true;
@@ -105,7 +105,7 @@ try {
         $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
         $mana_info = $get_cmana_stmt->fetch(PDO::FETCH_ASSOC);
-    } else (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
+    } else if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
         // SEARCH CUST IN KUALI
         searchName($manager);
         $get_mana_stmt = $dbh->prepare($get_cust_info);
@@ -230,38 +230,37 @@ $bkcmp = $bkspa = $bkstu = $bkasi = $bkfdn = [];
 if ($cmp) {
     $bkcmp =
         [
-            "id": "-tjpXbOsL",
-            "label": "BKCMP"
+            "id" => "-tjpXbOsL",
+            "label" => "BKCMP"
         ];
 } 
 if ($bkspa) {
     $bkspa =
         [
-            "id": "fRgMXRs7y",
-            "label": "BKSPA"
+            "id" => "fRgMXRs7y",
+            "label" => "BKSPA"
         ];
 }
 if ($bkstu) {
     $bkstu =  [
-        "id": "AV0oL2gsT",
-        "label": "BKSTU"
+        "id" => "AV0oL2gsT",
+        "label" => "BKSTU"
     ];
 }
 if ($bkfdn) {
     $bkfdn = [
-        "id": "VUhtYqoWm",
-        "label": "BKFDN"
+        "id" => "VUhtYqoWm",
+        "label" => "BKFDN"
     ];
 }
 if ($bkasi) {
     $bkasi =[
-        "id": "T6Rxq51PT",
-        "label": "BKASI"
+        "id" => "T6Rxq51PT",
+        "label" => "BKASI"
     ];
 }
 $bus_units['04lKcQ1Iy2'] = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
 $bus_units['04lKcQ1Iy2'] = array_filter($bus_units['04lKcQ1Iy2'], fn($info) => (!empty($info['label']) && !empty($info['id'])));
-}
 
 $form_type_id = match ($its) {
     true => "iK43J2G3IH",
@@ -285,9 +284,9 @@ $submit_form = json_encode([
             "id" => $form_type_id,
             "label" => $form_type_label
         ],
-        $manager_kuali
-        "W_Uw0hSpff"=> $json_form
-        $custodian_kuali
+        $manager_kuali,
+        "W_Uw0hSpff"=> $json_form,
+        $custodian_kuali,
         "tc1F0ohejI"=> [
             "data"=> [
                 "AkMeIWWhoj" => $dept_name,
@@ -307,6 +306,8 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 curl_close($curl);
+$resp_data = json_decode($resp, true);
+
 echo json_encode(['status' => 'success']);
 exit;
 //var_dump($resp);
@@ -326,7 +327,6 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
- */
 function searchName($search_name = '')
 {
     global $apikey;

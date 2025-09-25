@@ -95,6 +95,13 @@ check_auth();
         <option value="Yes">Yes</option>
     </select>
 </td>
+<td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
+<select id="item-type-<?=$row['Tag Number']?>">
+        <option value="IT Equipment"></option>
+        <option value="Instructional Equipment"></option>
+        <option value="Other"></option>
+    </select>
+</td>
 </div>
 <!-- CHECK IN/OUT -->
 <div>
@@ -326,6 +333,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const lsd = document.getElementById('lsd-condition-'+type.dataset.tag).value;
         const reason = document.getElementById('lsd-narrative-'+type.dataset.tag).value;
         const upd = document.getElementById('upd-'+type.dataset.tag).value;
+        const item_type = document.getElementById('item-type-'+type.dataset.tag).value;
 
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
         const lsd_res = await fetch(url, {
@@ -334,7 +342,8 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify({ tag: type.dataset.tag, who: who, borrower: borrower, position: position, lsd: lsd, reason: reason, 
             dept_id: dept_id,
             audit_id: audit_id,
-            upd: upd })
+            upd: upd,
+            item_type: item_type })
         });
         if (!lsd_res.ok) {
             const text = await lsd_res.text();

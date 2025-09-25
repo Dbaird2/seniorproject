@@ -14,10 +14,16 @@ $index = 0;
 echo json_encode(['tags'=>$data]);
 foreach($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {
+        $select = "SELECT make, type2, asset_model FROM asset_info WHERE asset_tag = :tag";
+        $select_stmt = $dbh->prepare($select);
+        $select_stmt->execute([":tag"=>$data['tag']]);
+        $tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
         $lsd_data['Unit'] = $session['Unit'];
         $lsd_data['Tag Number'] = $data['tag'];
         $lsd_data['Descr'] = $session['Descr'];
         $lsd_data['Serial ID'] = $session['Serial ID'];
+        $lsd_data['Make'] $tag_info['make'];
+        $lsd_data['Model'] = $tag_info['asset_model'];
         $lsd_data['VIN'] = $session['VIN'];
         $lsd_data['Dept'] = $session['Dept'];
         $lsd_data['Found Room Number'] = $session['Found Room Number'];
@@ -27,6 +33,8 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['who'] = $data['who'];
         $lsd_data['position'] = $data['position'];
         $lsd_data['upd'] = $data['upd'];
+        $lsd_data['borrower'] = $data['borrower'];
+        $lsd_data['item_type'] = $data['item_type'];
         $lsd_data['Found Note'] = $session['Found Note'];
         if ($tag['who'] === 'Myself') {
             $myself = true;
@@ -36,6 +44,8 @@ foreach($_SESSION['data'] as $session) {
         break;
     }
 }
+
+
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
@@ -68,214 +78,73 @@ if (empty($school_id) || empty($form_id)) {
 }
 
 
-$get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust FROM department d WHERE dept_id = :dept_id";
-$get_cust_stmt = $dbh->prepare($get_dept_custodians);
-$get_cust_stmt->execute([":dept_id"=>$dept_id]);
-$custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
-$dept_name = $custodians[0]['dept_name'];
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager as cust FROM department d WHERE dept_id = :dept_id";
+$get_mana_stmt = $dbh->prepare($get_dept_manager);
+$get_mana_stmt->execute([":dept_id"=>$dept_id]);
+$dept_info = $get_mana_stmt->fetchAll(PDO::FETCH_ASSOC);
+$dept_name = $dept_info['dept_name'];
+$manager = $dept_info['manager'];
 
-$cust_count = count($custodians);
-$cust_1 = $cust_2 = $cust_3 = $cust_4 = $cust_5 = [];
-switch ($cust_count) {
-case 1:
-    $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-    $cust_name_split = explode(" ", $custodians[0]['cust']);
+$get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+try {
+    $get_mana_stmt = $dbh->prepare($get_mana_info);
+    $get_mana_stmt->execute([":full_name"=>$manager]);
+    $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+    if (empty($mana_info['form_id']) || empty($mana_info['school_id'])) {
+        // SEARCH CUST IN KUALI
+        searchName($manager);
+        $get_mana_stmt = $dbh->prepare($get_mana_info);
+        $get_mana_stmt->execute([":full_name" => $manager]);
+        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+    }
+} catch (PDOException $e) {
+    // CUST DID NOT MATCH
+    searchName($manager);
+    $get_mana_stmt = $dbh->prepare($get_mana_info);
+    $get_mana_stmt->execute([":full_name" => $manager]);
+    $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+    // SEARCH CUST IN KUALI
+}
+$get_mana_info = "select l_name, f_name, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$mana_f_name = $mana_info['f_name'];
+$mana_l_name = $mana_info['l_name'];
+$mana_email = $mana_info['email'];
+$mana_form_id = $mana_info['form_id'];
+$mana_form_sig = $mana_info['signature'];
+$mana_form_sid = $mana_info['school_id'];
+$mana_form_user = $mana_info['username'];
+
+if (!empty($lsd_data['borrower'])) {
     try {
-        $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']]);
-        $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-        if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
+        $get_borrower_stmt = $dbh->prepare($get_mana_info);
+        $get_borrower_stmt->execute([":full_name"=>$lsd_data['borrower']]);
+        $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
+        if (empty($borrower_info['form_id']) || empty($borrower_info['school_id'])) {
             // SEARCH CUST IN KUALI
-            searchName($custodians[0]['cust']);
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+            searchName($lsd_data['borrower']);
+            $get_borrower_stmt = $dbh->prepare($get_mana_info);
+            $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
+            $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         }
     } catch (PDOException $e) {
         // CUST DID NOT MATCH
-        searchName($custodians[0]['cust']);
-        $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
-        $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+        searchName($lsd_data['borrower']);
+        $get_borrower_stmt = $dbh->prepare($get_mana_info);
+        $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
+        $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         // SEARCH CUST IN KUALI
     }
-    $l_name = implode(' ', array_filter([
-        $cust_name_split[1] ?? '',
-        $cust_name_split[2] ?? '',
-        $cust_name_split[3] ?? '',
-    ], 'strlen'));
-    $cust_1 = [
-        "displayName" => $custodians[0]['cust'],
-        "email" => $cust_info['email'],
-        "firstName"=> $cust_name_split[0],
-        "id"=> $cust_info['form_id'],
-        "label"=> $custodians[0]['cust'],
-        "lastName"=> $l_name,
-        "schoolId"=> $cust_info['school_id'],
-        "username"=> $cust_info['username']
-    ];
-case 2:
-    if ($cust_count >= 2) {
-        $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode(" " ,$custodians[1]['cust']);
-        try {
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name"=>$custodians[1]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-                // SEARCH CUST IN KUALI
-                searchName($custodians[1]['cust']);
-                $get_cust_stmt = $dbh->prepare($get_cust_info);
-                $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
-                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            // CUST DID NOT MATCH
-            searchName($custodians[1]['cust']);
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name" => $custodians[1]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            // SEARCH CUST IN KUALI
-        }
-        $l_name = implode(' ', array_filter([
-            $cust_name_split[1] ?? '',
-            $cust_name_split[2] ?? '',
-            $cust_name_split[3] ?? '',
-        ], 'strlen'));
-        $cust_2 = [
-            "displayName" => $custodians[1]['cust'],
-            "email" => $cust_info['email'],
-            "firstName"=> $cust_name_split[0],
-            "id"=> $cust_info['form_id'],
-            "label"=> $custodians[1]['cust'],
-            "lastName"=> $l_name,
-            "schoolId"=> $cust_info['school_id'],
-            "username"=> $cust_info['username']
-        ];
-    }
-case 3:
-    if ($cust_count >= 3) {
-        $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode(" " ,$custodians[2]['cust']);
-        try {
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name"=>$custodians[2]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-                // SEARCH CUST IN KUALI
-                searchName($custodians[2]['cust']);
-                $get_cust_stmt = $dbh->prepare($get_cust_info);
-                $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
-                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            // CUST DID NOT MATCH
-            searchName($custodians[2]['cust']);
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name" => $custodians[2]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            // SEARCH CUST IN KUALI
-        }
-        $l_name = implode(' ', array_filter([
-            $cust_name_split[1] ?? '',
-            $cust_name_split[2] ?? '',
-            $cust_name_split[3] ?? '',
-        ], 'strlen'));
-        $cust_3 = [
-            "displayName" => $custodians[2]['cust'],
-            "email" => $cust_info['email'],
-            "firstName"=> $cust_name_split[0],
-            "id"=> $cust_info['form_id'],
-            "label"=> $custodians[2]['cust'],
-            "lastName"=> $l_name,
-            "schoolId"=> $cust_info['school_id'],
-            "username"=> $cust_info['username']
-        ];
-    }
-case 4:
-    if ($cust_count >= 4) {
-        $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode(" ", $custodians[3]['cust']);
-        try {
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name"=>$custodians[3]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-                // SEARCH CUST IN KUALI
-                searchName($custodians[3]['cust']);
-                $get_cust_stmt = $dbh->prepare($get_cust_info);
-                $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
-                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-
-            }
-        } catch (PDOException $e) {
-            // CUST DID NOT MATCH
-            searchName($custodians[3]['cust']);
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name" => $custodians[3]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            // SEARCH CUST IN KUALI
-        }
-        $l_name = implode(' ', array_filter([
-            $cust_name_split[1] ?? '',
-            $cust_name_split[2] ?? '',
-            $cust_name_split[3] ?? '',
-        ], 'strlen'));
-        $cust_4 = [
-            "displayName" => $custodians[3]['cust'],
-            "email" => $cust_info['email'],
-            "firstName"=> $cust_name_split[0],
-            "id"=> $cust_info['form_id'],
-            "label"=> $custodians[3]['cust'],
-            "lastName"=> $l_name,
-            "schoolId"=> $cust_info['school_id'],
-            "username"=> $cust_info['username']
-        ];
-    }
-case 5:
-    if ($cust_count >= 5) {
-        $get_cust_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-        $cust_name_split = explode(" ", $custodians[4]['cust']);
-        try {
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name"=>$custodians[4]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-                // SEARCH CUST IN KUALI
-                searchName($custodians[4]['cust']);
-                $get_cust_stmt = $dbh->prepare($get_cust_info);
-                $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
-                $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            // CUST DID NOT MATCH
-            searchName($custodians[4]['cust']);
-            $get_cust_stmt = $dbh->prepare($get_cust_info);
-            $get_cust_stmt->execute([":full_name" => $custodians[4]['cust']]);
-            $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-            // SEARCH CUST IN KUALI
-        }
-        $l_name = implode(' ', array_filter([
-            $cust_name_split[1] ?? '',
-            $cust_name_split[2] ?? '',
-            $cust_name_split[3] ?? '',
-        ], 'strlen'));
-        $cust_5 = [
-            "displayName" => $custodians[4]['cust'],
-            "email" => $cust_info['email'],
-            "firstName"=> $cust_name_split[0],
-            "id"=> $cust_info['form_id'],
-            "label"=> $custodians[4]['cust'],
-            "lastName"=> $l_name,
-            "schoolId"=> $cust_info['school_id'],
-            "username"=> $cust_info['username']
-        ];
-    }
+    $bor_f_name = $mana_info['f_name'];
+    $bor_l_name = $mana_info['l_name'];
+    $bor_email = $mana_info['email'];
+    $bor_form_id = $mana_info['form_id'];
+    $bor_form_sig = $mana_info['signature'];
+    $bor_form_sid = $mana_info['school_id'];
+    $bor_form_user = $mana_info['username'];
 }
 if (!$apikey) {
     die("No API key found for user.");
 }
-
 
 $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -320,7 +189,7 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
-var_dump($resp);
+
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
@@ -337,284 +206,191 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-if (!$action_id) {
-    die("ERROR: actionId is NULL before submitting the document.");
-}
-$json_form = [];
-foreach ($transfer_data as $index => $data) {
-    $vin = false;
-    if (!empty($data['VIN'])) $vin = true;
-    $json_form['data'][] = [
-        "data" => [
-            "5c3qSm88bs"=> (string)$dept_id,
-            "6JHs3W0-CL"=> (string)$data['Found Room Number'],
-            "RxpLOF3XrE"=> (string)$data['Tag Number'],
-            "SBu1DONXk2"=> (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
-            "_pHzQVxouz"=> (string)$custodians[0]['cust'],
-            "vOI5qaQ5hL"=> (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
-        ], 
-        'id'=>(string)$index,
-    ];
-}
-$custs = [
-    "Gf5oXuQkTBy"=> $cust_1
-];
-if (!empty($cust_2)) {
-    $custs = [
-        "Gf5oXuQkTBy"=> $cust_1,
-        "i6O5npcOWj" => $cust_2
-    ];
-}
-if (!empty($cust_3)) {
-    $custs = [
-        "Gf5oXuQkTBy"=> $cust_1,
-        "i6O5npcOWj" => $cust_2,
-        "2W25abEJ4O" => $cust_3
-    ];
-}
-if (!empty($cust_4)) {
-    $custs = [
-        "Gf5oXuQkTBy"=> $cust_1,
-        "i6O5npcOWj" => $cust_2,
-        "2W25abEJ4O" => $cust_3,
-        "DZrHu6ITkF" => $cust_4
-    ];
-}
-if (!empty($cust_5)) {
-    $custs = [
-        "Gf5oXuQkTBy"=> $cust_1,
-        "i6O5npcOWj" => $cust_2,
-        "2W25abEJ4O" => $cust_3,
-        "DZrHu6ITkF" => $cust_4,
-        "_MkyBYDNix" => $cust_5
-    ];
-}
 $reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
 $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
+$upd_id = match ($lsd_data['upd']) {
+    "No" => "CbModhwutSo",
+    "Yes" => "YU12SPShKnx"
+};
+
+$item_type_id = match ($lsd_data['item_type']) {
+    "Instructional Equipment" => "iZ6HWywjL",
+    "IT Equipment" => "Ycmcbo5hp",
+    "Other" => "813J2qxw1"
+};
+
+$lsd_id = match ($lsd_data['lsd']) {
+    "Lost" => "bqRxkqovw",
+    "Stolen" => "fmp7EdgUx",
+    "Destroyed" => "-rR6VXHWp"
+};
+
 $ms_time = round(microtime(true) * 1000);
 if ($lsd_data['who'] === 'Myself') {
-$submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+    $submit_form = json_encode([
+        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        "_GODY1FjEy" => [
-            "id"=> "9A_6UOlDb",
-            "label"=> "From one department to another department "
-        ],
-        "VFp8qQLrUk"=> $full_name,
-        ...$custs,
-        "JZ-q3J19dw"=> $json_form,
-        "ne3KPx1Wy3"=> [
-            "actionId"=> $action_id,
-            "date"=> $now,
-            "displayName"=> $full_name . " (" . $_SESSION['email'] . ")",
-            "signatureType"=> "type",
-            "signedName"=> $full_name,
-            "userId"=> $form_id
-        ],
-        "K3p03X2Jvx"=> $reason,
-        "R-jIGrtlfO"=> $ms_time,
-        // WHO
-                "Sg2RTLnC5r"=> [
-                  "id"=> "w-25nbYAp",
-                  "label"=> "Myself"
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            // WHO
+            "Sg2RTLnC5r"=> [
+                "id"=> "w-25nbYAp",
+                "label"=> "Myself"
+            ],
+            // MANAGER IF STAFF
+            "0Qm43mG2vV" => [
+                "displayName" => $manager,
+                "email" => $mana_email,
+                "firstName" => $mana_f_name,
+                "id" => $mana_form_id,
+                "label" => $manager,
+                "lastName" => $mana_l_name,
+                "schoolId" => $mana_form_sid,
+                "username" => $mana_form_user
+            ],
+            // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+            "6lJyeq9g1v" => [
+                "id" => $item_type_id,
+                "label"=> $lsd_data['item_type']
+            ],
+            // REPORTED TO UPD?
+            "7BHQb4jTbS" => [
+                "id" => $upd_id,
+                "label" => $lsd_data['upd']
+            ],
+            // SERIAL NUMBER
+            "7Gzhcg_35S" => $lsd_data['Serial ID'],
+            "9eJvzLeMS0" => [
+                "id" =>"9JrVQuqdIQS",
+                "label"=> "Staff / Faculty"
+            ],
+            // SUBMITTER SIGNATURE
+            "EeUWxyyaOUR" => [
+                "actionId"=> $action_id,
+                "date" => $now,
+                "displayName" => $full_name . " (".$_SESSION['email'].")",
+                "signatureType"=> "type",
+                "signedName"=> $full_name,
+                "userId" => $form_id
+            ],
+            // DEPT IF STAFF
+
+            "GOiwf3tjc0"=> [
+                "data"=> [
+                    "AkMeIWWhoj"=> $dept_name,
+                    "IOw4-l7NsM"=> $_SESSION['info'][2]
                 ],
-                // MANAGER IF STAFF
-                "0Qm43mG2vV": {
-                  "displayName": "Anthony Rathburn",
-                  "email": "arathburn@csub.edu",
-                  "firstName": "Anthony",
-                  "id": "64cac1e0df946ca476378823",
-                  "label": "Anthony Rathburn",
-                  "lastName": "Rathburn",
-                  "schoolId": "001502085",
-                  "username": "arathburn"
-                },
-                // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
-                "6lJyeq9g1v": {
-                  "id": "iZ6HWywjL",
-                  "label": $lsd_data['item_type']
-},
-                // REPORTED TO UPD?
-                "7BHQb4jTbS": {
-                  "id": "CbModhwutSo",
-                  "label": "No"
-                },
-                    // SERIAL NUMBER
-                "7Gzhcg_35S": $lsd_data['Serial ID'],
-                "9eJvzLeMS0": {
-                  "id": "9JrVQuqdIQS",
-                  "label": "Staff / Faculty"
-                },
-                    // SUBMITTER SIGNATURE
-                "EeUWxyyaOUR": {
-                  "actionId": "68c0a83fc097f9fb447b2a6b",
-                  "date": "2025-09-09T22:28:52.798Z",
-                  "displayName": "Shauna Van Grinsven (svan-grinsven@csub.edu)",
-                  "signatureType": "type",
-                  "signedName": "Shauna Van Grinsven",
-                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
-                  "userId": "678fb95909bf8c07c9aac978"
-                },
-                    // DEPT IF STAFF
-                "GOiwf3tjc0": {
-                  "data": {
-                    "AkMeIWWhoj": "Geological Sciences",
-                    "IOw4-l7NsM": "D10380"
-                  },
-                  "label": "Geological Sciences"
-                },
-                    // MAKE
-                "Qb1ac69GLa": "Supreme Air",
-                    // LSD
-                "Sc5_swYeHS": {
-                  "id": "bqRxkqovw",
-                  "label": "Lost"
-                },
-                    // NARRATIVE
-                "dyaoRcFcOD": "The Geology Department does not have this fume hood in any classroom or lab, nor do I have documentation of its previous location from the former property custodians. ",
-                // DESCR
-                "pNvpNnuav8": "Supreme Air Fume Hood",
-                // TAG
-                "y7nFCmsLEg": "18458",
-                // MODEL
-                "y9obJL9NAo": "Supreme Air 5ft"
-              },
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
-]);
+                "label" => $dept_name
+            ],
+            // MAKE
+            "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+            // LSD
+            "Sc5_swYeHS"=> [
+                "id"=> $lsd_id,
+                "label"=> $lsd_data['lsd']
+            ],
+            // NARRATIVE
+            "dyaoRcFcOD" => $lsd_data['reason'],
+            // DESCR
+            "pNvpNnuav8" => $lsd_data['Descr'],
+            // TAG
+            "y7nFCmsLEg" => $lsd_data['Tag Number'],
+            // MODEL
+            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A'
+        ],
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
+    ]);
 } else if ($lsd_data['who'] === 'Someone else') {
-$submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+    $submit_form = json_encode([
+        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
 'variables' => [
     'documentId' => $document_id,
     'data' => [
-        "_GODY1FjEy" => [
-            "id"=> "9A_6UOlDb",
-            "label"=> "From one department to another department "
+        "Sg2RTLnC5r" => [
+            "id" => "SDqr0xnNfnM",
+            "label" => "I am initiating this submission on behalf of"
         ],
-        "VFp8qQLrUk"=> $full_name,
-        ...$custs,
-        "JZ-q3J19dw"=> $json_form,
-        "ne3KPx1Wy3"=> [
+        // MANAGER IF STAFF
+        "0Qm43mG2vV" => [
+            "displayName" => $manager,
+            "email" => $mana_email,
+            "firstName" => $mana_f_name,
+            "id" => $mana_form_id,
+            "label" => $manager,
+            "lastName" => $mana_l_name,
+            "schoolId" => $mana_form_sid,
+            "username" => $mana_form_user
+        ],
+        // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+        "6lJyeq9g1v" => [
+            "id" => $item_type_id,
+            "label"=> $lsd_data['item_type']
+        ],
+        // REPORTED TO UPD?
+        "7BHQb4jTbS" => [
+            "id" => $upd_id,
+            "label" => $lsd_data['upd']
+        ],
+        // SERIAL NUMBER
+        "7Gzhcg_35S" => $lsd_data['Serial ID'],
+        "9eJvzLeMS0" => [
+            "id" =>"9JrVQuqdIQS",
+            "label"=> "Staff / Faculty"
+        ],
+        // SUBMITTER SIGNATURE
+        "EeUWxyyaOUR" => [
             "actionId"=> $action_id,
-            "date"=> $now,
-            "displayName"=> $full_name . " (" . $_SESSION['email'] . ")",
+            "date" => $now,
+            "displayName" => $full_name . " (".$_SESSION['email'].")",
             "signatureType"=> "type",
             "signedName"=> $full_name,
-            "userId"=> $form_id
+            "userId" => $form_id
         ],
-        "K3p03X2Jvx"=> $reason,
-        "R-jIGrtlfO"=> $ms_time,
-        "data": {
-                "0Qm43mG2vV": {
-                  "displayName": "Anthony Rathburn",
-                  "email": "arathburn@csub.edu",
-                  "firstName": "Anthony",
-                  "id": "64cac1e0df946ca476378823",
-                  "label": "Anthony Rathburn",
-                  "lastName": "Rathburn",
-                  "schoolId": "001502085",
-                  "username": "arathburn"
-                },
-                "1w1_RfeMoG": "Distribution Lead",
-                "6lJyeq9g1v": {
-                  "id": "iZ6HWywjL",
-                  "label": "Instructional Equipment"
-                },
-                "7BHQb4jTbS": {
-                  "id": "CbModhwutSo",
-                  "label": "No"
-                },
-                "7Gzhcg_35S": "R152617",
-                "9BeWmJXRb4q": {
-                  "actionId": "68c0c18bc097f9fb4480aa34",
-                  "date": "2025-09-10T15:20:51.553Z",
-                  "displayName": "Aditi Arya (aarya1@csub.edu)",
-                  "signatureType": "type",
-                  "signedName": "Aditi Arya",
-                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
-                  "userId": "661f0788ab7adcea4cb4c680"
-                },
-                "9eJvzLeMS0": {
-                  "id": "9JrVQuqdIQS",
-                  "label": "Staff / Faculty"
-                },
-                "CS44boCJiU": {
-                  "actionId": "68c197784513111b2de1f67a",
-                  "date": "2025-09-10T22:13:24.303Z",
-                  "displayName": "Rigoberto Razo (rrazo2@csub.edu)",
-                  "signatureType": "type",
-                  "signedName": "Rigoberto Razo",
-                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
-                  "userId": "67be4dd110ac2eb10e3feddd"
-                },
-                "EeUWxyyaOUR": {
-                  "actionId": "68c0a83fc097f9fb447b2a6b",
-                  "date": "2025-09-09T22:28:52.798Z",
-                  "displayName": "Shauna Van Grinsven (svan-grinsven@csub.edu)",
-                  "signatureType": "type",
-                  "signedName": "Shauna Van Grinsven",
-                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
-                  "userId": "678fb95909bf8c07c9aac978"
-                },
-                "GOiwf3tjc0": {
-                  "data": {
-                    "AkMeIWWhoj": "Geological Sciences",
-                    "IOw4-l7NsM": "D10380"
-                  },
-                  "documentSetId": "67b77af288e621894856e7d0",
-                  "id": "67b77af288e621894856e7d1",
-                  "label": "Geological Sciences"
-                },
-                "IMt9oe8wL5": {
-                  "actionId": "68c0bd454513111b2dd4e0d0",
-                  "date": "2025-09-10T00:08:28.082Z",
-                  "displayName": "Anthony Rathburn (arathburn@csub.edu)",
-                  "signatureType": "type",
-                  "signedName": "Anthony Rathburn",
-                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
-                  "userId": "64cac1e0df946ca476378823"
-                },
-                "MiLvvsoH5a": 1757376000000,
-                "Qb1ac69GLa": "Supreme Air",
-                "Sc5_swYeHS": {
-                  "id": "bqRxkqovw",
-                  "label": "Lost"
-                },
-                "Sg2RTLnC5r": {
-                  "id": "w-25nbYAp",
-                  "label": "Myself"
-                },
-                "SjD_YMtQeG": "Dept Chair",
-                "TVsWI68kxB": "Energy and Sustainability Manager",
-                "Z6iBjLMEkD": 1757376000000,
-                "dyaoRcFcOD": "The Geology Department does not have this fume hood in any classroom or lab, nor do I have documentation of its previous location from the former property custodians. ",
-                "fy16ygj_ST": 1757376000000,
-                "pNvpNnuav8": "Supreme Air Fume Hood",
-                "s-uc7R_TFv": 1757462400000,
-                "tIGEHgQi2s": {
-                  "id": "no",
-                  "label": "\"was not\" the result of negligence"
-                },
-                "vedcAP4N1t": 1757376000000,
-                "xJenX4GBZs": "Instructional Support Techician",
-                "y7nFCmsLEg": "18458",
-                "y9obJL9NAo": "Supreme Air 5ft",
-                "yIpeMtiT_7": 1757462400000
-              },
+        // DEPT IF STAFF
+
+        "GOiwf3tjc0"=> [
+            "data"=> [
+                "AkMeIWWhoj"=> $dept_name,
+                "IOw4-l7NsM"=> $_SESSION['info'][2]
+            ],
+            "label" => $dept_name
+        ],
+        // MAKE
+        "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+        // LSD
+        "Sc5_swYeHS"=> [
+            "id"=> $lsd_id,
+            "label"=> $lsd_data['lsd']
+        ],
+        "N00EmVKFnd" => [
+            "displayName" => $lsd_data['borrower'],
+            "email" => $bor_email,
+            "firstName" => $bor_f_name,
+            "id" => $bor_form_id,
+            "label" => $lsd_data['borrower'],
+            "lastName" => $bor_l_name,
+            "schoolId" => $bor_form_sid,
+            "username" => $bor_form_user
+        ],
+        // NARRATIVE
+        "dyaoRcFcOD" => $lsd_data['reason'],
+        // DESCR
+        "pNvpNnuav8" => $lsd_data['Descr'],
+        // TAG
+        "y7nFCmsLEg" => $lsd_data['Tag Number'],
+        // MODEL
+        "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A'
     ],
     'actionId' => $action_id,
     'status' => 'completed'
 ]
-]);
+    ]);
 
 }
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
@@ -623,6 +399,17 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
+$resp_data = json_decode($resp, true);
+$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
+$tag = $lsd_data['Tag Number'];
+$doc_id = '68c73600df46a3027d2bd386';
+$input_array = $tag. ',' . $id . ',' . $doc_id . ',in-progress';
+
+$dept = $data['dept_id'][0];
+$audit_id = $data['audit_id'][0];
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+$update_stmt = $dbh->prepare($update);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
 curl_close($curl);
 exit;
 //var_dump($resp);
@@ -710,6 +497,7 @@ function searchName($search_name = '')
             $insert_stmt = $dbh->prepare($insert);
             $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
             try {
+                /*
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
@@ -729,6 +517,7 @@ function searchName($search_name = '')
                 $mail->AltBody = 'Click this link to access Dataworks...';
 
                 $mail->send();
+                 */
             } catch (Exception $e) {
                 error_log("Error sending email: " . $e->getMessage());
                 return;
