@@ -212,8 +212,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const btn = document.getElementById("submit").addEventListener("click", async () => {
     let bulk_t_tags =  [], t_tags = [], b_psr_tags = [], psr_tags = [], out_tags = [], in_tags = [], lsd_tags = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
-    const dept_id = <?= json_encode($_SESSION['info'][2] ?>;
-    const audit_id = <?= json_encode($_SESSION['info'][5] ?>;
+    const dept_id = <?= json_encode($_SESSION['info'][2]) ?>;
+    const audit_id = <?= json_encode($_SESSION['info'][5]) ?>;
     const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
     method: 'POST',
         headers: { 'Content-Type': 'application/json' },
