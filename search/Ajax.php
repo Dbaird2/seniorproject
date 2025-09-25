@@ -254,7 +254,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             if ($where_price && $where_status) {
                 $and = ' AND ';
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . ' ORDER BY a.asset_tag ' $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . ' ORDER BY a.asset_tag ' . $query_end;
 
             $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status;
 
