@@ -645,6 +645,7 @@ function randomPassword()
 function searchName($search_name = '')
 {
     global $apikey;
+    global $dept_id;
     $name_array = explode(' ' ,$search_name);
     $user_f_name = $name_array[0];
     $user_l_name = $name_array[1] . ' ' . $name_array[2] ?? '' . ' ' . $name_array[3] ?? '' . ' ' . $name_array[4] ?? '';
@@ -707,7 +708,7 @@ function searchName($search_name = '')
 
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, $dept_id]);
+            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
             try {
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
