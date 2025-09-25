@@ -52,9 +52,7 @@ check_auth();
         </select>
             </td>
          <td class="psr-<?= $row['Tag Number']?>" style="display:none;">
-            <select id="psr-reason-<?=$row['Tag Number'] ?>">
-                    <option value=""></option>
-            </select>
+            <input type="text"id="psr-reason-<?=$row['Tag Number'] ?>" placeholder="Reason for form...">
         </td>
 <!--EQUIP LSD INFO FROM USER
     MYSELF OR SOMEONE ELSE
