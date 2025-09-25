@@ -499,6 +499,7 @@ function searchName($search_name = '')
             $insert_stmt = $dbh->prepare($insert);
             $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
             try {
+                /*
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
@@ -518,6 +519,7 @@ function searchName($search_name = '')
                 $mail->AltBody = 'Click this link to access Dataworks...';
 
                 $mail->send();
+                 */
             } catch (Exception $e) {
                 error_log("Error sending email: " . $e->getMessage());
                 return;
