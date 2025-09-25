@@ -9,29 +9,33 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
-$someone_data = [[]];
-$myself_data = [[]];
+$myself = $someone_else = false;
 $index = 0;
 echo json_encode(['tags'=>$data]);
-foreach ($data['lsd_tags'] as $tag) {
-    foreach($_SESSION['data'] as $session) {
-        if ($session['Tag Number'] === $tag['tag']) {
-            if ($tag['who'] === 'Myself') {
-                $myself_data[$index]['Unit'] = $session['Unit'];
-                $myself_data[$index]['Tag Number'] = $tag;
-                $myself_data[$index]['Descr'] = $session['Descr'];
-                $myself_data[$index]['Serial ID'] = $session['Serial ID'];
-                $myself_data[$index]['VIN'] = $session['VIN'];
-                $myself_data[$index]['Dept'] = $session['Dept'];
-                $myself_data[$index]['Found Room Number'] = $session['Found Room Number'];
-                $myself_data[$index]['Found Building Name'] = $session['Found Building Name'];
-                $myself_data[$index++]['Found Note'] = $session['Found Note'];
-            } else if ($tag['who'] === 'Someone Else' && !empty($tag['borrower'])) {
-
+foreach($_SESSION['data'] as $session) {
+    if ($session['Tag Number'] === $data['tag']) {
+        $lsd_data['Unit'] = $session['Unit'];
+        $lsd_data['Tag Number'] = $data['tag'];
+        $lsd_data['Descr'] = $session['Descr'];
+        $lsd_data['Serial ID'] = $session['Serial ID'];
+        $lsd_data['VIN'] = $session['VIN'];
+        $lsd_data['Dept'] = $session['Dept'];
+        $lsd_data['Found Room Number'] = $session['Found Room Number'];
+        $lsd_data['Found Building Name'] = $session['Found Building Name'];
+        $lsd_data['reason'] = $data['reason'];
+        $lsd_data['lsd'] = $data['lsd'];
+        $lsd_data['who'] = $data['who'];
+        $lsd_data['position'] = $data['position'];
+        $lsd_data['upd'] = $data['upd'];
+        $lsd_data['Found Note'] = $session['Found Note'];
+        if ($tag['who'] === 'Myself') {
+            $myself = true;
+        } else if ($tag['who'] === 'Someone Else' && !empty($tag['borrower'])) {
+            $someone_else = true;
         }
+        break;
+    }
 }
-}
-/*
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
@@ -52,6 +56,15 @@ $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
 if (empty($school_id) || empty($form_id)) {
     searchName($full_name);
+    $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
+    $email = $_SESSION['email'];
+    $select_stmt = $dbh->prepare($select);
+    $select_stmt->execute([":email" => $_SESSION['email']]);
+    $display_name = $submitter_info['username'];
+    $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
+    $school_id = $submitter_info['school_id'] ?? '';
+    $signature = $submitter_info['signature'] ?? $full_name;
+    $form_id = $submitter_info['form_id'] ?? '';
 }
 
 
@@ -381,6 +394,7 @@ $now = new DateTime();
 $now->format('Y-m-d H:i:s');
 
 $ms_time = round(microtime(true) * 1000);
+if ($lsd_data['who'] === 'Myself') {
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -404,11 +418,205 @@ $submit_form = json_encode([
         ],
         "K3p03X2Jvx"=> $reason,
         "R-jIGrtlfO"=> $ms_time,
+        // WHO
+                "Sg2RTLnC5r"=> [
+                  "id"=> "w-25nbYAp",
+                  "label"=> "Myself"
+                ],
+                // MANAGER IF STAFF
+                "0Qm43mG2vV": {
+                  "displayName": "Anthony Rathburn",
+                  "email": "arathburn@csub.edu",
+                  "firstName": "Anthony",
+                  "id": "64cac1e0df946ca476378823",
+                  "label": "Anthony Rathburn",
+                  "lastName": "Rathburn",
+                  "schoolId": "001502085",
+                  "username": "arathburn"
+                },
+                // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+                "6lJyeq9g1v": {
+                  "id": "iZ6HWywjL",
+                  "label": $lsd_data['item_type']
+},
+                // REPORTED TO UPD?
+                "7BHQb4jTbS": {
+                  "id": "CbModhwutSo",
+                  "label": "No"
+                },
+                    // SERIAL NUMBER
+                "7Gzhcg_35S": $lsd_data['Serial ID'],
+                "9eJvzLeMS0": {
+                  "id": "9JrVQuqdIQS",
+                  "label": "Staff / Faculty"
+                },
+                    // SUBMITTER SIGNATURE
+                "EeUWxyyaOUR": {
+                  "actionId": "68c0a83fc097f9fb447b2a6b",
+                  "date": "2025-09-09T22:28:52.798Z",
+                  "displayName": "Shauna Van Grinsven (svan-grinsven@csub.edu)",
+                  "signatureType": "type",
+                  "signedName": "Shauna Van Grinsven",
+                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
+                  "userId": "678fb95909bf8c07c9aac978"
+                },
+                    // DEPT IF STAFF
+                "GOiwf3tjc0": {
+                  "data": {
+                    "AkMeIWWhoj": "Geological Sciences",
+                    "IOw4-l7NsM": "D10380"
+                  },
+                  "label": "Geological Sciences"
+                },
+                    // MAKE
+                "Qb1ac69GLa": "Supreme Air",
+                    // LSD
+                "Sc5_swYeHS": {
+                  "id": "bqRxkqovw",
+                  "label": "Lost"
+                },
+                    // NARRATIVE
+                "dyaoRcFcOD": "The Geology Department does not have this fume hood in any classroom or lab, nor do I have documentation of its previous location from the former property custodians. ",
+                // DESCR
+                "pNvpNnuav8": "Supreme Air Fume Hood",
+                // TAG
+                "y7nFCmsLEg": "18458",
+                // MODEL
+                "y9obJL9NAo": "Supreme Air 5ft"
+              },
     ],
     'actionId' => $action_id,
     'status' => 'completed'
 ]
 ]);
+} else if ($lsd_data['who'] === 'Someone else') {
+$submit_form = json_encode([
+    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
+'variables' => [
+    'documentId' => $document_id,
+    'data' => [
+        "_GODY1FjEy" => [
+            "id"=> "9A_6UOlDb",
+            "label"=> "From one department to another department "
+        ],
+        "VFp8qQLrUk"=> $full_name,
+        ...$custs,
+        "JZ-q3J19dw"=> $json_form,
+        "ne3KPx1Wy3"=> [
+            "actionId"=> $action_id,
+            "date"=> $now,
+            "displayName"=> $full_name . " (" . $_SESSION['email'] . ")",
+            "signatureType"=> "type",
+            "signedName"=> $full_name,
+            "userId"=> $form_id
+        ],
+        "K3p03X2Jvx"=> $reason,
+        "R-jIGrtlfO"=> $ms_time,
+        "data": {
+                "0Qm43mG2vV": {
+                  "displayName": "Anthony Rathburn",
+                  "email": "arathburn@csub.edu",
+                  "firstName": "Anthony",
+                  "id": "64cac1e0df946ca476378823",
+                  "label": "Anthony Rathburn",
+                  "lastName": "Rathburn",
+                  "schoolId": "001502085",
+                  "username": "arathburn"
+                },
+                "1w1_RfeMoG": "Distribution Lead",
+                "6lJyeq9g1v": {
+                  "id": "iZ6HWywjL",
+                  "label": "Instructional Equipment"
+                },
+                "7BHQb4jTbS": {
+                  "id": "CbModhwutSo",
+                  "label": "No"
+                },
+                "7Gzhcg_35S": "R152617",
+                "9BeWmJXRb4q": {
+                  "actionId": "68c0c18bc097f9fb4480aa34",
+                  "date": "2025-09-10T15:20:51.553Z",
+                  "displayName": "Aditi Arya (aarya1@csub.edu)",
+                  "signatureType": "type",
+                  "signedName": "Aditi Arya",
+                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
+                  "userId": "661f0788ab7adcea4cb4c680"
+                },
+                "9eJvzLeMS0": {
+                  "id": "9JrVQuqdIQS",
+                  "label": "Staff / Faculty"
+                },
+                "CS44boCJiU": {
+                  "actionId": "68c197784513111b2de1f67a",
+                  "date": "2025-09-10T22:13:24.303Z",
+                  "displayName": "Rigoberto Razo (rrazo2@csub.edu)",
+                  "signatureType": "type",
+                  "signedName": "Rigoberto Razo",
+                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
+                  "userId": "67be4dd110ac2eb10e3feddd"
+                },
+                "EeUWxyyaOUR": {
+                  "actionId": "68c0a83fc097f9fb447b2a6b",
+                  "date": "2025-09-09T22:28:52.798Z",
+                  "displayName": "Shauna Van Grinsven (svan-grinsven@csub.edu)",
+                  "signatureType": "type",
+                  "signedName": "Shauna Van Grinsven",
+                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
+                  "userId": "678fb95909bf8c07c9aac978"
+                },
+                "GOiwf3tjc0": {
+                  "data": {
+                    "AkMeIWWhoj": "Geological Sciences",
+                    "IOw4-l7NsM": "D10380"
+                  },
+                  "documentSetId": "67b77af288e621894856e7d0",
+                  "id": "67b77af288e621894856e7d1",
+                  "label": "Geological Sciences"
+                },
+                "IMt9oe8wL5": {
+                  "actionId": "68c0bd454513111b2dd4e0d0",
+                  "date": "2025-09-10T00:08:28.082Z",
+                  "displayName": "Anthony Rathburn (arathburn@csub.edu)",
+                  "signatureType": "type",
+                  "signedName": "Anthony Rathburn",
+                  "temporaryUrl": "/app/forms/api/v2/files/689e27eb42b1b41b1ba762aa/undefined",
+                  "userId": "64cac1e0df946ca476378823"
+                },
+                "MiLvvsoH5a": 1757376000000,
+                "Qb1ac69GLa": "Supreme Air",
+                "Sc5_swYeHS": {
+                  "id": "bqRxkqovw",
+                  "label": "Lost"
+                },
+                "Sg2RTLnC5r": {
+                  "id": "w-25nbYAp",
+                  "label": "Myself"
+                },
+                "SjD_YMtQeG": "Dept Chair",
+                "TVsWI68kxB": "Energy and Sustainability Manager",
+                "Z6iBjLMEkD": 1757376000000,
+                "dyaoRcFcOD": "The Geology Department does not have this fume hood in any classroom or lab, nor do I have documentation of its previous location from the former property custodians. ",
+                "fy16ygj_ST": 1757376000000,
+                "pNvpNnuav8": "Supreme Air Fume Hood",
+                "s-uc7R_TFv": 1757462400000,
+                "tIGEHgQi2s": {
+                  "id": "no",
+                  "label": "\"was not\" the result of negligence"
+                },
+                "vedcAP4N1t": 1757376000000,
+                "xJenX4GBZs": "Instructional Support Techician",
+                "y7nFCmsLEg": "18458",
+                "y9obJL9NAo": "Supreme Air 5ft",
+                "yIpeMtiT_7": 1757462400000
+              },
+    ],
+    'actionId' => $action_id,
+    'status' => 'completed'
+]
+]);
+
+}
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -416,19 +624,6 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 curl_close($curl);
-echo json_encode([$ms_time
-    ,$document_id
-    ,$full_name
-    ,$cust_1
-    ,$json_form
-    ,$reason
-    ,$action_id
-    ,$now
-    ,$form_id
-    ,$resp
-    ,$dept_id
-    ,$_SESSION['info']
-]);
 exit;
 //var_dump($resp);
 function randomPassword()
@@ -447,8 +642,6 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
- */
-/*
 function searchName($search_name = '')
 {
     global $apikey;
@@ -566,4 +759,3 @@ function searchName($search_name = '')
         }
     }
 }
- */

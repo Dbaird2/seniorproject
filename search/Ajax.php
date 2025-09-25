@@ -211,7 +211,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . $query_end;
+        $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " WHERE (" . $where_array . ") " . $where_dept . $where_price .$where_status . ' ORDER BY a.asset_tag ' . $query_end;
         $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a WHERE (" . $where_array . ") " . $where_dept . $where_price . $where_status;
 //-------------------------------------------------------------------------
 
@@ -254,7 +254,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             if ($where_price && $where_status) {
                 $and = ' AND ';
             }
-            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . $query_end;
+            $query = $query_start . $column_array . " " . $query_asset_from . $location_from . " " . $where . $where_price . $and . $where_dept . $and2 . $where_status . ' ORDER BY a.asset_tag ' $query_end;
 
             $query_count = "SELECT COUNT(*) as Rows FROM asset_info AS a JOIN room_table AS r ON a.room_tag = r.room_tag JOIN bldg_table AS b ON r.bldg_id = b.bldg_id " . $where . $where_price . $and . $where_dept . $and2 . $where_status;
 
@@ -292,7 +292,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //      HIDE CHECKBOXES & INPUT FOR ASSET FILTER
         echo "<script>removeCheckbox('.filter-assets');</script>";
 
-        $params_bldg = [":offset"=>$offset];
+        $params_bldg = [":offset"=>$query_offset];
         $params_count = [];
         $column_array[] = 'room_tag';
         $where_array[] = 'CAST(room_tag AS TEXT) ILIKE :search';
@@ -301,27 +301,27 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $params_count[":bldg_id"] = $bldg_id_val;
             $and = ' AND ';
             $where = ' WHERE ';
-            $bldg_id_where = 'bldg_id = :bldg_id';
+            $bldg_id_where = 'b.bldg_id = :bldg_id';
         }
         if ($bldg_id === 'true') {
             $header_true['bldg_id'] = 'true';
-            $column_array[] = 'bldg_id';
+            $column_array[] = 'b.bldg_id';
         }
         if ($bldg_name === 'true') {
             $header_true['bldg_name'] = 'true';
-            $column_array[] = 'bldg_name';
-            $where_array[] = 'bldg_name ILIKE :search';
+            $column_array[] = 'b.bldg_name';
+            $where_array[] = 'b.bldg_name ILIKE :search';
         }
         if ($room_loc === 'true') {
             $header_true['room_loc'] = 'true';
-            $column_array[] = 'room_loc';
-            $where_array[] = 'room_loc ILIKE :search';
+            $column_array[] = 'r.room_loc';
+            $where_array[] = 'r.room_loc ILIKE :search';
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query_bldg_from = " FROM bldg_table NATURAL JOIN room_table ";
+        $query_bldg_from = " FROM bldg_table b LEFT JOIN room_table r ON r.room_tag = b.room_tag ";
         if ($tag === 'ALL' || $tag === '') {
-            $query = "SELECT " .$column_array.$query_bldg_from.$where.$bldg_id_where.$query_end;
+            $query = "SELECT " .$column_array.$query_bldg_from.$where.$bldg_id_where. ' ORDER BY r.room_loc ' . $query_end;
             $bldg_count = "SELECT COUNT(*) as Rows ".$query_bldg_from.$where.$bldg_id_where;
 
             $bldg_e = $dbh->prepare($query);
@@ -338,7 +338,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         } else {
             $params_bldg[":search"] = "%$tag%";
             $params_count[":search"] = "%$tag%";
-            $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE (' . $where_array .')'.$and.$bldg_id_where.$query_end;
+            $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE (' . $where_array .')'.$and.$bldg_id_where. ' ORDER BY room_loc ' . $query_end;
 
             $bldg_count = "SELECT COUNT(*) as Rows
                 FROM bldg_table NATURAL JOIN room_table 
@@ -364,7 +364,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-bldg');</script>";
         echo "<script>removeCheckbox('.filter-room');</script>";
         if ($tag === 'ALL') {
-            $dept_query = "SELECT * FROM department LIMIT 50 OFFSET :offset";
+            $dept_query = "SELECT * FROM department ORDER BY dept_id LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
             $count_stmt = $dbh->prepare($dept_count_query);
             $count_stmt->execute();
@@ -380,7 +380,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $count_stmt->execute($params);
             $total_rows = $count_stmt->fetch(PDO::FETCH_ASSOC);
 
-            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search LIMIT 50 OFFSET :offset";
+            $dept_query = "SELECT * FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search ORDER BY dept_id LIMIT 50 OFFSET :offset";
             $params[":offset"] = $query_offset;
             $data_stmt = $dbh->prepare($dept_query);
             $data_stmt->execute($params);

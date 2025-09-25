@@ -528,11 +528,11 @@ function searchName($search_name = '')
                 $mail->AltBody = 'Click this link to access Dataworks...';
 
                 $mail->send();
- */
             } catch (Exception $e) {
                 error_log("Error sending email: " . $e->getMessage());
                 return;
             }
+ */
         } else {
             $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
             $update = "UPDATE user_table SET ";

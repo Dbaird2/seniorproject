@@ -299,7 +299,25 @@ document.addEventListener("DOMContentLoaded", function() {
         const reason = document.getElementById('lsd-narrative-'+type.dataset.tag).value;
         const upd = document.getElementById('upd-'+type.dataset.tag).value;
 
-        lsd_tags.push({tag: type.dataset.tag, reason: reason, borrower: borrower, lsd: lsd, who: who, position: position, upd: upd});
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+        const lsd_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: type.dataset.tag, who: who, borrower: borrower, position: position, lsd: lsd, reason: reason, upd: upd })
+        });
+        if (!lsd_res.ok) {
+            const text = await lsd_res.text();
+            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
+        } else {
+            const clone = lsd_res.clone();
+            try {
+                const data = await lsd_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+            } catch {
+                const text = await clone.text();  
+                console.log("bulk-transfer response (text):", text);
+            }
+        }
     } 
     });
     console.log('bulk_tags', bulk_t_tags);
