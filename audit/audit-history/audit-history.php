@@ -117,6 +117,9 @@ include_once("../../config.php");
                     } else {
                         notStart($old_type);
                     }
+                    echo "</tr>";
+                }
+
 
 
 ?>
