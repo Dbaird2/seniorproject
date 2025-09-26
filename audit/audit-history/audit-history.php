@@ -102,7 +102,7 @@ if (count($audits) > 0) {
                     continue;
                 }
                 $color = 'red';
-                if ($row[1] === 'In Progress']) {
+                if ($row[1] === 'In Progress') {
                     $color = 'yellow';
                 } else if ($row[1] === 'Complete') {
                     $color = 'green';
