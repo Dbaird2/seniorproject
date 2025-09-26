@@ -114,9 +114,11 @@ include_once("../../config.php");
                     }
                     if ($old_ongoing) {
                         displayAuditData($old_ongoing_index, $dept);
-                    } else {
+                    }
+                    if (!$old_ongoing && !$previous) {
                         notStart($old_type);
                     }
+
                     echo "</tr>";
                 }
 
