@@ -94,6 +94,9 @@ if (count($audits) > 0) {
         
         if (!empty($dept_info[$dept['dept_id']])) {
             foreach ($dept_info[$dept['dept_id']] as $row) {
+                if (empty($row[0])) {
+                    continue;
+                }
                 echo "<td>" . $audit_type[(int)$row[0]] . "</td>";
                 echo "<td>" . $row[1] . "</td>";
                 if ($row[1] === 'In Progress') {
@@ -115,6 +118,8 @@ if (count($audits) > 0) {
             }
         } else {
             echo "<td>Self Audit</td>";
+            echo "<td>Not Started</td>";
+            echo "<td>Management Audit</td>";
             echo "<td>Not Started</td>";
         }
         echo "</tr>";
