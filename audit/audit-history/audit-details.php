@@ -103,7 +103,8 @@ ob_start();
                     <th class='odd'>Acq Date</th>
                     <th class='odd'>Cost</th>
                     <th class='odd'>Status</th>
-                    <th class='odd'>Found Room Tag</th>
+                    <th class='odd'>Found Room Number</th>
+                    <th class='odd'>Found Building Name</th>
                     <th class='odd'>Note</th>
                     <th class='odd'>Found Timestamp</th>
             </tr>
@@ -136,7 +137,8 @@ ob_start();
                 echo "<td class='$color' >". htmlspecialchars($row['Acq Date']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['COST Total Cost']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Tag Status']). "</td>";
-                echo "<td class='$color' >". htmlspecialchars($row['Found Room Tag']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Found Room Number']). "</td>";
+                echo "<td class='$color' >". htmlspecialchars($row['Found Building Name']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Found Note']). "</td>";
                 echo "<td class='$color' >". htmlspecialchars($row['Found Timestamp']). "</td>";
                 echo "</tr>";
