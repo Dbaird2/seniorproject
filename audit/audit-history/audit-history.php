@@ -105,15 +105,15 @@ include_once("../../config.php");
                         }
                     }
                     if ($curr) {
-                        displayAuditData($audits[$curr_index], $dept);
+                        displayAuditData($curr_index, $dept);
                     } else {
                         notStart($curr_type);
                     }
                     if ($previous) {
-                        displayAuditData($audits[$previous_index], $dept);
+                        displayAuditData($previous_index, $dept);
                     }
                     if ($old_ongoing) {
-                        displayAuditData($audits[$old_ongoing_index], $dept);
+                        displayAuditData($old_ongoing_index, $dept);
                     } else {
                         notStart($old_type);
                     }
