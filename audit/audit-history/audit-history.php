@@ -43,6 +43,9 @@ include_once("../../config.php");
         $stmt->execute([':search' => $search]);
     }
     $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo "<pre>";
+    var_dump($audits);
+    echo "</pre>";
 
     foreach ($departments as $index => $dept) {
         foreach ($audits as $audit) {
