@@ -109,7 +109,7 @@ include_once("../../config.php");
                     } else {
                         notStart($curr_type);
                     }
-                    if ($previous_curr) {
+                    if ($previous) {
                         displayAuditData($audits[$previous_index], $dept);
                     }
                     if ($old_ongoing) {
