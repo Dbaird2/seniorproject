@@ -28,14 +28,16 @@ $keys = [
     1 => 'Tag Number',
     2 => 'Tag Status',
     3 => 'Found Room Tag',
-    4 => 'Found Note',
-    5 => 'Found Timestamp',
-    6 => 'Description',
-    7 => 'Location',
-    8 => 'Dept',
-    9 => 'Serial ID',
-    10 => 'VIN',
-    11 => 'Custodian'
+    4 => 'Found Room Number',
+    5 => 'Found Building Name',
+    6 => 'Found Note',
+    7 => 'Found Timestamp',
+    8 => 'Description',
+    9 => 'Location',
+    10 => 'Dept',
+    11 => 'Serial ID',
+    12 => 'VIN',
+    13 => 'Custodian'
 ]; 
 try {
     $spreadsheet = new Spreadsheet();
@@ -57,14 +59,16 @@ try {
             $sheet->setCellValue('B'.$index, $row['Tag Number']);
             $sheet->setCellValue('C'.$index, $row['Tag Status']);
             $sheet->setCellValue('D'.$index, $row['Found Room Tag']);
-            $sheet->setCellValue('E'.$index, $row['Found Note']);
-            $sheet->setCellValue('F'.$index, $row['Found Timestamp']);
-            $sheet->setCellValue('G'.$index, $row['Descr']);
-            $sheet->setCellValue('H'.$index, $row['Location']);
-            $sheet->setCellValue('I'.$index, $row['Dept']);
-            $sheet->setCellValue('J'.$index, $row['Serial ID']);
-            $sheet->setCellValue('K'.$index, $row['VIN']);
-            $sheet->setCellValue('L'.$index++, $row['Custodian']);
+            $sheet->setCellValue('E'.$index, $row['Found Room Number']);
+            $sheet->setCellValue('F'.$index, $row['Found Building Name']);
+            $sheet->setCellValue('G'.$index, $row['Found Note']);
+            $sheet->setCellValue('H'.$index, $row['Found Timestamp']);
+            $sheet->setCellValue('I'.$index, $row['Descr']);
+            $sheet->setCellValue('J'.$index, $row['Location']);
+            $sheet->setCellValue('K'.$index, $row['Dept']);
+            $sheet->setCellValue('L'.$index, $row['Serial ID']);
+            $sheet->setCellValue('M'.$index, $row['VIN']);
+            $sheet->setCellValue('N'.$index++, $row['Custodian']);
         }
     }
     //$sheet->fromArray($data, NULL, 'A2');

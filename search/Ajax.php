@@ -341,11 +341,11 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $query = "SELECT " . $column_array . ' ' . $query_bldg_from . ' WHERE (' . $where_array .')'.$and.$bldg_id_where. ' ORDER BY room_loc ' . $query_end;
 
             $bldg_count = "SELECT COUNT(*) as Rows
-                FROM bldg_table NATURAL JOIN room_table 
+                FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id 
                 WHERE
-                (bldg_name like :search OR
-                room_loc like :search OR
-                CAST(room_tag as TEXT) like :search)".$and.$bldg_id_where;
+                (b.bldg_name like :search OR
+                r.room_loc like :search OR
+                CAST(r.room_tag as TEXT) like :search)".$and.$bldg_id_where;
             $bldg_e = $dbh->prepare($query);
             $bldg_e->execute($params_bldg);
             $result = $bldg_e->fetchAll(PDO::FETCH_ASSOC);
