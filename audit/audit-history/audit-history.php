@@ -92,7 +92,7 @@ if (count($audits) > 0) {
         echo "<tr class='$color'>";
         echo "<td><a href='#'>".$dept['dept_id']."</a></td>";
         
-        if (!empty($dept_info[$dept['dept_id']) {
+        if (!empty($dept_info[$dept['dept_id'])) {
             foreach ($dept_info[$dept['dept_id']] as $row) {
                 echo "<td>" . $audit_type[(int)$row[0]] . "</td>";
                 echo "<td>" . $row[1] . "</td>";
