@@ -19,7 +19,7 @@ $search = $_POST['search'];
 $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
 $and = $status_search === '' ? '' : ' AND ';
 if ($search === 'all') {
-    $depts = "SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN departments d ON a.dept_id = d.dept_id ORDER BY a.dept_id ";
+    $depts = "SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.dept_id ";
     $dept_stmt = $dbh->query($depts);
     $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -28,7 +28,7 @@ if ($search === 'all') {
     $stmt->execute();
 } else {
     $search = '%' . $search . '%';
-    $depts = "SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN departments d ON a.dept_id = d.dept_id WHERE a.dept_id ILIKE :search OR d.dept_name ILIKE :search ORDER BY a.dept_id ";
+    $depts = "SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id WHERE a.dept_id ILIKE :search OR d.dept_name ILIKE :search ORDER BY a.dept_id ";
     $dept_stmt = $dbh->prepare($depts);
     $dept_stmt->execute([":search"=>$search]);
     $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
