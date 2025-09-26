@@ -43,8 +43,6 @@ foreach ($departments as $index => $dept) {
     foreach ($audits as $audit) {
         if ($audit['dept_id'] === $dept['dept_id']) {
             $dept_info[$dept['dept_id']][] = [$audit['audit_id'], $audit['audit_status'], $audit['forms_submitted'], $audit['auditor']];
-        } else {
-            $dept_info[$dept['dept_id']][] = [0, 'Not Started'];             
         }
     }
 }
