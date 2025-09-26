@@ -46,9 +46,6 @@ foreach ($departments as $index => $dept) {
         }
     }
 }
-echo "<pre>";
-var_dump($dept_info);
-echo "</pre>";
 $count = 0;
 if (count($audits) > 0) {
 ?>
@@ -96,15 +93,22 @@ if (count($audits) > 0) {
         $count_dept = 0;
         $color = ($i++ % 2 == 0) ? 'even' : 'odd';
         echo "<tr class='$color'>";
-        echo "<td><a href='#'>".$dept['dept_id']."</a></td>";
+        echo "<td>".$dept['dept_id']."</td>";
+        echo "<td>".$dept['dept_name']."</td>";
          
         if (!empty($dept_info[$dept['dept_id']])) {
             foreach ($dept_info[$dept['dept_id']] as $row) {
                 if (empty($row[0])) {
                     continue;
                 }
-                echo "<td>" . $audit_type[(int)$row[0]] . "</td>";
-                echo "<td>" . $row[1] . "</td>";
+                $color = 'red';
+                if ($row[1] === 'In Progress']) {
+                    $color = 'yellow';
+                } else if ($row[1] === 'Complete') {
+                    $color = 'green';
+                }
+                echo "<td style='color:'".$color.";'>" . $audit_type[(int)$row[0]] . "</td>";
+                echo "<td style='color:'".$color.";'>" . $row[1] . "</td>";
                 if ($row[1] === 'In Progress') {
                     echo "<td>";
                     if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$row[0], [1,2,3]))) {
@@ -119,19 +123,20 @@ if (count($audits) > 0) {
                     echo "</td>";
                 }
                 echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=".htmlspecialchars(urlencode($row[3]))."'>PDF</a>  ";
-                echo "<td><a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=".htmlspecialchars(urlencode($row[3]))."'>Excel</a></td>";
+                echo "<a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=".htmlspecialchars(urlencode($row[3]))."'>Excel</a></td>";
                 if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
                     echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=".htmlspecialchars(urlencode($row[3]))."'>Delete</a></td>";
                 }
+                echo "<br>";
             }
         } else {
-            echo "<td>Self Audit</td>";
+            echo "<td style='color:red;'>Self Audit</td>";
             echo "<td>Not Started</td>";
-            echo "<td>Management Audit</td>";
+            echo "<td style='color:red;'>Management Audit</td>";
             echo "<td>Not Started</td>";
-            echo "<td>Previous Self Audit</td>";
+            echo "<td style='color:red;'>Previous Self Audit</td>";
             echo "<td>Not Started</td>";
-            echo "<td>Previous Management Audit</td>";
+            echo "<td style='color:red;'>Previous Management Audit</td>";
             echo "<td>Not Started</td>";
 
         }
