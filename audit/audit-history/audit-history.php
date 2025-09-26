@@ -162,7 +162,7 @@ include_once("../../config.php");
         $audit_type[2] = 'Previous Self Audit';
         $audit_type[3] = 'Overdue Self Audit';
     } else {
-        $audit_type[1] = 'Previosu Self Audit';
+        $audit_type[1] = 'Previous Self Audit';
         $audit_type[2] = 'Self Audit';
         $audit_type[3] = 'Overdue Self Audit';
     }
@@ -171,7 +171,7 @@ include_once("../../config.php");
         $audit_type[5] = 'Previous Management Audit';
         $audit_type[6] = 'Overdue Management Audit';
     } else {
-        $audit_type[4] = 'Previosu Management Audit';
+        $audit_type[4] = 'Previous Management Audit';
         $audit_type[5] = 'Management Audit';
         $audit_type[6] = 'Overdue Management Audit';
     }
@@ -180,11 +180,14 @@ include_once("../../config.php");
         $audit_type[8] = 'Previous SPA Audit';
         $audit_type[9] = 'Overdue SPA Audit';
     } else {
-        $audit_type[7] = 'Previosu SPA Audit';
+        $audit_type[7] = 'Previous SPA Audit';
         $audit_type[8] = 'SPA Audit';
         $audit_type[9] = 'Overdue SPA Audit';
     }
     $color = 'red';
+    echo "<pre>";
+    var_dump($row);
+    echo "</pre>";
     if ($row[1] === 'In Progress') {
         $color = 'yellow';
     } else if ($row[1] === 'Complete') {
