@@ -29,7 +29,7 @@ if ($search === 'all') {
     $stmt->execute([':search' => $search]);
 }
 $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$depts = "SELECT DISTINCT(dept_id) FROM asset_info";
+$depts = "SELECT DISTINCT(dept_id) as dept_id FROM asset_info ORDER BY dept_id ";
 $dept_stmt = $dbh->query($depts);
 $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
