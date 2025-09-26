@@ -25,16 +25,22 @@ include_once("../../config.php");
         $id = $curr_results['curr_spa_id'];
         $prev_id = ($id === 7) ? 8 : 7;
         $old_and_going_id = 9;
+        $curr_type = "SPA Audit";
+        $old_type = "Previous SPA Audit";
         $query_type = " audit_id = ANY(ARRAY[7,8,9]) ";
     } else if ($type === 'Management Audits') {
         $id = $curr_results['curr_mgmt_id'];
         $prev_id = ($id === 4) ? 5 : 4;
         $old_and_going_id = 6;
+        $curr_type = "Management Audit";
+        $old_type = "Previous Management Audit";
         $query_type = " audit_id = ANY(ARRAY[4,5,6]) ";
     } else if ($type === 'Self Audits') {
         $id = $curr_results['curr_self_id'];
         $prev_id = ($id === 1) ? 2 : 1;
         $old_and_going_id = 3;
+        $curr_type = "Self Audit";
+        $old_type = "Previous Self Audit";
         $query_type = " audit_id = ANY(ARRAY[1,2,3]) ";
     }
     if ($search === 'all') {
@@ -57,9 +63,6 @@ include_once("../../config.php");
         $stmt->execute([':search' => $search]);
     }
     $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo "<pre>";
-    var_dump($audits);
-    echo "</pre>";
 
     $count = 0;
     if (count($audits) > 0) {
@@ -102,125 +105,31 @@ include_once("../../config.php");
                         }
                     }
                     if ($curr) {
-                        if ($curr_results['curr_self_id'] === 1) {
-                            $audit_type[1] = 'Self Audit';
-                            $audit_type[2] = 'Previous Self Audit';
-                            $audit_type[3] = 'Overdue Self Audit';
-                        } else {
-                            $audit_type[1] = 'Previous Self Audit';
-                            $audit_type[2] = 'Self Audit';
-                            $audit_type[3] = 'Overdue Self Audit';
-                        }
-                        if ($curr_results['curr_mgmt_id'] === 4) {
-                            $audit_type[4] = 'Management Audit';
-                            $audit_type[5] = 'Previous Management Audit';
-                            $audit_type[6] = 'Overdue Management Audit';
-                        } else {
-                            $audit_type[4] = 'Previous Management Audit';
-                            $audit_type[5] = 'Management Audit';
-                            $audit_type[6] = 'Overdue Management Audit';
-                        }
-                        if ($curr_results['curr_spa_id'] === 8) {
-                            $audit_type[7] = 'SPA Audit';
-                            $audit_type[8] = 'Previous SPA Audit';
-                            $audit_type[9] = 'Overdue SPA Audit';
-                        } else {
-                            $audit_type[7] = 'Previous SPA Audit';
-                            $audit_type[8] = 'SPA Audit';
-                            $audit_type[9] = 'Overdue SPA Audit';
-                        }
-                        $color = 'red';
-                        if ($audits[$curr_index]['audit_status'] === 'In Progress') {
-                            $color = 'yellow';
-                        } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
-                            $color = 'green';
-                        }
-                        echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
-                        echo "<td style='color:'" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
-                        if ($row[1] === 'In Progress') {
-                            echo "<td>";
-                            if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) {
-                                echo "<a href='continue/get-audit-hist-data.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Continue</a>  ";
-                            }
-                            if (($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-                                echo "<a href='complete/start-bulk-transfer.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&complete=true'>Start Forms</a>  ";
-                            }
-                            if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
-                                echo "<a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Complete</a>";
-                            }
-                            echo "</td>";
-                        }
-                        echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audit[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>PDF</a>  ";
-                        echo "<a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Excel</a></td>";
-                        if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-                            echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Delete</a></td>";
-                        }
+                        displayAuditData($audits[$curr_index], $dept);
+                    } else {
+                        notStart($curr_type);
+                    }
+                    if ($previous_curr) {
+                        displayAuditData($audits[$previous_index], $dept);
+                    }
+                    if ($old_ongoing) {
+                        displayAuditData($audits[$old_ongoing_index], $dept);
+                    } else {
+                        notStart($old_type);
                     }
 
 
-                    if (!empty($dept_info[$dept['dept_id']])) {
-                        $row = $dept_info[$dept['dept_id']];
-                        $audit_count = count($row);
-
-
-                        foreach ($row as $index => $id) {
-                            if ($id[0] === $curr_results['curr_mgmt_id']) {
-                                $curr_mgmt_i = $index;
-                                $curr_mgmt = true;
-                            } else if ($id[0] === $curr_results['curr_self_id']) {
-                                $curr_self_i = $index;
-                                $curr_self = true;
-                            } else if ($id[0] === $curr_results['curr_spa_id']) {
-                                $curr_spa_i = $index;
-                                $curr_spa = true;
-                            } else if ($id[0] === $prev_mgmt_id) {
-                                $prev_mgmt_i = $index;
-                                $prev_mgmt = true;
-                            } else if ($id[0] === $prev_self_id) {
-                                $prev_self_i = $index;
-                                $prev_self = true;
-                            } else if ($id[0] === $prev_spa_id) {
-                                $prev_spa_i = $index;
-                                $prev_spa = true;
-                            }
-                        }
-                        if (!$curr_self) {
-                        } else {
-                            displayAuditData($row[$curr_self_i], $dept);
-                        }
-                        if (!$curr_mgmt) {
-                        } else {
-                            displayAuditData($row[$curr_mgmt_i], $dept);
-                        }
-                        if (!$curr_spa) {
-                        } else {
-                            displayAuditData($row[$curr_spa_i], $dept);
-                        }
-                        if (!$prev_self) {
-                        } else {
-                            displayAuditData($row[$prev_self_i], $dept);
-                        }
-                        if (!$prev_mgmt) {
-                        } else {
-                            displayAuditData($row[$prev_mgmt_i], $dept);
-                        }
-                        if (!$prev_spa) {
-                        } else {
-                            displayAuditData($row[$prev_spa_i], $dept);
-                        }
-                    }
-                    echo "</tr>";
-                }
-                ?>
+?>
             </tbody>
         </table>
     <?php } ?>
 </body>
 
 </html>
-<?php function displayAuditData($row, $dept)
+<?php function displayAuditData($curr_index, $dept)
 {
     global $curr_results;
+    global $audits;
     if ($curr_results['curr_self_id'] === 1) {
         $audit_type[1] = 'Self Audit';
         $audit_type[2] = 'Previous Self Audit';
@@ -249,34 +158,30 @@ include_once("../../config.php");
         $audit_type[9] = 'Overdue SPA Audit';
     }
     $color = 'red';
-    echo "<pre>";
-    var_dump($row);
-    echo "</pre>";
-    if ($row[1] === 'In Progress') {
+    if ($audits[$curr_index]['audit_status'] === 'In Progress') {
         $color = 'yellow';
-    } else if ($row[1] === 'Complete') {
+    } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
         $color = 'green';
     }
-    echo "<td>" . $audit_type[(int)$row[0]] . "</td>";
-    echo "<td style='color:'" . $color . ";'>" . $row[1] . "</td>";
-    if ($row[1] === 'In Progress') {
+    echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
+    echo "<td style='color:'" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
+    if ($audits[$curr_index]['audit_status'] === 'In Progress') {
         echo "<td>";
-        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$row[0], [1, 2, 3]))) {
-            echo "<a href='continue/get-audit-hist-data.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "'>Continue</a>  ";
+        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) {
+            echo "<a href='continue/get-audit-hist-data.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Continue</a>  ";
         }
-        if (($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$row[0], [1, 2, 3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-            echo "<a href='complete/start-bulk-transfer.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&complete=true'>Start Forms</a>  ";
+        if (($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
+            echo "<a href='complete/start-bulk-transfer.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&complete=true'>Start Forms</a>  ";
         }
-        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$row[0], [1, 2, 3]))) && $row[2] === true) {
-            echo "<a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "'>Complete</a>";
+        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
+            echo "<a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Complete</a>";
         }
         echo "</td>";
     }
-    echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=" . htmlspecialchars(urlencode($row[3])) . "'>PDF</a>  ";
-    echo "<a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=" . htmlspecialchars(urlencode($row[3])) . "'>Excel</a></td>";
+    echo "<td><a href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>PDF</a>  ";
+    echo "<a href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Excel</a></td>";
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
-        echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($row[0])) . "&auditor=" . htmlspecialchars(urlencode($row[3])) . "'>Delete</a></td>";
-        echo "<br>";
+        echo "<td><a href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Delete</a></td>";
     }
 }
 
