@@ -319,7 +319,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
         $column_array = implode(', ', $column_array);
         $where_array = implode(' OR ', $where_array);
-        $query_bldg_from = " FROM bldg_table b LEFT JOIN room_table r ON r.room_tag = b.room_tag ";
+        $query_bldg_from = " FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id ";
         if ($tag === 'ALL' || $tag === '') {
             $query = "SELECT " .$column_array.$query_bldg_from.$where.$bldg_id_where. ' ORDER BY r.room_loc ' . $query_end;
             $bldg_count = "SELECT COUNT(*) as Rows ".$query_bldg_from.$where.$bldg_id_where;

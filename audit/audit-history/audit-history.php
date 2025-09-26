@@ -88,7 +88,7 @@ foreach ($audits as $row) {
         if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
             echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Start Forms</a></td>";
         }
-        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) && $row['forms_submitted'] === true) {
+        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3]))) && $row['forms_submitted'] === true) {
             echo "<td><a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
         }
     }
@@ -147,7 +147,7 @@ foreach ($audits as $row) {
         if (($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
             echo "<td><a href='complete/start-bulk-transfer.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."&complete=true'>Start Forms</a></td>";
         }
-        if (($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3])) && $row['forms_submitted'] === true) {
+        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $row['dept_id'] && in_array((int)$row['audit_id'], [1,2,3]))) && $row['forms_submitted'] === true) {
             echo "<td><a href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=".htmlspecialchars(urlencode($row['dept_id']))."&audit_id=".htmlspecialchars(urlencode($row['audit_id']))."'>Complete Audit</a></td>";
         }
     }
