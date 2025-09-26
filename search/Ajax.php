@@ -402,7 +402,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $data_stmt->execute([":offset"=>$query_offset]);
             $result = $data_stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
-            $user_count_query = "SELECT COUNT(*) as Rows FROM user_table WHERE email ILIKE :search OR dept ILIKE :search";
+            $user_count_query = "SELECT COUNT(*) as Rows FROM user_table WHERE email ILIKE :search OR :search = ANY(dept_id)";
             $params = [":search"=>"%$tag%"];
             $count_stmt = $dbh->prepare($user_count_query);
             $count_stmt->execute([":search"=>"%$tag%"]);
