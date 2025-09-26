@@ -28,9 +28,9 @@ include_once("../../navbar.php");
     <input class = "search-input" type="hidden" name="offset" id="offset">
     <input class="search-input" type="text" name="search" id="search" placeholder="Search for an audit..." > 
     <select class="search-input" name="audit-type" id="audit-type">
-        <option value="Self Audits"></option>
-        <option value="Management Audits"></option>
-        <option value="SPA Audits"></option>
+        <option value="Self Audits">Self Audits</option>
+        <option value="Management Audits">Management Audits</option>
+        <option value="SPA Audits">SPA Audits</option>
     </select>
     <button id="button-9">Search</button>
     </div>
