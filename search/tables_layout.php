@@ -258,8 +258,8 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
             });
         }
             document.addEventListener('DOMContentLoaded', function() {
-                const form-selection = document.querySelectorAll('.forms-needed');
-                form-selection.forEach(form_type => {
+                const form_selection = document.querySelectorAll('.forms-needed');
+                form_selection.forEach(form_type => {
                     form_type.addEventListener("change", () => {
                     const type_value = form_type.value;
                     const tag = form_type.dataset.tag;
