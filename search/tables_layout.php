@@ -126,14 +126,14 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                 <input type="hidden" id="old_po" name="old_po" value="<?= $safe_po ?>">
 <input type="hidden" id="old_status" name="old_status">
                                     <label for="asset_tag">Asset Tag:</label>
-                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>">
+                                    <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" readonly>
                                     <br>
                                     <label for="name">Asset Name:</label>
                                     <input type="text" id="name" name="name" value="<?= $safe_name ?>">
                                     <br>
 
                                     <label for="deptid">Department ID:</label>
-                                    <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>">
+                                    <input type="text" id="deptid" name="deptid" value="<?= $safe_deptid ?>" readonly>
                                     <br>
                                     <label for="location">Room Tag:</label>
                                     <input type="text" id="location" name="location" value="<?= $safe_room ?>">
@@ -145,7 +145,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                     <input type="number" id="price" name="price" value="<?= $safe_price ?>">
                                     <br>
                                     <label for="po">Purchase Order:</label>
-                                    <input type="text" id="po" name="po" value="<?= $safe_po ?>">
+                                    <input type="text" id="po" name="po" value="<?= $safe_po ?>" >
                                     <br>
                                     <label for="status">Status:</label>
                                     <select id="status" name="status">
@@ -153,58 +153,91 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
+                                    <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>">
+                                           <option value="psr">Property Survey Report</option>
+                                           <option value="lsd">Equipment Lost/Stolen/Destroyed</option>
+                                           <option value="check-out">Check Out</option>
+                                           <option value="check-in">Check In</option>
+                                           <option value="transfer">Transfer</option>
+                                    </select>   
 <!-- EQUIP LOSS STOLEN -->
+<div class="lsd-<?= $safe_tag?>" style="display: none;">
+    <select id="lsd-who-<?=$safe_tag?>">
+        <option value="Myself">Myself</option>
+        <option value="someone-else">I am initiating this submission on behalf of</option>
+    </select>
+<br>
+    <input type="text" id="lsd-fill-for<?=$safe_tag?>" placeholder="Email of Borrower">
+<br>
+    <select id="lsd-position-<?=$safe_tag?>">
+        <option value="Staff/Faculty">Staff/Faculty</option>
+        <option value="Student">Student</option>
+    </select>
+<br>
+    <select id="lsd-<?=$safe_tag?>">
+        <option value="Lost">Lost</option>
+        <option value="Stolen">Stolen</option>
+        <option value="Destroyed">Destroyed</option>
+    </select>
+<br>
+    <textarea id="lsd-narrative-<?=$safe_tag?>" placeholder="Detail Narrative..."></textarea>
+<br>
+    <label>Reported to UPD?</label>
+    <select id="upd-<?=$safe_tag?>">
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+    </select>
+<br>
+    <select id="item-type-<?=$safe_tag?>">
+        <option value="IT Equipment">IT Equipment</option>
+        <option value="Instructional Equipment">Instructional Equipment</option>
+        <option value="Other">Other</option>
+    </select>
+<br>
+</div>
+<!-- -->
 
-<!-- CHECK OUT -->
+<!-- CHECK OUT/IN -->
+<div class="check-<?= $safe_tag?>" style="display: none;">
+    <select id="who-<?=$safe_tag?>">
+        <option value="myself">Myself</option>
+        <option value="someone-else">Someone Else</option>
+    </select>
+    <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
+    <select id="check-condition-<?=$safe_tag?>">
+        <option value="new">New</option>
+        <option value="good">Good</option>
+        <option value="used">Used</option>
+        <option value="damanged">Damaged</option>
+    </select>
+    <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
+</div>
+<!-- -->
 
 <!-- TRANSFER -->
+<div class="transfer-<?= $safe_tag?>" style="display: none;">
+<!-- HAVE NOT STARTED SOLO TRANSFER -->
+</div>
+<!-- -->
 
 <!-- PSR -->
-                        <select name="reason" id="reason">
-                            <option value=""></option>
-                            <option value="lsd">Lost/Stolen/Damaged</option>
-                            <option value="psr">Proper Disposal</option>
-                        </select>
-                        <br>
-                        <label for="check-form">Check Form (if applicable):</label><br>
-                        <select name="check-forms" id="check-form">
-                            <option value=""></option>
-                            <option value="out">Check Out</option>
-                            <option value="in">Check In</option>
-                        </select>
-                        <select name="condition" id="condition">
-                            <option value=""></option>
-                            <option value="new">New</option>
-                            <option value="good">Good</option>
-                            <option value="used">Used</option>
-                            <option value="damaged">Damaged</option>
-                        </select>
-                        <select name="device" id="device">
-                            <option value=""></option>
-                            <option value="laptop">Laptop</option>
-                            <option value="desktop">Desktop</option>
-                            <option value="tablet">Tablet</option>
-                        </select>
-                        <select name="dept" id="dept">
-                            <option value=""></option>
-                            <?php foreach ($dept2 as $id) { ?>
-                                <option value="<?= $id ?>"><?= $id ?></option>
-                            <?php } ?>
-                        </select>
-                        <input type="search" list="check-form-names" name="check-form-names" id="check-form-names" placeholder="Start typing a name...">
-                        <datalist id="check-form-names">
-<?php
-        $select = "SELECT full_name, dept_id FROM kuali_info ORDER BY full_name ASC";
-        $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute();
-        $users = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($users as $user) {
-            $full_name = $user['full_name'];
-?>
-                                <option value="<?= $full_name ?>"><?= $full_name ?> (<?= $user['dept_id'] ?>)</option>
-                            <?php } ?>
-                        </datalist>
-                        <br>
+<div class="psr-<?= $safe_tag?>" style="display: none;">
+    <select id="psr-code-<?= $safe_tag ?>">
+        <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)">UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)</option>
+        <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)">VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)</option>
+        <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10">SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10</option>
+        <option value="LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)">LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)</option>
+        <option value="TO BE CANABALIZED (SALVAGED FOR PARTS)">TO BE CANABALIZED (SALVAGED FOR PARTS)</option>
+        <option value="SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)">SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)</option>
+        <option value="DONATION OF COMPUTERS FOR SCHOOLS PROGRAM">DONATION OF COMPUTERS FOR SCHOOLS PROGRAM</option>
+        <option value="SALE (SEE SAM SECTION 3520)">SALE (SEE SAM SECTION 3520)</option>
+        <option value="TRADE-IN (SHOW TRADE-IN PRICE OFFERED)">TRADE-IN (SHOW TRADE-IN PRICE OFFERED)</option>
+    </select>
+    <br>
+    <input type="text" id="psr-reason-<?=$safe_tag?>" placeholder="Reason for form...">
+    <br>
+</div>
+<!-- -->
                                     <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
                                     <button type="submit">Update Asset</button>
                                 </form>
@@ -216,7 +249,67 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                     </div>
                 </div>
 <?php } ?>
+        <script>
+        function hideUI (type, tag) 
+        {
+            const form = document.querySelectorAll('.'+type+'-'+tag);
+            form.forEach(row => {
+                row.style.display = 'none';
+            });
+        }
+            document.addEventListener('DOMContentLoaded', function() {
+                const form-selection = document.querySelectorAll('.forms-needed');
+                form-selection.forEach(form_type => {
+                    form_type.addEventListener("change", () => {
+                    const type_value = form_type.value;
+                    const tag = form_type.dataset.tag;
+                    if (type_value === 'check-out') {
+                        document.querySelector('.check-'+tag).style.display = 'inline';
+                        const someone_else = document.getElementById('who-'+tag);
+                        someone_else.addEventListener('change', () => {
+                            if (someone_else.value === 'someone-else') {
+                                document.getElementById('someone-else-'+tag).style.display = 'inline';
+                            } else {
+                                document.getElementById('someone-else-'+tag).style.display = 'none';
+                            }
+                        });
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                        hideUI('psr', tag);
+                    }
+                    if (type_value === 'psr') {
+                        document.querySelector('.psr-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                    }
+                    if (type_value === 'lsd') {
+                        document.querySelector('.psr-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                        const someone_else = document.getElementById('lsd-who-'+tag);
+                        someone_else.addEventListener('change', () => {
+                            if (someone_else.value === 'someone-else') {
+                                document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
+                            } else {
+                                document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
+                            }
+                        });
+                    }
+                    if (type_value === 'transfer') {
+                        document.querySelector('.transfer-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('psr', tag);
+                    }
 
+
+
+
+
+
+        </script>
 <?php
 }
 

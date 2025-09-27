@@ -38,7 +38,7 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['Found Note'] = $session['Found Note'];
         if ($tag['who'] === 'Myself') {
             $myself = true;
-        } else if ($tag['who'] === 'Someone Else' && !empty($tag['borrower'])) {
+        } else if ($tag['who'] === 'someone-else' && !empty($tag['borrower'])) {
             $someone_else = true;
         }
         break;
@@ -305,7 +305,7 @@ if ($lsd_data['who'] === 'Myself') {
         'status' => 'completed'
     ]
     ]);
-} else if ($lsd_data['who'] === 'Someone else') {
+} else if ($lsd_data['who'] === 'someone-else') {
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',

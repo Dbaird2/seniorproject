@@ -97,9 +97,9 @@ check_auth();
 </td>
 <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
 <select id="item-type-<?=$row['Tag Number']?>">
-        <option value="IT Equipment"></option>
-        <option value="Instructional Equipment"></option>
-        <option value="Other"></option>
+        <option value="IT Equipment">IT Equipment</option>
+        <option value="Instructional Equipment">Instructional Equipment</option>
+        <option value="Other">Other</option>
     </select>
 </td>
 </div>
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
         hideUI('bulk-transfer', tag);
     }
     if (form_type.value === 'check-in') {
-        someone_else = document.querySelector('.who-'+tag);
+        const someone_else = document.querySelector('.who-'+tag);
         someone_else.addEventListener('change', () => {
         console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function() {
         hideUI('bulk-transfer', tag);
     }
     if (form_type.value === 'lsd') {
-        someone_else = document.getElementById('lsd-who-'+tag);
+        const someone_else = document.getElementById('lsd-who-'+tag);
         someone_else.addEventListener('change', () => {
         console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
