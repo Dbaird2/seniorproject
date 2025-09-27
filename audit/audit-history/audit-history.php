@@ -21,6 +21,7 @@ include_once("../../config.php");
     $type = $_POST['audit_type'];
     $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
     $and = $status_search === '' ? '' : ' AND ';
+    echo $type . "<br>";
     if ($type === 'SPA Audits') {
         $id = $curr_results['curr_spa_id'];
         $prev_id = ($id === 7) ? 8 : 7;
@@ -153,7 +154,7 @@ include_once("../../config.php");
         $audit_type[5] = 'Management Audit';
         $audit_type[6] = 'Overdue Management Audit';
     }
-    if ($curr_results['curr_spa_id'] === 8) {
+    if ($curr_results['curr_spa_id'] === 7) {
         $audit_type[7] = 'SPA Audit';
         $audit_type[8] = 'Previous SPA Audit';
         $audit_type[9] = 'Overdue SPA Audit';
