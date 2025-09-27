@@ -59,8 +59,10 @@ try {
             $sheet->setCellValue('B'.$index, $row['Tag Number']);
             $sheet->setCellValue('C'.$index, $row['Tag Status']);
             $sheet->setCellValue('D'.$index, $row['Found Room Tag']);
-            $sheet->setCellValue('E'.$index, $row['Found Room Number']) ?? 'N/A';
-            $sheet->setCellValue('F'.$index, $row['Found Building Name']) ?? 'N/A';
+            if (!empty($row['Found Room Number'])) {
+                $sheet->setCellValue('E'.$index, $row['Found Room Number']) ?? 'N/A';
+                $sheet->setCellValue('F'.$index, $row['Found Building Name']) ?? 'N/A';
+            }
             $sheet->setCellValue('G'.$index, $row['Found Note']);
             $sheet->setCellValue('H'.$index, $row['Found Timestamp']);
             $sheet->setCellValue('I'.$index, $row['Descr']);
