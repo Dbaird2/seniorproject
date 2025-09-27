@@ -520,6 +520,7 @@ if ($total_pages > 2) { ?>
         }
             document.addEventListener('DOMContentLoaded', function() {
                 const form_selection = document.querySelectorAll('.forms-needed');
+                console.log(form_selection);
                 form_selection.forEach(form_type => {
                     form_type.addEventListener("change", () => {
                     const type_value = form_type.value;
