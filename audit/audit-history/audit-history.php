@@ -21,7 +21,6 @@ include_once("../../config.php");
     $type = $_POST['audit_type'];
     $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
     $and = $status_search === '' ? '' : ' AND ';
-    echo $type . "<br>";
     if ($type === 'SPA Audits') {
         $id = $curr_results['curr_spa_id'];
         $prev_id = ($id === 7) ? 8 : 7;
@@ -66,7 +65,7 @@ include_once("../../config.php");
     $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $count = 0;
-    if (count($audits) > 0) {
+    if (count($departments) > 0) {
     ?>
         <table class="is-history" id="is-history">
             <thead>
