@@ -564,5 +564,8 @@ if ($total_pages > 2) { ?>
                         hideUI('lsd', tag);
                         hideUI('psr', tag);
                     }
+                });
+                });
+            });
         </script>
 </body>
