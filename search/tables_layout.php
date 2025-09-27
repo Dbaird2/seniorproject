@@ -160,6 +160,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                            <option value="check-in">Check In</option>
                                            <option value="transfer">Transfer</option>
                                     </select>   
+<br>
 <!-- EQUIP LOSS STOLEN -->
 <div class="lsd-<?= $safe_tag?>" style="display: none;">
     <select id="lsd-who-<?=$safe_tag?>">
@@ -249,67 +250,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                     </div>
                 </div>
 <?php } ?>
-        <script>
-        function hideUI (type, tag) 
-        {
-            const form = document.querySelectorAll('.'+type+'-'+tag);
-            form.forEach(row => {
-                row.style.display = 'none';
-            });
-        }
-            document.addEventListener('DOMContentLoaded', function() {
-                const form_selection = document.querySelectorAll('.forms-needed');
-                form_selection.forEach(form_type => {
-                    form_type.addEventListener("change", () => {
-                    const type_value = form_type.value;
-                    const tag = form_type.dataset.tag;
-                    if (type_value === 'check-out') {
-                        document.querySelector('.check-'+tag).style.display = 'inline';
-                        const someone_else = document.getElementById('who-'+tag);
-                        someone_else.addEventListener('change', () => {
-                            if (someone_else.value === 'someone-else') {
-                                document.getElementById('someone-else-'+tag).style.display = 'inline';
-                            } else {
-                                document.getElementById('someone-else-'+tag).style.display = 'none';
-                            }
-                        });
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                        hideUI('psr', tag);
-                    }
-                    if (type_value === 'psr') {
-                        document.querySelector('.psr-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                    }
-                    if (type_value === 'lsd') {
-                        document.querySelector('.psr-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                        const someone_else = document.getElementById('lsd-who-'+tag);
-                        someone_else.addEventListener('change', () => {
-                            if (someone_else.value === 'someone-else') {
-                                document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
-                            } else {
-                                document.querySelector('lsd-fill-for-'+tag).style.display = 'inline';
-                            }
-                        });
-                    }
-                    if (type_value === 'transfer') {
-                        document.querySelector('.transfer-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('psr', tag);
-                    }
-
-
-
-
-
-
-        </script>
 <?php
 }
 
