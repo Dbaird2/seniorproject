@@ -722,7 +722,7 @@ function showFormType(form)
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
                 document.qeurySelector("bus-change-"+tag).style.display = 'none';
             }
-        }
+        });
     }
 
 }
