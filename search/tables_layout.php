@@ -6,6 +6,7 @@ include_once "../config.php";
 <?php
 function asset_layout($result, $header_true, $row_num)
 {
+    global $dbh;
 ?>
     <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
