@@ -7,7 +7,35 @@ include_once "../config.php";
 function asset_layout($result, $header_true, $row_num)
 {
     global $dbh;
+$select = "select dept_name, dept_id FROM department";
+$select_stmt = $dbh->query($select);
+$dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+        <datalist name="dept-names">
+             <?php foreach ($dept_info as $dept) { ?>
+                 <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
+            <?php } ?>
+        </datalist>
+<?php 
+$select = "select bldg_name, bldg_id FROM bldg_table";
+$select_stmt = $dbh->query($select);
+$bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+        <datalist name="bldg-names">
+             <?php foreach ($bldg_info as $bldg) { ?>
+                 <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
+            <?php } ?>
+        </datalist>
+<?php 
+$select = "select bldg_id, room_loc FROM room_table";
+$select_stmt = $dbh->query($select);
+$room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+        <datalist name="room-names">
+         <?php foreach ($room_info as $room) { ?>
+             <option value="<?=$room['room_loc'] . '-' . $room['bldg_id']?>"><?= $room['room_loc'] ?></option>
+        <?php } ?>
+        </datalist>
     <section class="is-ajax" id="is-ajax" style="opacity: 0;">
             <table id="asset-table">
                 <thead>
@@ -173,7 +201,7 @@ foreach ($all_bus as $bus) {
         <option value="someone-else">I am initiating this submission on behalf of</option>
     </select>
 <br>
-    <input type="text" id="lsd-fill-for-<?=$safe_tag?>" placeholder="Email of Borrower">
+    <input type="text" id="lsd-fill-for-<?=$safe_tag?>" placeholder="Email of Borrower" style="display:none;">
 <br>
     <select id="lsd-position-<?=$safe_tag?>">
         <option value="Staff/Faculty">Staff/Faculty</option>
@@ -236,41 +264,11 @@ foreach ($all_bus as $bus) {
 </div>
     <div class="dept-change-<?=$safe_tag?>" style="display:none;">
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
-<?php 
-$select = "select dept_name, dept_id FROM department";
-$select_stmt = $dbh->query($select);
-$dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-        <datalist name="dept-names">
-             <?php foreach ($dept_info as $dept) { ?>
-                 <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
-            <?php } ?>
-        </datalist>
     </div>
 
     <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
-<?php 
-$select = "select bldg_name, bldg_id FROM bldg_table";
-$select_stmt = $dbh->query($select);
-$bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-        <datalist name="bldg-names">
-             <?php foreach ($bldg_info as $bldg) { ?>
-                 <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
-            <?php } ?>
-        </datalist>
         <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
-<?php 
-$select = "select bldg_id, room_loc FROM room_table";
-$select_stmt = $dbh->query($select);
-$room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-        <datalist name="room-names">
-         <?php foreach ($room_info as $room) { ?>
-             <option value="<?=$room['room_loc'] . '-' . $room['bldg_id']?>"><?= $room['room_loc'] ?></option>
-        <?php } ?>
-        </datalist>
     </div>
     <div class="bus-change-<?=$safe_tag?>" style="display:none;">
         <input type="text" id="transfer-why-<?=$safe_tag?>">
@@ -285,8 +283,6 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- -->
 
-                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 <!-- PSR -->
 <div class="psr-<?= $safe_tag?>" style="display: none;">
     <select id="psr-code-<?= $safe_tag ?>">
