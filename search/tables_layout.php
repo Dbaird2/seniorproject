@@ -656,6 +656,13 @@ foreach ($result as $row) {
 }
 ?>
 <script>
+function hideUI (type, tag)
+{
+    const form = document.querySelectorAll('.'+type+'-'+tag);
+        form.forEach(row => {
+            row.style.display = 'none';
+    });
+}
 function showFormType(form) 
 {
     const tag = form.dataset.tag;
