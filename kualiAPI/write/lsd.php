@@ -64,8 +64,9 @@ $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $school_id = $submitter_info['school_id'] ?? '';
 $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
+$email_array = explode('@', $email);
 if (empty($school_id) || empty($form_id)) {
-    searchName($full_name);
+    searchName($email_array[0]);
     $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
     $email = $_SESSION['email'];
     $select_stmt = $dbh->prepare($select);
@@ -119,16 +120,17 @@ if (!empty($lsd_data['borrower'])) {
         $get_borrower_stmt = $dbh->prepare($get_mana_info);
         $get_borrower_stmt->execute([":full_name"=>$lsd_data['borrower']]);
         $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
+        $bor_email_array = explode('@', $lsd_data['borrower']);
         if (empty($borrower_info['form_id']) || empty($borrower_info['school_id'])) {
             // SEARCH CUST IN KUALI
-            searchName($lsd_data['borrower']);
+            searchName($bor_email_array[0]);
             $get_borrower_stmt = $dbh->prepare($get_mana_info);
             $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
             $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         }
     } catch (PDOException $e) {
         // CUST DID NOT MATCH
-        searchName($lsd_data['borrower']);
+        searchName($bor_email_array[0]);
         $get_borrower_stmt = $dbh->prepare($get_mana_info);
         $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
         $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);

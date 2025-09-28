@@ -116,7 +116,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="crud/change_asset_info.php" method="post">
                                 <input type="hidden" id="old_tag" name="old_tag" value="<?= $safe_tag ?>">
                                 <input type="hidden" id="old_name" name="old_name" value="<?= $safe_name?>">
                                 <input type="hidden" id="old_dept" name="old_dept" value="<?= $safe_deptid ?>">
@@ -169,7 +168,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         <option value="someone-else">I am initiating this submission on behalf of</option>
     </select>
 <br>
-    <input type="text" id="lsd-fill-for<?=$safe_tag?>" placeholder="Email of Borrower">
+    <input type="text" id="lsd-fill-for-<?=$safe_tag?>" placeholder="Email of Borrower">
 <br>
     <select id="lsd-position-<?=$safe_tag?>">
         <option value="Staff/Faculty">Staff/Faculty</option>
@@ -241,8 +240,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 </div>
 <!-- -->
                                     <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                    <button type="submit">Update Asset</button>
-                                </form>
+                                    <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -582,7 +580,7 @@ foreach ($result as $row) {
                                     <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept ?>">
                                     <br>
                                     <button type="submit" value="<?= $email ?>" name="delete-user">Delete User</button>
-                                    <button type="submit" name="user">Update User</button>
+                                    <button data-tag="<?$safe_tag?>"  type="submit" name="user">Update User</button>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -596,56 +594,6 @@ foreach ($result as $row) {
 }
 ?>
 <script>
- document.addEventListener('DOMContentLoaded', function() {
-                const form_selection = document.querySelectorAll('.forms-needed');
-                console.log('forms-needed', form_selection);
-                form_selection.forEach(form_type => {
-                    form_type.addEventListener("change", () => {
-                    const type_value = form_type.value;
-                    const tag = form_type.dataset.tag;
-                    if (type_value === 'check-out') {
-                        document.querySelector('.check-'+tag).style.display = 'inline';
-                        const someone_else = document.getElementById('who-'+tag);
-                        someone_else.addEventListener('change', () => {
-                            if (someone_else.value === 'someone-else') {
-                                document.getElementById('someone-else-'+tag).style.display = 'inline';
-                            } else {
-                                document.getElementById('someone-else-'+tag).style.display = 'none';
-                            }
-                        });
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                        hideUI('psr', tag);
-                    }
-                    if (type_value === 'psr') {
-                        document.querySelector('.psr-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                    }
-                    if (type_value === 'lsd') {
-                        document.querySelector('.psr-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('transfer', tag);
-                        const someone_else = document.getElementById('lsd-who-'+tag);
-                        someone_else.addEventListener('change', () => {
-                            if (someone_else.value === 'someone-else') {
-                                document.getElementById('lsd-fill-for-'+tag).style.display = 'inline';
-                            } else {
-                                document.getElementById('lsd-fill-for-'+tag).style.display = 'none';
-                            }
-                        });
-                    }
-                    if (type_value === 'transfer') {
-                        document.querySelector('.transfer-'+tag).style.display = 'inline';
-                        hideUI('check', tag);
-                        hideUI('lsd', tag);
-                        hideUI('psr', tag);
-                    }
-                });
-                });
-            });
 function showFormType(form) 
 {
     const tag = form.dataset.tag;
@@ -691,5 +639,134 @@ function showFormType(form)
         hideUI('psr', tag);
     }
 
+}
+function sendForm(type) 
+{
+    const tag = type.dataset.tag;
+    const type = document.getElementById('form-select-'+tag).value;
+    if (type == 'lsd') {
+        // GET FORM INFO
+        // SEND FORM THROUGH PROMISE
+        // DISPLAY MSG THROUGH TOAST
+        const who = document.getElementById("lsd-who-"+tag).value;
+        const borrower = document.getElementById("lsd-fill-for-"+tag).value;
+        const position = document.getElementById("lsd-position-"+tag).value;
+        const lsd = document.getElementById("lsd-"+tag).value;
+        const reason = document.getElementById("lsd-narrative-"+tag).value;
+        const upd = document.getElementById("upd-"+tag).value;
+        const item_type = document.getElementById("item-type-"+tag).value;
+
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+        const lsd_res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, who: who, borrower: borrower, position: position,
+                lsd: lsd, reason: reason })
+        });
+        if (!lsd_res.ok) {
+            const text = await lsd_res.text();
+            throw new Error(`HTTPS ${lsd_res.status}: ${text}`);
+        } else {
+            const clone = lsd_res.clone();
+            try {
+                const data = await lsd_res.json();
+                console.log('LSD data reponse: ', data);
+            } catch {
+                const text = await clone.text();
+                console.log('LSD text response: ', text);
+            }
+        }
+    } else if (type === 'psr') {
+
+        const code = document.getElementById("psr-code-"+tag).value;
+        const reason = document.getElementById("psr-reason-"+tag).value;
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
+        const psr_res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, 
+                code: code,
+                reason: reason
+            })
+        });
+        if (!psr_res.ok) {
+            const text = await psr_res.text();
+            throw new Error(`HTTPS ${psr_res.status}: ${text}`);
+        } else {
+            const clone = psr_res.clone();
+            try {
+                const data = await psr_res.json();
+                console.log('PSR data reponse: ', data);
+            } catch {
+                const text = await clone.text();
+                console.log('PSR text response: ', text);
+            }
+        }
+
+    } else if (type === 'check-out') {
+        const check_type = document.getElementById("who-"+tag).value;
+        const borrower = document.getElementById("someone-else-"+tag).value;
+        const condition = document.getElementById("check-condition-"+tag).value;
+        const notes = document.getElementById("check-notes-"+tag).value;
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
+        const out_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, 
+            type: check_type,
+            borrower: borrower,
+            condition: condition,
+            notes: notes
+        })
+        });
+        if (!out_res.ok) {
+            const text = await out_res.text();
+            throw new Error(`HTTPS ${out_res.status}: ${text}`);
+        } else {
+            const clone = out_res.clone();
+            try {
+                const data = await out_res.json();
+                console.log('Check-Out data reponse: ', data);
+            } catch {
+                const text = await clone.text();
+                console.log('Check-Out text response: ', text);
+            }
+        }
+
+    } else if (type === 'check-in') {
+        const check_type = document.getElementById("who-"+tag).value;
+        const borrower = document.getElementById("someone-else-"+tag).value;
+        const condition = document.getElementById("check-condition-"+tag).value;
+        const notes = document.getElementById("check-notes-"+tag).value;
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-in.php";
+        const in_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, 
+            type: check_type,
+            borrower: borrower,
+            condition: condition,
+            notes: notes
+        })
+        });
+        if (!in_res.ok) {
+            const text = await in_res.text();
+            throw new Error(`HTTPS ${in_res.status}: ${text}`);
+        } else {
+            const clone = in_res.clone();
+            try {
+                const data = await in_res.json();
+                console.log('Check-In data reponse: ', data);
+            } catch {
+                const text = await clone.text();
+                console.log('Check-In text response: ', text);
+            }
+        }
+
+    } else if (type === 'transfer') {
+
+    }
+
+    
 }
 </script>

@@ -70,7 +70,7 @@ check_auth();
 </select>
 </td>
 <td class="lsd-fill-<?= $row['Tag Number']?>" style="display:none;">
-<input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>" placeholder="Full Name">
+<input type="text" id="lsd-fill-for-<?=$row['Tag Number'] ?>" placeholder="Email of borrower...">
 </td>
 <td class="lsd-<?= $row['Tag Number']?>" style="display:none;">
 <select id="lsd-position-<?=$row['Tag Number'] ?>">
