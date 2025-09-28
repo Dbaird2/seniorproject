@@ -703,21 +703,21 @@ function showFormType(form)
     }
     if (type_value === 'transfer') {
         document.querySelector('.transfer-'+tag).style.display = 'inline';
-        const form_type = document.getElementById("transfer-form-type-"+tag).value;
+        const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
         hideUI('check', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
-        form_type.addEventListener('change', () => {
-            if (form_type === 'bus-change') {
+        transfer_form_type.addEventListener('change', () => {
+            if (transfer_form_type === 'bus-change') {
                 document.qeurySelector("bus-change-"+tag).style.display = 'inline';
                 document.querySelector("dept-change-"+tag).style.display = 'none';
                 document.querySelector("room-dept-change-"+tag).style.display = 'none';
 
-            } else if (form_type === 'bldg-room-change') {
+            } else if (transfer_form_type === 'bldg-room-change') {
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
                 document.qeurySelector("bus-change-"+tag).style.display = 'none';
 
-            } else if (form_type === 'dept-change') {
+            } else if (transfer_form_type === 'dept-change') {
                 document.querySelector("dept-change-"+tag).style.display = 'inline';
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
                 document.qeurySelector("bus-change-"+tag).style.display = 'none';
@@ -850,7 +850,7 @@ function sendForm(type)
         }
 
     } else if (type === 'transfer') {
-        const form_type = document.getElementById("transfer-form-type-"+tag).value;
+        const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
         const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
         const dept = document.getElementById("transfer-dept-"+tag).value;
         const bldg = document.getElementById("transfer-bldg-"+tag).value;
