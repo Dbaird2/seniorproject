@@ -104,6 +104,15 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         $safe_serial = htmlspecialchars($row['serial_num'] ?? '', ENT_QUOTES);
         $bldg_name = htmlspecialchars($row['bldg_name'] ?? '', ENT_QUOTES);
         $room_loc = htmlspecialchars($row['room_loc'] ?? '', ENT_QUOTES);
+        $bus_unit = htmlspecialchars($row['bus_unit'] ?? '', ENT_QUOTES);
+        $all_bus = [['BKCMP'], ['BKSPA'], ['BKASI'], ['BKSTU'], ['BKFDN']];
+        $extra_bus = [];
+        foreach ($all_bus as $bus) {
+            if ($bus_unit == $bus) {
+                continue;
+            }
+            $extra_bus[] = $bus;
+        }
 ?>
                 <div id="modal<?= $safe_tag ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $safe_tag; ?>" aria-hidden="true">
                     <!-- Modal content -->
@@ -218,6 +227,66 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 <!-- TRANSFER -->
 <div class="transfer-<?= $safe_tag?>" style="display: none;">
 <!-- HAVE NOT STARTED SOLO TRANSFER -->
+    <select id="transfer-form-type-<?= $safe_tag ?>">
+        <option value='bus-change'>Business Unit Change</option>
+        <option value='bldg-room-change'>Building/Room/Location change</option>
+        <option value='dept-change'>Department Change</option>
+    </select>
+    <select id="transfer-in-bldg-<?=$safe_tag?>">
+        <option value='Yes'>Yes</option>
+        <option value='No'>No</option>
+    </select>
+    <div class="dept-change-<?=$safe_tag?>" style="display:none;">
+        <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
+        <?php 
+            $select = "select dept_name, dept_id FROM departments";
+            $select_stmt = $dbh->query($select);
+            $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+        <datalist name="dept-names">
+             <?php foreach ($dept_info as $dept): ?>
+                 <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
+            <?php endforeach ?>
+        </datalist>
+    </div>
+        
+    <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
+        Optional
+        <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
+        <?php 
+            $select = "select bldg_name, bldg_id FROM bldg_table";
+            $select_stmt = $dbh->query($select);
+            $bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+        <datalist name="bldg-names">
+             <?php foreach ($bldg_info as $bldg): ?>
+                 <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
+            <?php endforeach ?>
+        </datalist>
+        <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
+        <?php 
+            $select = "select bldg_id, room_loc FROM room_table";
+            $select_stmt = $dbh->query($select);
+            $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+        <datalist name="room-names">
+         <?php foreach ($room_info as $room): ?>
+             <option value="<?=$room['room_loc'] . '-' . $bldg['bldg_id']?>"><?= $bldg['room_loc'] ?></option>
+        <?php endforeach; ?>
+        </datalist>
+    </div>
+    <div class="bus-change-<?=$safe_tag?>" style="display:none;">
+        <input type="text" id="transfer-why-<?=$safe_tag?>">
+        <select id='new-bus-<?=$safe_tag?>'>
+            <?php foreach ($extra_bus as $bus): ?>
+                <option value="<?=$bus?>"><?=$bus?></option>
+            <?php endforeach; ?>
+        </select>
+        
+    </div>
+    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes...">
+
+        
 </div>
 <!-- -->
 
@@ -634,9 +703,26 @@ function showFormType(form)
     }
     if (type_value === 'transfer') {
         document.querySelector('.transfer-'+tag).style.display = 'inline';
+        const form_type = document.getElementById("transfer-form-type-"+tag).value;
         hideUI('check', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
+        form_type.addEventListener('change', () => {
+            if (form_type === 'bus-change') {
+                document.qeurySelector("bus-change-"+tag).style.display = 'inline';
+                document.querySelector("dept-change-"+tag).style.display = 'none';
+                document.querySelector("room-dept-change-"+tag).style.display = 'none';
+
+            } else if (form_type === 'bldg-room-change') {
+                document.querySelector("room-dept-change-"+tag).style.display = 'inline';
+                document.qeurySelector("bus-change-"+tag).style.display = 'none';
+
+            } else if (form_type === 'dept-change') {
+                document.querySelector("dept-change-"+tag).style.display = 'inline';
+                document.querySelector("room-dept-change-"+tag).style.display = 'inline';
+                document.qeurySelector("bus-change-"+tag).style.display = 'none';
+            }
+        }
     }
 
 }
@@ -764,9 +850,14 @@ function sendForm(type)
         }
 
     } else if (type === 'transfer') {
+        const form_type = document.getElementById("transfer-form-type-"+tag).value;
+        const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
+        const dept = document.getElementById("transfer-dept-"+tag).value;
+        const bldg = document.getElementById("transfer-bldg-"+tag).value;
+        const room = document.getElementById("transfer-room-"+tag).value;
+        const why = document.getElementById("transfer-why-"+tag).value;
+        const notes = document.getElementById("transfer-notes-"+tag).value;
 
     }
-
-    
 }
 </script>
