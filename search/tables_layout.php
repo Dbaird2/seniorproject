@@ -246,7 +246,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         <datalist name="dept-names">
              <?php foreach ($dept_info as $dept): ?>
                  <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
-            <?php endforeach ?>
+            <?php endforeach; ?>
         </datalist>
     </div>
         
@@ -261,7 +261,7 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
         <datalist name="bldg-names">
              <?php foreach ($bldg_info as $bldg): ?>
                  <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
-            <?php endforeach ?>
+            <?php endforeach; ?>
         </datalist>
         <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
         <?php 
