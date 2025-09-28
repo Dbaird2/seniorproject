@@ -228,7 +228,7 @@ foreach ($all_bus as $bus) {
         <option value='Yes'>Yes</option>
         <option value='No'>No</option>
     </select>
-    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes...">
+    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
     <div class="dept-change-<?=$safe_tag?>" style="display:none;">
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
@@ -264,7 +264,7 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist name="room-names">
          <?php foreach ($room_info as $room): ?>
-             <option value="<?=$room['room_loc'] . '-' . $bldg['bldg_id']?>"><?= $bldg['room_loc'] ?></option>
+             <option value="<?=$room['room_loc'] . '-' . $room['bldg_id']?>"><?= $room['room_loc'] ?></option>
         <?php endforeach; ?>
         </datalist>
     </div>
@@ -298,9 +298,8 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
     <input type="text" id="psr-reason-<?=$safe_tag?>" placeholder="Reason for form...">
     <br>
 </div>
-<!-- -->
-                                    <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                    <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
+                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
+                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -701,24 +700,25 @@ function showFormType(form)
     }
     if (type_value === 'transfer') {
         document.querySelector('.transfer-'+tag).style.display = 'inline';
-        const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
+        const transfer_form_type_sel = document.getElementById("transfer-form-type-"+tag);
         hideUI('check', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
-        transfer_form_type.addEventListener('change', () => {
+        transfer_form_type_sel.addEventListener('change', () => {
+            const transfer_form_type = transfer_form_type_sel.value;
             if (transfer_form_type === 'bus-change') {
-                document.qeurySelector("bus-change-"+tag).style.display = 'inline';
+                document.querySelector("bus-change-"+tag).style.display = 'inline';
                 document.querySelector("dept-change-"+tag).style.display = 'none';
                 document.querySelector("room-dept-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'bldg-room-change') {
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
-                document.qeurySelector("bus-change-"+tag).style.display = 'none';
+                document.querySelector("bus-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'dept-change') {
                 document.querySelector("dept-change-"+tag).style.display = 'inline';
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
-                document.qeurySelector("bus-change-"+tag).style.display = 'none';
+                document.querySelector("bus-change-"+tag).style.display = 'none';
             }
         });
     }
