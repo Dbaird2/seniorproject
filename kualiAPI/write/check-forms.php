@@ -93,7 +93,7 @@ if ($check_type === "Checking Out Equipment") {
     $manager_stmt->execute([':full_name'=>$dept_info[0]['manager']]);
     $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     if (empty($manager_info['school_id']) || empty($manager_info['form_id'])) {
-        searchName($dept_info[0]['manager']};
+        searchName($dept_info[0]['manager']);
         $manager_info = "SELECT form_id, signature, f_name, l_name, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) as full_name = :full_name";
         $manager_stmt = $dbh->prepare($manager_info);
         $manager_stmt->execute([':full_name'=>$dept_info[0]['manager']]);
