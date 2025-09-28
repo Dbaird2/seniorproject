@@ -198,6 +198,8 @@ foreach ($all_bus as $bus) {
 <br>
 </div>
 <!-- -->
+                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
+                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
@@ -215,6 +217,8 @@ foreach ($all_bus as $bus) {
     <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
 <!-- -->
+                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
+                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 
 <!-- TRANSFER -->
 <div class="transfer-<?= $safe_tag?>" style="display: none;">
@@ -238,9 +242,9 @@ $select_stmt = $dbh->query($select);
 $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist name="dept-names">
-             <?php foreach ($dept_info as $dept): ?>
+             <?php foreach ($dept_info as $dept) { ?>
                  <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
-            <?php endforeach; ?>
+            <?php } ?>
         </datalist>
     </div>
 
@@ -252,9 +256,9 @@ $select_stmt = $dbh->query($select);
 $bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist name="bldg-names">
-             <?php foreach ($bldg_info as $bldg): ?>
+             <?php foreach ($bldg_info as $bldg) { ?>
                  <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
-            <?php endforeach; ?>
+            <?php } ?>
         </datalist>
         <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
 <?php 
@@ -263,17 +267,17 @@ $select_stmt = $dbh->query($select);
 $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist name="room-names">
-         <?php foreach ($room_info as $room): ?>
+         <?php foreach ($room_info as $room) { ?>
              <option value="<?=$room['room_loc'] . '-' . $room['bldg_id']?>"><?= $room['room_loc'] ?></option>
-        <?php endforeach; ?>
+        <?php } ?>
         </datalist>
     </div>
     <div class="bus-change-<?=$safe_tag?>" style="display:none;">
         <input type="text" id="transfer-why-<?=$safe_tag?>">
         <select id='new-bus-<?=$safe_tag?>'>
-            <?php foreach ($extra_bus as $bus): ?>
+            <?php foreach ($extra_bus as $bus) { ?>
                 <option value="<?=$bus?>"><?=$bus?></option>
-            <?php endforeach; ?>
+            <?php } ?>
         </select>
 
     </div>
@@ -281,6 +285,8 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- -->
 
+                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
+                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 <!-- PSR -->
 <div class="psr-<?= $safe_tag?>" style="display: none;">
     <select id="psr-code-<?= $safe_tag ?>">
@@ -664,7 +670,14 @@ function showFormType(form)
 {
     const tag = form.dataset.tag;
     const type_value = form.value;
-    if (type_value === 'check-out') {
+    if (type_value === '') {
+        hideUI('lsd', tag);
+        hideUI('transfer', tag);
+        hideUI('psr', tag);
+        hideUI('check', tag);
+    }
+
+    if (type_value === 'check-out' || type_value === 'check-in') {
         document.querySelector('.check-'+tag).style.display = 'inline';
         const someone_else = document.getElementById('who-'+tag);
         someone_else.addEventListener('change', () => {
