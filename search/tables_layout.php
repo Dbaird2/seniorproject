@@ -735,7 +735,7 @@ async function sendForm(type)
         const upd = document.getElementById("upd-"+tag).value;
         const item_type = document.getElementById("item-type-"+tag).value;
 
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php';
         const lsd_res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
