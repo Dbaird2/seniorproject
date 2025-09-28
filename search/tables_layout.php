@@ -729,8 +729,8 @@ function showFormType(form)
 function sendForm(type) 
 {
     const tag = type.dataset.tag;
-    const type = document.getElementById('form-select-'+tag).value;
-    if (type == 'lsd') {
+    const form_type = document.getElementById('form-select-'+tag).value;
+    if (form_type == 'lsd') {
         // GET FORM INFO
         // SEND FORM THROUGH PROMISE
         // DISPLAY MSG THROUGH TOAST
@@ -762,7 +762,7 @@ function sendForm(type)
                 console.log('LSD text response: ', text);
             }
         }
-    } else if (type === 'psr') {
+    } else if (form_type === 'psr') {
 
         const code = document.getElementById("psr-code-"+tag).value;
         const reason = document.getElementById("psr-reason-"+tag).value;
@@ -789,7 +789,7 @@ function sendForm(type)
             }
         }
 
-    } else if (type === 'check-out') {
+    } else if (form_type === 'check-out') {
         const check_type = document.getElementById("who-"+tag).value;
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
@@ -819,7 +819,7 @@ function sendForm(type)
             }
         }
 
-    } else if (type === 'check-in') {
+    } else if (form_type === 'check-in') {
         const check_type = document.getElementById("who-"+tag).value;
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
@@ -849,7 +849,7 @@ function sendForm(type)
             }
         }
 
-    } else if (type === 'transfer') {
+    } else if (form_type === 'transfer') {
         const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
         const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
         const dept = document.getElementById("transfer-dept-"+tag).value;
