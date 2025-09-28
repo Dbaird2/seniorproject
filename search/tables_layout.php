@@ -125,14 +125,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <input type="hidden" id="old_tag" name="old_tag" value="<?= $safe_tag ?>">
-                                <input type="hidden" id="old_name" name="old_name" value="<?= $safe_name?>">
-                                <input type="hidden" id="old_dept" name="old_dept" value="<?= $safe_deptid ?>">
-                                <input type="hidden" id="old_room_tag" name="old_room_tag" value="<?= $safe_room ?>">
-                                <input type="hidden" id="old_sn" name="old_sn" value="<?= $safe_serial ?>">
-                                <input type="hidden" id="old_price" name="old_price" value="<?= $safe_price ?>">
-                                <input type="hidden" id="old_po" name="old_po" value="<?= $safe_po ?>">
-<input type="hidden" id="old_status" name="old_status">
                                     <label for="asset_tag">Asset Tag:</label>
                                     <input type="text" id="asset_tag" name="asset_tag" value="<?= $safe_tag ?>" readonly>
                                     <br>
@@ -225,69 +217,6 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
 <!-- -->
 
 <!-- TRANSFER -->
-<div class="transfer-<?= $safe_tag?>" style="display: none;">
-<!-- HAVE NOT STARTED SOLO TRANSFER -->
-    <select id="transfer-form-type-<?= $safe_tag ?>">
-        <option value='bus-change'>Business Unit Change</option>
-        <option value='bldg-room-change'>Building/Room/Location change</option>
-        <option value='dept-change'>Department Change</option>
-    </select>
-    <select id="transfer-in-bldg-<?=$safe_tag?>">
-        <option value='Yes'>Yes</option>
-        <option value='No'>No</option>
-    </select>
-    <div class="dept-change-<?=$safe_tag?>" style="display:none;">
-        <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
-        <?php 
-            $select = "select dept_name, dept_id FROM departments";
-            $select_stmt = $dbh->query($select);
-            $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-        <datalist name="dept-names">
-             <?php foreach ($dept_info as $dept): ?>
-                 <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
-            <?php endforeach; ?>
-        </datalist>
-    </div>
-        
-    <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
-        Optional
-        <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
-        <?php 
-            $select = "select bldg_name, bldg_id FROM bldg_table";
-            $select_stmt = $dbh->query($select);
-            $bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-        <datalist name="bldg-names">
-             <?php foreach ($bldg_info as $bldg): ?>
-                 <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
-            <?php endforeach; ?>
-        </datalist>
-        <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
-        <?php 
-            $select = "select bldg_id, room_loc FROM room_table";
-            $select_stmt = $dbh->query($select);
-            $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-        ?>
-        <datalist name="room-names">
-         <?php foreach ($room_info as $room): ?>
-             <option value="<?=$room['room_loc'] . '-' . $bldg['bldg_id']?>"><?= $bldg['room_loc'] ?></option>
-        <?php endforeach; ?>
-        </datalist>
-    </div>
-    <div class="bus-change-<?=$safe_tag?>" style="display:none;">
-        <input type="text" id="transfer-why-<?=$safe_tag?>">
-        <select id='new-bus-<?=$safe_tag?>'>
-            <?php foreach ($extra_bus as $bus): ?>
-                <option value="<?=$bus?>"><?=$bus?></option>
-            <?php endforeach; ?>
-        </select>
-        
-    </div>
-    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes...">
-
-        
-</div>
 <!-- -->
 
 <!-- PSR -->

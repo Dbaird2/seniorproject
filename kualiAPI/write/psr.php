@@ -145,7 +145,7 @@ $headers = array(
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 $data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68c73600df46a3027d2bd386"
+"appId": "68d09dcd7688dc028af9b5e7"
       }}';
 
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);

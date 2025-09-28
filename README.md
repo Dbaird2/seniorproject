@@ -14,16 +14,15 @@ URL: https://dataworks-7b7x.onrender.com
 ## 🚀 Usage Instructions
 Only Management can create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
 ## To Do
-- Add delete features for assets and users
 - Help pages 
 - Complete audit page so you can check the type of form needed for each asset,
 insert into db the actionId's, check once a day to see if they're complete if
 all are complete, then change audit to complete
 - Create endpoints for phone fetch requests
 - Update location from TRANSFER FORMS (waiting on form fix)
+## Needs testing
 - Create TRANSFER, PSR, and CHECK-OUT forms from search page
 - Make auditing from other users profiles functionality work & make profile
   viewer as well
-## Needs testing
 - Audit updating
 - Updates from KUALI 

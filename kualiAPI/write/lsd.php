@@ -66,7 +66,7 @@ $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
 $email_array = explode('@', $email);
 if (empty($school_id) || empty($form_id)) {
-    searchName($email_array[0]);
+    searchName($full_name);
     $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
     $email = $_SESSION['email'];
     $select_stmt = $dbh->prepare($select);
@@ -123,14 +123,14 @@ if (!empty($lsd_data['borrower'])) {
         $bor_email_array = explode('@', $lsd_data['borrower']);
         if (empty($borrower_info['form_id']) || empty($borrower_info['school_id'])) {
             // SEARCH CUST IN KUALI
-            searchName($bor_email_array[0]);
+            searchName($lsd_data['borrower']);
             $get_borrower_stmt = $dbh->prepare($get_mana_info);
             $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
             $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         }
     } catch (PDOException $e) {
         // CUST DID NOT MATCH
-        searchName($bor_email_array[0]);
+        searchName($lsd_data['borrower']);
         $get_borrower_stmt = $dbh->prepare($get_mana_info);
         $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
         $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
@@ -161,7 +161,7 @@ $headers = array(
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 $data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68c73600df46a3027d2bd386"
+"appId": "68d09e41d599f1028a9b9457"
       }}';
 
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
