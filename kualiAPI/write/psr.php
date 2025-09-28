@@ -14,7 +14,7 @@ $index = 0;
 echo json_encode(['tags'=>$data]);
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
-foreach ($data['psr_tags'] as $tag) {
+foreach ($data['tag'] as $index=>$tag) {
     foreach($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag['tag']) {
             $select = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
@@ -38,14 +38,17 @@ foreach ($data['psr_tags'] as $tag) {
             $transfer_data[$index]['Tag Number'] = $tag['tag'];
             $transfer_data[$index]['Descr'] = $session['Descr'];
             $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
-            $transfer_data[$index]['code'] = $data['code'];
-            $transfer_data[$index]['reason'] = $data['reason'];
+            $transfer_data[$index]['code'] = $data['code'][$index];
+            $transfer_data[$index]['reason'] = $data['reason'][$index];
             break;
         }
     }
 }
-
-$dept_id = $_SESSION['info'][2];
+if ($data['from_page'][0] !== 'search') {
+    $dept_id = $_SESSION['info'][2];
+} else {
+    $dept_id = $_SESSION['dept_id'];
+}
 
 $subdomain = "csub";
 // SUBMITTER INFO

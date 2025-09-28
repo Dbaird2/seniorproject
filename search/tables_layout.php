@@ -754,7 +754,7 @@ async function sendForm(type)
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, who: who, borrower: borrower, position: position,
-                lsd: lsd, reason: reason })
+                lsd: lsd, reason: reason, from_page: 'search' })
         });
         if (!lsd_res.ok) {
             const text = await lsd_res.text();
@@ -779,7 +779,8 @@ async function sendForm(type)
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
                 code: code,
-                reason: reason
+                reason: reason,
+                from_page: 'search'
             })
         });
         if (!psr_res.ok) {
@@ -801,7 +802,7 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php';
         const out_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -809,7 +810,8 @@ async function sendForm(type)
             type: check_type,
             borrower: borrower,
             condition: condition,
-            notes: notes
+            notes: notes,
+            from_page: 'search'
         })
         });
         if (!out_res.ok) {
@@ -831,7 +833,7 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-in.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php';
         const in_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -839,7 +841,8 @@ async function sendForm(type)
             type: check_type,
             borrower: borrower,
             condition: condition,
-            notes: notes
+            notes: notes,
+            from_page : 'search'
         })
         });
         if (!in_res.ok) {

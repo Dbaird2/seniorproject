@@ -22,7 +22,11 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['Tag Number'] = $data['tag'];
         $lsd_data['Descr'] = $session['Descr'];
         $lsd_data['Serial ID'] = $session['Serial ID'];
-        $lsd_data['Make'] $tag_info['make'];
+        if (!empty($tag_info['make'])) {
+            $lsd_data['Make'] = $tag_info['make'];
+        } else {
+            $lsd_data['Make'] = 'N/A';
+        }
         $lsd_data['Model'] = $tag_info['asset_model'];
         $lsd_data['VIN'] = $session['VIN'];
         $lsd_data['Dept'] = $session['Dept'];
@@ -45,8 +49,11 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 
-
-$dept_id = $_SESSION['info'][2];
+if ($data['from_page'] !== 'search') {
+    $dept_id = $_SESSION['info'][2];
+} else {
+    $dept_id = $_SESSION['dept_id'];
+}
 
 $subdomain = "csub";
 // SUBMITTER INFO
