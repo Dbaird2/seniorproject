@@ -1,3 +1,6 @@
+<?php
+include_once "../config.php";
+?>
 <link rel="stylesheet" href="ajax.css">
 
 <?php
