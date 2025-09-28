@@ -719,7 +719,7 @@ function showFormType(form)
     }
 
 }
-function sendForm(type) 
+async function sendForm(type) 
 {
     const tag = type.dataset.tag;
     const form_type = document.getElementById('form-select-'+tag).value;
