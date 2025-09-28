@@ -198,8 +198,6 @@ foreach ($all_bus as $bus) {
 <br>
 </div>
 <!-- -->
-                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
@@ -217,11 +215,9 @@ foreach ($all_bus as $bus) {
     <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
 <!-- -->
-                                <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
 
 <!-- TRANSFER -->
-<div class="transfer-<?= $safe_tag?>" style="display: none;">
+<div class="transfer-<?= $safe_tag?>" style="display: inline;">
 <!-- HAVE NOT STARTED SOLO TRANSFER -->
     <select id="transfer-form-type-<?= $safe_tag ?>">
         <option value='bus-change'>Business Unit Change</option>
@@ -234,7 +230,7 @@ foreach ($all_bus as $bus) {
     </select>
     <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
-    <div class="dept-change-<?=$safe_tag?>" style="display:none;">
+    <div class="dept-change-<?=$safe_tag?>" style="display:inline;">
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
 <?php 
 $select = "select dept_name, dept_id FROM departments";
@@ -248,7 +244,7 @@ $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         </datalist>
     </div>
 
-    <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
+    <div class="room-dept-change-<?=$safe_tag?>" style="display:inline;">
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
 <?php 
 $select = "select bldg_name, bldg_id FROM bldg_table";
@@ -272,7 +268,7 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php } ?>
         </datalist>
     </div>
-    <div class="bus-change-<?=$safe_tag?>" style="display:none;">
+    <div class="bus-change-<?=$safe_tag?>" style="display:inline;">
         <input type="text" id="transfer-why-<?=$safe_tag?>">
         <select id='new-bus-<?=$safe_tag?>'>
             <?php foreach ($extra_bus as $bus) { ?>
