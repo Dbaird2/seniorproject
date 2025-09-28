@@ -153,7 +153,8 @@ echo "<td class=" . $color_class . ">" . $safe_po . "</td>";
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
-                                    <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>">
+                                    <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>" onchange="showFormType(this)">
+                                           <option value=""></option>
                                            <option value="psr">Property Survey Report</option>
                                            <option value="lsd">Equipment Lost/Stolen/Destroyed</option>
                                            <option value="check-out">Check Out</option>
@@ -594,5 +595,63 @@ foreach ($result as $row) {
 <?php
 }
 ?>
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+                const form_selection = document.querySelectorAll('.forms-needed');
+                console.log('forms-needed', form_selection);
+                form_selection.forEach(form_type => {
+                    form_type.addEventListener("change", () => {
+                    const type_value = form_type.value;
+                    const tag = form_type.dataset.tag;
+                    if (type_value === 'check-out') {
+                        document.querySelector('.check-'+tag).style.display = 'inline';
+                        const someone_else = document.getElementById('who-'+tag);
+                        someone_else.addEventListener('change', () => {
+                            if (someone_else.value === 'someone-else') {
+                                document.getElementById('someone-else-'+tag).style.display = 'inline';
+                            } else {
+                                document.getElementById('someone-else-'+tag).style.display = 'none';
+                            }
+                        });
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                        hideUI('psr', tag);
+                    }
+                    if (type_value === 'psr') {
+                        document.querySelector('.psr-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                    }
+                    if (type_value === 'lsd') {
+                        document.querySelector('.psr-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('transfer', tag);
+                        const someone_else = document.getElementById('lsd-who-'+tag);
+                        someone_else.addEventListener('change', () => {
+                            if (someone_else.value === 'someone-else') {
+                                document.getElementById('lsd-fill-for-'+tag).style.display = 'inline';
+                            } else {
+                                document.getElementById('lsd-fill-for-'+tag).style.display = 'none';
+                            }
+                        });
+                    }
+                    if (type_value === 'transfer') {
+                        document.querySelector('.transfer-'+tag).style.display = 'inline';
+                        hideUI('check', tag);
+                        hideUI('lsd', tag);
+                        hideUI('psr', tag);
+                    }
+                });
+                });
+            });
+function showFormType(form) 
+{
+    const tag = form.dataset.tag;
+    const form_type = form.value;
 
+    console.log("changed form type", tag, form_type);
 
+}
+</script>

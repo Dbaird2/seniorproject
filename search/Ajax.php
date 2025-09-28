@@ -546,9 +546,9 @@ if ($total_pages > 2) { ?>
                         hideUI('transfer', tag);
                     }
                     if (type_value === 'lsd') {
-                        document.querySelector('.psr-'+tag).style.display = 'inline';
+                        document.querySelector('.lsd-'+tag).style.display = 'inline';
                         hideUI('check', tag);
-                        hideUI('lsd', tag);
+                        hideUI('psr', tag);
                         hideUI('transfer', tag);
                         const someone_else = document.getElementById('lsd-who-'+tag);
                         someone_else.addEventListener('change', () => {
