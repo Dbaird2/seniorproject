@@ -654,7 +654,6 @@ foreach ($result as $row) {
 }
 ?>
 <script>
-/*
 function hideUI (type, tag)
 {
     const form = document.querySelectorAll('.'+type+'-'+tag);
@@ -859,5 +858,4 @@ async function sendForm(type)
 
     }
 }
-*/
 </script>

@@ -510,6 +510,4 @@ if ($total_pages > 2) { ?>
         }
 }
 ?>
-<script>
-        </script>
 </body>
