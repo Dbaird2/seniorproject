@@ -228,6 +228,7 @@ foreach ($all_bus as $bus) {
         <option value='Yes'>Yes</option>
         <option value='No'>No</option>
     </select>
+    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes...">
 </div>
     <div class="dept-change-<?=$safe_tag?>" style="display:none;">
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
@@ -244,7 +245,6 @@ $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
-        Optional
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
 <?php 
 $select = "select bldg_name, bldg_id FROM bldg_table";
@@ -277,7 +277,6 @@ $room_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
         </select>
 
     </div>
-    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes...">
 
 
 <!-- -->
@@ -655,6 +654,7 @@ foreach ($result as $row) {
 }
 ?>
 <script>
+/*
 function hideUI (type, tag)
 {
     const form = document.querySelectorAll('.'+type+'-'+tag);
@@ -687,9 +687,9 @@ function showFormType(form)
         hideUI('transfer', tag);
     }
     if (type_value === 'lsd') {
-        document.querySelector('.psr-'+tag).style.display = 'inline';
+        document.querySelector('.lsd-'+tag).style.display = 'inline';
         hideUI('check', tag);
-        hideUI('lsd', tag);
+        hideUI('psr', tag);
         hideUI('transfer', tag);
         const someone_else = document.getElementById('lsd-who-'+tag);
         someone_else.addEventListener('change', () => {
@@ -859,4 +859,5 @@ async function sendForm(type)
 
     }
 }
+*/
 </script>
