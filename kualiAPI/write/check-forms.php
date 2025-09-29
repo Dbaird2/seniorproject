@@ -38,6 +38,9 @@ $email = $_SESSION['email'];
 $select_tag = "SELECT asset_name, serial_num, type2 FROM asset_info WHERE asset_tag = :tag";
 $select_stmt = $dbh->prepare($select_tag);
 $select_stmt->execute([":tag"=>$tag]);
+$tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+$asset_type = $tag_info['type2'];
+
 $condition_id = match ($condition) {
     "New" => "PMMV9ld3ML",
     "Good" => "uPq0cgV51",
@@ -50,7 +53,7 @@ $condition_combined = [
 ];
 
 $asset_type_id = match ($asset_type) {
-"Laptop" => "VMjSpx4-H",
+    "Laptop" => "VMjSpx4-H",
     "Desktop" => "UHFK_j1G7L",
     "Tablet" => "-wWkrsS_A_"
 };

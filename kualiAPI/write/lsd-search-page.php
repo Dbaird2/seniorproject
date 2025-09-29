@@ -19,8 +19,8 @@ $lsd_data['Unit'] = $session['bus_unit'];
 $lsd_data['Tag Number'] = $data['tag'];
 $lsd_data['Descr'] = $session['asset_name'];
 $lsd_data['Serial ID'] = $session['serial_num'];
-if (!empty($tag_info['make'])) {
-    $lsd_data['Make'] = $tag_info['make'];
+if (!empty($session['make'])) {
+    $lsd_data['Make'] = $session['make'];
 } else {
     $lsd_data['Make'] = 'N/A';
 }
@@ -33,9 +33,9 @@ $lsd_data['position'] = $data['position'];
 $lsd_data['upd'] = $data['upd'];
 $lsd_data['borrower'] = $data['borrower'];
 $lsd_data['item_type'] = $data['item_type'];
-if ($tag['who'] === 'Myself') {
+if ($data['who'] === 'Myself') {
     $myself = true;
-} else if ($tag['who'] === 'someone-else' && !empty($tag['borrower'])) {
+} else if ($data['who'] === 'someone-else' && !empty($data['borrower'])) {
     $someone_else = true;
 }
 

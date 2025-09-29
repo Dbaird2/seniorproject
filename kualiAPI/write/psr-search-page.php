@@ -19,28 +19,28 @@ $stmt = $dbh->prepare($select);
 $stmt->execute([":tag"=>$data['tag']]);
 $type = $stmt->fetch(PDO::FETCH_ASSOC);
 if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
-        $its = true;
-    }
-    if ($type['bus_unit'] === 'BKCMP') {
-        $cmp = true;
-    } else if ($type['bus_unit'] === 'BKSPA') {
-        $spa = true;
-    } else if ($type['bus_unit'] === 'BKASI') {
-        $asi = true;
-    } else if ($type['bus_unit'] === 'BKSTU') {
-        $stu = true;
-    } else if ($type['bus_unit'] === 'BKFDN') {
-        $fdn = true;
-    }
-    $transfer_data[$index]['Tag Number'] = $data['tag'];
-    $transfer_data[$index]['Descr'] = $type['asset_name'];
-    $transfer_data[$index]['Serial ID'] = $type['serial_num'];
-    $transfer_data[$index]['code'] = $data['code'];
-    $transfer_data[$index]['reason'] = $data['reason'];
+    $its = true;
+}
+if ($type['bus_unit'] === 'BKCMP') {
+    $cmp = true;
+} else if ($type['bus_unit'] === 'BKSPA') {
+    $spa = true;
+} else if ($type['bus_unit'] === 'BKASI') {
+    $asi = true;
+} else if ($type['bus_unit'] === 'BKSTU') {
+    $stu = true;
+} else if ($type['bus_unit'] === 'BKFDN') {
+    $fdn = true;
+}
+$transfer_data[$index]['Tag Number'] = $data['tag'];
+$transfer_data[$index]['Descr'] = $type['asset_name'];
+$transfer_data[$index]['Serial ID'] = $type['serial_num'];
+$transfer_data[$index]['code'] = $data['code'];
+$transfer_data[$index]['reason'] = $data['reason'];
 if ($data['from_page'] !== 'search') {
     $dept_id = $_SESSION['info'][2];
 } else {
-    $dept_id = $_SESSION['dept_id'];
+    $dept_id = $_SESSION['deptid'];
 }
 
 $subdomain = "csub";
