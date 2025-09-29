@@ -88,7 +88,7 @@ $get_cust_stmt = $dbh->prepare($get_dept_manager);
 $get_cust_stmt->execute([":dept_id"=>$dept_id]);
 $manager_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $manager_info['dept_name'];
-$manager = $manager_info['manager'];
+$manager = $manager_info['dept_manager'];
 
 $cust_1 = [];
 $get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
@@ -100,7 +100,7 @@ try {
         searchName($manager);
         $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
-        $mana_info = $get_cmana_stmt->fetch(PDO::FETCH_ASSOC);
+        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     } else if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
         // SEARCH CUST IN KUALI
         searchName($manager);

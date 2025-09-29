@@ -82,7 +82,11 @@ $check_type_id = match ($check_type) {
 };
 
 
-$get_cust_info = "select manager, unnest(custodian) as cust from user_table where dept_id = :dept";
+$get_cust_info = "select dept_manager, unnest(custodian) as cust from user_table where dept_id = :dept";
+if ($form_type === 'Myself') {
+    $dept_id = $_SESSION['deptid'];
+}
+
 try {
     $get_cust_stmt = $dbh->prepare($get_cust_info);
     $get_cust_stmt->execute([":dept"=>$dept_id]);

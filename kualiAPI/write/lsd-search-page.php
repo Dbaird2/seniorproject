@@ -76,14 +76,15 @@ if (empty($school_id) || empty($form_id)) {
 }
 
 
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager as cust FROM department d WHERE dept_id = :dept_id";
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
 $get_mana_stmt->execute([":dept_id"=>$dept_id]);
 $dept_info = $get_mana_stmt->fetchAll(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
-$manager = $dept_info['manager'];
+$manager = $dept_info['dept_manager'];
+echo json_encode(["data"=>$manager . ' ' . $dept_name]);
 
-$get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$get_mana_info = "select l_name, f_name, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 try {
     $get_mana_stmt = $dbh->prepare($get_mana_info);
     $get_mana_stmt->execute([":full_name"=>$manager]);
@@ -103,7 +104,6 @@ try {
     $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     // SEARCH CUST IN KUALI
 }
-$get_mana_info = "select l_name, f_name, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $mana_f_name = $mana_info['f_name'];
 $mana_l_name = $mana_info['l_name'];
 $mana_email = $mana_info['email'];
