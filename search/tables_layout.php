@@ -754,7 +754,7 @@ async function sendForm(type)
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, who: who, borrower: borrower, position: position,
-                lsd: lsd, reason: reason, from_page: 'search' })
+                lsd: lsd, reason: reason, from_page: 'search', upd: upd })
         });
         if (!lsd_res.ok) {
             const text = await lsd_res.text();
@@ -807,10 +807,11 @@ async function sendForm(type)
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
-            type: check_type,
+            form_type: check_type,
             borrower: borrower,
             condition: condition,
             notes: notes,
+            check_type: 'check-out',
             from_page: 'search'
         })
         });
@@ -838,10 +839,11 @@ async function sendForm(type)
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
-            type: check_type,
+            form_type: check_type,
             borrower: borrower,
             condition: condition,
             notes: notes,
+            check_type: 'check-in',
             from_page : 'search'
         })
         });

@@ -14,11 +14,11 @@ $index = 0;
 echo json_encode(['tags'=>$data]);
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
-    $select = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([":tag"=>$tag['tag']]);
-    $type = $stmt->fetchColumn();
-    if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
+$select = "SELECT serial_num, asset_name, type2 FROM asset_info WHERE asset_tag = :tag";
+$stmt = $dbh->prepare($select);
+$stmt->execute([":tag"=>$data['tag']]);
+$type = $stmt->fetch(PDO::FETCH_ASSOC);
+if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
         $its = true;
     }
     if ($_SESSION['Unit'] === 'BKCMP') {
@@ -32,11 +32,11 @@ $cmp = $spa = $stu = $fdn = $asi = false;
     } else if ($_SESSION['Unit'] === 'BKFDN') {
         $fdn = true;
     }
-    $transfer_data[$index]['Tag Number'] = $tag['tag'];
-    $transfer_data[$index]['Descr'] = $session['Descr'];
-    $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
-    $transfer_data[$index]['code'] = $data['code'][$index];
-    $transfer_data[$index]['reason'] = $data['reason'][$index];
+    $transfer_data[$index]['Tag Number'] = $data['tag'];
+    $transfer_data[$index]['Descr'] = $type['asset_name'];
+    $transfer_data[$index]['Serial ID'] = $type['serial_num'];
+    $transfer_data[$index]['code'] = $data['code'];
+    $transfer_data[$index]['reason'] = $data['reason'];
 if ($data['from_page'][0] !== 'search') {
     $dept_id = $_SESSION['info'][2];
 } else {
