@@ -143,6 +143,8 @@ function hideUI(type, tag)
     return;
 };
 document.addEventListener("DOMContentLoaded", function() {
+    const dept_id = <?= json_encode($_SESSION['info'][2], true) ?>;
+    const audit_id = <?= json_encode($_SESSION['info'][3], true) ?>;
     const forms_needed = document.querySelectorAll('.forms-needed');
     forms_needed.forEach(form_type => {
     form_type.addEventListener('change', () => {
