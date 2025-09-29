@@ -444,7 +444,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-$id = $resp_data['data'['app']['documentConnection']['edges'][0]['node']['id'];
+$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
 $tag = $transfer_data[0]['Tag Number'];
 $doc_id = '68c73600df46a3027d2bd386';
 $input_array = $tag. ',' . $id . ',' . $doc_id . ',in-progress'; 
