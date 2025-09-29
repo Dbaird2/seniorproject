@@ -13,20 +13,29 @@ $transfer_data = [[]];
 $index = 0;
 /* DATA FROM COMPLETE AUDIT */
 $tag = $data['tag'];
-foreach ($_SESSOIN['data'] as $data) {
-    if ($data['Tag Number'] === $tag) {
-        $descr = $data['Descr'];
-        $serial_num = $data['Serial ID'] ?? 'N/A';
-        break;
+$select_tag = "SELECT asset_name, serial_num, type2 FROM asset_info WHERE asset_tag = :tag";
+$select_stmt = $dbh->prepare($select_tag);
+$select_stmt->execute([":tag"=>$tag]);
+$asset_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+$descr = $asset_info['asset_name'];
+$serial_num = $asset_info['serial_num'];
+if (!empty($_SESSION['data'])) {
+    foreach ($_SESSION['data'] as $data) {
+        if ($data['Tag Number'] === $tag) {
+            $descr = $data['Descr'];
+            $serial_num = $data['Serial ID'] ?? 'N/A';
+            break;
+        }
     }
 }
+
 $form_type = $data['form_type'];
 $check_type = $data['check_type'];
 $borrower = $data['borrower'];
 $condition = $data['condition'];
 $notes = $data['notes'];
 $email = $_SESSION['email'];
-$select_tag = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
+$select_tag = "SELECT asset_name, serial_num, type2 FROM asset_info WHERE asset_tag = :tag";
 $select_stmt = $dbh->prepare($select_tag);
 $select_stmt->execute([":tag"=>$tag]);
 $condition_id = match ($condition) {
