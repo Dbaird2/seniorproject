@@ -371,11 +371,13 @@ if (!empty($cust_5)) {
         "_MkyBYDNix" => $cust_5
     ];
 }
+echo json_encode(['Custodians'=>$custs]);
 $reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
 $now = new DateTime();
-$now->format('Y-m-d H:i:s');
+$now->format('Y-m-d\TH:i:s.v\Z');
 
 $ms_time = round(microtime(true) * 1000);
+if (empty($cust_2)) {
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -387,7 +389,7 @@ $submit_form = json_encode([
             "label"=> "From one department to another department "
         ],
         "VFp8qQLrUk"=> $full_name,
-        ...$custs,
+        "Gf5oXuQkTBy"=> $cust_1,
         "JZ-q3J19dw"=> $json_form,
         "ne3KPx1Wy3"=> [
             "actionId"=> $action_id,
@@ -404,6 +406,37 @@ $submit_form = json_encode([
     'status' => 'completed'
 ]
 ]);
+} else if (empty($cust_3)) {
+$submit_form = json_encode([
+    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
+'variables' => [
+    'documentId' => $document_id,
+    'data' => [
+        "_GODY1FjEy" => [
+            "id"=> "9A_6UOlDb",
+            "label"=> "From one department to another department "
+        ],
+        "VFp8qQLrUk"=> $full_name,
+        "Gf5oXuQkTBy"=> $cust_1,
+        "i6O5npcOWj" => $cust_2,
+        "JZ-q3J19dw"=> $json_form,
+        "ne3KPx1Wy3"=> [
+            "actionId"=> $action_id,
+            "date"=> $now,
+            "displayName"=> $full_name . " (" . $_SESSION['email'] . ")",
+            "signatureType"=> "type",
+            "signedName"=> $full_name,
+            "userId"=> $form_id
+        ],
+        "K3p03X2Jvx"=> $reason,
+        "R-jIGrtlfO"=> $ms_time,
+    ],
+    'actionId' => $action_id,
+    'status' => 'completed'
+]
+]);
+}
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);

@@ -90,7 +90,7 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
-function addInfo($display_name, $full_name, $email, $id, $school_id, $signature, $dept_form_id, $documentSetId, $role = 'custodian', $dept_name, $dept_id = 'D21560')
+function addInfo($documentSetId, $kuali_id, $display_name, $full_name, $email, $id, $school_id, $signature, $dept_form_id, $documentSetId, $role = 'custodian', $dept_name, $dept_id = 'D21560')
 {
     global $dbh;
 
@@ -126,10 +126,10 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
         $dept_stmt->execute($params);
     } else {
         // DEPARTMENT DOES NOT EXIST
-        $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?)"; 
+        $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"; 
         $dept_stmt = $dbh->prepare($dept_insert);
         if
-        $dept_stmt->execute([$dept_id, $dept_name, $full_name
+        $dept_stmt->execute([$dept_id, $dept_name, $full_name, $custodian, $manager, $documentSetId, $kuali_id]);
     }
 
     // UPDATE USER
@@ -160,6 +160,7 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
         }
         $user_stmt->execute([$username_array[0], $u_role, $name_array[0], $name_array[1], $dept_id, $id, $school_id]);
         try {
+            /*
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
@@ -179,6 +180,7 @@ function addInfo($display_name, $full_name, $email, $id, $school_id, $signature,
             $mail->AltBody = 'Click this link to access Dataworks...';
 
             $mail->send();
+             */
         } catch (Exception $e) {
             error_log("Error sending email: " . $e->getMessage());
             return;
@@ -191,6 +193,8 @@ try {
     foreach ($edges as $index => $edge) {
         $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
         $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
+        $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['documentSetId'];
+        $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'] ??$edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
         $update_time = $edge['node']['meta']['createdAt'];
         if (isset($edge['node']['data']['XhBe3DNaU4'])) {
             // NEW CUSTODIAN
@@ -212,7 +216,7 @@ try {
                 $c_signature = $edge['node']['data']['XhBe3DNaU4']['signedName'];
             }
 
-            addInfo($c_display_name, $c_full_name, $c_email, $c_id, $c_school_id, $c_signature, $role = 'custodian', $dept_name, $dept_id);
+            addInfo($documentSetId, $dept_kuali_id, $c_display_name, $c_full_name, $c_email, $c_id, $c_school_id, $c_signature, 'custodian', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['Oe0m5rZUcD'])) {
             // PERSON FILLING OUT FORM
@@ -236,7 +240,7 @@ try {
                 $m_signature = $edge['node']['data']['Oe0m5rZUcD']['signedName'];
             }
 
-            addInfo($m_display_name, $m_full_name, $m_email, $m_id, $m_school_id, $m_signature, $role = 'admin','DISTRIBUTION', $m_dept_id);
+            addInfo($documentSetId, $dept_kuali_id, $m_display_name, $m_full_name, $m_email, $m_id, $m_school_id, $m_signature, $role = 'admin','DISTRIBUTION', $m_dept_id, $documentSetId, $dept_kuali_id);
         }
         if (isset($edge['node']['data']['Ut5TV4CKpt'])) {
             // TRAINER
@@ -259,7 +263,7 @@ try {
                 $d_signature = $edge['node']['data']['Ut5TV4CKpt']['signedName'];
             }
 
-            addInfo($d_display_name, $d_full_name, $d_email, $d_id, $d_school_id, $d_signature, $role = 'admin', 'DISTRIBUTION');
+            addInfo($documentSetId, $dept_kuali_id, $d_display_name, $d_full_name, $d_email, $d_id, $d_school_id, $d_signature, $role = 'admin', 'DISTRIBUTION');
         }
         if (isset($edge['node']['data']['04PgxWqAbE'])) {
             // MANAGER/DEAN
@@ -282,7 +286,7 @@ try {
                 $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
             }
 
-            addInfo($m4_display_name, $m4_full_name, $m4_email, $m4_id, $m4_school_id, $m4_signature, $role = 'manager', $dept_name, $dept_id);
+            addInfo($documentSetId, $dept_kuali_id, $m4_display_name, $m4_full_name, $m4_email, $m4_id, $m4_school_id, $m4_signature, $role = 'manager', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
             // MANAGER/DEAN
@@ -293,7 +297,7 @@ try {
             $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
             $m2_signature = $m2_display_name;
 
-            addInfo($m2_display_name, $m2_full_name, $m2_email, $m2_id, $m2_school_id, $m2_signature, $role = 'manager', $dept_name, $dept_id);
+            addInfo($documentSetId, $dept_kuali_id, $m2_display_name, $m2_full_name, $m2_email, $m2_id, $m2_school_id, $m2_signature, $role = 'manager', $dept_name, $dept_id);
         }
         if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
             // CUSTODIAN
@@ -304,7 +308,7 @@ try {
             $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
             $m3_signature = $m3_display_name;
 
-            addInfo($m3_display_name, $m3_full_name, $m3_email, $m3_id, $m3_school_id, $m3_signature, $role = 'custodian', $dept_name, $dept_id);
+            addInfo($documentSetId, $dept_kuali_id, $m3_display_name, $m3_full_name, $m3_email, $m3_id, $m3_school_id, $m3_signature, $role = 'custodian', $dept_name, $dept_id);
         }
         $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
         $update_stmt = $dbh->prepare($update_q);

@@ -83,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
                 ':dept'=>$dept_pg_array, ":status_type"=>$status_type])) {
                 if ($role === 'custodian') {
-                    $dept_cust = "UPDATE department SET custodian = ? WHERE dept_id IN ($placeholder)";
+                    $dept_cust = "UPDATE department SET custodian = ARRAY_APPEND(custodian, ?) WHERE dept_id IN ($placeholder)";
                     $dept_stmt = $dbh->prepare($dept_cust);
                     $dept_stmt->execute([$full_name, $dept_id_array]);
                 }
