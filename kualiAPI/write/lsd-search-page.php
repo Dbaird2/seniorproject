@@ -42,7 +42,7 @@ if ($data['who'] === 'Myself') {
 if ($data['from_page'] !== 'search') {
     $dept_id = $_SESSION['info'][2];
 } else {
-    $dept_id = $_SESSION['dept_id'];
+    $dept_id = $_SESSION['deptid'];
 }
 
 $subdomain = "csub";

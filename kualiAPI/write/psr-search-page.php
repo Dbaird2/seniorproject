@@ -83,7 +83,7 @@ $custodian_kuali['ryhlM_VqBn'] = [
 ];
 
 
-$get_dept_manager = "SELECT dept_id, dept_name, manager FROM department d WHERE dept_id = :dept_id";
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_cust_stmt = $dbh->prepare($get_dept_manager);
 $get_cust_stmt->execute([":dept_id"=>$dept_id]);
 $manager_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);

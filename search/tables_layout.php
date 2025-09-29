@@ -234,8 +234,8 @@ foreach ($all_bus as $bus) {
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
     <select id="who-<?=$safe_tag?>">
-        <option value="myself">Myself</option>
-        <option value="someone-else">Someone Else</option>
+        <option value="Myself">Myself</option>
+        <option value="Someone Else">Someone Else</option>
     </select>
     <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
     <select id="check-condition-<?=$safe_tag?>">
@@ -677,7 +677,7 @@ function showFormType(form)
         document.querySelector('.check-'+tag).style.display = 'inline';
         const someone_else = document.getElementById('who-'+tag);
         someone_else.addEventListener('change', () => {
-        if (someone_else.value === 'someone-else') {
+        if (someone_else.value === 'Someone Else') {
             document.getElementById('someone-else-'+tag).style.display = 'inline';
         } else {
             document.getElementById('someone-else-'+tag).style.display = 'none';
