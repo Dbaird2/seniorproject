@@ -773,7 +773,7 @@ async function sendForm(type)
 
         const code = document.getElementById("psr-code-"+tag).value;
         const reason = document.getElementById("psr-reason-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/psr-search-page.php';
         const psr_res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
