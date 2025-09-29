@@ -239,10 +239,10 @@ foreach ($all_bus as $bus) {
     </select>
     <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
     <select id="check-condition-<?=$safe_tag?>">
-        <option value="new">New</option>
-        <option value="good">Good</option>
-        <option value="used">Used</option>
-        <option value="damanged">Damaged</option>
+        <option value="New">New</option>
+        <option value="Good">Good</option>
+        <option value="Used">Used</option>
+        <option value="Damanged">Damaged</option>
     </select>
     <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
@@ -754,7 +754,7 @@ async function sendForm(type)
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, who: who, borrower: borrower, position: position,
-                lsd: lsd, reason: reason, from_page: 'search', upd: upd })
+                lsd: lsd, reason: reason, from_page: 'search', upd: upd, item_type: item_type })
         });
         if (!lsd_res.ok) {
             const text = await lsd_res.text();

@@ -39,10 +39,10 @@ $select_tag = "SELECT asset_name, serial_num, type2 FROM asset_info WHERE asset_
 $select_stmt = $dbh->prepare($select_tag);
 $select_stmt->execute([":tag"=>$tag]);
 $condition_id = match ($condition) {
-"New" => "PMMV9ld3ML",
+    "New" => "PMMV9ld3ML",
     "Good" => "uPq0cgV51",
     "Used" => "2zmA7sZQnX",
-    "Damaged" => ""
+    "Damaged" => "s0MNB7p9vx"
 };
 $condition_combined = [
     "id"=>$condition_id,
@@ -52,8 +52,7 @@ $condition_combined = [
 $asset_type_id = match ($asset_type) {
 "Laptop" => "VMjSpx4-H",
     "Desktop" => "UHFK_j1G7L",
-    "Tablet" => "",
-    "Other" => ""
+    "Tablet" => "-wWkrsS_A_"
 };
 $asset_type_combined = [
     "id"=>$asset_type_id,
