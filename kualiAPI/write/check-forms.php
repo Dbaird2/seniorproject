@@ -545,7 +545,16 @@ function searchName($search_name = '')
     global $dept_id;
     $name_array = explode(' ', $search_name);
     $user_f_name = $name_array[0];
-    $user_l_name = $name_array[1] . ' ' . $name_array[2] ?? '' . ' ' . $name_array[3] ?? '' . ' ' . $name_array[4] ?? '';
+    $user_l_name = $name_array[1];
+    if (!empty($name_array[2])) {
+        $user_l_name .= ' ' . $name_array[2];
+    }
+    if (!empty($name_array[3])) {
+        $user_l_name .=  ' ' . $name_array[3];
+    }
+    if (!empty($name_array[4])) {
+        $user_l_name .=  ' ' . $name_array[4];
+    }
     $subdomain = "csub";
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
