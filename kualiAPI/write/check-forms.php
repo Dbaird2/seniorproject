@@ -187,7 +187,7 @@ if ($form_type === 'check-in') {
     $custodian_data = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     $custodian_name = $custodian_data[0]['custodian'] ?? '';
 
-    $get_custodian = 'SELECT form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname';
+    $get_custodian = "SELECT form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
     $custodian_stmt = $dbh->prepare($get_custodian);
     $custodian_stmt->execute([':fullname' => $custodian_name]);
     $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
@@ -222,7 +222,7 @@ if ($form_type === 'check-in') {
     $manager_data = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     $manager_name = $manager_data['dept_manager'] ?? '';
     try {
-        $get_manager = 'SELECT email, form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname';
+        $get_manager = "SELECT email, form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
         $manager_stmt = $dbh->prepare($get_manager);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
@@ -256,7 +256,7 @@ if ($form_type === 'check-in') {
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
     try {
-        $get_borrower = 'SELECT form_id, display_name, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :fullname';
+        $get_borrower = "SELECT form_id, display_name, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :fullname";
         $borrower_stmt = $dbh->prepare($get_borrower);
         $borrower_stmt->execute([':fullname' => $borrower]);
         $borrower_info = $borrower_stmt->fetch(PDO::FETCH_ASSOC);
