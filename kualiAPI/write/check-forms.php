@@ -175,7 +175,8 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 /*-----------------------------------------------------------------------------*/
-
+$date = new DateTime();
+$date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($form_type === 'check-in') {
 
     $date_of_form['73dNIwQS0c'] = $date->format('m/d/Y');
