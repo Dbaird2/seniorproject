@@ -807,12 +807,11 @@ async function sendForm(type)
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
-            form_type: check_type,
+            form_type: 'check-out',
             borrower: borrower,
             condition: condition,
             notes: notes,
-            check_type: 'check-out',
-            from_page: 'search'
+            who: check_type
         })
         });
         if (!out_res.ok) {

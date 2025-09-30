@@ -372,8 +372,9 @@ if (!empty($cust_5)) {
     ];
 }
 $reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
-$now = new DateTime();
-$now->format('Y-m-d H:i:s');
+$now_array = new DateTime();
+$now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
+$now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
 $ms_time = round(microtime(true) * 1000);
 $submit_form = json_encode([
