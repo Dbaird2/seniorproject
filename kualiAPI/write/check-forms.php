@@ -190,6 +190,10 @@ if ($form_type === 'check-in') {
     $get_custodian = "SELECT form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
     $custodian_stmt = $dbh->prepare($get_custodian);
     $custodian_stmt->execute([':fullname' => $custodian_name]);
+    if ($custodian_stmt->rowCount() <= 0) {
+        searchName($custodian_name);
+        $custodian_stmt->execute([':fullname' => $custodian_name]);
+    }
     $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     $cust_email_array = explode('@', $custodian_info['username'] . '@csub.edu');
     if ($cust_email_array[0] !== $custodian_info['username']) {
@@ -225,13 +229,18 @@ if ($form_type === 'check-in') {
         $get_manager = "SELECT email, form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
         $manager_stmt = $dbh->prepare($get_manager);
         $manager_stmt->execute([':fullname' => $manager_name]);
+        if ($manager_stmt->rowCount() <= 0) {
+            searchName($manager_name);
+            $manager_stmt->execute([':fullname' => $manager_name]);
+        }
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
+
     } catch (PDOException $e) {
         searchName($manager_name);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
-    $manager_email_array = explode('@', $manager_info['email'] ?? $manager_name);
+    $manager_email_array = explode('@', $manager_info['email']);
     if ($manager_email_array[0] !== $manager_info['username']) {
         $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';
         $update_stmt = $dbh->prepare($update_user);
@@ -243,7 +252,7 @@ if ($form_type === 'check-in') {
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
     /* GET MANAGER ID FOR GRAPHQL */
-    $authority_info[''] = [
+    $authority_info['NdN80WJusb'] = [
         'displayName' => $manager_info['f_name'] . ' ' . $manager_info['l_name'],
         'email' => $manager_info['email'],
         'firstName' => $manager_info['f_name'],
@@ -259,6 +268,10 @@ if ($who !== 'Myself') {
         $get_borrower = "SELECT form_id, display_name, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :fullname";
         $borrower_stmt = $dbh->prepare($get_borrower);
         $borrower_stmt->execute([':fullname' => $borrower]);
+        if ($borrower_stmt->rowCount() <= 0) {
+            searchName($borrower);
+            $borrower_stmt->execute([':fullname' => $borrower]);
+        }
         $borrower_info = $borrower_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         searchName($borrower);
