@@ -1,5 +1,5 @@
 <?php
-require_once "../../config.php";
+include_once "../../config.php";
 include_once "../../vendor/autoload.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -188,7 +188,7 @@ if ($form_type === 'check-in') {
         $update_stmt->execute([':username' => $cust_email_array[0], ":email" => $custodian_info['username'] . '@csub.edu']);
     }
     if (empty($custodian_info['form_id']) || empty($custodian_info['school_id'])) {
-        searchEmail($cust_email_array[0], $dbh);
+        searchEmail($cust_email_array[0]);
         $custodian_stmt->execute([':fullname' => $custodian_name]);
         $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -217,7 +217,7 @@ if ($form_type === 'check-in') {
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        searchName($manager_name, $dbh);
+        searchName($manager_name);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -228,7 +228,7 @@ if ($form_type === 'check-in') {
         $update_stmt->execute([':username' => $manager_email_array[0], ":email" => $manager_info['email']]);
     }
     if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
-        searchEmail($manager_email_array[0], $dbh);
+        searchEmail($manager_email_array[0]);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -251,12 +251,12 @@ if ($who !== 'Myself') {
         $borrower_stmt->execute([':fullname' => $borrower]);
         $borrower_info = $borrower_stmt->fetch(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        searchName($borrower, $dbh);
+        searchName($borrower);
         $borrower_stmt->execute([':fullname' => $borrower]);
         $borrower_info = $borrower_stmt->fetch(PDO::FETCH_ASSOC);
     }
     if (empty($borrower_info['form_id']) || empty($borrower_info['school_id'])) {
-        searchName($borrower, $dbh);
+        searchName($borrower);
         $borrower_stmt->execute([':fullname' => $borrower]);
         $borrower_info = $borrower_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -320,7 +320,7 @@ if ($who !== 'Myself') {
         $update_stmt->execute([':username' => $email_array[0], ":email" => $_SESSION['email']]);
     }
     if (empty($submitter_info['form_id']) || empty($submitter_info['school_id'])) {
-        searchEmail($email_array[0], $dbh);
+        searchEmail($email_array[0]);
         $get_stmt->execute([':email' => $_SESSION['email']]);
         $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -409,8 +409,9 @@ function randomPassword()
     $pass[] = 'A';
     return implode($pass);
 }
-function searchEmail($email, $dbh) 
+function searchEmail($email) 
 {
+    global $dbh;
     global $apikey;
     global $dept_id;
     $email_array = explode('@', $email);
@@ -527,8 +528,9 @@ function searchEmail($email, $dbh)
         }
     }
 }
-function searchName($search_name = '', $dbh)
+function searchName($search_name = '')
 {
+    global $dbh;
     global $apikey;
     global $dept_id;
     $name_array = explode(' ', $search_name);
