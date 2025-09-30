@@ -235,7 +235,7 @@ foreach ($transfer_data as $index => $data) {
     $vin = false;
     if (!empty($data['VIN'])) $vin = true;
     $disposition_id = match ($data['code']) {
-    'UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)' => 'CuUeXWzGh',
+        'UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)' => 'CuUeXWzGh',
         'LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)' => '2qPaeKyjo',
         'VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)' => '_tTo3w-3o',
         'TO BE CANABALIZED (SALVAGED FOR PARTS)' => 'XG6kUAxX1',
@@ -253,9 +253,8 @@ foreach ($transfer_data as $index => $data) {
                 "id" => $disposition_id,
                 "label" => $data['code']
             ],
-            "yks38VOkzw" => (string)$data['Tag Number'],
-            "SBu1DONXk2" => (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
             "gNBhgBRLK0" => (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
+            "yks38VOkzw" => (string)$data['Tag Number'],
         ],
         'id' => (string)$index,
     ];
