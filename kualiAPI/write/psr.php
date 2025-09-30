@@ -55,7 +55,7 @@ $select_stmt = $dbh->prepare($select);
 $select_stmt->execute([":email" => $email]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 if (empty($submitter_info)) {
-    searchName($_SESSION['name']);
+    searchName($_SESSION[$submitter_info['f_name'] . ' ' . $submitter_info['l_name']);
     $select_stmt = $dbh->prepare($select);
     $select_stmt->execute([":email" => $email]);
     $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,6 +71,19 @@ $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
 $first_name = $submitter_info['f_name'];
 $last_name = $submitter_info['l_name'];
+
+$submitter_key = 'Jpy9KU-X3P';
+$submitter_kauli = [
+    "displayName"=> $full_name ,
+    "email" => $_SESSION['email'],
+    "firstName" => $first_name,
+    "id" => $form_id,
+    "label" => $full_name,
+    "lastName" => $last_name,
+    "schoolId" => $school_id,
+    "username" => $display_name
+];
+
 
 
 $subdomain = "csub";
