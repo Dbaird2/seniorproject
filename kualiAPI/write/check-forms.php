@@ -500,10 +500,6 @@ function searchEmail($email, $dbh)
                 error_log("Error sending email: " . $e->getMessage());
                 return;
             }
-            } catch (Exception $e) {
-                error_log("Error sending email: " . $e->getMessage());
-                return;
-            }
         } else {
             $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
             $update = "UPDATE user_table SET ";
