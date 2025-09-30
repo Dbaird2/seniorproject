@@ -233,13 +233,13 @@ if ($form_type === 'check-in') {
             searchName($manager_name);
             $manager_stmt->execute([':fullname' => $manager_name]);
         }
-        $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
         searchName($manager_name);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
+    $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     $manager_email_array = explode('@', $manager_info['email']);
     if ($manager_email_array[0] !== $manager_info['username']) {
         $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';
@@ -337,6 +337,7 @@ if ($who !== 'Myself') {
     $get_stmt->execute([':email' => $_SESSION['email']]);
     $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
     /* GET FIRST PART OF EMAIL TO USE FOR SEARCHING */
+    $email_array = explode('@', $_SESSION['email']);
     if ($email_array[0] !== $submitter_info['username']) {
         $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';
         $update_stmt = $dbh->prepare($update_user);
@@ -347,7 +348,6 @@ if ($who !== 'Myself') {
         $get_stmt->execute([':email' => $_SESSION['email']]);
         $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
     }
-    $email_array = explode('@', $_SESSION['email']);
 
     $submitter_sig = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
     $submitter_id = $submitter_info['school_id'];
@@ -434,6 +434,7 @@ function randomPassword()
 }
 function searchEmail($email) 
 {
+    echo json_encode(['searchEmail'=>$email]);
     global $dbh;
     global $apikey;
     global $dept_id;
@@ -553,6 +554,7 @@ function searchEmail($email)
 }
 function searchName($search_name = '')
 {
+    echo json_encode(['searchName'=>$search_name]);
     global $dbh;
     global $apikey;
     global $dept_id;
