@@ -38,8 +38,8 @@ foreach ($data['tag'] as $index => $tag) {
             $transfer_data[$index]['Tag Number'] = $tag['tag'];
             $transfer_data[$index]['Descr'] = $session['Descr'];
             $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
-            $transfer_data[$index]['code'] = $data['code'][$index];
-            $transfer_data[$index]['reason'] = $data['reason'][$index];
+            $transfer_data[$index]['code'] = $tag['code'];
+            $transfer_data[$index]['reason'] = $tag['reason'];
             break;
         }
     }
@@ -77,7 +77,7 @@ $get_cust_stmt = $dbh->prepare($get_custodian);
 $get_cust_stmt->execute([":dept" => $_SESSION['info'][2]]);
 $dept_custodian = $get_cust_stmt->fetchColumn();
 
-$select = "SELECT f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
+$select = "SELECT email, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
 $email = $_SESSION['email'];
 $select_stmt = $dbh->prepare($select);
 $select_stmt->execute([":fullname" => $dept_custodian]);
@@ -95,6 +95,8 @@ $custodian_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 
 $cust_display_name = $custodian_info['username'];
 $cust_full_name = $custodian_info['f_name'] . ' ' . $custodian_info['l_name'];
+$cust_first_name = $custodian_info['f_name'];
+$cust_last_name = $custodian_info['l_name'];
 $cust_school_id = $custodian_info['school_id'];
 $cust_signature = $custodian_info['signature'] ?? $cust_full_name;
 $cust_form_id = $custodian_info['form_id'];
@@ -132,7 +134,8 @@ try {
         $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
         $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
-    } else if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
+    }
+    if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
         /* SEARCH CUST IN KUALI */
         searchName($manager);
         $get_mana_stmt = $dbh->prepare($get_cust_info);
