@@ -14,7 +14,7 @@ $index = 0;
 echo json_encode(['tags' => $data]);
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
-foreach ($data['tag'] as $index => $tag) {
+foreach ($data['psr_tags'] as $index => $tag) {
     foreach ($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag['tag']) {
             $select = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
