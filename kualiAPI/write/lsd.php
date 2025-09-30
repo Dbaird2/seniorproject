@@ -88,7 +88,7 @@ $get_mana_stmt = $dbh->prepare($get_dept_manager);
 $get_mana_stmt->execute([":dept_id"=>$dept_id]);
 $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
-$manager = $dept_info['dept_manager'];
+$manager = trim($dept_info['dept_manager']);
 
 $get_mana_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 
@@ -106,18 +106,19 @@ try {
         searchEmail($mana_info['email'], $apikey, $dept_id);
         $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
+        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     }
 } catch (PDOException $e) {
     searchName($manager, $apikey, $dept_id);
     $get_mana_stmt = $dbh->prepare($get_mana_info);
     $get_mana_stmt->execute([":full_name" => $manager]);
+    $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 }
-$mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $mana_f_name = $mana_info['f_name'];
 $mana_l_name = $mana_info['l_name'];
 $mana_email = $mana_info['email'];
 $mana_form_id = $mana_info['form_id'];
-$mana_form_sig = $mana_info['signature'];
+$mana_form_sig = $mana_info['signature'] ?? $mana_info['f_name'] . ' ' . $mana_info['l_name'];
 $mana_form_sid = $mana_info['school_id'];
 $mana_form_user = $mana_info['username'];
 
@@ -137,15 +138,16 @@ if (!empty($lsd_data['borrower'])) {
             searchEmail($bor_email_array[0], $apikey, $dept_id);
             $get_borrower_stmt = $dbh->prepare($get_mana_info);
             $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
+            $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         }
     } catch (PDOException $e) {
         // CUST DID NOT MATCH
         searchName($lsd_data['borrower'], $apikey, $dept_id);
         $get_borrower_stmt = $dbh->prepare($get_mana_info);
         $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
+        $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
         // SEARCH CUST IN KUALI
     }
-    $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
     $bor_f_name = $mana_info['f_name'];
     $bor_l_name = $mana_info['l_name'];
     $bor_email = $mana_info['email'];
