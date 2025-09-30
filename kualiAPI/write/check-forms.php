@@ -22,7 +22,7 @@ $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
 /* SERIAL */
-$tag_info = 'SELECT serial_num, asset_name, type2 FROM asset_table WHERE asset_tag = :tag';
+$tag_info = 'SELECT serial_num, asset_name, type2 FROM asset_info WHERE asset_tag = :tag';
 $tag_stmt = $dbh->prepare($tag_info);
 $tag_stmt->execute([':tag' => $tag]);
 $tag_data = $tag_stmt->fetch(PDO::FETCH_ASSOC);
