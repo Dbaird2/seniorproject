@@ -31,7 +31,8 @@ $asset_name = $tag_data['asset_name'] ?? 'Unknown Asset';
 $asset_type = $tag_data['type2'] ?? 'Laptop';
 
 /* DEPT NAME */
-$select_dept = 'SELECT dept_name, documentsetid, kuali_id FROM deptartment WHERE dept_id = :dept_id';
+$dept_id = $_SESSION['deptid'];
+$select_dept = 'SELECT dept_name, documentsetid, kuali_id FROM department WHERE dept_id = :dept_id';
 $dept_stmt = $dbh->prepare($select_dept);
 $dept_stmt->execute([':dept_id' => $dept_id]);
 $dept_data = $dept_stmt->fetch(PDO::FETCH_ASSOC);
