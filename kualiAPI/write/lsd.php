@@ -90,7 +90,8 @@ $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
 $manager = $dept_info['dept_manager'];
 
-$get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$get_mana_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+
 try {
     $get_mana_stmt = $dbh->prepare($get_mana_info);
     $get_mana_stmt->execute([":full_name"=>$manager]);
@@ -112,7 +113,6 @@ try {
     $get_mana_stmt->execute([":full_name" => $manager]);
 }
 $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
-$get_mana_info = "select l_name, f_name, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $mana_f_name = $mana_info['f_name'];
 $mana_l_name = $mana_info['l_name'];
 $mana_email = $mana_info['email'];
@@ -414,6 +414,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
+/*
 $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
 $tag = $lsd_data['Tag Number'];
 $doc_id = '68c73600df46a3027d2bd386';
@@ -424,6 +425,7 @@ $audit_id = $data['audit_id'][0];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+ */
 curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp]);
