@@ -38,6 +38,9 @@ foreach ($data['psr_tags'] as $index => $tag) {
             $transfer_data[$index]['Tag Number'] = $tag['tag'];
             $transfer_data[$index]['Descr'] = $session['Descr'];
             $transfer_data[$index]['Serial ID'] = $session['Serial ID'];
+            if (!empty($session['VIN'])) {
+                $transfer_data[$index]['VIN'] = $session['VIN'];
+            }
             $transfer_data[$index]['code'] = $tag['code'];
             $transfer_data[$index]['reason'] = $tag['reason'];
             break;
@@ -126,7 +129,7 @@ $manager_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $manager_info['dept_name'];
 $manager = $manager_info['dept_manager'];
 
-$get_mana_info = "SELECT email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :full_name";
+$get_mana_info = "SELECT l_name, f_name, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :full_name";
 try {
     $get_mana_stmt = $dbh->prepare($get_mana_info);
     $get_mana_stmt->execute([":full_name" => $manager]);
@@ -250,7 +253,7 @@ foreach ($transfer_data as $index => $data) {
                 "id" => $disposition_id,
                 "label" => $data['code']
             ],
-            "yks38VOkzw" => (string)$data['tag'],
+            "yks38VOkzw" => (string)$data['Tag Number'],
             "SBu1DONXk2" => (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
             "gNBhgBRLK0" => (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
         ],
@@ -293,7 +296,7 @@ if ($bkasi) {
 }
 $bus_units_key = '04lKcQ1Iy2';
 $bus_units = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
-$bus_units = array_filter($bus_units['04lKcQ1Iy2'], fn($info) => (!empty($info['label']) && !empty($info['id'])));
+$bus_units = array_filter($bus_units, fn($info) => (!empty($info['label']) && !empty($info['id'])));
 if (!$vin) {
     $form_type_id = match ($its) {
     true => "iK43J2G3IH",
