@@ -105,6 +105,14 @@ $kuali_form_type['fyaCF8g3Uh'] = [
     'label' => $form_type
 ];
 /*-----------------------------------------------------------------------------*/
+$select_key = "SELECT kuali_key FROM user_table WHERE email = :email";
+$key_stmt = $dbh->prepare($select_key);
+$key_stmt->execute([":email"=>$_SESSION['email']]);
+$apikey = $key_stmt->fetchColumn();
+
+$subdomain = 'csub';
+$url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";  
+
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_POST, true);
