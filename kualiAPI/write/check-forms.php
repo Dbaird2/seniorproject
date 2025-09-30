@@ -82,11 +82,11 @@ $kuali_asset_type['aUVT1BLN6V'] = [
     "label" => $asset_type
 ];
 
-$who_id['e0fZiLYomu'] = match ($who) {
-"Myself" => "fK-8m6dzx",
+$who_id = match ($who) {
+    "Myself" => "fK-8m6dzx",
     "Someone Else" => "y89ptC2TA"
 };
-$kuali_who = [
+$kuali_who['e0fZiLYomu'] = [
     "id" => $who_id,
     "label" => $who
 ];
