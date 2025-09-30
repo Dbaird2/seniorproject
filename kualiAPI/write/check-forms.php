@@ -63,7 +63,7 @@ if (empty($kuali_id) || empty($documentsetid)) {
 
 $location_key = "XE0n2IZXBC";
 $location = "Bakersfield";
-$stree_key = "Smva-ICjnV";
+$street_key = "Smva-ICjnV";
 $street = "9001 Stockdale Hwy";
 $condition_id = match ($condition) {
 "New" => "PMMV9ld3ML",
@@ -107,7 +107,7 @@ $form_type_id = match ($form_type) {
 "Returning Equipment" => "",
     "Checking Out Equipment" => "Nwnp1xzbH"
 };
-$form_type = 'fyaCF8g3Uh';
+$form_type_key = 'fyaCF8g3Uh';
 $kuali_form_type= [
     'id' => $form_type_id,
     'label' => $form_type
@@ -368,7 +368,7 @@ if ($who !== 'Myself') {
     $submitter_first = $submitter_info['f_name'];
     $submitter_last = $submitter_info['l_name'];
     $submitter_sig_key = 'JXLJ_AOov-'; 
-    $submitter_info_info = [
+    $submitter_sig_info = [
         'actionId' => $action_id,
         'date' => $now,
         'displayName' => $submitter_first . ' ' . $submitter_last . ' (' . $_SESSION['email'] . ')',
