@@ -41,9 +41,9 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['borrower'] = $data['borrower'];
         $lsd_data['item_type'] = $data['item_type'];
         $lsd_data['Found Note'] = $session['Found Note'];
-        if ($tag['who'] === 'Myself') {
+        if ($data['who'] === 'Myself') {
             $myself = true;
-        } else if ($tag['who'] === 'someone-else' && !empty($tag['borrower'])) {
+        } else if ($data['who'] === 'someone-else' && !empty($data['borrower'])) {
             $someone_else = true;
         }
         break;
@@ -59,7 +59,7 @@ $email = $_SESSION['email'];
 $select_stmt = $dbh->prepare($select);
 $select_stmt->execute([":email" => $_SESSION['email']]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$apikey = $submitter_info['kuali_key'] ?? '';
+$apikey = $submitter_info['kuali_key'];
 if (empty($apikey)) {
     die("API Key Not Found");
 }
@@ -83,12 +83,12 @@ if (empty($school_id) || empty($form_id)) {
 }
 
 
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager as cust FROM department d WHERE dept_id = :dept_id";
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
 $get_mana_stmt->execute([":dept_id"=>$dept_id]);
-$dept_info = $get_mana_stmt->fetchAll(PDO::FETCH_ASSOC);
+$dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
-$manager = $dept_info['manager'];
+$manager = $dept_info['dept_manager'];
 
 $get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 try {

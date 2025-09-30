@@ -197,7 +197,7 @@ if ($form_type === 'check-in') {
     $custodian_data = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     $custodian_name = $custodian_data[0]['custodian'] ?? '';
 
-    $get_custodian = "SELECT form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
+    $get_custodian = "SELECT email, form_id, school_id, f_name, l_name, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
     $custodian_stmt = $dbh->prepare($get_custodian);
     $custodian_stmt->execute([':fullname' => $custodian_name]);
     if ($custodian_stmt->rowCount() <= 0) {
@@ -205,14 +205,14 @@ if ($form_type === 'check-in') {
         $custodian_stmt->execute([':fullname' => $custodian_name]);
     }
     $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
-    $cust_email_array = explode('@', $custodian_info['username'] . '@csub.edu');
+    $cust_email_array = explode('@', $custodian_info['email']);
     if ($cust_email_array[0] !== $custodian_info['username']) {
         $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';
         $update_stmt = $dbh->prepare($update_user);
         $update_stmt->execute([':username' => $cust_email_array[0], ":email" => $custodian_info['username'] . '@csub.edu']);
     }
     if (empty($custodian_info['form_id']) || empty($custodian_info['school_id'])) {
-        searchEmail($cust_email_array[0], $apikey, $dept_id);
+        searchEmail($custodian_info['email'], $apikey, $dept_id);
         $custodian_stmt->execute([':fullname' => $custodian_name]);
         $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -259,7 +259,7 @@ if ($form_type === 'check-in') {
         $update_stmt->execute([':username' => $manager_email_array[0], ":email" => $manager_info['email']]);
     }
     if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
-        searchEmail($manager_email_array[0], $apikey, $dept_id);
+        searchEmail($manager_info['email'], $apikey, $dept_id);
         $manager_stmt->execute([':fullname' => $manager_name]);
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -357,7 +357,7 @@ if ($who !== 'Myself') {
         $update_stmt->execute([':username' => $email_array[0], ":email" => $_SESSION['email']]);
     }
     if (empty($submitter_info['form_id']) || empty($submitter_info['school_id'])) {
-        searchEmail($email_array[0], $apikey, $dept_id);
+        searchEmail($_SESSION['email'], $apikey, $dept_id);
         $get_stmt->execute([':email' => $_SESSION['email']]);
         $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
     }
