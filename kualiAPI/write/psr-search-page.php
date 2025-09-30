@@ -1,5 +1,5 @@
 <?php
-require_once "../../config.php";
+include_once "../../config.php";
 include_once "../../vendor/autoload.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -11,45 +11,47 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 $index = 0;
-echo json_encode(['tags'=>$data]);
+echo json_encode(['tags' => $data]);
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
-$select = "SELECT bus_unit, serial_num, asset_name, type2 FROM asset_info WHERE asset_tag = :tag";
+$select = "SELECT bus_unit, type2, asset_name, serial_num FROM asset_info WHERE asset_tag = :tag";
 $stmt = $dbh->prepare($select);
-$stmt->execute([":tag"=>$data['tag']]);
-$type = $stmt->fetch(PDO::FETCH_ASSOC);
-if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
+$stmt->execute([":tag" => $data['tag']]);
+$tag_info = $stmt->fetch(PDO::FETCH_ASSOC);
+if (in_array($tag_info['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
     $its = true;
 }
-if ($type['bus_unit'] === 'BKCMP') {
+if ($tag_info['bus_unit'] === 'BKCMP') {
     $cmp = true;
-} else if ($type['bus_unit'] === 'BKSPA') {
+} else if ($tag_info['bus_unit'] === 'BKSPA') {
     $spa = true;
-} else if ($type['bus_unit'] === 'BKASI') {
+} else if ($tag_info['bus_unit'] === 'BKASI') {
     $asi = true;
-} else if ($type['bus_unit'] === 'BKSTU') {
+} else if ($tag_info['bus_unit'] === 'BKSTU') {
     $stu = true;
-} else if ($type['bus_unit'] === 'BKFDN') {
+} else if ($tag_info['bus_unit'] === 'BKFDN') {
     $fdn = true;
 }
-$transfer_data[$index]['Tag Number'] = $data['tag'];
-$transfer_data[$index]['Descr'] = $type['asset_name'];
-$transfer_data[$index]['Serial ID'] = $type['serial_num'];
-$transfer_data[$index]['code'] = $data['code'];
-$transfer_data[$index]['reason'] = $data['reason'];
-if ($data['from_page'] !== 'search') {
-    $dept_id = $_SESSION['info'][2];
-} else {
-    $dept_id = $_SESSION['deptid'];
-}
+$transfer_data[0]['Tag Number'] = $data['tag'];
+$transfer_data[0]['Descr'] = $tag_info['asset_name'];
+$transfer_data[0]['Serial ID'] = $tag_info['serial_num'];
+$transfer_data[0]['code'] = $data['code'];
+$transfer_data[0]['reason'] = $data['reason'];
 
-$subdomain = "csub";
-// SUBMITTER INFO
+
+$dept_id = $_SESSION['deptid'];
+
 $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
 $select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":email" => $_SESSION['email']]);
+$select_stmt->execute([":email" => $email]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+if (empty($submitter_info)) {
+    searchName($_SESSION['name']);
+    $select_stmt = $dbh->prepare($select);
+    $select_stmt->execute([":email" => $email]);
+    $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+}
 $apikey = $submitter_info['kuali_key'] ?? '';
 if (empty($apikey)) {
     die("API Key Not Found");
@@ -59,74 +61,99 @@ $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $school_id = $submitter_info['school_id'] ?? '';
 $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
+$first_name = $submitter_info['f_name'];
+$last_name = $submitter_info['l_name'];
+
+
+$subdomain = "csub";
+/* CUSTODIAN INFO */
+$get_custodian = "SELECT unnest(custodian) FROM department WHERE dept_id = :dept";
+$get_cust_stmt = $dbh->prepare($get_custodian);
+$get_cust_stmt->execute([":dept" => $_SESSION['deptid']]);
+$dept_custodian = $get_cust_stmt->fetchColumn();
+
+$select = "SELECT f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
+$email = $_SESSION['email'];
+$select_stmt = $dbh->prepare($select);
+$select_stmt->execute([":fullname" => $dept_custodian]);
+if ($select_stmt->rowCount() <= 0) {
+    searchName($dept_custodian);
+    $select_stmt = $dbh->prepare($select);
+    $select_stmt->execute([":fullname" => $dept_custodian]);
+}
 if (empty($school_id) || empty($form_id)) {
     searchName($full_name);
     $select_stmt = $dbh->prepare($select);
     $select_stmt->execute([":email" => $_SESSION['email']]);
-    $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
-    $apikey = $submitter_info['kuali_key'] ?? '';
-    $display_name = $submitter_info['username'];
-    $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-    $school_id = $submitter_info['school_id'] ?? '';
-    $signature = $submitter_info['signature'] ?? $full_name;
-    $form_id = $submitter_info['form_id'] ?? '';
 }
-$custodian_kuali['ryhlM_VqBn'] = [
-    "displayName" => $full_name,
-    "email" => $_SESSION['email'],
-    "firstName"=> $submitter_info['f_name'],
-    "id"=> $form_id,
-    "label"=> $full_name,
-    "lastName"=> $submitter_info['l_name'],
-    "schoolId"=> $school_id,
-    "username"=> $display_name
+$custodian_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+
+$cust_display_name = $custodian_info['username'];
+$cust_full_name = $custodian_info['f_name'] . ' ' . $custodian_info['l_name'];
+$cust_school_id = $custodian_info['school_id'];
+$cust_signature = $custodian_info['signature'] ?? $cust_full_name;
+$cust_form_id = $custodian_info['form_id'];
+$custodian_kuali_key = 'ryhlM_VqBn';
+$custodian_kuali = [
+    "displayName" => $cust_full_name,
+    "email" => $cust_email,
+    "firstName" => $cust_first_name,
+    "id" => $cust_form_id,
+    "label" => $cust_full_name,
+    "lastName" => $cust_last_name,
+    "schoolId" => $cust_school_id,
+    "username" => $cust_display_name
 ];
+/*----------------------------------------- CUSTODIAN INFO
+ * ------------------------------------------ */
 
-
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
-$get_cust_stmt = $dbh->prepare($get_dept_manager);
-$get_cust_stmt->execute([":dept_id"=>$dept_id]);
-$manager_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
+/* MANAGER INFO */
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department WHERE dept_id = :dept_id";
+$get_mana_stmt = $dbh->prepare($get_dept_manager);
+$get_mana_stmt->execute([":dept_id" => $dept_id]);
+if ($get_mana_stmt->rowCount() <= 0) {
+    die("Department not found.");
+}
+$manager_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $manager_info['dept_name'];
 $manager = $manager_info['dept_manager'];
 
-$cust_1 = [];
-$get_mana_info = "select email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$get_mana_info = "SELECT email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :full_name";
 try {
     $get_mana_stmt = $dbh->prepare($get_mana_info);
-    $get_mana_stmt->execute([":full_name"=>$manager]);
-    $manager_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+    $get_mana_stmt->execute([":full_name" => $manager]);
     if ($get_mana_stmt->rowCount() <= 0) {
         searchName($manager);
         $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
         $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     } else if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
-        // SEARCH CUST IN KUALI
+        /* SEARCH CUST IN KUALI */
         searchName($manager);
         $get_mana_stmt = $dbh->prepare($get_cust_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
-        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     }
 } catch (PDOException $e) {
-    // CUST DID NOT MATCH
+    /* CUST DID NOT MATCH EXACTLY */
     searchName($manager);
     $get_mana_stmt = $dbh->prepare($get_mana_info);
     $get_mana_stmt->execute([":full_name" => $manager]);
-    $mana_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-    // SEARCH CUST IN KUALI
+    /* SEARCH CUST IN KUALI */
 }
-
-$manager_kuali['Jpy9KU-X3P'] = [
-    "displayName"=> $manager,
-    "email"=> $mana_info['email'],
-    "firstName"=> $mana_info['f_name'],
-    "id"=> $mana_info['form_id'],
-    "label"=> $manager,
-    "lastName"=> $mana_info['l_name'],
-    "schoolId"=> $mana_info['school_id'],
-    "username"=> $mana_info['username']
+$mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+$manager_kuali_key = 'Jpy9KU-X3P';
+$manager_kuali = [
+    "displayName" => $manager,
+    "email" => $mana_info['email'],
+    "firstName" => $mana_info['f_name'],
+    "id" => $mana_info['form_id'],
+    "label" => $manager,
+    "lastName" => $mana_info['l_name'],
+    "schoolId" => $mana_info['school_id'],
+    "username" => $mana_info['username']
 ];
+/*----------------------------------------- MANAGER INFO
+ * ------------------------------------------ */
 
 $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -197,31 +224,31 @@ foreach ($transfer_data as $index => $data) {
     if (!empty($data['VIN'])) $vin = true;
     $disposition_id = match ($data['code']) {
         'UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)' => 'CuUeXWzGh',
-            'LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)' => '2qPaeKyjo',
-            'VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)' => '_tTo3w-3o',
-            'TO BE CANABALIZED (SALVAGED FOR PARTS)' => 'XG6kUAxX1',
-            'SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10' => 'zNDbUOd2L',
-            'DONATION TO AN ELIGIBLE PUBLIC SCHOOL, PUBLIC SCHOOL DISTRICT OR ELIGIBLE ORGANIZATION  (SEE SAM SECTION 3520.5)' => 'v0Lk5047Y',
-            'SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)' => 'GgGdDSrGF',
-            'DONATION OF COMPUTERS FOR SCHOOLS PROGRAM' => 'wbwDDzEkI',
-            'SALE (SEE SAM SECTION 3520)' => 'WWQDBaKR0',
-            'TRADE-IN (SHOW TRADE-IN PRICE OFFERED)' => 'faprYWvqs'
+        'LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)' => '2qPaeKyjo',
+        'VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)' => '_tTo3w-3o',
+        'TO BE CANABALIZED (SALVAGED FOR PARTS)' => 'XG6kUAxX1',
+        'SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10' => 'zNDbUOd2L',
+        'DONATION TO AN ELIGIBLE PUBLIC SCHOOL, PUBLIC SCHOOL DISTRICT OR ELIGIBLE ORGANIZATION  (SEE SAM SECTION 3520.5)' => 'v0Lk5047Y',
+        'SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)' => 'GgGdDSrGF',
+        'DONATION OF COMPUTERS FOR SCHOOLS PROGRAM' => 'wbwDDzEkI',
+        'SALE (SEE SAM SECTION 3520)' => 'WWQDBaKR0',
+        'TRADE-IN (SHOW TRADE-IN PRICE OFFERED)' => 'faprYWvqs'
     };
     $json_form['data'][] = [
         "data" => [
-            "LZEp-popmB"=> (string)$data['reason'],
+            "LZEp-popmB" => (string)$data['reason'],
             "gFNvCD0-pH" => [
-                "id"=> $disposition_id,
-                "label"=> $data['code']
+                "id" => $disposition_id,
+                "label" => $data['code']
             ],
-            "yks38VOkzw"=> (string)$data['tag'],
-            "SBu1DONXk2"=> (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
-            "gNBhgBRLK0"=> (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
-        ], 
-        'id'=>(string)$index,
+            "yks38VOkzw" => (string)$data['tag'],
+            "SBu1DONXk2" => (string)$dept_name . ' (' . $data['Found Building Name'] . ')',
+            "gNBhgBRLK0" => (string)$data['Descr'] . ' - ' . ($vin ? 'VIN: ' . (string)$data['VIN'] ?? '' : 'SN: ' . (string)$data['Serial ID'] ?? ''),
+        ],
+        'id' => (string)$index,
     ];
 }
-// ADD REST OF UNITS
+/* ADD REST OF UNITS */
 $bkcmp = $bkspa = $bkstu = $bkasi = $bkfdn = [];
 if ($cmp) {
     $bkcmp =
@@ -229,7 +256,7 @@ if ($cmp) {
             "id" => "-tjpXbOsL",
             "label" => "BKCMP"
         ];
-} 
+}
 if ($bkspa) {
     $bkspa =
         [
@@ -250,51 +277,55 @@ if ($bkfdn) {
     ];
 }
 if ($bkasi) {
-    $bkasi =[
+    $bkasi = [
         "id" => "T6Rxq51PT",
         "label" => "BKASI"
     ];
 }
-$bus_units['04lKcQ1Iy2'] = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
-$bus_units['04lKcQ1Iy2'] = array_filter($bus_units['04lKcQ1Iy2'], fn($info) => (!empty($info['label']) && !empty($info['id'])));
+$bus_units_key = '04lKcQ1Iy2';
+$bus_units = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
+$bus_units = array_filter($bus_units['04lKcQ1Iy2'], fn($info) => (!empty($info['label']) && !empty($info['id'])));
+if (!$vin) {
+    $form_type_id = match ($its) {
+        true => "iK43J2G3IH",
+        false => "2DyVz03Xr"
+    };
+    $form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
+} else {
+    $form_type_id = "p4UJVwrfG";
+    $form_type_label = 'Vehicle';
+}
 
-$form_type_id = match ($its) {
-    true => "iK43J2G3IH",
-    false => "2DyVz03Xr"
-};
-$form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
-
-$reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
 $now_array = new DateTime();
-$now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
+$now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
 $ms_time = round(microtime(true) * 1000);
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        $bus_units,
-        "COwZg-7nwQ" => [
-            "id" => $form_type_id,
-            "label" => $form_type_label
-        ],
-        $manager_kuali,
-        "W_Uw0hSpff"=> $json_form,
-        $custodian_kuali,
-        "tc1F0ohejI"=> [
-            "data"=> [
-                "AkMeIWWhoj" => $dept_name,
-                "IOw4-l7NsM"=> $_SESSION['info'][2]
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            $custodian_kuali_key => $custodian_kuali,
+            $bus_units_key => $bus_units,
+            "COwZg-7nwQ" => [
+                "id" => $form_type_id,
+                "label" => $form_type_label
             ],
-            "label"=> $dept_name
-        ]
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
+            "tc1F0ohejI" => [
+                "data" => [
+                    "AkMeIWWhoj" => $dept_name,
+                    "IOw4-l7NsM" => $_SESSION['deptid']
+                ],
+                "label" => $dept_name
+            ],
+            $manager_kuali_key => $manager_kuali,
+            "W_Uw0hSpff" => $json_form,
+        ],
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
@@ -305,9 +336,8 @@ $resp = curl_exec($curl);
 curl_close($curl);
 $resp_data = json_decode($resp, true);
 
-echo json_encode(['status' => 'success']);
+echo json_encode(['status' => $submit_form, 'response' => $resp_data]);
 exit;
-//var_dump($resp);
 function randomPassword()
 {
     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
@@ -328,10 +358,19 @@ function searchName($search_name = '')
 {
     global $apikey;
     global $dept_id;
-    $name_array = explode(' ' ,$search_name);
-    $user_f_name = $name_array[0];
-    $user_l_name = $name_array[1] . ' ' . $name_array[2] ?? '' . ' ' . $name_array[3] ?? '' . ' ' . $name_array[4] ?? '';
     global $dbh;
+    $name_array = explode(' ', $search_name);
+    $user_f_name = $name_array[0];
+    $user_l_name = $name_array[1];
+    if (!empty($name_array[2])) {
+        $user_l_name .= ' ' . $name_array[2];
+    }
+    if (!empty($name_array[3])) {
+        $user_l_name .=  ' ' . $name_array[3];
+    }
+    if (!empty($name_array[4])) {
+        $user_l_name .=  ' ' . $name_array[4];
+    }
     $subdomain = "csub";
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
@@ -354,19 +393,18 @@ function searchName($search_name = '')
 }
 }
 }',
-    'variables' => [
-        'query' => $search_name
-    ]
+        'variables' => [
+            'query' => $search_name
+        ]
     ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
 
-    //for debug only!
+    /* for debug only! */
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
     $resp = curl_exec($curl);
     curl_close($curl);
-    //var_dump($resp);
     $name_data = json_decode($resp, true);
     $name_edges = $name_data['data']['usersConnection']['edges'];
     foreach ($name_edges as $info) {
@@ -377,13 +415,12 @@ function searchName($search_name = '')
         $f_name = $info['node']['firstName'];
         $l_name = $info['node']['lastName'];
         $schoolid = $info['node']['schoolId'];
-        if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name)))  {
+        if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name))) {
             continue;
         }
-        // CHECK DB
         $select = "SELECT * from user_table WHERE email = :email";
         $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":email"=>$email]);
+        $select_stmt->execute([":email" => $email]);
         if ($select_stmt->rowCount() <= 0) {
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
@@ -392,7 +429,7 @@ function searchName($search_name = '')
             $insert_stmt = $dbh->prepare($insert);
             $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
             try {
-                /*
+
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                 $mail->isSMTP();
                 $mail->Host       = 'smtp.gmail.com';
@@ -412,7 +449,6 @@ function searchName($search_name = '')
                 $mail->AltBody = 'Click this link to access Dataworks...';
 
                 $mail->send();
- */
             } catch (Exception $e) {
                 error_log("Error sending email: " . $e->getMessage());
                 return;
@@ -421,7 +457,7 @@ function searchName($search_name = '')
             $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
             $update = "UPDATE user_table SET ";
             $count = 0;
-            $params = [":email"=>$email];
+            $params = [":email" => $email];
             if (empty($user['school_id'])) {
                 $count++;
                 $update .= 'school_id = :school';
@@ -444,3 +480,4 @@ function searchName($search_name = '')
         }
     }
 }
+
