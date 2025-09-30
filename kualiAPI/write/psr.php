@@ -55,7 +55,7 @@ $select_stmt = $dbh->prepare($select);
 $select_stmt->execute([":email" => $email]);
 $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 if (empty($submitter_info)) {
-    searchName($_SESSION[$submitter_info['f_name'] . ' ' . $submitter_info['l_name']);
+    searchName($submitter_info['f_name'] . ' ' . $submitter_info['l_name']);
     $select_stmt = $dbh->prepare($select);
     $select_stmt->execute([":email" => $email]);
     $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
