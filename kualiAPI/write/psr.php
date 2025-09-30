@@ -24,15 +24,15 @@ foreach ($data['psr_tags'] as $index => $tag) {
             if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
                 $its = true;
             }
-            if ($_SESSION['Unit'] === 'BKCMP') {
+            if ($session['Unit'] === 'BKCMP') {
                 $cmp = true;
-            } else if ($_SESSION['Unit'] === 'BKSPA') {
+            } else if ($session['Unit'] === 'BKSPA') {
                 $spa = true;
-            } else if ($_SESSION['Unit'] === 'BKASI') {
+            } else if ($session['Unit'] === 'BKASI') {
                 $asi = true;
-            } else if ($_SESSION['Unit'] === 'BKSTU') {
+            } else if ($session['Unit'] === 'BKSTU') {
                 $stu = true;
-            } else if ($_SESSION['Unit'] === 'BKFDN') {
+            } else if ($session['Unit'] === 'BKFDN') {
                 $fdn = true;
             }
             $transfer_data[$index]['Tag Number'] = $tag['tag'];
@@ -100,6 +100,7 @@ $cust_last_name = $custodian_info['l_name'];
 $cust_school_id = $custodian_info['school_id'];
 $cust_signature = $custodian_info['signature'] ?? $cust_full_name;
 $cust_form_id = $custodian_info['form_id'];
+$cust_email = $custodian_info['email'];
 $custodian_kuali_key = 'ryhlM_VqBn';
 $custodian_kuali = [
     "displayName" => $cust_full_name,
@@ -138,7 +139,7 @@ try {
     if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
         /* SEARCH CUST IN KUALI */
         searchName($manager);
-        $get_mana_stmt = $dbh->prepare($get_cust_info);
+        $get_mana_stmt = $dbh->prepare($get_mana_info);
         $get_mana_stmt->execute([":full_name" => $manager]);
     }
 } catch (PDOException $e) {
