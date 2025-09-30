@@ -40,7 +40,8 @@ $dept_name = $dept_data['dept_name'] ?? 'Unknown Department';
 $documentsetid = $dept_data['documentsetid'] ?? '';
 $kuali_id = $dept_data['kuali_id'] ?? '';
 if (empty($kuali_id) || empty($documentsetid)) {
-    $dept_info['isFMbCuv8e'] = [
+    $dept_key = 'isFMbCuv8e';
+    $dept_info = [
         'data' => [
             'AkMeIWWhoj' => $dept_name,
             'IOw4-l7NsM' => $_SESSION['deptid']
@@ -48,7 +49,8 @@ if (empty($kuali_id) || empty($documentsetid)) {
         'label' => $dept_name
     ];
 } else {
-    $dept_info['isFMbCuv8e'] = [
+    $dept_key = 'isFMbCuv8e';
+    $dept_info = [
         'data' => [
             'AkMeIWWhoj' => $dept_name,
             'IOw4-l7NsM' => $_SESSION['deptid']
@@ -59,15 +61,18 @@ if (empty($kuali_id) || empty($documentsetid)) {
     ];
 }
 
-$location["XE0n2IZXBC"] = "Bakersfield";
-$street["Smva-ICjnV"] = "9001 Stockdale Hwy";
+$location_key = "XE0n2IZXBC";
+$location = "Bakersfield";
+$stree_key = "Smva-ICjnV";
+$street = "9001 Stockdale Hwy";
 $condition_id = match ($condition) {
 "New" => "PMMV9ld3ML",
     "Good" => "uPq0cgV51",
     "Used" => "2zmA7sZQnX",
     "Damaged" => "s0MNB7p9vx"
 };
-$kuali_condition['UTQZbrKiio'] = [
+$condition_key = 'UTQZbrKiio';
+$kuali_condition = [
     "id" => $condition_id,
     "label" => $condition
 ];
@@ -77,7 +82,8 @@ $asset_type_id = match ($asset_type) {
     "Desktop" => "UHFK_j1G7L",
     "Tablet" => "-wWkrsS_A_"
 };
-$kuali_asset_type['aUVT1BLN6V'] = [
+$asset_type_key = 'aUVT1BLN6V';
+$kuali_asset_type = [
     "id" => $asset_type_id,
     "label" => $asset_type
 ];
@@ -86,7 +92,8 @@ $who_id = match ($who) {
     "Myself" => "fK-8m6dzx",
     "Someone Else" => "y89ptC2TA"
 };
-$kuali_who['e0fZiLYomu'] = [
+$who_key = 'e0fZiLYomu';
+$kuali_who = [
     "id" => $who_id,
     "label" => $who
 ];
@@ -100,7 +107,8 @@ $form_type_id = match ($form_type) {
 "Returning Equipment" => "",
     "Checking Out Equipment" => "Nwnp1xzbH"
 };
-$kuali_form_type['fyaCF8g3Uh'] = [
+$form_type = 'fyaCF8g3Uh';
+$kuali_form_type= [
     'id' => $form_type_id,
     'label' => $form_type
 ];
@@ -179,7 +187,8 @@ $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($form_type === 'check-in') {
 
-    $date_of_form['73dNIwQS0c'] = $date->format('m/d/Y');
+    $check_type_date_key = '73dNIwQS0c';
+    $check_type_date = $date->format('m/d/Y');
 
     $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id";
     $custodian_stmt = $dbh->prepare($custodian);
@@ -207,6 +216,7 @@ if ($form_type === 'check-in') {
         $custodian_info = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    $authority_key = '_fBI_Ezliu';
     $authority_info['_fBI_Ezliu'] = [
         'displayName' => $custodian_info['f_name'] . ' ' . $custodian_info['l_name'],
         'email' => $_SESSION['email'],
@@ -217,7 +227,8 @@ if ($form_type === 'check-in') {
         'username' => $custodian_info['username']
     ];
 } else {
-    $date_of_form['-StvOCXWsX'] = $date->format('m/d/Y');
+    $check_type_date_key = '-StvOCXWsX';
+    $check_type_date = $date->format('m/d/Y');
 
 
     $manager_select = "SELECT dept_manager FROM department WHERE dept_id = :dept_id";
@@ -252,7 +263,8 @@ if ($form_type === 'check-in') {
         $manager_info = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     }
     /* GET MANAGER ID FOR GRAPHQL */
-    $authority_info['NdN80WJusb'] = [
+    $authority_key = 'NdN80WJusb';
+    $authority_info = [
         'displayName' => $manager_info['f_name'] . ' ' . $manager_info['l_name'],
         'email' => $manager_info['email'],
         'firstName' => $manager_info['f_name'],
@@ -304,24 +316,24 @@ if ($who !== 'Myself') {
                 /* TAG */
                 "BOZIA6hewQ" => $tag,
                 /* MS TIME STAMP */
-                $check_type_date,
+                $check_type_date_key => $check_type_date,
                 /* MYSELF / SOMEONE ELSE */
-                $kuali_who,
+                $who_key => $kuali_who,
                 /* RETURNING / CHECK OUT */
-                $kuali_form_type,
-                $location,
-                $street,
+                $form_type_key => $kuali_form_type,
+                $location_key => $location,
+                $street_key => $street,
                 /* DESCRIPTION */
                 "cQOz4UQ0rQ" => $asset_name,
                 "jYTHHgL10M" => $serial,
-                $dept_info,
+                $dept_key => $dept_info,
                 /* CONDITION */
-                $kuali_condition,
+                $condition_key => $kuali_condition,
                 /* LAPTOP, TABLET, etc */
-                $kuali_asset_type,
+                $asset_type_key => $kuali_asset_type,
                 /* MANAGER OR CUST */
-                $authority_info,
-                $borrower_info
+                $authority_key => $authority_info,
+                $borrower_key => $borrower_info
             ],
             'actionId' => $action_id,
             'status' => 'completed'
@@ -355,7 +367,8 @@ if ($who !== 'Myself') {
     $submitter_form_id = $submitter_info['form_id'];
     $submitter_first = $submitter_info['f_name'];
     $submitter_last = $submitter_info['l_name'];
-    $submitter_sig_info['JXLJ_AOov-'] = [
+    $submitter_sig_key = 'JXLJ_AOov-'; 
+    $submitter_info_info = [
         'actionId' => $action_id,
         'date' => $now,
         'displayName' => $submitter_first . ' ' . $submitter_last . ' (' . $_SESSION['email'] . ')',
@@ -363,6 +376,7 @@ if ($who !== 'Myself') {
         'signedName' => $submitter_sig ?? $submitter_first . ' ' . $submitter_last,
         'userId' => $submitter_form_id
     ];
+    $check_type_date = $date->format('m/d/Y');
 
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
@@ -370,29 +384,28 @@ if ($who !== 'Myself') {
         'variables' => [
             'documentId' => $document_id,
             'data' => [
-                /* NOTE */
                 "0LZvRo9vT5" => $note,
                 /* TAG */
                 "BOZIA6hewQ" => $tag,
                 /* MS TIME STAMP */
-                $check_type_date,
+                $check_type_date_key => $check_type_date,
                 /* MYSELF / SOMEONE ELSE */
-                $kuali_who,
+                $who_key => $kuali_who,
                 /* RETURNING / CHECK OUT */
-                $kuali_form_type,
-                $location,
-                $street,
+                $form_type_key => $kuali_form_type,
+                $location_key => $location,
+                $street_key => $street,
                 /* DESCRIPTION */
                 "cQOz4UQ0rQ" => $asset_name,
                 "jYTHHgL10M" => $serial,
-                $dept_info,
+                $dept_key => $dept_info,
                 /* CONDITION */
-                $kuali_condition,
+                $condition_key => $kuali_condition,
                 /* LAPTOP, TABLET, etc */
-                $kuali_asset_type,
+                $asset_type_key => $kuali_asset_type,
                 /* MANAGER OR CUST */
-                $authority_info,
-                $submitter_sig_info
+                $authority_key => $authority_info,
+                $submitter_sig_key => $submitter_sig_info
             ],
             'actionId' => $action_id,
             'status' => 'completed'
