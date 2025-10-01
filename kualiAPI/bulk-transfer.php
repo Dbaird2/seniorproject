@@ -145,10 +145,12 @@ try {
                 if ($bldg_id === '39A') {
                     $bldg_id = 39;
                 }
+                
                 $bldg_name = $data['data']['BC0E2hOKv3']['data']['AkMeIWWhoj'];
                 echo "<br>Bldg ID " . $bldg_id . "<br>";
                 echo "<br>Bldg Name " . $bldg_name . "<br>";
             }
+            $bldg_id = (int)$bldg_id
             // UPDATE DATABASE BASED OF KUALI
             if (!empty($bldg_id) && !empty($bldg_name)) {
                 $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :id";
