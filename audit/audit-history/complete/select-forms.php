@@ -1,13 +1,17 @@
 <?php
 include_once "../../../config.php";
 check_auth();
+$select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
+$stmt = $dbh->prepare($select_dept);
+$stmt->execute([":id"=>$_SESSION['info'][2]]);
+$dept_name = $stmt->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Form Submissions <?= $_SESSION['info'][2] . ' ' . $_SESSION['info'][3] ?></title>
-    <?php include_once "../../navbar.php"; ?>
+    <title>Form Submissions <?= $_SESSION['info'][2] . ' ' . $dept_name ?></title>
+    <?php include_once "../../../navbar.php"; ?>
     <style>
         * {
             box-sizing: border-box;
@@ -255,7 +259,7 @@ check_auth();
                 </thead>
                 <tbody>
                     <?php foreach ($_SESSION['data'] as $index => $row) { ?>
-                        <tr>
+                    <tr class="row-<?=$row['Tag Number']?>">
                             <td style="font-weight: 700;background-color: #e5F3Fd;"><?= $row['Unit'] ?></td>
                             <td style="font-weight: 600;background-color: #e5F3Fd;"><?= $row['Tag Number'] ?></td>
                             <td style="font-weight: 600;background-color: #e5F3Fd;"><?= $row['Descr'] ?></td>
@@ -282,6 +286,13 @@ check_auth();
                                         <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)">UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)</option>
                                         <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)">VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)</option>
                                         <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10">SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10</option>
+                                        <option value"LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)">LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)</option>
+                                        <option value="TO BE CANABALIZED (SALVAGED FOR PARTS)">TO BE CANABALIZED (SALVAGED FOR PARTS)</option>
+                                        <option value="DONATION TO AN ELIGIBLE PUBLIC SCHOOL, PUBLIC SCHOOL DISTRICT OR ELIGIBLE ORGANIZATION  (SEE SAM SECTION 3520.5)">DONATION TO AN ELIGIBLE PUBLIC SCHOOL, PUBLIC SCHOOL DISTRICT OR ELIGIBLE ORGANIZATION (SEE SAM SECTION 3520.5)</option>
+                                        <option value="SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)">SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)</option>
+                                        <option value="DONATION OF COMPUTERS FOR SCHOOLS PROGRAM">DONATION OF COMPUTERS FOR SCHOOLS PROGRAM</option>
+                                        <option value="SALE (SEE SAM SECTION 3520)">SALE (SEE SAM SECTION 3520)</option>
+                                        <option value="TRADE-IN (SHOW TRADE-IN PRICE OFFERED)">TRADE-IN (SHOW TRADE-IN PRICE OFFERED)</option>
                                     </select>
                                 </div>
                             </td>
@@ -455,7 +466,10 @@ check_auth();
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Do you have insurance?</label>
-                                    <input type="text" id="upd-insurance-<?= $row['Tag Number'] ?>">
+                                    <select id="upd-insurance-<?= $row['Tag Number'] ?>">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
                                 </div>
                             </td>
                             <td class="lsd-upd-insurance-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -566,6 +580,7 @@ check_auth();
                         hideUI('lsd-upd', tag);
                         hideUI('lsd-upd-yes', tag);
                         hideUI('lsd-upd-insurance', tag);
+                        hideUI('lsd-fill-', tag);
                         return;
                     }
                     const form_class = document.querySelectorAll('.' + form_type.value + '-' + form_type.dataset.tag);
@@ -587,6 +602,7 @@ check_auth();
                         hideUI('lsd-upd', tag);
                         hideUI('lsd-upd-yes', tag);
                         hideUI('lsd-upd-insurance', tag);
+                        hideUI('lsd-fill-', tag);
                     }
 
                     if (form_type.value === 'check-in') {
@@ -607,6 +623,7 @@ check_auth();
                         hideUI('lsd-upd', tag);
                         hideUI('lsd-upd-yes', tag);
                         hideUI('lsd-upd-insurance', tag);
+                        hideUI('lsd-fill-', tag);
                     }
 
                     if (form_type.value === 'psr') {
@@ -618,6 +635,7 @@ check_auth();
                         hideUI('lsd-upd', tag);
                         hideUI('lsd-upd-yes', tag);
                         hideUI('lsd-upd-insurance', tag);
+                        hideUI('lsd-fill-', tag);
                     }
 
                     if (form_type.value === 'lsd') {
@@ -635,10 +653,20 @@ check_auth();
                                         hideUI('lsd-upd-yes', tag);
                                     }
                                 });
+                                const assigned = document.getElementById('upd-insurance-' + tag);
+                                assigned.addEventListener('change', () => {
+                                    console.log(assigned.value);
+                                    if (assigned.value === 'Yes') {
+                                        showUI('lsd-upd-insurance', tag);
+                                    } else {
+                                        hideUI('lsd-upd-insurance', tag);
+                                    }
+                                });
                             } else {
                                 hideUI('lsd-upd', tag);
                                 hideUI('lsd-upd-yes', tag);
                                 hideUI('lsd-upd-insurance', tag);
+                                hideUI('lsd-fill-', tag);
                             }
                         });
                         const someone_else = document.getElementById('lsd-who-' + tag);
@@ -666,6 +694,7 @@ check_auth();
                         hideUI('check-in', tag);
                         hideUI('psr', tag);
                         hideUI('lsd', tag);
+                        hideUI('lsd-fill-', tag);
                     }
 
                     form_class.forEach(el => {
@@ -762,9 +791,13 @@ check_auth();
                             try {
                                 const data = await out_res.json();
                                 console.log("Check out response (JSON):", data);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("Check out response (text):", text);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             }
                         }
                     } else if (val == 'check-in') {
@@ -805,9 +838,13 @@ check_auth();
                             try {
                                 const data = await in_res.json();
                                 console.log("Check in response (JSON):", data);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("Check in response (text):", text);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             }
                         }
                     } else if (val === 'lsd') {
@@ -889,9 +926,13 @@ check_auth();
                             try {
                                 const data = await lsd_res.json();
                                 console.log("bulk-transfer response (JSON):", data);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("bulk-transfer response (text):", text);
+                                hide('row', type.dataset.tag);
+                                type.value = '';
                             }
                         }
                     }
@@ -922,10 +963,18 @@ check_auth();
                         const clone = psr_res.clone();
                         try {
                             const data = await psr_res.json();
-                            console.log("bulk-transfer response (JSON):", data);
+                            console.log("PSR response (JSON):", data);
+                            psr_tags.forEach(async (value) => {
+                                hide('row', value);
+                                type.value = '';
+                            }
                         } catch {
                             const text = await clone.text();
-                            console.log("bulk-transfer response (text):", text);
+                            console.log("PSR response (text):", text);
+                            psr_tags.forEach(async (value) => {
+                                hide('row', value);
+                                type.value = '';
+                            }
                         }
                     }
                 }
@@ -952,9 +1001,17 @@ check_auth();
                         try {
                             const data = await bulk_t_res.json();
                             console.log("bulk-transfer response (JSON):", data);
+                            bulk_t_tags.forEach(async (value) => {
+                                hide('row', value);
+                                type.value = '';
+                            }
                         } catch {
                             const text = await clone.text();
                             console.log("bulk-transfer response (text):", text);
+                            psr_tags.forEach(async (value) => {
+                                hide('row', value);
+                                type.value = '';
+                            }
                         }
                     }
                 }
@@ -962,5 +1019,4 @@ check_auth();
         });
     </script>
 </body>
-
 </html>
