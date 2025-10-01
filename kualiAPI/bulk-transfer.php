@@ -119,6 +119,7 @@ try {
         }
         $tags = $edge['node']['data']['JZ-q3J19dw']['data'];
         foreach ($tags as $index => $data) {
+            echo "<br>--------------------------------------<br>";
             $tag = $data['data']['RxpLOF3XrE'];
             if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
                 echo "<br>Tag field empty<br>";
@@ -164,6 +165,8 @@ try {
                     $stmt = $dbh->prepare($insert);
                     $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
                     echo "<br>Building Was NOT found adding building to database. Automatically Added Building<br>";
+                    $id_stmt = $dbh->prepare($select);
+                    $id_stmt->execute([':id'=>$bldg_id]);
                 }
 
                 $db_bldg = $id_stmt->fetch(PDO::FETCH_ASSOC);
@@ -194,6 +197,7 @@ try {
                     $insert = "INSERT INTO room_table (room_loc, bldg_id) VALUES (:rloc, :bid)";
                     $insert_stmt = $dbh->prepare($insert);
                     $insert_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
+                    echo "<br>Inserted room into database<br>";
 
                     $select_stmt = $dbh->prepare($select_q);
                     $select_stmt->execute([':bid' => $bldg_id, ":rloc" => $room_loc]);
@@ -212,6 +216,7 @@ try {
                     $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+                    echo "<br>Updated Tag in database<br>";
                 } else { 
                     echo "<br>Tag was not in database<br>";
                 }
@@ -226,6 +231,7 @@ try {
                 echo "error updating kuali_table " . $e->getMessage();
             }
             echo "<br>Time " . $update_time . "<br>";
+            echo "<br>--------------------------------------<br>";
         }
     }
 } catch (PDOException $e) {
