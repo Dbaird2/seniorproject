@@ -138,7 +138,7 @@ try {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
                 $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
                 echo "<br>Bldg ID " . $bldg_id . "<br>";
-                echo "<br>Bldg Name " . $bldg_id . "<br>";
+                echo "<br>Bldg Name " . $bldg_name . "<br>";
             }
             if (!empty($data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'];
@@ -151,9 +151,19 @@ try {
             }
             // UPDATE DATABASE BASED OF KUALI
             if (!empty($bldg_id) && !empty($bldg_name)) {
-                $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :id OR bldg_name = :name";
-                $stmt = $dbh->prepare($select);
-                $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
+                $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :id";
+                $id_stmt = $dbh->prepare($select);
+                $id_stmt->execute([':id'=>$bldg_id]);
+                $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :name";
+                $name_stmt = $dbh->prepare($select);
+                $name_stmt->execute([':id'=>$bldg_id]);
+                if ($id_stmt->rowCount() === 0) {
+                    $insert = "INSERT INTO bldg_table (bldg_id, bldg_name) VALUES (:id, :name)";
+                    $stmt = $dbh->prepare($insert);
+                    $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
+                    echo "<br>Building Was NOT found adding building to database. Automatically Added Building<br>";
+                }
+
                 $db_bldg = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($bldg_id !== $db_bldg['bldg_id']) {
                     $update = "UPDATE bldg_table SET bldg_id = :id WHERE bldg_name = :name";
@@ -168,10 +178,8 @@ try {
                     echo "<br>Bldg name was different. Fixing<br>";
                 }
             } else {
-                $insert = "INSERT INTO bldg_table (bldg_id, bldg_name) VALUES (:id, :name)";
-                $stmt = $dbh->prepare($insert);
-                $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
-                echo "<br>Building Was NOT found adding building to database. Automatically Added Building<br>";
+                echo "<br>Building name or id was not found skipping<br>";
+                continue;
             }
 
 
