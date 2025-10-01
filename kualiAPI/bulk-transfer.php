@@ -156,7 +156,7 @@ try {
                 $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :id";
                 $id_stmt = $dbh->prepare($select);
                 $id_stmt->execute([':id'=>$bldg_id]);
-                $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :name";
+                $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_name = :name";
                 $name_stmt = $dbh->prepare($select);
                 $name_stmt->execute([':name'=>$bldg_name]);
                 if ($id_stmt->rowCount() === 0) {
