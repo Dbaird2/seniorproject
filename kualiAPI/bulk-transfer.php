@@ -172,7 +172,7 @@ try {
                     echo "<br>Bldg id was different. Fixing<br>";
                 }
                 if ($bldg_name !== $db_bldg['bldg_name']) {
-                    $update = "UPDATE bldg_table SET bldg_name = :name WHERE bldg_id = :name";
+                    $update = "UPDATE bldg_table SET bldg_name = :name WHERE bldg_id = :id";
                     $stmt = $dbh->prepare($update);
                     $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
                     echo "<br>Bldg name was different. Fixing<br>";
