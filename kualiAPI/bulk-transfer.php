@@ -158,7 +158,7 @@ try {
                 $id_stmt->execute([':id'=>$bldg_id]);
                 $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :name";
                 $name_stmt = $dbh->prepare($select);
-                $name_stmt->execute([':id'=>$bldg_id]);
+                $name_stmt->execute([':name'=>$bldg_name]);
                 if ($id_stmt->rowCount() === 0) {
                     $insert = "INSERT INTO bldg_table (bldg_id, bldg_name) VALUES (:id, :name)";
                     $stmt = $dbh->prepare($insert);
