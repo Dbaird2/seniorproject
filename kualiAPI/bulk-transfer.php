@@ -126,7 +126,7 @@ try {
             }
             echo "<br>Tag " . $data['data']['RxpLOF3XrE']. "<br>";
             $dept_id = $data['data']['5c3qSm88bs'];
-            if (!empty($data['data']['6JHs3W0-CL']) {
+            if (!empty($data['data']['6JHs3W0-CL'])) {
                 $room_loc = $data['data']['6JHs3W0-CL'];
             }
             $dept_id = substr($dept_id, 0, 6);
