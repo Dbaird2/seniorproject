@@ -136,7 +136,7 @@ try {
             }
             if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
-                $bldg_name = $data['data']['bYpfsUDuZx']['data']['data']['AkMeIWWhoj'];
+                $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
                 echo "<br>Bldg ID " . $bldg_id . "<br>";
                 echo "<br>Bldg Name " . $bldg_id . "<br>";
             }

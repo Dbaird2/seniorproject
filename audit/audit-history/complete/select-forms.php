@@ -47,6 +47,7 @@ $dept_name = $stmt->fetchColumn();
         }
 
         .table-wrapper {
+            margin-top: -330px;
             overflow-x: auto;
             padding: 1.5rem;
         }
