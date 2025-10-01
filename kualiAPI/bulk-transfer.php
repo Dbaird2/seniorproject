@@ -166,7 +166,7 @@ try {
                     echo "<br>Building Was NOT found adding building to database. Automatically Added Building<br>";
                 }
 
-                $db_bldg = $stmt->fetch(PDO::FETCH_ASSOC);
+                $db_bldg = $id_stmt->fetch(PDO::FETCH_ASSOC);
                 if ($bldg_id !== $db_bldg['bldg_id']) {
                     $update = "UPDATE bldg_table SET bldg_id = :id WHERE bldg_name = :name";
                     $stmt = $dbh->prepare($update);
