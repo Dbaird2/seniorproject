@@ -792,12 +792,12 @@ $dept_name = $stmt->fetchColumn();
                             try {
                                 const data = await out_res.json();
                                 console.log("Check out response (JSON):", data);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("Check out response (text):", text);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             }
                         }
@@ -839,12 +839,12 @@ $dept_name = $stmt->fetchColumn();
                             try {
                                 const data = await in_res.json();
                                 console.log("Check in response (JSON):", data);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("Check in response (text):", text);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             }
                         }
@@ -927,12 +927,12 @@ $dept_name = $stmt->fetchColumn();
                             try {
                                 const data = await lsd_res.json();
                                 console.log("bulk-transfer response (JSON):", data);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             } catch {
                                 const text = await clone.text();
                                 console.log("bulk-transfer response (text):", text);
-                                hide('row', type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
                                 type.value = '';
                             }
                         }
@@ -966,14 +966,14 @@ $dept_name = $stmt->fetchColumn();
                             const data = await psr_res.json();
                             console.log("PSR response (JSON):", data);
                             psr_tags.forEach(async (value) => {
-                                hide('row', value);
+                                hideUI('row', value);
                                 type.value = '';
                             });
                         } catch {
                             const text = await clone.text();
                             console.log("PSR response (text):", text);
                             psr_tags.forEach(async (value) => {
-                                hide('row', value);
+                                hideUI('row', value);
                                 type.value = '';
                             });
                         }
@@ -1003,14 +1003,14 @@ $dept_name = $stmt->fetchColumn();
                             const data = await bulk_t_res.json();
                             console.log("bulk-transfer response (JSON):", data);
                             bulk_t_tags.forEach(async (value) => {
-                                hide('row', value);
+                                hideUI('row', value);
                                 type.value = '';
                             });
                         } catch {
                             const text = await clone.text();
                             console.log("bulk-transfer response (text):", text);
                             psr_tags.forEach(async (value) => {
-                                hide('row', value);
+                                hideUI('row', value);
                                 type.value = '';
                             });
                         }
