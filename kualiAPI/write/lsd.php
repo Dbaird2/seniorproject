@@ -116,7 +116,9 @@ $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
 $manager = trim($dept_info['dept_manager']);
 
-$get_mana_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$get_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
+$get_info_email = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where email = :email";
+$get_info_name = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 
 
 if (!$apikey) {
@@ -186,12 +188,12 @@ if (!$action_id || !$document_id) {
 if (!empty($lsd_data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $lsd_data['borrower'])) {
-        $borrower_signature = getSignature(query: $get_mana_info, email: $lsd_data['borrower'], action_id: $action_id);
+        $borrower_signature = getSignature(query: $get_info_email, email: $lsd_data['borrower'], action_id: $action_id);
     } else {
-        $borrower_signature = getSignature(query: $get_mana_info, person_name: $lsd_data['borrower'], action_id: $action_id);
+        $borrower_signature = getSignature(query: $get_info_name, person_name: $lsd_data['borrower'], action_id: $action_id);
     }
 }
-$manager_info = getSignature(query: $get_mana_info, person_name: $manager, type: 'info');
+$manager_info = getSignature(query: $get_info, person_name: $manager, type: 'info');
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
 $upd_id = match ($lsd_data['upd']) {
     "No" => "CbModhwutSo",
@@ -364,19 +366,19 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
-$resp_data = json_decode($resp, true);
-/*
-$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
-$tag = $lsd_data['Tag Number'];
-$doc_id = '68c73600df46a3027d2bd386';
-$input_array = $tag. ',' . $id . ',' . $doc_id . ',in-progress';
+if (!empty($data['dept_id']) && !empty($data['audit_id'])) {
+    $resp_data = json_decode($resp, true);
+    $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
+    $tag = $lsd_data['Tag Number'];
+    $doc_id = '68c73600df46a3027d2bd386';
+    $input_array = $tag. ',' . $id . ',' . $doc_id . ',in-progress';
 
-$dept = $data['dept_id'][0];
-$audit_id = $data['audit_id'][0];
-$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
-$update_stmt = $dbh->prepare($update);
-$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
- */
+    $dept = $data['dept_id'];
+    $audit_id = $data['audit_id'];
+    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+    $update_stmt = $dbh->prepare($update);
+    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+}
 curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp]);

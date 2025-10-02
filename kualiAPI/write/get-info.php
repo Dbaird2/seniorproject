@@ -1,9 +1,8 @@
 <?php
 function getSignature($query = '',$person_name = '', $email = '', $type = 'signature', $action_id = '') {
-    if (empty($query)) {
-        return;
-    }
-    if (empty($person_name) || empty($email)) {
+    if (empty($query)) return;
+    
+    if (empty($person_name) && empty($email)) {
         return;
     }
     if ($type === 'signature' && empty($action_id)) {
@@ -32,17 +31,31 @@ function getSignature($query = '',$person_name = '', $email = '', $type = 'signa
                 $update_stmt->execute([':username' => $email_array[0], ":email" => $email]);
             }
         }
-        if ((empty($person_info['form_id']) || empty($person_info['school_id'])) && !empty($person_info['email'])) {
+        if ((empty($person_info['form_id']) || empty($person_info['school_id']))) {
+            if (!empty($email)) {
+                searchEmail($person_info['email'], $apikey, $dept_id);
+                $get_name_stmt = $dbh->prepare($query);
+                $get_name_stmt->execute([":email" => $person_name]);
+                $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                searchName($person_name, $apikey, $dept_id);
+                $get_name_stmt = $dbh->prepare($query);
+                $get_name_stmt->execute([":full_name" => $person_name]);
+                $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+            }
+        }
+    } catch (PDOException $e) {
+        if (!empty($email)) {
             searchEmail($person_info['email'], $apikey, $dept_id);
+            $get_name_stmt = $dbh->prepare($query);
+            $get_name_stmt->execute([":email" => $person_name]);
+            $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            searchName($person_name, $apikey, $dept_id);
             $get_name_stmt = $dbh->prepare($query);
             $get_name_stmt->execute([":full_name" => $person_name]);
             $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
         }
-    } catch (PDOException $e) {
-        searchName($person_name, $apikey, $dept_id);
-        $get_name_stmt = $dbh->prepare($query);
-        $get_name_stmt->execute([":full_name" => $person_name]);
-        $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
     }
     $now_array = new DateTime();                              
     $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
