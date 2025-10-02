@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 LEFT JOIN department d ON a.dept_id = d.dept_id
                 WHERE bus_unit = :name ORDER BY a.asset_tag";
         } else {
-
             $select_q = "SELECT a.found, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
                 a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
                 d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
@@ -488,8 +487,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 <h3><br>OR<br></h3>
 <input class="form-input" list="dept-ids" type="search" name="list-type" placeholder="Search Dept Name">
 <datalist id="dept-ids" id="list" name="list">
+<option value="SPA Audit">SPA</option>
 <?php foreach ($depts as $dept) { ?>
-<option value="SPA Audit"></option>
 <option value="<?= $dept['dept_name'] ?>"><?= $dept['dept_name'] ?></option>
 <?php } ?>
 </datalist> 
