@@ -654,8 +654,8 @@ $dept_name = $stmt->fetchColumn();
                                         hideUI('lsd-upd-yes', tag);
                                     }
                                 });
-                                const assigned = document.getElementById('upd-insurance-' + tag);
-                                assigned.addEventListener('change', () => {
+                                const insurance = document.getElementById('upd-insurance-' + tag);
+                                insurance.addEventListener('change', () => {
                                     console.log(assigned.value);
                                     if (assigned.value === 'Yes') {
                                         showUI('lsd-upd-insurance', tag);

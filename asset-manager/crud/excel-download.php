@@ -10,11 +10,11 @@ $email = $_SESSION['email'];
 $profile_name = $_GET['profile_name'];
 $profile_name = trim($profile_name, "'");
 
-$select_q = "SELECT p.asset_tag, a.asset_name,
-    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
-    FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
-    JOIN room_table r ON a.room_tag = r.room_tag
-    JOIN bldg_table b ON r.bldg_id = b.bldg_id
+$select_q = "SELECT p.asset_tag, a.asset_name, a.serial_num, a.asset_price
+    ,CONCAT(b.bldg_id, '-', r.room_loc) AS location,a.dept_id, a.po, p.asset_note
+    FROM user_asset_profile p LEFT JOIN asset_info a ON p.asset_tag = a.asset_tag
+    LEFT JOIN room_table r ON a.room_tag = r.room_tag
+    LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
     WHERE p.profile_name = :profile_name AND p.email = :email";
 try {
     $select_stmt = $dbh->prepare($select_q);
@@ -26,7 +26,15 @@ try {
 }
 $spreadsheet = new Spreadsheet();
 if ($result) {
-    $spreadsheet->getActiveSheet()->fromArray($result, NULL, 'A1');
+    $spreadsheet->getActiveSheet()->setCellValue('A1', 'Tag Number');
+    $spreadsheet->getActiveSheet()->setCellValue('A2', 'Descr');
+    $spreadsheet->getActiveSheet()->setCellValue('A3', 'Serial ID');
+    $spreadsheet->getActiveSheet()->setCellValue('A4', 'Location');
+    $spreadsheet->getActiveSheet()->setCellValue('A5', 'Department');
+    $spreadsheet->getActiveSheet()->setCellValue('A6', 'COST Total Cost');
+    $spreadsheet->getActiveSheet()->setCellValue('A7', 'PO No.');
+    $spreadsheet->getActiveSheet()->setCellValue('A7', 'Notes');
+    $spreadsheet->getActiveSheet()->fromArray($result, NULL, 'A2');
 } else {
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'No Data Found');
 }
