@@ -34,9 +34,11 @@ if ($result) {
 $writer = new Xlsx($spreadsheet);
 $writer->setPreCalculateFormulas(false);
 
+if (ob_get_length()) { ob_end_clean(); } // clear any previous output
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment; filename=' . urlencode($profile_name) . '.xlsx');
+header('Cache-Control: max-age=0');
+header('Pragma: public');
 $writer->save('php://output');
-echo json_encode(['status'=>'Success']);
 exit;
 

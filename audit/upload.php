@@ -119,8 +119,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $highest_col = $worksheet->getHighestColumn();
         unset($_SESSION['data']);
         $continue = false;
-        if ($data[0][11] === 'Tag Status') {
-            $continue = true;
+        if (!empty($data[0][11])) {
+            if ($data[0][11] === 'Tag Status') {
+                $continue = true;
+            }
         }
         if (count($data) >= 2) {
             $header_index = 0;
