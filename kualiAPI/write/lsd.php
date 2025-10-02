@@ -232,9 +232,9 @@ if ($lsd_data['who'] === 'Myself') {
                 "label"=> "Staff / Faculty"
             ],
             // MANAGER IF STAFF
-            "0Qm43mG2vV" => [
+            "0Qm43mG2vV" => 
                 $manager_info
-            ],
+            ,
             // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
             "6lJyeq9g1v" => [
                 "id" => $item_type_id,
