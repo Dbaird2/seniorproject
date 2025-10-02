@@ -95,9 +95,9 @@ function quickStart() {
 function displayTable() {
     const profile_name = document.getElementById('profiles').value;
     if (profile_name.length === 0) {
-        $(".quick-buttons").hide();
-        $("#restart").hide();
-        $("#nav-ui2").hide();
+        document.querySelector('.quick-buttons').style.display = 'none';
+        document.getElementById('restart').style.display = 'none';
+        document.getElementById('nav-ui2').style.display = 'none';
         return;
     }
 
@@ -110,9 +110,9 @@ function displayTable() {
         },
         success: function (html) {
             $("#display-table").html(html).show();
-            $(".quick-buttons").show();
-            $("#restart").show();
-            $("#nav-ui2").show();
+            document.querySelector('.quick-buttons').style.display = 'flex';
+            document.getElementById('restart').style.display = 'flex';
+            document.getElementById('nav-ui2').style.display = 'flex';
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.error("AJAX Error:", textStatus, errorThrown);

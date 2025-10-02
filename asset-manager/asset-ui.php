@@ -47,7 +47,7 @@ check_auth();
 
                 </ul>
             </nav>
-            <div class="quick-buttons">
+            <div class="quick-buttons" style="display:none;" >
                 <input type="search" id="dept" list="dept-list" placeholder="Department" autocomplete="on" accept="text/plain">
                 <datalist id="dept-list">
                     <?php
@@ -58,14 +58,14 @@ check_auth();
                     }
                     ?>
                 </datalist>
-                <a class="cta" href="#" style="display:none;"><button id="quick-start" name="quick-start">Quick Start</button></a>
+                <a class="cta" href="#"><button id="quick-start" name="quick-start">Quick Start</button></a>
             </div>
-            <div class="downloads">
-                <a class="cta" href="#" style="display:none;"><button id="restart" name="restart">Restart Sheet</button></a>
+            <div class="downloads" style="display:none;">
+                <a class="cta" href="#"><button id="restart" name="restart">Restart Sheet</button></a>
 
             </div>
         </header>
-        <nav id="nav-ui2" style="place-self: center;">
+        <nav id="nav-ui2" style="place-self: center;display:none;">
             <ul class="nav-ui">
                 <li>
                     <input type="search" id="search-db" list="asset-list" placeholder="Search Assets" autocomplete="off" accept="text/plain">

@@ -185,7 +185,7 @@ if (!$action_id || !$document_id) {
 
 if (!empty($lsd_data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
-    if (preg_match('/@/i', $lsd_data['borrower']) {
+    if (preg_match('/@/i', $lsd_data['borrower'])) {
         $borrower_signature = getSignature($query: $get_mana_info, $email: $lsd_data['borrower'], $action_id: $action_id);
     } else {
         $borrower_signature = getSignature($query: $get_mana_info, $person_name: $lsd_data['borrower'], $action_id: $action_id);
