@@ -24,6 +24,14 @@ function getSignature($query = '',$person_name = '', $email = '', $type = 'signa
             $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
         }
         if (!empty($email)) {
+            $get_name_stmt = $dbh->prepare($query);
+            $get_name_stmt->execute([":email"=>$email]);
+            if ($get_name_stmt->rowCount() === 0) {
+                searchName($email, $apikey, $dept_id);
+                $get_name_stmt = $dbh->prepare($query);
+                $get_name_stmt->execute([":email" => $email]);
+            }
+            $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
             $email_array = explode('@', $email);
             if ($email_array[0] !== $person_info['username']) {           
                 $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';               
