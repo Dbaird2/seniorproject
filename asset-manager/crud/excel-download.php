@@ -27,13 +27,13 @@ try {
 $spreadsheet = new Spreadsheet();
 if ($result) {
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'Tag Number');
-    $spreadsheet->getActiveSheet()->setCellValue('A2', 'Descr');
-    $spreadsheet->getActiveSheet()->setCellValue('A3', 'Serial ID');
-    $spreadsheet->getActiveSheet()->setCellValue('A4', 'Location');
-    $spreadsheet->getActiveSheet()->setCellValue('A5', 'Department');
-    $spreadsheet->getActiveSheet()->setCellValue('A6', 'COST Total Cost');
-    $spreadsheet->getActiveSheet()->setCellValue('A7', 'PO No.');
-    $spreadsheet->getActiveSheet()->setCellValue('A7', 'Notes');
+    $spreadsheet->getActiveSheet()->setCellValue('B1', 'Descr');
+    $spreadsheet->getActiveSheet()->setCellValue('C1', 'Serial ID');
+    $spreadsheet->getActiveSheet()->setCellValue('D1', 'Location');
+    $spreadsheet->getActiveSheet()->setCellValue('E1', 'Department');
+    $spreadsheet->getActiveSheet()->setCellValue('F1', 'COST Total Cost');
+    $spreadsheet->getActiveSheet()->setCellValue('G1', 'PO No.');
+    $spreadsheet->getActiveSheet()->setCellValue('H1', 'Notes');
     $spreadsheet->getActiveSheet()->fromArray($result, NULL, 'A2');
 } else {
     $spreadsheet->getActiveSheet()->setCellValue('A1', 'No Data Found');

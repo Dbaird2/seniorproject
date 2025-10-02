@@ -17,7 +17,7 @@ check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
-        if ($name === 'SPA') {
+        if ($name === 'SPA Audit') {
             $name = 'BKSPA';
             $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
                 a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
