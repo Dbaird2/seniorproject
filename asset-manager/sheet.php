@@ -66,7 +66,7 @@ if (isset($_POST['profile_name'])) {
                 <th>Building</th>
                 <th>Department ID</th>
                 <th>PO</th>
-                <th><input onchange="filterTable()" id="search-asset" type="text" placeholder="Search assets..."></th>
+                <th class='search-tags'><input onchange="filterTable()" id="search-asset" type="text" placeholder="Search assets..."></th>
                 <th></th>
             </tr>
         </thead>
