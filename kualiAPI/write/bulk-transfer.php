@@ -443,8 +443,8 @@ $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
 $tag = $transfer_data[0]['Tag Number'];;
 $input_array = $tag. ',' . $id . ',' . $document_id . ',in-progress'; 
 
-$dept = $data['dept_id'][0];
-$audit_id = $data['audit_id'][0];
+$dept = $data['bulk_t_tags'][0]['dept_id'];
+$audit_id = $data['bulk_t_tags'][0]['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);

@@ -16,6 +16,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 30px 10%;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .nav-ui {
@@ -237,6 +239,78 @@
   margin: 0;
 }
 
+/* Enhanced input field styling with modern design */
+.is-manager input[type="search"] {
+  padding: 12px 16px;
+  border: 2px solid rgba(14, 165, 233, 0.2);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e293b;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.is-manager input[type="search"]:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.is-manager input[type="search"]:hover {
+  border-color: #0ea5e9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.is-manager input[type="search"]::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* Better styling for quick-buttons and downloads sections */
+.quick-buttons,
+.downloads {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.quick-buttons input[type="search"] {
+  margin-right: 8px;
+}
+
+/* Enhanced nav-ui2 styling for centered search section */
+#nav-ui2 {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+#nav-ui2 .nav-ui {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+#nav-ui2 .nav-ui li {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 /* Responsive design improvements */
 @media (max-width: 768px) {
   .action-buttons {
@@ -266,6 +340,43 @@
   .asset-note {
     min-width: 120px;
     min-height: 50px;
+  }
+
+  .is-manager header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 5%;
+  }
+
+  .quick-buttons,
+  .downloads {
+    justify-content: center;
+  }
+
+  .is-manager input[type="search"] {
+    width: 100%;
+    min-width: unset;
+  }
+
+  #nav-ui2 {
+    padding: 15px 20px;
+    margin: 15px 10px;
+  }
+
+  #nav-ui2 .nav-ui {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #nav-ui2 .nav-ui li {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .is-manager button {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
   }
 }
 

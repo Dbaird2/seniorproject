@@ -58,10 +58,10 @@ check_auth();
                     }
                     ?>
                 </datalist>
-                <a class="cta" href="#"><button id="quick-start" name="quick-start">Quick Start</button></a>
+                <a class="cta" href="#" style="display:none;"><button id="quick-start" name="quick-start">Quick Start</button></a>
             </div>
             <div class="downloads">
-                <a class="cta" href="#"><button id="restart" name="restart">Restart Sheet</button></a>
+                <a class="cta" href="#" style="display:none;"><button id="restart" name="restart">Restart Sheet</button></a>
 
             </div>
         </header>

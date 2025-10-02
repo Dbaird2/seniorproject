@@ -94,6 +94,13 @@ function quickStart() {
 }
 function displayTable() {
     const profile_name = document.getElementById('profiles').value;
+    if (profile_name.length === 0) {
+        $(".quick-buttons").hide();
+        $("#restart").hide();
+        $("#nav-ui2").hide();
+        return;
+    }
+
     $.ajax({
         method: 'POST',
         url: "sheet.php",

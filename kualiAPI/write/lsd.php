@@ -41,6 +41,7 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['borrower'] = $data['borrower'];
         $lsd_data['item_type'] = $data['item_type'];
         $lsd_data['Found Note'] = $session['Found Note'];
+        $lsd_data['date_reported'] = $data['date_reported'];
         $lsd_data['upd'] = $data['upd'];
         if (strtolower($lsd_data['upd']) === 'yes') {
             $lsd_data['insurance'] = $data[''];
@@ -117,7 +118,6 @@ $manager = trim($dept_info['dept_manager']);
 
 $get_mana_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 
-$manager_info = getSignature($query: $get_mana_info, $person_name: $manager, $type: 'info');
 
 if (!$apikey) {
     die("No API key found for user.");
@@ -191,6 +191,7 @@ if (!empty($lsd_data['borrower'])) {
         $borrower_signature = getSignature($query: $get_mana_info, $person_name: $lsd_data['borrower'], $action_id: $action_id);
     }
 }
+$manager_info = getSignature($query: $get_mana_info, $person_name: $manager, $type: 'info');
 $submitter_sig = getSignature($query: $select, $email: $email, $action_id: $action_id);
 $upd_id = match ($lsd_data['upd']) {
     "No" => "CbModhwutSo",
@@ -208,9 +209,11 @@ $lsd_id = match ($lsd_data['lsd']) {
     "Stolen" => "fmp7EdgUx",
     "Destroyed" => "-rR6VXHWp"
 };
-
+$date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
+$current_date = $date->format('m/d/Y');
 $ms_time = round(microtime(true) * 1000);
 if ($lsd_data['who'] === 'Myself') {
+    // DATE MISSING (MISSING), NOW DATE (MISSING)
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -270,7 +273,11 @@ if ($lsd_data['who'] === 'Myself') {
             // TAG
             "y7nFCmsLEg" => $lsd_data['Tag Number'],
             // MODEL
-            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A'
+            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+            // DATE MISSING
+            "MiLvvsoH5a" => $lsd_data['date_reported'],
+            // CURRENT DATE
+            "vedcAP4N1t" => $current_date
         ],
         'actionId' => $action_id,
         'status' => 'completed'
@@ -283,9 +290,17 @@ if ($lsd_data['who'] === 'Myself') {
 'variables' => [
     'documentId' => $document_id,
     'data' => [
-        "Sg2RTLnC5r" => [
-            "id" => "SDqr0xnNfnM",
-            "label" => "I am initiating this submission on behalf of"
+        "N00EmVKFnd" => [
+            $borrower_info
+        ],
+        // WHO
+        "Sg2RTLnC5r"=> [
+            "id"=> "w-25nbYAp",
+            "label"=> "Myself"
+        ],
+        "9eJvzLeMS0" => [
+            "id" =>"9JrVQuqdIQS",
+            "label"=> "Staff / Faculty"
         ],
         // MANAGER IF STAFF
         "0Qm43mG2vV" => [
@@ -303,12 +318,10 @@ if ($lsd_data['who'] === 'Myself') {
         ],
         // SERIAL NUMBER
         "7Gzhcg_35S" => $lsd_data['Serial ID'],
-        "9eJvzLeMS0" => [
-            "id" =>"9JrVQuqdIQS",
-            "label"=> "Staff / Faculty"
-        ],
+
         // SUBMITTER SIGNATURE
         "EeUWxyyaOUR" => [
+            $submitter_sig
         ],
         // DEPT IF STAFF
 
@@ -326,9 +339,6 @@ if ($lsd_data['who'] === 'Myself') {
             "id"=> $lsd_id,
             "label"=> $lsd_data['lsd']
         ],
-        "N00EmVKFnd" => [
-            $borrower_info
-        ],
         // NARRATIVE
         "dyaoRcFcOD" => $lsd_data['reason'],
         // DESCR
@@ -336,7 +346,11 @@ if ($lsd_data['who'] === 'Myself') {
         // TAG
         "y7nFCmsLEg" => $lsd_data['Tag Number'],
         // MODEL
-        "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A'
+        "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+        // DATE MISSING
+        "MiLvvsoH5a" => $lsd_data['date_reported'],
+        // CURRENT DATE
+        "vedcAP4N1t" => $current_date
     ],
     'actionId' => $action_id,
     'status' => 'completed'
