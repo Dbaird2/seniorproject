@@ -17,8 +17,8 @@ $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 }
 function searchName($search_name = '', $apikey = '', $dept_id = '')
 {
-    include_once '../../config.php';
     include_once "../../vendor/autoload.php";
+    global $dbh;
     $name_array = explode(' ', $search_name);
     $user_f_name = $name_array[0];
     $user_l_name = $name_array[1];

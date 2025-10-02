@@ -27,7 +27,7 @@ function getSignature($query = '',$person_name = '', $email = '', $type = 'signa
             $get_name_stmt = $dbh->prepare($query);
             $get_name_stmt->execute([":email"=>$email]);
             if ($get_name_stmt->rowCount() === 0) {
-                searchName($email, $apikey, $dept_id);
+                searchEmail($email, $apikey, $dept_id);
                 $get_name_stmt = $dbh->prepare($query);
                 $get_name_stmt->execute([":email" => $email]);
             }
