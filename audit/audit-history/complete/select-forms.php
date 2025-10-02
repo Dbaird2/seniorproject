@@ -968,14 +968,14 @@ $dept_name = $stmt->fetchColumn();
                             psr_tags.forEach(async (value) => {
                                 hide('row', value);
                                 type.value = '';
-                            }
+                            });
                         } catch {
                             const text = await clone.text();
                             console.log("PSR response (text):", text);
                             psr_tags.forEach(async (value) => {
                                 hide('row', value);
                                 type.value = '';
-                            }
+                            });
                         }
                     }
                 }
@@ -1005,14 +1005,14 @@ $dept_name = $stmt->fetchColumn();
                             bulk_t_tags.forEach(async (value) => {
                                 hide('row', value);
                                 type.value = '';
-                            }
+                            });
                         } catch {
                             const text = await clone.text();
                             console.log("bulk-transfer response (text):", text);
                             psr_tags.forEach(async (value) => {
                                 hide('row', value);
                                 type.value = '';
-                            }
+                            });
                         }
                     }
                 }
