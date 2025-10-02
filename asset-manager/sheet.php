@@ -13,9 +13,9 @@ if (isset($_POST['profile_name'])) {
 
     $select_q = "SELECT p.color, p.asset_tag, a.asset_name, a.bus_unit,a.serial_num,
     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, p.asset_note
-    FROM user_asset_profile p JOIN asset_info a ON p.asset_tag = a.asset_tag
-    JOIN room_table r ON a.room_tag = r.room_tag
-    JOIN bldg_table b ON r.bldg_id = b.bldg_id
+    FROM user_asset_profile p LEFT JOIN asset_info a ON p.asset_tag = a.asset_tag
+    LEFT JOIN room_table r ON a.room_tag = r.room_tag
+    LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
     WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
     try {
         $select_stmt = $dbh->prepare($select_q);
@@ -66,7 +66,7 @@ if (isset($_POST['profile_name'])) {
                 <th>Building</th>
                 <th>Department ID</th>
                 <th>PO</th>
-                <th><input onchange="filterTable()" id="search-asset" type="text" placeholder="Search assets...></th>
+                <th><input onchange="filterTable()" id="search-asset" type="text" placeholder="Search assets..."></th>
                 <th></th>
             </tr>
         </thead>

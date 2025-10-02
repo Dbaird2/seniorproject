@@ -16,7 +16,7 @@ check_auth();
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="asset-ajax.js"></script>
     <link rel="stylesheet" href="manager.css">
-<?php include_once '../navbar.php'; ?>
+    <?php include_once '../navbar.php'; ?>
 </head>
 <style>
     * {
@@ -37,15 +37,8 @@ check_auth();
                             $query_stmt = $dbh->prepare($query);
                             $query_stmt->execute([":email" => $_SESSION['email']]);
                             $result = $query_stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
-                            /*
-                            test data
-                            $result = [
-                                ["profile_id" => "1", "profile_name" => "D21200"],
-                                ["profile_id" => "2", "profile_name" => "D21500"]
-                            ];
-                            */
                             foreach ($result as $row) {
-                                echo "<option value='" . htmlspecialchars($row['profile_name']) . "' data-id='" . htmlspecialchars($row['profile_name'])."'>";
+                                echo "<option value='" . htmlspecialchars($row['profile_name']) . "' data-id='" . htmlspecialchars($row['profile_name']) . "'>";
                             }
                             ?>
                         </datalist>
@@ -60,13 +53,6 @@ check_auth();
                     <?php
                     $query = "SELECT dept_name FROM department";
                     $result = $dbh->query($query);
-                    /*
-                    test data
-                    $result = [
-                        ["dept_name" => "DISTRIBUTION"],
-                        ["dept_name" => "FACILITIES"]
-                    ];
-                    */
                     foreach ($result as $row) {
                         echo "<option value='" . htmlspecialchars($row['dept_name']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
                     }
@@ -87,12 +73,6 @@ check_auth();
                         <?php
                         $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'In Service'";
                         $result = $dbh->query($query);
-                        // test data
-                        /*$result = [
-                            ["asset_id" => "A12345", "asset_name" => "Laptop"],
-                            ["asset_id" => "A67890", "asset_name" => "Desktop"]
-                        ];
-                         */
                         foreach ($result as $row) {
                             echo "<option value='" . htmlspecialchars($row['asset_tag']) . "' data-id='" . htmlspecialchars($row['asset_tag']) . "'>";
                         }

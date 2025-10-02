@@ -119,7 +119,6 @@ try {
         }
         $tags = $edge['node']['data']['JZ-q3J19dw']['data'];
         foreach ($tags as $index => $data) {
-            echo "<br>--------------------------------------<br>";
             $tag = $data['data']['RxpLOF3XrE'];
             if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
                 echo "<br>Tag field empty<br>";
@@ -138,8 +137,6 @@ try {
             if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
                 $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
-                echo "<br>Bldg ID " . $bldg_id . "<br>";
-                echo "<br>Bldg Name " . $bldg_name . "<br>";
             }
             if (!empty($data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'];
@@ -148,12 +145,12 @@ try {
                 }
                 
                 $bldg_name = $data['data']['BC0E2hOKv3']['data']['AkMeIWWhoj'];
-                echo "<br>Bldg ID " . $bldg_id . "<br>";
-                echo "<br>Bldg Name " . $bldg_name . "<br>";
             }
             $bldg_id = (int)$bldg_id;
             // UPDATE DATABASE BASED OF KUALI
             if (!empty($bldg_id) && !empty($bldg_name)) {
+                echo "<br>Bldg ID " . $bldg_id . "<br>";
+                echo "<br>Bldg Name " . $bldg_name . "<br>";
                 $select = "SELECT bldg_id, bldg_name FROM bldg_table WHERE bldg_id = :id";
                 $id_stmt = $dbh->prepare($select);
                 $id_stmt->execute([':id'=>$bldg_id]);
@@ -213,9 +210,14 @@ try {
                 $stmt = $dbh->prepare($select_tag);
                 $stmt->execute([":tag"=>$tag]);
                 if ($stmt->rowCount() > 0) {
-                    $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
-                    $update_stmt = $dbh->prepare($update_q);
-                    $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+                    if (!empty($bldg_id) && !empty($bldg_name) && !empty($room_loc)) {
+                        echo "<br>Bldg ID " . $bldg_id . " ";
+                        echo "Bldg Name " . $bldg_name . " ";
+                        echo "Room location " . $room_loc . "<br>";
+                        $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
+                        $update_stmt = $dbh->prepare($update_q);
+                        $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+                    }
                     echo "<br>Updated Tag in database<br>";
                 } else { 
                     echo "<br>Tag was not in database<br>";

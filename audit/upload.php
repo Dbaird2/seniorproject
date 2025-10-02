@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Room Tag'] = '';
                     $_SESSION['data'][$index]['Found Room Number'] = '';
                     $_SESSION['data'][$index]['Found Building Name'] = '';
-                    $_SESSION['data'][$index]['Found Note'] .= '';
+                    $_SESSION['data'][$index]['Found Note'] = '';
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 }
                 $highest_row++;

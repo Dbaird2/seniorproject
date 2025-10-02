@@ -2,6 +2,7 @@
 include_once "../../config.php";
 include_once "../../vendor/autoload.php";
 include_once 'search.php';
+include_once 'get-info.php';
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
@@ -37,10 +38,34 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['lsd'] = $data['lsd'];
         $lsd_data['who'] = $data['who'];
         $lsd_data['position'] = $data['position'];
-        $lsd_data['upd'] = $data['upd'];
         $lsd_data['borrower'] = $data['borrower'];
         $lsd_data['item_type'] = $data['item_type'];
         $lsd_data['Found Note'] = $session['Found Note'];
+        $lsd_data['upd'] = $data['upd'];
+        if (strtolower($lsd_data['upd']) === 'yes') {
+            $lsd_data['insurance'] = $data[''];
+            if (strtolower($lsd_data['insurance']) === 'yes') { 
+                $lsd_data['state'] = $data['state'];
+                $lsd_data['zip'] = $data['zip'];
+                $lsd_data['city'] = $data['city'];
+                $lsd_data['street'] = $data['street'];
+                $lsd_data['company'] = $data['company'];
+            }
+            $lsd_data['explain'] = $data['explain'];
+            $lsd_data['reported'] = $data['reported'];
+            $lsd_data['security'] = $data['security'];
+            $lsd_data['authorized'] = $data['authorized'];
+            $lsd_data['precautions'] = $data['precations'];
+            $lsd_data['recovery_steps'] = $data['recover_steps'];
+            $lsd_data['who_assigned'] = $data['who_assigned'];
+            $lsd_data['assigned_staff'] = $data['assigned_staff'];
+            $lsd_data['access_keys'] = $data['access_keys'];
+            $lsd_data['secured'] = $data['secured'];
+            $lsd_data['upd_location'] = $data['upd_location'];
+            $lsd_data['by_whom'] = $data['by_whom'];
+            $lsd_data['time_last_seen'] = $data['time_last_seen'];
+            $lsd_data['date_last_seen'] = $data['date_last_seen'];
+        }
         if ($data['who'] === 'Myself') {
             $myself = true;
         } else if ($data['who'] === 'someone-else' && !empty($data['borrower'])) {
@@ -81,7 +106,7 @@ if (empty($school_id) || empty($form_id)) {
     $signature = $submitter_info['signature'] ?? $full_name;
     $form_id = $submitter_info['form_id'] ?? '';
 }
-
+    
 
 $get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
@@ -92,70 +117,8 @@ $manager = trim($dept_info['dept_manager']);
 
 $get_mana_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 
-try {
-    $get_mana_stmt = $dbh->prepare($get_mana_info);
-    $get_mana_stmt->execute([":full_name"=>$manager]);
-    if ($get_mana_stmt->rowCount() === 0) {
-        searchName($manager, $apikey, $dept_id);
-        $get_mana_stmt = $dbh->prepare($get_mana_info);
-        $get_mana_stmt->execute([":full_name" => $manager]);
-    }
-    $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
-    if (empty($mana_info['form_id']) || empty($mana_info['school_id'])) {
-        // SEARCH CUST IN KUALI
-        searchEmail($mana_info['email'], $apikey, $dept_id);
-        $get_mana_stmt = $dbh->prepare($get_mana_info);
-        $get_mana_stmt->execute([":full_name" => $manager]);
-        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
-    }
-} catch (PDOException $e) {
-    searchName($manager, $apikey, $dept_id);
-    $get_mana_stmt = $dbh->prepare($get_mana_info);
-    $get_mana_stmt->execute([":full_name" => $manager]);
-    $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
-}
-$mana_f_name = $mana_info['f_name'];
-$mana_l_name = $mana_info['l_name'];
-$mana_email = $mana_info['email'];
-$mana_form_id = $mana_info['form_id'];
-$mana_form_sig = $mana_info['signature'] ?? $mana_info['f_name'] . ' ' . $mana_info['l_name'];
-$mana_form_sid = $mana_info['school_id'];
-$mana_form_user = $mana_info['username'];
+$manager_info = getSignature($query: $get_mana_info, $person_name: $manager, $type: 'info');
 
-if (!empty($lsd_data['borrower'])) {
-    try {
-        $get_borrower_stmt = $dbh->prepare($get_mana_info);
-        $get_borrower_stmt->execute([":full_name"=>$lsd_data['borrower']]);
-        if ($get_borrower_stmt->rowCount() === 0) {
-            searchName($lsd_data['borrower'], $apikey, $dept_id);
-            $get_borrower_stmt = $dbh->prepare($get_mana_info);
-            $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
-        }
-        $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
-        $bor_email_array = explode('@', $lsd_data['borrower']);
-        if (empty($borrower_info['form_id']) || empty($borrower_info['school_id'])) {
-            // SEARCH CUST IN KUALI
-            searchEmail($bor_email_array[0], $apikey, $dept_id);
-            $get_borrower_stmt = $dbh->prepare($get_mana_info);
-            $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
-            $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
-        }
-    } catch (PDOException $e) {
-        // CUST DID NOT MATCH
-        searchName($lsd_data['borrower'], $apikey, $dept_id);
-        $get_borrower_stmt = $dbh->prepare($get_mana_info);
-        $get_borrower_stmt->execute([":full_name" => $lsd_data['borrower']]);
-        $borrower_info = $get_borrower_stmt->fetch(PDO::FETCH_ASSOC);
-        // SEARCH CUST IN KUALI
-    }
-    $bor_f_name = $mana_info['f_name'];
-    $bor_l_name = $mana_info['l_name'];
-    $bor_email = $mana_info['email'];
-    $bor_form_id = $mana_info['form_id'];
-    $bor_form_sig = $mana_info['signature'];
-    $bor_form_sid = $mana_info['school_id'];
-    $bor_form_user = $mana_info['username'];
-}
 if (!$apikey) {
     die("No API key found for user.");
 }
@@ -220,11 +183,15 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
-$now_array = new DateTime();
-$now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
-$now = $now_array->format('Y-m-d\TH:i:s.v\Z');
-
+if (!empty($lsd_data['borrower'])) {
+    // GET BORROWER INFO FROM getSignature();
+    if (preg_match('/@/i', $lsd_data['borrower']) {
+        $borrower_signature = getSignature($query: $get_mana_info, $email: $lsd_data['borrower'], $action_id: $action_id);
+    } else {
+        $borrower_signature = getSignature($query: $get_mana_info, $person_name: $lsd_data['borrower'], $action_id: $action_id);
+    }
+}
+$submitter_sig = getSignature($query: $select, $email: $email, $action_id: $action_id);
 $upd_id = match ($lsd_data['upd']) {
     "No" => "CbModhwutSo",
     "Yes" => "YU12SPShKnx"
@@ -261,14 +228,7 @@ if ($lsd_data['who'] === 'Myself') {
             ],
             // MANAGER IF STAFF
             "0Qm43mG2vV" => [
-                "displayName" => $manager,
-                "email" => $mana_email,
-                "firstName" => $mana_f_name,
-                "id" => $mana_form_id,
-                "label" => $manager,
-                "lastName" => $mana_l_name,
-                "schoolId" => $mana_form_sid,
-                "username" => $mana_form_user
+                $manager_info
             ],
             // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
             "6lJyeq9g1v" => [
@@ -285,12 +245,7 @@ if ($lsd_data['who'] === 'Myself') {
             
             // SUBMITTER SIGNATURE
             "EeUWxyyaOUR" => [
-                "actionId"=> $action_id,
-                "date" => $now,
-                "displayName" => $full_name . " (".$_SESSION['email'].")",
-                "signatureType"=> "type",
-                "signedName"=> $full_name,
-                "userId" => $form_id
+                $submitter_sig
             ],
             // DEPT IF STAFF
 
@@ -334,14 +289,7 @@ if ($lsd_data['who'] === 'Myself') {
         ],
         // MANAGER IF STAFF
         "0Qm43mG2vV" => [
-            "displayName" => $manager,
-            "email" => $mana_email,
-            "firstName" => $mana_f_name,
-            "id" => $mana_form_id,
-            "label" => $manager,
-            "lastName" => $mana_l_name,
-            "schoolId" => $mana_form_sid,
-            "username" => $mana_form_user
+            $manager_info
         ],
         // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
         "6lJyeq9g1v" => [
@@ -361,12 +309,6 @@ if ($lsd_data['who'] === 'Myself') {
         ],
         // SUBMITTER SIGNATURE
         "EeUWxyyaOUR" => [
-            "actionId"=> $action_id,
-            "date" => $now,
-            "displayName" => $full_name . " (".$_SESSION['email'].")",
-            "signatureType"=> "type",
-            "signedName"=> $full_name,
-            "userId" => $form_id
         ],
         // DEPT IF STAFF
 
@@ -385,14 +327,7 @@ if ($lsd_data['who'] === 'Myself') {
             "label"=> $lsd_data['lsd']
         ],
         "N00EmVKFnd" => [
-            "displayName" => $lsd_data['borrower'],
-            "email" => $bor_email,
-            "firstName" => $bor_f_name,
-            "id" => $bor_form_id,
-            "label" => $lsd_data['borrower'],
-            "lastName" => $bor_l_name,
-            "schoolId" => $bor_form_sid,
-            "username" => $bor_form_user
+            $borrower_info
         ],
         // NARRATIVE
         "dyaoRcFcOD" => $lsd_data['reason'],
@@ -432,5 +367,4 @@ curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp]);
 exit;
-//var_dump($resp);
 

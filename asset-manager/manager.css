@@ -1,83 +1,10 @@
-/*
-.is-manager li,
-.is-manager a,
-.is-manager button {
-  font-weight: 500;
-  font-size: 13px;
-  color: #edf0f1;
-  text-decoration: none;
-}
-.is-manager header {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 10%;
-}
-.nav-ui {
-  list-style: none;
-}
-.nav-ui li {
-  display: inline-block;
-  padding: 0px 20px;
-  transition: all 0.3s ease 0s;
-}
-.nav-ui li a {
-  transition: all 0.3s ease 0s;
-}
-.nav-ui li a:hover {
-  color: #0088a9;
-}
-.is-manager button {
-  margin-left: 20px;
-  padding: 9px 25px;
-  background-color: #003594;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease 0s;
-}
-
-.is-manager button:hover {
-  background-color: rgba(0, 136, 169, 9, 83);
-  translate: 0px -2px;
-}
-.is-ajax,
-.is-manager {
-    background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
-    min-height:100%;
-    height:100vh;
-}
-.display-table {
-    width:80%;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-.table {
-    background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
-    width:100%;
-    text-align: center;
-    padding:10px 10px;
-    max-height:350px;
-}
-.table td {
-    min-height:100px;
-    height:25px;
-}
-textarea {
-    resize:both;
-}
-*/
 /* Added modern styling with improved color scheme and layout */
 .is-manager li,
 .is-manager a,
 .is-manager button {
   font-weight: 500;
   font-size: 13px;
-  color: #edf0f1;
+  color: #1e293b;
   text-decoration: none;
 }
 
@@ -91,33 +18,28 @@ textarea {
   padding: 30px 10%;
 }
 
-.nav-ui2,
 .nav-ui {
   list-style: none;
 }
 
-.nav-ui2 li,
 .nav-ui li {
   display: inline-block;
   padding: 0px 20px;
   transition: all 0.3s ease 0s;
 }
 
-.nav-ui2 li a,
 .nav-ui li a {
   transition: all 0.3s ease 0s;
 }
 
-.nav-ui2 li a:hover,
 .nav-ui li a:hover {
-  color: #0088a9;
+  color: #0ea5e9;
 }
 
 .is-manager button {
-    margin-left:0px;
   margin-left: 20px;
   padding: 9px 25px;
-  background-color: #003594;
+  background-color: #0ea5e9;
   border: none;
   border-radius: 5px;
   color: white;
@@ -126,17 +48,17 @@ textarea {
 }
 
 .is-manager button:hover {
-  background-color: rgba(0, 136, 169, 0.83);
+  background-color: #0284c7;
   transform: translateY(-2px);
 }
 
-/* Modern background and layout */
+/* Updated background to light blue and white gradient theme */
 .is-ajax,
 .is-manager {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    min-height: 100vh;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    padding: 20px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #ffffff 100%);
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
 }
 
 .page-container {
@@ -201,7 +123,7 @@ textarea {
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
   overflow-x: auto;
   max-height: 80vh;
   overflow-y: auto;
@@ -214,8 +136,9 @@ textarea {
   font-size: 14px;
 }
 
+/* Updated table header to light blue gradient */
 .modern-table thead {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
   color: white;
   position: sticky;
   top: 0;
@@ -234,7 +157,7 @@ textarea {
 
 .modern-table td {
   padding: 14px 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.1);
   vertical-align: middle;
 }
 
@@ -242,18 +165,19 @@ textarea {
   transition: all 0.2s ease;
 }
 
+/* Updated hover effect to light blue */
 .modern-table tbody tr:hover {
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(14, 165, 233, 0.08);
   transform: scale(1.001);
 }
 
 .modern-table tbody tr:nth-child(even) {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(224, 242, 254, 0.3);
 }
 
-/* Asset tag styling */
+/* Updated asset tag to light blue gradient */
 .asset-tag {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
   color: white;
   padding: 4px 8px;
   border-radius: 6px;
@@ -261,13 +185,13 @@ textarea {
   font-size: 12px;
 }
 
-/* Modern textarea styling */
+/* Updated textarea border to light blue */
 .asset-note {
-  width: 85%;
+  width: 100%;
   min-width: 150px;
   min-height: 60px;
   padding: 8px 12px;
-  border: 2px solid rgba(102, 126, 234, 0.2);
+  border: 2px solid rgba(14, 165, 233, 0.2);
   border-radius: 8px;
   font-family: inherit;
   font-size: 13px;
@@ -278,9 +202,9 @@ textarea {
 
 .asset-note:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #0ea5e9;
   background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
 }
 
 .asset-note::placeholder {
@@ -295,12 +219,13 @@ textarea {
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 60px 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
   margin-top: 50px;
 }
 
+/* Updated empty state heading to light blue */
 .empty-state h3 {
-  color: #667eea;
+  color: #0ea5e9;
   font-size: 24px;
   margin-bottom: 10px;
   font-weight: 600;
@@ -343,15 +268,4 @@ textarea {
     min-height: 50px;
   }
 }
-.quick-buttons {
-    display:none;
-}
-#restart {
-    display: none;
-}
-#nav-ui2 {
-    display:none;
-}
-#search-asset {
-    width: 50%;
-}
+
