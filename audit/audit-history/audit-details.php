@@ -47,9 +47,7 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-
-
-ob_start(); 
+ob_start();
 
     ?>
 <!DOCTYPE html>
@@ -57,10 +55,178 @@ ob_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="audit-details.css">
+    <title>Audit Details - Department <?php echo htmlspecialchars((string) $audit_details['dept_id']); ?></title>
+    <!-- Added comprehensive CSS styling with light blue and white theme -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #1e293b;
+        }
+
+        .header-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.1);
+            margin-bottom: 2rem;
+            border: 1px solid #e0f2fe;
+        }
+
+        .header-table thead {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        }
+
+        .header-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-table tbody td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0f2fe;
+            font-size: 0.95rem;
+            color: #334155;
+        }
+
+        .header-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .middle {
+            width: 100%;
+        }
+
+        .audit-data {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.1);
+            border: 1px solid #e0f2fe;
+        }
+
+        .audit-data h3 {
+            color: #0284c7;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+        }
+
+        .audit-data table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .audit-data thead {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .audit-data thead th {
+            padding: 1rem 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .audit-data thead th:last-child {
+            border-right: none;
+        }
+
+        .audit-data tbody td {
+            padding: 0.875rem 0.75rem;
+            font-size: 0.9rem;
+            color: #334155;
+            border-right: 1px solid #f1f5f9;
+        }
+
+        .audit-data tbody td:last-child {
+            border-right: none;
+        }
+
+        .audit-data tbody tr.even td.even {
+            background-color: #f8fafc;
+        }
+
+        .audit-data tbody tr.odd td.odd {
+            background-color: white;
+        }
+
+        .audit-data tbody tr:hover td {
+            background-color: #e0f2fe !important;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Status color overrides */
+        .audit-data tbody td[style*="color:green"] {
+            color: #16a34a !important;
+        }
+
+        .audit-data tbody td[style*="color:blue"] {
+            color: #0284c7 !important;
+        }
+
+        @media print {
+            .page-wrapper {
+                background: white;
+                padding: 0;
+            }
+
+            .header-table,
+            .audit-data {
+                box-shadow: none;
+                border: 1px solid #e0f2fe;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 1rem;
+            }
+
+            .audit-data {
+                padding: 1rem;
+                overflow-x: auto;
+            }
+
+            .audit-data table {
+                font-size: 0.8rem;
+            }
+
+            .audit-data thead th,
+            .audit-data tbody td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
 </head>
-<body class="is-audit-details">
+<body>
+    <div class="page-wrapper">
     <table class="header-table" id="header-table">
         <thead>
             <tr class="odd">
@@ -80,12 +246,12 @@ ob_start();
             echo "<td>" . $audit_details['audited_with'] ?? '' . "</td>";
             echo "<td>" . date('Y-m-d H:i:s', strtotime((string) $audit_details['finished_at'])) . "</td>";
             echo "</tr>";
-            
+
                         ?>
         </tbody>
     </table>
     <section class="middle">
-    
+
 <div class="audit-data">
     <h3>Department <?php echo htmlspecialchars((string) $audit_details['dept_id']); ?> Assets</h3>
     <table>
@@ -113,7 +279,7 @@ ob_start();
             <?php  $j = 1;
             foreach ($data as $index=>$row) {
                 echo "<tr>";
-                $color = ($index % 2 == 0) ? 'even' : 'odd'; 
+                $color = ($index % 2 == 0) ? 'even' : 'odd';
                 if ($row['Tag Status'] === 'Found') {
                     echo "<td class='$color' style='color:green;font-weight:700;'>". htmlspecialchars($row['Unit']) ."</td>";
                     echo "<td class='$color' style='color:green;font-weight:700;'>". htmlspecialchars($row['Tag Number']). "</td>";
@@ -148,8 +314,10 @@ ob_start();
             </table>
         </div>
     </section>
+    </div>
+</body>
 </html>
-<?php 
+<?php
             $html = ob_get_clean();
             $mpdf = new \Mpdf\Mpdf();
             $mpdf->WriteHTML($html);
@@ -157,5 +325,4 @@ ob_start();
             $mpdf->SetTitle('Audit Details - ' . htmlspecialchars((string) $audit_details['dept_id']));
             $mpdf->SetAuthor(htmlspecialchars((string) $audit_details['auditor']));
             $mpdf->Output('audit-details-'.htmlspecialchars((string) $audit_details['dept_id']).'.pdf', 'D');
-
 
