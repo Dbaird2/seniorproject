@@ -259,9 +259,9 @@ if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') 
             "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
             // SUBMITTER SIGNATURE
-            "EeUWxyyaOUR" => [
+            "EeUWxyyaOUR" => 
                 $submitter_sig
-            ],
+            ,
             // DEPT IF STAFF
 
             "GOiwf3tjc0"=> [
@@ -330,9 +330,9 @@ if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') 
             "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
             // SUBMITTER SIGNATURE
-            "EeUWxyyaOUR" => [
+            "EeUWxyyaOUR" => 
                 $submitter_sig
-            ],
+            ,
             // DEPT IF STAFF
 
             "GOiwf3tjc0"=> [
@@ -408,9 +408,9 @@ if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') 
             "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
             // SUBMITTER SIGNATURE
-            "EeUWxyyaOUR" => [
+            "EeUWxyyaOUR" => 
                 $submitter_sig
-            ],
+            ,
             // DEPT IF STAFF
 
             "GOiwf3tjc0"=> [
@@ -483,9 +483,7 @@ else if ($lsd_data['who'] === 'someone-else') {
             "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
             // SUBMITTER SIGNATURE
-            "EeUWxyyaOUR" => [
-                $submitter_sig
-            ],
+            "EeUWxyyaOUR" => $submitter_sig,
             // DEPT IF STAFF
 
             "GOiwf3tjc0"=> [
