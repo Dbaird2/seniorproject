@@ -319,8 +319,30 @@ ob_start();
 </html>
 <?php
             $html = ob_get_clean();
-            $mpdf = new \Mpdf\Mpdf();
-            $mpdf->WriteHTML($html);
+            $mpdf = new \Mpdf\Mpdf([
+                'mode' => 'utf-8',
+                'format' => 'A4-L', // Landscape orientation
+                'margin_left' => 10,
+                'margin_right' => 10,
+                'margin_top' => 10,
+                'margin_bottom' => 10,
+                'margin_header' => 5,
+                'margin_footer' => 5
+            ]);
+            
+            // Add PDF-specific CSS to make table more compact
+            $pdfStyles = '<style>
+                .page-wrapper { padding: 0.5rem; background: white; }
+                .header-table { margin-bottom: 1rem; font-size: 9pt; }
+                .header-table th, .header-table td { padding: 0.4rem; }
+                .audit-data { padding: 0.5rem; }
+                .audit-data h3 { font-size: 11pt; margin-bottom: 0.5rem; }
+                .audit-data table { font-size: 7pt; }
+                .audit-data thead th { padding: 0.3rem 0.2rem; font-size: 7pt; }
+                .audit-data tbody td { padding: 0.3rem 0.2rem; }
+            </style>';
+            
+            $mpdf->WriteHTML($pdfStyles . $html);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->SetTitle('Audit Details - ' . htmlspecialchars((string) $audit_details['dept_id']));
             $mpdf->SetAuthor(htmlspecialchars((string) $audit_details['auditor']));
