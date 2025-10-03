@@ -97,16 +97,23 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['item_type'] = $data['item_type'];
         if ($lsd_data['item_type'] === 'IT Equipment') {
             $lsd_data['encrypted'] = $data['encrypted'];
-            $variable['data']['ZfhX3CCX7D'] = $lsd_data['encrypted'];
+            $variable['data']['ZfhX3CCX7D']['label'] = $lsd_data['encrypted'];
             if ($lsd_data['encrypted'] === 'Yes') {
+                $variable['data']['ZfhX3CCX7D']['id'] = 'yes';
                 $lsd_data['encrypted_data'] = $data['encrypted_data'];
                 $variables['data']['8YYaqGi1u4'] = $lsd_data['encrypted_data'];
+            } else {
+            $variable['data']['ZfhX3CCX7D']['id'] = 'no';
+
             }
             $lsd_data['confidential'] = $data['confidential'];
-            $variables['data']['TC9A_cNoXu'] = $lsd_data['confidential'];
+            $variables['data']['TC9A_cNoXu']['label'] = $lsd_data['confidential'];
             if ($lsd_data['confidential'] === 'Yes') {
                 $lsd_data['confidential_data'] = $data['confidential_data'];
                 $variables['data']['lDIEb-U1m9'] = $lsd_data['confidential_data'];
+                $variables['data']['TC9A_cNoXu']['id'] = 'yes';
+            } else {
+                $variables['data']['TC9A_cNoXu']['id'] = 'no';
             }
         }
         if ($data['who'] === 'Myself') {
@@ -281,7 +288,7 @@ $variables['data']["7Gzhcg_35S"] = $lsd_data['Serial ID'];
 $variables['data']["EeUWxyyaOUR"] = $submitter_sig;
             // DEPT IF STAFF
 $variables['data']["GOiwf3tjc0"]['data']['AkMeIWWhoj'] = $dept_name;
-$variables['data']["GOiwf3tjc0"]['data']['IOw4-l7NsM'] = $dept_name;
+$variables['data']["GOiwf3tjc0"]['data']['IOw4-l7NsM'] = $dept_id;
 $variables['data']["GOiwf3tjc0"]['label'] = $dept_name;
             // MAKE
 $variables['data']["Qb1ac69GLa"] = $lsd_data['Make'] ?? 'N/A';
