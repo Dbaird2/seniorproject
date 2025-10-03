@@ -3,7 +3,7 @@ include_once "../../../config.php";
 check_auth();
 $select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
 $stmt = $dbh->prepare($select_dept);
-$stmt->execute([":id"=>$_SESSION['info'][2]]);
+$stmt->execute([":id" => $_SESSION['info'][2]]);
 $dept_name = $stmt->fetchColumn();
 ?>
 <!DOCTYPE html>
@@ -260,7 +260,7 @@ $dept_name = $stmt->fetchColumn();
                 </thead>
                 <tbody>
                     <?php foreach ($_SESSION['data'] as $index => $row) { ?>
-                    <tr class="row-<?=$row['Tag Number']?>">
+                        <tr class="row-<?= $row['Tag Number'] ?>">
                             <td style="font-weight: 700;background-color: #e5F3Fd;"><?= $row['Unit'] ?></td>
                             <td style="font-weight: 600;background-color: #e5F3Fd;"><?= $row['Tag Number'] ?></td>
                             <td style="font-weight: 600;background-color: #e5F3Fd;"><?= $row['Descr'] ?></td>
@@ -365,39 +365,39 @@ $dept_name = $stmt->fetchColumn();
                             </td>
                         </tr>
                         <tr>
-                                <td class="lsd-it-equip-<?=$row['Tag Number']?>" style="display:none;">
-                                    <div class="form-field-group">
+                            <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
                                     <label>Did this equipment have any confidential information stored on it?</label>
-                                        <select id="lsd-it-equip-confidential-<?=$row['Tag Number']?>">
-                                            <option value=""></option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td class="lsd-it-equip-confidential-<?=$row['Tag Number']?>" style="display:none;">
-                                    <div class="form-field-group">
+                                    <select id="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>">
+                                        <option value=""></option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
                                     <label>Describe as completely as possible the nature of the confideial data that was stored on this equipment</label>
-                                        <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
-                                        id="lsd-it-equip-confidential-input-<?=$row['Tag Number']?>">
-                                    </div>
-                                </td>
-                                <td class="lsd-it-equip-<?=$row['Tag Number']?>" style="display:none;">
-                                    <div class="form-field-group">
+                                    <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
+                                        id="lsd-it-equip-confidential-input-<?= $row['Tag Number'] ?>">
+                                </div>
+                            </td>
+                            <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
                                     <label>Was the confidential data stored on this asset encrypted and/or password protected?</label>
-                                        <select id="lsd-it-equip-encrypted-<?=$row['Tag Number']?>">
-                                            <option value=""></option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td class="lsd-it-equip-encrypted-<?=$row['Tag Number']?>" style="display:none;">
-                                    <div class="form-field-group">
+                                    <select id="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>">
+                                        <option value=""></option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
                                     <label>Please describe how the data was protected</label>
-                                        <input type="text" id="lsd-it-equip-encrypted-input-<?=$row['Tag Number']?>">
-                                    </div>
-                                </td>
+                                    <input type="text" id="lsd-it-equip-encrypted-input-<?= $row['Tag Number'] ?>">
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -581,520 +581,515 @@ $dept_name = $stmt->fetchColumn();
             <button id="submit">Submit Forms</button>
         </div>
     </div>
-    <script>
-        function hideUI(type, tag) {
-            const form = document.querySelectorAll('.' + type + '-' + tag);
-            form.forEach(el => {
-                el.style.display = 'none';
-            });
-            return;
+<script>
+function hideUI(type, tag) {
+    const form = document.querySelectorAll('.' + type + '-' + tag);
+    form.forEach(el => {
+    el.style.display = 'none';
+    });
+    return;
+}
+
+function showUI(type, tag) {
+    const form = document.querySelectorAll('.' + type + '-' + tag);
+    form.forEach(el => {
+    el.style.display = 'table-cell';
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dept_id = <?= json_encode($_SESSION['info'][2], true) ?>;
+    const audit_id = <?= json_encode($_SESSION['info'][3], true) ?>;
+    const forms_needed = document.querySelectorAll('.forms-needed');
+
+    forms_needed.forEach(form_type => {
+    form_type.addEventListener('change', () => {
+    console.log('Changed input', form_type, form_type.value);
+    const tag = form_type.dataset.tag;
+    console.log(form_type.value, tag);
+    if (form_type.value === '') {
+        hideUI('check-out', tag);
+        hideUI('check-in', tag);
+        hideUI('lsd', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd-insurance', tag);
+        hideUI('lsd-fill-', tag);
+        return;
+    }
+    const form_class = document.querySelectorAll('.' + form_type.value + '-' + form_type.dataset.tag);
+    if (form_type.value === 'check-out') {
+        someone_else = document.querySelector('.who-' + tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.querySelector('.someone-else-' + tag).style.display = 'block';
+        } else {
+            document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
-
-        function showUI(type, tag) {
-            const form = document.querySelectorAll('.' + type + '-' + tag);
-            form.forEach(el => {
-                el.style.display = 'table-cell';
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const dept_id = <?= json_encode($_SESSION['info'][2], true) ?>;
-            const audit_id = <?= json_encode($_SESSION['info'][3], true) ?>;
-            const forms_needed = document.querySelectorAll('.forms-needed');
-
-            forms_needed.forEach(form_type => {
-                form_type.addEventListener('change', () => {
-                    console.log('Changed input', form_type, form_type.value);
-                    const tag = form_type.dataset.tag;
-                    console.log(form_type.value, tag);
-                    if (form_type.value === '') {
-                        hideUI('check-out', tag);
-                        hideUI('check-in', tag);
-                        hideUI('lsd', tag);
-                        hideUI('psr', tag);
-                        hideUI('bulk-transfer', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd-insurance', tag);
-                        hideUI('lsd-fill-', tag);
-                        return;
-                    }
-                    const form_class = document.querySelectorAll('.' + form_type.value + '-' + form_type.dataset.tag);
-                    if (form_type.value === 'check-out') {
-                        someone_else = document.querySelector('.who-' + tag);
-                        someone_else.addEventListener('change', () => {
-                            console.log(someone_else.value);
-                            if (someone_else.value === 'someone-else') {
-                                document.querySelector('.someone-else-' + tag).style.display = 'block';
-                            } else {
-                                document.querySelector('.someone-else-' + tag).style.display = 'none';
-                            }
-                        });
-                        hideUI('check-in', tag);
-                        hideUI('lsd', tag);
-                        hideUI('psr', tag);
-                        hideUI('bulk-transfer', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd-insurance', tag);
-                        hideUI('lsd-fill-', tag);
-                    }
-
-                    if (form_type.value === 'check-in') {
-                        const someone_else = document.querySelector('.who-' + tag);
-                        someone_else.addEventListener('change', () => {
-                            console.log(someone_else.value);
-                            if (someone_else.value === 'someone-else') {
-                                document.querySelector('.someone-else-' + tag).style.display = 'block';
-                            } else {
-                                document.querySelector('.someone-else-' + tag).style.display = 'none';
-                            }
-                        });
-                        hideUI('check-out', tag);
-                        hideUI('lsd', tag);
-                        hideUI('psr', tag);
-                        hideUI('bulk-transfer', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd-insurance', tag);
-                        hideUI('lsd-fill-', tag);
-                    }
-
-                    if (form_type.value === 'psr') {
-                        hideUI('check-out', tag);
-                        hideUI('lsd', tag);
-                        hideUI('check-in', tag);
-                        hideUI('bulk-transfer', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd-insurance', tag);
-                        hideUI('lsd-fill-', tag);
-                    }
-
-                    if (form_type.value === 'lsd') {
-                        const upd = document.getElementById('upd-' + tag);
-                        upd.addEventListener('change', () => {
-                            console.log(upd.value);
-                            if (upd.value === 'Yes') {
-                                showUI('lsd-upd', tag);
-                                const assigned = document.getElementById('upd-assigned-staff-' + tag);
-                                assigned.addEventListener('change', () => {
-                                    console.log(assigned.value);
-                                    if (assigned.value === 'Yes') {
-                                        showUI('lsd-upd-yes', tag);
-                                    } else {
-                                        hideUI('lsd-upd-yes', tag);
-                                    }
-                                });
-                                const insurance = document.getElementById('upd-insurance-' + tag);
-                                insurance.addEventListener('change', () => {
-                                    console.log(assigned.value);
-                                    if (insurance.value === 'Yes') {
-                                        showUI('lsd-upd-insurance', tag);
-                                    } else {
-                                        hideUI('lsd-upd-insurance', tag);
-                                    }
-                                });
-                                const it_equip = document.getElementById('item-type-' + tag);
-                                console.log(it_equip);
-                                it_equip.addEventListener('change', () => {
-                                    console.log(it_equip.value);
-                                    if (it_equip.value === 'IT Equipment') {
-                                        console.log(it_equip.value);
-                                        showUI('lsd-it-equip', tag);
-                                        const confidential = document.getElementById('lsd-it-equip-confidential-' + tag);
-                                        confidential.addEventListener('change', () => {
-                                            if (confidential.value === 'Yes') {
-                                                showUI('lsd-it-equip-confidential', tag);
-                                            } else {
-                                                hideUI('lsd-it-equip-confidential', tag);
-                                            }
-                                        });
-                                        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + tag);
-                                        encrypted.addEventListener('change', () => {
-                                            if (encrypted.value === 'Yes') {
-                                                showUI('lsd-it-equip-encrypted', tag);
-                                            } else {
-                                                hideUI('lsd-it-equip-encrypted', tag);
-                                            }
-                                        });
-                                    } else {
-                                        hideUI('lsd-it-equip', tag);
-                                        hideUI('lsd-it-equip-encrypted', tag);
-                                        hideUI('lsd-it-equip-confidential', tag);
-                                    }
-                                });
-                            } else {
-                                hideUI('lsd-it-equip', tag);
-                                hideUI('lsd-it-equip-encrypted', tag);
-                                hideUI('lsd-it-equip-confidential', tag);
-                                hideUI('lsd-upd', tag);
-                                hideUI('lsd-upd-yes', tag);
-                                hideUI('lsd-upd-insurance', tag);
-                                hideUI('lsd-fill-', tag);
-                                hideUI('lsd-it-equip', tag);
-                            }
-                        });
-                        const someone_else = document.getElementById('lsd-who-' + tag);
-                        someone_else.addEventListener('change', () => {
-                            console.log(someone_else.value);
-                            if (someone_else.value === 'someone-else') {
-                                document.querySelector('.lsd-fill-' + tag).style.display = 'table-cell';
-                                console.log(document.querySelector('.lsd-fill-' + tag));
-                            } else {
-                                document.querySelector('.lsd-fill-' + tag).style.display = 'none';
-                            }
-                        });
-                        hideUI('check-out', tag);
-                        hideUI('check-in', tag);
-                        hideUI('psr', tag);
-                        hideUI('bulk-transfer', tag);
-                    }
-
-                    if (form_type.value === 'bulk-transfer') {
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd', tag);
-                        hideUI('lsd-upd-yes', tag);
-                        hideUI('lsd-upd-insurance', tag);
-                        hideUI('check-out', tag);
-                        hideUI('check-in', tag);
-                        hideUI('psr', tag);
-                        hideUI('lsd', tag);
-                        hideUI('lsd-fill-', tag);
-                    }
-
-                    form_class.forEach(el => {
-                        el.style.display = 'table-cell';
-                    });
-                });
-            });
-
-            const btn = document.getElementById("submit").addEventListener("click", async () => {
-                let bulk_t_tags = [],
-                    t_tags = [],
-                    b_psr_tags = [],
-                    psr_tags = [],
-                    out_tags = [],
-                    in_tags = [],
-                    lsd_tags = [];
-                const forms_needed = document.querySelectorAll('.forms-needed');
-                const dept_id = <?= json_encode($_SESSION['info'][2]) ?>;
-                const audit_id = <?= json_encode($_SESSION['info'][5]) ?>;
-
-                const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        dept_id: dept_id,
-                        audit_id: audit_id
-                    })
-                });
-
-                if (!form_submitted.ok) {
-                    const text = await form_submitted.text();
-                    throw new Error(`HTTP ${form_submitted.status}: ${text}`);
-                } else {
-                    const clone = form_submitted.clone();
-                    try {
-                        const data = await form_submitted.json();
-                        console.log("Update DB response (JSON):", data);
-                    } catch {
-                        const text = await clone.text();
-                        console.log("Update DB response (text):", text);
-                    }
-                }
-
-                forms_needed.forEach(async (type) => {
-                    const val = type.value;
-
-                    if (val == 'bulk-transfer') {
-                        bulk_t_tags.push(type.dataset.tag);
-                    } else if (val == 'psr') {
-                        const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
-                        const code = document.getElementById('psr-code-' + type.dataset.tag).value;
-                        psr_tags.push({
-                            tag: type.dataset.tag,
-                            reason: reason,
-                            code: code
-                        });
-                    } else if (val == 'check-out') {
-                        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-                        const check_type = document.querySelector('.who-' + type.dataset.tag).value;
-                        const borrower = document.querySelector('.someonel-else-' + type.dataset.tag).value;
-                        const condition = document.getElementById('check-condition-' + type.dataset.tag).value;
-                        const notes = document.getElementById('check-notes-' + type.dataset.tag).value;
-                        const split_name = borrower.split(' ');
-
-                        if (check_type === 'Myself' && split_name < 2) {
-                            document.getElementById('check-out-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-                            exit;
-                        }
-
-                        const out_res = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                form_type: 'Checking Out Equipment',
-                                tag: type.dataset.tag,
-                                type: check_type,
-                                borrower: borrower,
-                                condition: condition,
-                                dept_id: dept_id,
-                                audit_id: audit_id,
-                                notes: notes
-                            })
-                        });
-
-                        if (!out_res.ok) {
-                            const text = await out_res.text();
-                            throw new Error(`HTTP ${out_res.status}: ${text}`);
-                        } else {
-                            const clone = out_res.clone();
-                            try {
-                                const data = await out_res.json();
-                                console.log("Check out response (JSON):", data);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            } catch {
-                                const text = await clone.text();
-                                console.log("Check out response (text):", text);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            }
-                        }
-                    } else if (val == 'check-in') {
-                        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-                        const check_type = document.querySelector('.who-' + type.dataset.tag).value;
-                        const borrower = document.querySelector('.someonel-else-' + type.dataset.tag).value;
-                        const condition = document.getElementById('check-condition-' + type.dataset.tag).value;
-                        const notes = document.getElementById('check-notes-' + type.dataset.tag).value;
-                        const split_name = borrower.split(' ');
-
-                        if (check_type === 'Myself' && split_name < 2) {
-                            document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-                            exit;
-                        }
-
-                        const in_res = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                form_type: 'Returning Equipment',
-                                tag: type.dataset.tag,
-                                type: check_type,
-                                borrower: borrower,
-                                condition: condition,
-                                dept_id: dept_id,
-                                audit_id: audit_id,
-                                notes: notes
-                            })
-                        });
-
-                        if (!in_res.ok) {
-                            const text = await in_res.text();
-                            throw new Error(`HTTP ${in_res.status}: ${text}`);
-                        } else {
-                            const clone = in_res.clone();
-                            try {
-                                const data = await in_res.json();
-                                console.log("Check in response (JSON):", data);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            } catch {
-                                const text = await clone.text();
-                                console.log("Check in response (text):", text);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            }
-                        }
-                    } else if (val === 'lsd') {
-                        const who = document.getElementById('lsd-who-' + type.dataset.tag).value;
-                        const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag).value;
-                        const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
-                        const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
-                        const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
-                        const upd = document.getElementById('upd-' + type.dataset.tag).value;
-                        const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
-                        const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
-                        const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
-                        const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
-                        const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
-                        const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
-                        const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
-                        const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
-                        const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
-                        const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
-                        const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
-                        const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
-                        const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
-                        const security = document.getElementById('upd-security-' + type.dataset.tag).value;
-                        const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
-                        const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
-                        const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
-                        const company = document.getElementById('upd-company-' + type.dataset.tag).value;
-                        const street = document.getElementById('upd-street-' + type.dataset.tag).value;
-                        const city = document.getElementById('upd-city-' + type.dataset.tag).value;
-                        const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
-                        const state = document.getElementById('upd-state-' + type.dataset.tag).value;
-                        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
-                        const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
-                        const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-                        const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-
-                        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
-                        const lsd_res = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                tag: type.dataset.tag,
-                                who: who,
-                                borrower: borrower,
-                                position: position,
-                                lsd: lsd,
-                                reason: reason,
-                                dept_id: dept_id,
-                                audit_id: audit_id,
-                                upd: upd,
-                                item_type: item_type,
-                                date_reported: date_reported,
-                                date_last_seen: date_last_seen,
-                                time_last_seen: time_last_seen,
-                                by_whom: by_whom,
-                                upd_location: upd_location,
-                                secured: secured,
-                                access_keys: access_keys,
-                                assigned_staff: assigned_staff,
-                                who_assigned: who_assigned,
-                                recovery_steps: recovery_steps,
-                                precautions: precautions,
-                                authorized: authorized,
-                                security: security,
-                                reported: reported,
-                                explain: explain,
-                                insurance: insurance,
-                                company: company,
-                                street: street,
-                                city: city,
-                                zip: zip,
-                                state: state,
-                                encrypted: encrypted,
-                                encrypted_data: encrypted_data,
-                                confidential: confidential,
-                                confidential_data: confidential_data
-                            })
-                        });
-
-                        if (!lsd_res.ok) {
-                            const text = await lsd_res.text();
-                            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
-                        } else {
-                            const clone = lsd_res.clone();
-                            try {
-                                const data = await lsd_res.json();
-                                console.log("bulk-transfer response (JSON):", data);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            } catch {
-                                const text = await clone.text();
-                                console.log("bulk-transfer response (text):", text);
-                                hideUI('row', type.dataset.tag);
-                                type.value = '';
-                            }
-                        }
-                    }
-                });
-
-                console.log('bulk_tags', bulk_t_tags);
-                console.log('lsd', lsd_tags);
-                console.log('psr', psr_tags);
-
-                if (psr_tags.length !== 0) {
-                    url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
-                    const psr_res = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            psr_tags,
-                            dept_id: dept_id,
-                            audit_id: audit_id
-                        })
-                    });
-
-                    if (!psr_res.ok) {
-                        const text = await psr_res.text();
-                        throw new Error(`HTTP ${psr_res.status}: ${text}`);
-                    } else {
-                        const clone = psr_res.clone();
-                        try {
-                            const data = await psr_res.json();
-                            console.log("PSR response (JSON):", data);
-                            psr_tags.forEach(async (value) => {
-                                hideUI('row', value);
-                                type.value = '';
-                            });
-                        } catch {
-                            const text = await clone.text();
-                            console.log("PSR response (text):", text);
-                            psr_tags.forEach(async (value) => {
-                                hideUI('row', value);
-                                type.value = '';
-                            });
-                        }
-                    }
-                }
-
-                if (bulk_t_tags.length !== 0) {
-                    url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
-                    const bulk_t_res = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            bulk_t_tags,
-                            dept_id: dept_id,
-                            audit_id: audit_id
-                        })
-                    });
-
-                    if (!bulk_t_res.ok) {
-                        const text = await bulk_t_res.text();
-                        throw new Error(`HTTP ${bulk_t_res.status}: ${text}`);
-                    } else {
-                        const clone = bulk_t_res.clone();
-                        try {
-                            const data = await bulk_t_res.json();
-                            console.log("bulk-transfer response (JSON):", data);
-                            bulk_t_tags.forEach(async (value) => {
-                                hideUI('row', value);
-                                type.value = '';
-                            });
-                        } catch {
-                            const text = await clone.text();
-                            console.log("bulk-transfer response (text):", text);
-                            psr_tags.forEach(async (value) => {
-                                hideUI('row', value);
-                                type.value = '';
-                            });
-                        }
-                    }
-                }
-            });
         });
-    </script>
+        hideUI('check-in', tag);
+        hideUI('lsd', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd-insurance', tag);
+        hideUI('lsd-fill-', tag);
+    }
+
+    if (form_type.value === 'check-in') {
+        const someone_else = document.querySelector('.who-' + tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.querySelector('.someone-else-' + tag).style.display = 'block';
+        } else {
+            document.querySelector('.someone-else-' + tag).style.display = 'none';
+        }
+        });
+        hideUI('check-out', tag);
+        hideUI('lsd', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd-insurance', tag);
+        hideUI('lsd-fill-', tag);
+    }
+
+    if (form_type.value === 'psr') {
+        hideUI('check-out', tag);
+        hideUI('lsd', tag);
+        hideUI('check-in', tag);
+        hideUI('bulk-transfer', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd-insurance', tag);
+        hideUI('lsd-fill-', tag);
+    }
+
+    if (form_type.value === 'lsd') {
+        const upd = document.getElementById('upd-' + tag);
+        upd.addEventListener('change', () => {
+        console.log(upd.value);
+        if (upd.value === 'Yes') {
+            showUI('lsd-upd', tag);
+            const assigned = document.getElementById('upd-assigned-staff-' + tag);
+            assigned.addEventListener('change', () => {
+            console.log(assigned.value);
+            if (assigned.value === 'Yes') {
+                showUI('lsd-upd-yes', tag);
+            } else {
+                hideUI('lsd-upd-yes', tag);
+            }
+            });
+            const insurance = document.getElementById('upd-insurance-' + tag);
+            insurance.addEventListener('change', () => {
+            console.log(assigned.value);
+            if (insurance.value === 'Yes') {
+                showUI('lsd-upd-insurance', tag);
+            } else {
+                hideUI('lsd-upd-insurance', tag);
+            }
+            });
+        }
+        });
+        const someone_else = document.getElementById('lsd-who-' + tag);
+        someone_else.addEventListener('change', () => {
+        console.log(someone_else.value);
+        if (someone_else.value === 'someone-else') {
+            document.querySelector('.lsd-fill-' + tag).style.display = 'table-cell';
+            console.log(document.querySelector('.lsd-fill-' + tag));
+        } else {
+            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+        }
+        hideUI('check-out', tag);
+        hideUI('check-in', tag);
+        hideUI('psr', tag);
+        hideUI('bulk-transfer', tag);
+        });
+
+        const it_equip = document.getElementById('item-type-' + tag);
+        console.log(it_equip);
+        it_equip.addEventListener('change', () => {
+        console.log(it_equip.value);
+        if (it_equip.value === 'IT Equipment') {
+            console.log(it_equip.value);
+            showUI('lsd-it-equip', tag);
+            const confidential = document.getElementById('lsd-it-equip-confidential-' + tag);
+            confidential.addEventListener('change', () => {
+            if (confidential.value === 'Yes') {
+                showUI('lsd-it-equip-confidential', tag);
+            } else {
+                hideUI('lsd-it-equip-confidential', tag);
+            }
+            });
+            const encrypted = document.getElementById('lsd-it-equip-encrypted-' + tag);
+            encrypted.addEventListener('change', () => {
+            if (encrypted.value === 'Yes') {
+                showUI('lsd-it-equip-encrypted', tag);
+            } else {
+                hideUI('lsd-it-equip-encrypted', tag);
+            }
+            });
+        } else {
+            hideUI('lsd-it-equip', tag);
+            hideUI('lsd-it-equip-encrypted', tag);
+            hideUI('lsd-it-equip-confidential', tag);
+        }
+        });
+    }
+
+
+
+    if (form_type.value === 'bulk-transfer') {
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd', tag);
+        hideUI('lsd-upd-yes', tag);
+        hideUI('lsd-upd-insurance', tag);
+        hideUI('check-out', tag);
+        hideUI('check-in', tag);
+        hideUI('psr', tag);
+        hideUI('lsd', tag);
+        hideUI('lsd-fill-', tag);
+    }
+
+    form_class.forEach(el => {
+    el.style.display = 'table-cell';
+    });
+    });
+    });
+
+    const btn = document.getElementById("submit").addEventListener("click", async () => {
+    let bulk_t_tags = [],
+        t_tags = [],
+        b_psr_tags = [],
+        psr_tags = [],
+        out_tags = [],
+        in_tags = [],
+        lsd_tags = [];
+    const forms_needed = document.querySelectorAll('.forms-needed');
+    const dept_id = <?= json_encode($_SESSION['info'][2]) ?>;
+    const audit_id = <?= json_encode($_SESSION['info'][5]) ?>;
+
+    const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
+    method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+    },
+        body: JSON.stringify({
+        dept_id: dept_id,
+            audit_id: audit_id
+    })
+    });
+
+    if (!form_submitted.ok) {
+        const text = await form_submitted.text();
+        throw new Error(`HTTP ${form_submitted.status}: ${text}`);
+    } else {
+        const clone = form_submitted.clone();
+        try {
+            const data = await form_submitted.json();
+            console.log("Update DB response (JSON):", data);
+        } catch {
+            const text = await clone.text();
+            console.log("Update DB response (text):", text);
+        }
+    }
+
+    forms_needed.forEach(async (type) => {
+    const val = type.value;
+
+    if (val == 'bulk-transfer') {
+        bulk_t_tags.push(type.dataset.tag);
+    } else if (val == 'psr') {
+        const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
+        const code = document.getElementById('psr-code-' + type.dataset.tag).value;
+        psr_tags.push({
+        tag: type.dataset.tag,
+            reason: reason,
+            code: code
+        });
+    } else if (val == 'check-out') {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
+        const check_type = document.querySelector('.who-' + type.dataset.tag).value;
+        const borrower = document.querySelector('.someonel-else-' + type.dataset.tag).value;
+        const condition = document.getElementById('check-condition-' + type.dataset.tag).value;
+        const notes = document.getElementById('check-notes-' + type.dataset.tag).value;
+        const split_name = borrower.split(' ');
+
+        if (check_type === 'Myself' && split_name < 2) {
+            document.getElementById('check-out-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
+
+        const out_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            form_type: 'Checking Out Equipment',
+                tag: type.dataset.tag,
+                type: check_type,
+                borrower: borrower,
+                condition: condition,
+                dept_id: dept_id,
+                audit_id: audit_id,
+                notes: notes
+        })
+        });
+
+        if (!out_res.ok) {
+            const text = await out_res.text();
+            throw new Error(`HTTP ${out_res.status}: ${text}`);
+        } else {
+            const clone = out_res.clone();
+            try {
+                const data = await out_res.json();
+                console.log("Check out response (JSON):", data);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            } catch {
+                const text = await clone.text();
+                console.log("Check out response (text):", text);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            }
+        }
+    } else if (val == 'check-in') {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
+        const check_type = document.querySelector('.who-' + type.dataset.tag).value;
+        const borrower = document.querySelector('.someonel-else-' + type.dataset.tag).value;
+        const condition = document.getElementById('check-condition-' + type.dataset.tag).value;
+        const notes = document.getElementById('check-notes-' + type.dataset.tag).value;
+        const split_name = borrower.split(' ');
+
+        if (check_type === 'Myself' && split_name < 2) {
+            document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
+
+        const in_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            form_type: 'Returning Equipment',
+                tag: type.dataset.tag,
+                type: check_type,
+                borrower: borrower,
+                condition: condition,
+                dept_id: dept_id,
+                audit_id: audit_id,
+                notes: notes
+        })
+        });
+
+        if (!in_res.ok) {
+            const text = await in_res.text();
+            throw new Error(`HTTP ${in_res.status}: ${text}`);
+        } else {
+            const clone = in_res.clone();
+            try {
+                const data = await in_res.json();
+                console.log("Check in response (JSON):", data);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            } catch {
+                const text = await clone.text();
+                console.log("Check in response (text):", text);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            }
+        }
+    } else if (val === 'lsd') {
+        const who = document.getElementById('lsd-who-' + type.dataset.tag).value;
+        const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag).value;
+        const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
+        const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
+        const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
+        const upd = document.getElementById('upd-' + type.dataset.tag).value;
+        const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
+        const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
+        const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
+        const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
+        const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
+        const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
+        const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
+        const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
+        const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
+        const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
+        const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
+        const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
+        const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
+        const security = document.getElementById('upd-security-' + type.dataset.tag).value;
+        const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
+        const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
+        const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
+        const company = document.getElementById('upd-company-' + type.dataset.tag).value;
+        const street = document.getElementById('upd-street-' + type.dataset.tag).value;
+        const city = document.getElementById('upd-city-' + type.dataset.tag).value;
+        const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
+        const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+        const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+        const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+        const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+        const lsd_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            tag: type.dataset.tag,
+                who: who,
+                borrower: borrower,
+                position: position,
+                lsd: lsd,
+                reason: reason,
+                dept_id: dept_id,
+                audit_id: audit_id,
+                upd: upd,
+                item_type: item_type,
+                date_reported: date_reported,
+                date_last_seen: date_last_seen,
+                time_last_seen: time_last_seen,
+                by_whom: by_whom,
+                upd_location: upd_location,
+                secured: secured,
+                access_keys: access_keys,
+                assigned_staff: assigned_staff,
+                who_assigned: who_assigned,
+                recovery_steps: recovery_steps,
+                precautions: precautions,
+                authorized: authorized,
+                security: security,
+                reported: reported,
+                explain: explain,
+                insurance: insurance,
+                company: company,
+                street: street,
+                city: city,
+                zip: zip,
+                state: state,
+                encrypted: encrypted,
+                encrypted_data: encrypted_data,
+                confidential: confidential,
+                confidential_data: confidential_data
+        })
+        });
+
+        if (!lsd_res.ok) {
+            const text = await lsd_res.text();
+            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
+        } else {
+            const clone = lsd_res.clone();
+            try {
+                const data = await lsd_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            } catch {
+                const text = await clone.text();
+                console.log("bulk-transfer response (text):", text);
+                hideUI('row', type.dataset.tag);
+                type.value = '';
+            }
+        }
+    }
+    });
+
+    console.log('bulk_tags', bulk_t_tags);
+    console.log('lsd', lsd_tags);
+    console.log('psr', psr_tags);
+
+    if (psr_tags.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
+        const psr_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            psr_tags,
+                dept_id: dept_id,
+                audit_id: audit_id
+        })
+        });
+
+        if (!psr_res.ok) {
+            const text = await psr_res.text();
+            throw new Error(`HTTP ${psr_res.status}: ${text}`);
+        } else {
+            const clone = psr_res.clone();
+            try {
+                const data = await psr_res.json();
+                console.log("PSR response (JSON):", data);
+                psr_tags.forEach(async (value) => {
+                hideUI('row', value);
+                type.value = '';
+                });
+            } catch {
+                const text = await clone.text();
+                console.log("PSR response (text):", text);
+                psr_tags.forEach(async (value) => {
+                hideUI('row', value);
+                type.value = '';
+                });
+            }
+        }
+    }
+
+    if (bulk_t_tags.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
+        const bulk_t_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            bulk_t_tags,
+                dept_id: dept_id,
+                audit_id: audit_id
+        })
+        });
+
+        if (!bulk_t_res.ok) {
+            const text = await bulk_t_res.text();
+            throw new Error(`HTTP ${bulk_t_res.status}: ${text}`);
+        } else {
+            const clone = bulk_t_res.clone();
+            try {
+                const data = await bulk_t_res.json();
+                console.log("bulk-transfer response (JSON):", data);
+                bulk_t_tags.forEach(async (value) => {
+                hideUI('row', value);
+                type.value = '';
+                });
+            } catch {
+                const text = await clone.text();
+                console.log("bulk-transfer response (text):", text);
+                psr_tags.forEach(async (value) => {
+                hideUI('row', value);
+                type.value = '';
+                });
+            }
+        }
+    }
+    });
+});
+</script>
 </body>
+
 </html>
