@@ -364,7 +364,7 @@ $dept_name = $stmt->fetchColumn();
                             </td>
                         </tr>
                         <tr>
-                                <td class="lsd-it-equip-<?=$row['Tag Number']?>">
+                                <td class="lsd-it-equip-<?=$row['Tag Number']?>" style="display:none;">
                                     <div class="form-field-group">
                                     <label>Did this equipment have any confidential information stored on it?</label>
                                         <select id="lsd-it-equip-confidential-<?=$row['Tag Number']?>">
@@ -374,14 +374,14 @@ $dept_name = $stmt->fetchColumn();
                                         </select>
                                     </div>
                                 </td>
-                                <td class="lsd-it-equip-confidential-<?=$row['Tag Number']?>">
+                                <td class="lsd-it-equip-confidential-<?=$row['Tag Number']?>" style="display:none;">
                                     <div class="form-field-group">
                                     <label>Describe as completely as possible the nature of the confideial data that was stored on this equipment</label>
                                         <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
                                         id="lsd-it-equip-confidential-input-<?=$row['Tag Number']?>">
                                     </div>
                                 </td>
-                                <td class="lsd-it-equip-<?=$row['Tag Number']?>">
+                                <td class="lsd-it-equip-<?=$row['Tag Number']?>" style="display:none;">
                                     <div class="form-field-group">
                                     <label>Was the confidential data stored on this asset encrypted and/or password protected?</label>
                                         <select id="lsd-it-equip-encrypted-<?=$row['Tag Number']?>">
@@ -391,7 +391,7 @@ $dept_name = $stmt->fetchColumn();
                                         </select>
                                     </div>
                                 </td>
-                                <td class="lsd-it-equip-encrypted-<?=$row['Tag Number']?>">
+                                <td class="lsd-it-equip-encrypted-<?=$row['Tag Number']?>" style="display:none;">
                                     <div class="form-field-group">
                                     <label>Please describe how the data was protected</label>
                                         <input type="text" id="lsd-it-equip-encrypted-input-<?=$row['Tag Number']?>">
@@ -980,7 +980,7 @@ $dept_name = $stmt->fetchColumn();
                                 street: street,
                                 city: city,
                                 zip: zip,
-                                state: state
+                                state: state,
                                 encrypted: encrypted,
                                 encrypted_data: encrypted_data,
                                 confidential: confidential,
