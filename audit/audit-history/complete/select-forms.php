@@ -700,8 +700,9 @@ $dept_name = $stmt->fetchColumn();
                                     }
                                 });
                                 const it_equip = document.getElementById('item-type-' + tag);
+                                console.log(it_equip);
                                 it_equip.addEventListener('change', () => {
-                                    console.log(assigned.value);
+                                    console.log(it_equip.value);
                                     if (it_equip.value === 'IT Equipment') {
                                         console.log(it_equip.value);
                                         showUI('lsd-it-equip', tag);
@@ -723,9 +724,14 @@ $dept_name = $stmt->fetchColumn();
                                         });
                                     } else {
                                         hideUI('lsd-it-equip', tag);
+                                        hideUI('lsd-it-equip-encrypted', tag);
+                                        hideUI('lsd-it-equip-confidential', tag);
                                     }
                                 });
                             } else {
+                                hideUI('lsd-it-equip', tag);
+                                hideUI('lsd-it-equip-encrypted', tag);
+                                hideUI('lsd-it-equip-confidential', tag);
                                 hideUI('lsd-upd', tag);
                                 hideUI('lsd-upd-yes', tag);
                                 hideUI('lsd-upd-insurance', tag);

@@ -233,64 +233,64 @@ if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') 
                 "id"=> "w-25nbYAp",
                 "label"=> "Myself"
             ],
-            'ZfhX3CCX7D' => $lsd_data['encrypted'];
-    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
-    'TC9A_cNoXu' => $lsd_data['confidential'];
-    'lDIEb-U1m9' => $lsd_data['confidential_data'];
-    "9eJvzLeMS0" => [
-        "id" =>"9JrVQuqdIQS",
-        "label"=> "Staff / Faculty"
-    ],
-    // MANAGER IF STAFF
-    "0Qm43mG2vV" => 
-    $manager_info
-    ,
-    // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
-    "6lJyeq9g1v" => [
-        "id" => $item_type_id,
-        "label"=> $lsd_data['item_type']
-    ],
-    // REPORTED TO UPD?
-    "7BHQb4jTbS" => [
-        "id" => $upd_id,
-        "label" => $lsd_data['upd']
-    ],
-    // SERIAL NUMBER
-    "7Gzhcg_35S" => $lsd_data['Serial ID'],
+            'ZfhX3CCX7D' => $lsd_data['encrypted'],
+            '8YYaqGi1u4' => $lsd_data['encrypted_data'],
+            'TC9A_cNoXu' => $lsd_data['confidential'],
+            'lDIEb-U1m9' => $lsd_data['confidential_data'],
+            "9eJvzLeMS0" => [
+                "id" =>"9JrVQuqdIQS",
+                "label"=> "Staff / Faculty"
+            ],
+            // MANAGER IF STAFF
+            "0Qm43mG2vV" => 
+            $manager_info
+            ,
+            // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+            "6lJyeq9g1v" => [
+                "id" => $item_type_id,
+                "label"=> $lsd_data['item_type']
+            ],
+            // REPORTED TO UPD?
+            "7BHQb4jTbS" => [
+                "id" => $upd_id,
+                "label" => $lsd_data['upd']
+            ],
+            // SERIAL NUMBER
+            "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
-    // SUBMITTER SIGNATURE
-    "EeUWxyyaOUR" => [
-        $submitter_sig
-    ],
-    // DEPT IF STAFF
+            // SUBMITTER SIGNATURE
+            "EeUWxyyaOUR" => [
+                $submitter_sig
+            ],
+            // DEPT IF STAFF
 
-    "GOiwf3tjc0"=> [
-        "data"=> [
-            "AkMeIWWhoj"=> $dept_name,
-            "IOw4-l7NsM"=> $_SESSION['info'][2]
-        ],
-        "label" => $dept_name
-    ],
-    // MAKE
-    "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
-    // LSD
-    "Sc5_swYeHS"=> [
-        "id"=> $lsd_id,
-        "label"=> $lsd_data['lsd']
-    ],
-    // NARRATIVE
-    "dyaoRcFcOD" => $lsd_data['reason'],
-    // DESCR
-    "pNvpNnuav8" => $lsd_data['Descr'],
-    // TAG
-    "y7nFCmsLEg" => $lsd_data['Tag Number'],
-    // MODEL
-    "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
-    // DATE MISSING
-    "MiLvvsoH5a" => $current_date,
-    // CURRENT DATE
-    "vedcAP4N1t" => $current_date,
-    "fy16ygj_ST" => $lsd_data['date_reported']
+            "GOiwf3tjc0"=> [
+                "data"=> [
+                    "AkMeIWWhoj"=> $dept_name,
+                    "IOw4-l7NsM"=> $_SESSION['info'][2]
+                ],
+                "label" => $dept_name
+            ],
+            // MAKE
+            "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+            // LSD
+            "Sc5_swYeHS"=> [
+                "id"=> $lsd_id,
+                "label"=> $lsd_data['lsd']
+            ],
+            // NARRATIVE
+            "dyaoRcFcOD" => $lsd_data['reason'],
+            // DESCR
+            "pNvpNnuav8" => $lsd_data['Descr'],
+            // TAG
+            "y7nFCmsLEg" => $lsd_data['Tag Number'],
+            // MODEL
+            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+            // DATE MISSING
+            "MiLvvsoH5a" => $current_date,
+            // CURRENT DATE
+            "vedcAP4N1t" => $current_date,
+            "fy16ygj_ST" => $lsd_data['date_reported']
         ],
         'actionId' => $action_id,
         'status' => 'completed'
@@ -382,63 +382,63 @@ if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') 
                 "id"=> "w-25nbYAp",
                 "label"=> "Myself"
             ],
-            'ZfhX3CCX7D' => $lsd_data['encrypted'];
-    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
-    'TC9A_cNoXu' => $lsd_data['confidential'];
-    'lDIEb-U1m9' => $lsd_data['confidential_data'];
-    "9eJvzLeMS0" => [
-        "id" =>"9JrVQuqdIQS",
-        "label"=> "Staff / Faculty"
-    ],
-    // MANAGER IF STAFF
-    "0Qm43mG2vV" => 
-    $manager_info
-    ,
-    // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
-    "6lJyeq9g1v" => [
-        "id" => $item_type_id,
-        "label"=> $lsd_data['item_type']
-    ],
-    // REPORTED TO UPD?
-    "7BHQb4jTbS" => [
-        "id" => $upd_id,
-        "label" => $lsd_data['upd']
-    ],
-    // SERIAL NUMBER
-    "7Gzhcg_35S" => $lsd_data['Serial ID'],
+            'ZfhX3CCX7D' => $lsd_data['encrypted'],
+            '8YYaqGi1u4' => $lsd_data['encrypted_data'],
+            'TC9A_cNoXu' => $lsd_data['confidential'],
+            'lDIEb-U1m9' => $lsd_data['confidential_data'],
+            "9eJvzLeMS0" => [
+                "id" =>"9JrVQuqdIQS",
+                "label"=> "Staff / Faculty"
+            ],
+            // MANAGER IF STAFF
+            "0Qm43mG2vV" => 
+            $manager_info
+            ,
+            // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+            "6lJyeq9g1v" => [
+                "id" => $item_type_id,
+                "label"=> $lsd_data['item_type']
+            ],
+            // REPORTED TO UPD?
+            "7BHQb4jTbS" => [
+                "id" => $upd_id,
+                "label" => $lsd_data['upd']
+            ],
+            // SERIAL NUMBER
+            "7Gzhcg_35S" => $lsd_data['Serial ID'],
 
-    // SUBMITTER SIGNATURE
-    "EeUWxyyaOUR" => [
-        $submitter_sig
-    ],
-    // DEPT IF STAFF
+            // SUBMITTER SIGNATURE
+            "EeUWxyyaOUR" => [
+                $submitter_sig
+            ],
+            // DEPT IF STAFF
 
-    "GOiwf3tjc0"=> [
-        "data"=> [
-            "AkMeIWWhoj"=> $dept_name,
-            "IOw4-l7NsM"=> $_SESSION['info'][2]
-        ],
-        "label" => $dept_name
-    ],
-    // MAKE
-    "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
-    // LSD
-    "Sc5_swYeHS"=> [
-        "id"=> $lsd_id,
-        "label"=> $lsd_data['lsd']
-    ],
-    // NARRATIVE
-    "dyaoRcFcOD" => $lsd_data['reason'],
-    // DESCR
-    "pNvpNnuav8" => $lsd_data['Descr'],
-    // TAG
-    "y7nFCmsLEg" => $lsd_data['Tag Number'],
-    // MODEL
-    "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
-    // DATE MISSING
-    "MiLvvsoH5a" => $lsd_data['date_reported'],
-    // CURRENT DATE
-    "vedcAP4N1t" => $current_date
+            "GOiwf3tjc0"=> [
+                "data"=> [
+                    "AkMeIWWhoj"=> $dept_name,
+                    "IOw4-l7NsM"=> $_SESSION['info'][2]
+                ],
+                "label" => $dept_name
+            ],
+            // MAKE
+            "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+            // LSD
+            "Sc5_swYeHS"=> [
+                "id"=> $lsd_id,
+                "label"=> $lsd_data['lsd']
+            ],
+            // NARRATIVE
+            "dyaoRcFcOD" => $lsd_data['reason'],
+            // DESCR
+            "pNvpNnuav8" => $lsd_data['Descr'],
+            // TAG
+            "y7nFCmsLEg" => $lsd_data['Tag Number'],
+            // MODEL
+            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+            // DATE MISSING
+            "MiLvvsoH5a" => $lsd_data['date_reported'],
+            // CURRENT DATE
+            "vedcAP4N1t" => $current_date
         ],
         'actionId' => $action_id,
         'status' => 'completed'
