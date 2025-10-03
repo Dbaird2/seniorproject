@@ -97,13 +97,13 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['item_type'] = $data['item_type'];
         if ($lsd_data['item_type'] === 'IT Equipment') {
             $lsd_data['encrypted'] = $data['encrypted'];
-            $variable['data']['ZfhX3CCX7D']['label'] = $lsd_data['encrypted'];
+            $variables['data']['ZfhX3CCX7D']['label'] = $lsd_data['encrypted'];
             if ($lsd_data['encrypted'] === 'Yes') {
                 $variable['data']['ZfhX3CCX7D']['id'] = 'yes';
                 $lsd_data['encrypted_data'] = $data['encrypted_data'];
                 $variables['data']['8YYaqGi1u4'] = $lsd_data['encrypted_data'];
             } else {
-            $variable['data']['ZfhX3CCX7D']['id'] = 'no';
+                $variables['data']['ZfhX3CCX7D']['id'] = 'no';
 
             }
             $lsd_data['confidential'] = $data['confidential'];
