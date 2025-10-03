@@ -378,7 +378,21 @@ if ($who !== 'Myself') {
         'userId' => $submitter_form_id
     ];
     $check_type_date = $date->format('m/d/Y');
-
+    /*
+    $variables['documentId'] = $document_id;
+    $variables['data']['0LZvRo9vT5'] = $note;
+    $variables['data']['BOZIA6hewQ'] = $tag;
+    $variables['data'][$check_type_date_key] = $check_type_date;
+    $variables['data'][$who_key] = $kuali_who;
+    $variables['data'][$stree_key] = $street;
+    $variables['data']['cQOz4UQ0rQ'] = $asset_name;
+    $variables['data']['jYTHHgL10M'] = $serial;
+    $variables['data'][$dept_key] = $dept_info;
+    $variables['data'][$condition_key] = $kuali_condition;
+    $variables['data'][$asset_type_key] = $kuali_asset_type;
+    $variables['data'][$authority_key] = $authority_info;
+    $variables['data'][$submitter_sig_key] = $sugmitter_sig_info;
+*/
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
     { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',

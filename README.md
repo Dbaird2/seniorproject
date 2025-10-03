@@ -26,3 +26,5 @@ all are complete, then change audit to complete
   viewer as well
 - Audit updating
 - Updates from KUALI 
+## 10/3 Updates
+- lsd.php refactored for more dynamic submitting
