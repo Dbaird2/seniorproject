@@ -264,7 +264,7 @@ $lsd_who_id = match ($who) {
     'Myself' => 'w-25nbYAp',
     'Someone Else' => 'SDqr0xnNfnM'
 };
-$variables['data']['documentId'] = $document_id;
+$variables['documentId'] = $document_id;
 $variables['data']['0Qm43mG2vV'] = $manager_info;
 $variables['data']['Sg2RTLnC5r']['id'] = $lsd_who_id;
 $variables['data']['Sg2RTLnC5r']['label'] = $who;
@@ -297,6 +297,8 @@ $variables['data']["y7nFCmsLEg"] = $lsd_data['Tag Number'];
 // MODEL
 $variables['data']["y9obJL9NAo"] = $lsd_data['Model'] ?? 'N/A';
 // DATE MISSING
+$date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
+$current_date = $date->format('m/d/Y');
 $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
 $variables['data']["vedcAP4N1t"] = $current_date;
@@ -309,8 +311,6 @@ $variables['data']["vedcAP4N1t"] = $current_date;
 $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 
-$date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
-$current_date = $date->format('m/d/Y');
 $ms_time = round(microtime(true) * 1000);
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)

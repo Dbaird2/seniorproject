@@ -72,7 +72,7 @@ function getSignature($query = '',$person_name = '', $email = '', $type = 'signa
         $signature = [
             'actionId'    => $action_id,
             'date'     => $now,
-            'displayName'   => $person_info['f_name'].' '.$person_info['l_name'] . '('.$person_info['email'].')',
+            'displayName'   => $person_info['f_name'].' '.$person_info['l_name'] . ' ('.$person_info['email'].')',
             'signatureType' => 'type',
             'signedName' => $person_info['signature'] ?? $person_info['f_name'].' '.$person_info['l_name'],
             'userId'  => $person_info['form_id']
