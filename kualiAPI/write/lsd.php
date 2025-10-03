@@ -262,8 +262,8 @@ $who = match ($lsd_data['who']) {
 };
 $lsd_who_id = match ($who) {
     'Myself' => 'w-25nbYAp',
-    'Someone Else' => ''
-}
+    'Someone Else' => 'SDqr0xnNfnM'
+};
 $variables['data']['documentId'] = $document_id;
 $variables['data']['0Qm43mG2vV'] = $manager_info;
 $variables['data']['Sg2RTLnC5r']['id'] = $lsd_who_id;
