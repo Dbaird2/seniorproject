@@ -330,15 +330,29 @@ ob_start();
                 'margin_footer' => 5
             ]);
             
-            // Add PDF-specific CSS to make table more compact
             $pdfStyles = '<style>
                 .page-wrapper { padding: 0.5rem; background: white; }
                 .header-table { margin-bottom: 1rem; font-size: 9pt; }
-                .header-table th, .header-table td { padding: 0.4rem; }
+                .header-table thead { background: #0ea5e9 !important; }
+                .header-table thead th { 
+                    padding: 0.4rem; 
+                    color: white !important; 
+                    background: #0ea5e9 !important;
+                    font-weight: bold;
+                }
+                .header-table td { padding: 0.4rem; }
                 .audit-data { padding: 0.5rem; }
-                .audit-data h3 { font-size: 11pt; margin-bottom: 0.5rem; }
+                .audit-data h3 { font-size: 11pt; margin-bottom: 0.5rem; color: #0284c7; }
                 .audit-data table { font-size: 7pt; }
-                .audit-data thead th { padding: 0.3rem 0.2rem; font-size: 7pt; }
+                .audit-data thead { background: #0ea5e9 !important; }
+                .audit-data thead th { 
+                    padding: 0.3rem 0.2rem; 
+                    font-size: 7pt; 
+                    color: white !important; 
+                    background: #0ea5e9 !important;
+                    font-weight: bold;
+                    border-right: 1px solid rgba(255, 255, 255, 0.3);
+                }
                 .audit-data tbody td { padding: 0.3rem 0.2rem; }
             </style>';
             
