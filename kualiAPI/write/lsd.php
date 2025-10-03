@@ -97,16 +97,16 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['item_type'] = $data['item_type'];
         if ($lsd_data['item_type'] === 'IT Equipment') {
             $lsd_data['encrypted'] = $data['encrypted'];
-            $variable['data']['ZfhX3CCX7D'] = $lsd_data['encrypted'],
+            $variable['data']['ZfhX3CCX7D'] = $lsd_data['encrypted'];
             if ($lsd_data['encrypted'] === 'Yes') {
                 $lsd_data['encrypted_data'] = $data['encrypted_data'];
-                $variables['data']['8YYaqGi1u4'] = $lsd_data['encrypted_data'],
+                $variables['data']['8YYaqGi1u4'] = $lsd_data['encrypted_data'];
             }
             $lsd_data['confidential'] = $data['confidential'];
-            $variables['data']['TC9A_cNoXu'] = $lsd_data['confidential'],
+            $variables['data']['TC9A_cNoXu'] = $lsd_data['confidential'];
             if ($lsd_data['confidential'] === 'Yes') {
                 $lsd_data['confidential_data'] = $data['confidential_data'];
-                $variables['data']['lDIEb-U1m9'] = $lsd_data['confidential_data'],
+                $variables['data']['lDIEb-U1m9'] = $lsd_data['confidential_data'];
             }
         }
         if ($data['who'] === 'Myself') {
@@ -293,7 +293,7 @@ $variables['data']["dyaoRcFcOD"] = $lsd_data['reason'];
 // DESCR
 $variables['data']["pNvpNnuav8"] = $lsd_data['Descr'];
 // TAG
-$variables['data']"y7nFCmsLEg"] = $lsd_data['Tag Number'];
+$variables['data']["y7nFCmsLEg"] = $lsd_data['Tag Number'];
 // MODEL
 $variables['data']["y9obJL9NAo"] = $lsd_data['Model'] ?? 'N/A';
 // DATE MISSING
