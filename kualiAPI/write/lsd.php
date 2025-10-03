@@ -39,7 +39,6 @@ foreach($_SESSION['data'] as $session) {
         $lsd_data['who'] = $data['who'];
         $lsd_data['position'] = $data['position'];
         $lsd_data['borrower'] = $data['borrower'];
-        $lsd_data['item_type'] = $data['item_type'];
         $lsd_data['Found Note'] = $session['Found Note'];
         $lsd_data['date_reported'] = $data['date_reported'];
         $lsd_data['upd'] = $data['upd'];
@@ -67,6 +66,13 @@ foreach($_SESSION['data'] as $session) {
             $lsd_data['time_last_seen'] = $data['time_last_seen'];
             $lsd_data['date_last_seen'] = $data['date_last_seen'];
         }
+        $lsd_data['item_type'] = $data['item_type'];
+        if ($lsd_data['item_type'] === 'IT Equipment') {
+            $lsd_data['encrypted'] = $data['encrypted'];
+            $lsd_data['encrypted_data'] = $data['encrypted_data'];
+            $lsd_data['confidential'] = $data['confidential'];
+            $lsd_data['confidential_data'] = $data['confidential_data'];
+        }
         if ($data['who'] === 'Myself') {
             $myself = true;
         } else if ($data['who'] === 'someone-else' && !empty($data['borrower'])) {
@@ -76,7 +82,14 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 
-    $dept_id = $_SESSION['info'][2];
+
+if ($lsd_data['item_type'] === 'IT Equipment') {
+    'ZfhX3CCX7D' => $lsd_data['encrypted'];
+    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
+    'TC9A_cNoXu' => $lsd_data['confidential'];
+    'lDIEb-U1m9' => $lsd_data['confidential_data'];
+}
+$dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -107,7 +120,7 @@ if (empty($school_id) || empty($form_id)) {
     $signature = $submitter_info['signature'] ?? $full_name;
     $form_id = $submitter_info['form_id'] ?? '';
 }
-    
+
 
 $get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
@@ -196,26 +209,100 @@ if (!empty($lsd_data['borrower'])) {
 $manager_info = getSignature(query: $get_info, person_name: $manager, type: 'info');
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
 $upd_id = match ($lsd_data['upd']) {
-    "No" => "CbModhwutSo",
+"No" => "CbModhwutSo",
     "Yes" => "YU12SPShKnx"
 };
 
 $item_type_id = match ($lsd_data['item_type']) {
-    "Instructional Equipment" => "iZ6HWywjL",
+"Instructional Equipment" => "iZ6HWywjL",
     "IT Equipment" => "Ycmcbo5hp",
     "Other" => "813J2qxw1"
 };
 
 $lsd_id = match ($lsd_data['lsd']) {
-    "Lost" => "bqRxkqovw",
+"Lost" => "bqRxkqovw",
     "Stolen" => "fmp7EdgUx",
     "Destroyed" => "-rR6VXHWp"
 };
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
 $current_date = $date->format('m/d/Y');
 $ms_time = round(microtime(true) * 1000);
-if ($lsd_data['who'] === 'Myself') {
-    // DATE MISSING (MISSING), NOW DATE (MISSING)
+if ($lsd_data['Who'] === 'Myself' && $lsd_data['item_type'] === 'IT Equipment') {
+    $submit_form = json_encode([
+        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            // WHO
+            "Sg2RTLnC5r"=> [
+                "id"=> "w-25nbYAp",
+                "label"=> "Myself"
+            ],
+            'ZfhX3CCX7D' => $lsd_data['encrypted'];
+    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
+    'TC9A_cNoXu' => $lsd_data['confidential'];
+    'lDIEb-U1m9' => $lsd_data['confidential_data'];
+    "9eJvzLeMS0" => [
+        "id" =>"9JrVQuqdIQS",
+        "label"=> "Staff / Faculty"
+    ],
+    // MANAGER IF STAFF
+    "0Qm43mG2vV" => 
+    $manager_info
+    ,
+    // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+    "6lJyeq9g1v" => [
+        "id" => $item_type_id,
+        "label"=> $lsd_data['item_type']
+    ],
+    // REPORTED TO UPD?
+    "7BHQb4jTbS" => [
+        "id" => $upd_id,
+        "label" => $lsd_data['upd']
+    ],
+    // SERIAL NUMBER
+    "7Gzhcg_35S" => $lsd_data['Serial ID'],
+
+    // SUBMITTER SIGNATURE
+    "EeUWxyyaOUR" => [
+        $submitter_sig
+    ],
+    // DEPT IF STAFF
+
+    "GOiwf3tjc0"=> [
+        "data"=> [
+            "AkMeIWWhoj"=> $dept_name,
+            "IOw4-l7NsM"=> $_SESSION['info'][2]
+        ],
+        "label" => $dept_name
+    ],
+    // MAKE
+    "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+    // LSD
+    "Sc5_swYeHS"=> [
+        "id"=> $lsd_id,
+        "label"=> $lsd_data['lsd']
+    ],
+    // NARRATIVE
+    "dyaoRcFcOD" => $lsd_data['reason'],
+    // DESCR
+    "pNvpNnuav8" => $lsd_data['Descr'],
+    // TAG
+    "y7nFCmsLEg" => $lsd_data['Tag Number'],
+    // MODEL
+    "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+    // DATE MISSING
+    "MiLvvsoH5a" => $current_date,
+    // CURRENT DATE
+    "vedcAP4N1t" => $current_date,
+    "fy16ygj_ST" => $lsd_data['date_reported']
+        ],
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
+    ]);
+} else if ($lsd_data['who'] === 'Myself') {
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -233,7 +320,7 @@ if ($lsd_data['who'] === 'Myself') {
             ],
             // MANAGER IF STAFF
             "0Qm43mG2vV" => 
-                $manager_info
+            $manager_info
             ,
             // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
             "6lJyeq9g1v" => [
@@ -247,7 +334,160 @@ if ($lsd_data['who'] === 'Myself') {
             ],
             // SERIAL NUMBER
             "7Gzhcg_35S" => $lsd_data['Serial ID'],
-            
+
+            // SUBMITTER SIGNATURE
+            "EeUWxyyaOUR" => [
+                $submitter_sig
+            ],
+            // DEPT IF STAFF
+
+            "GOiwf3tjc0"=> [
+                "data"=> [
+                    "AkMeIWWhoj"=> $dept_name,
+                    "IOw4-l7NsM"=> $_SESSION['info'][2]
+                ],
+                "label" => $dept_name
+            ],
+            // MAKE
+            "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+            // LSD
+            "Sc5_swYeHS"=> [
+                "id"=> $lsd_id,
+                "label"=> $lsd_data['lsd']
+            ],
+            // NARRATIVE
+            "dyaoRcFcOD" => $lsd_data['reason'],
+            // DESCR
+            "pNvpNnuav8" => $lsd_data['Descr'],
+            // TAG
+            "y7nFCmsLEg" => $lsd_data['Tag Number'],
+            // MODEL
+            "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+            // DATE MISSING
+            "MiLvvsoH5a" => $current_date,
+            // CURRENT DATE
+            "vedcAP4N1t" => $current_date,
+            "fy16ygj_ST" => $lsd_data['date_reported']
+        ],
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
+    ]);
+} else if ($lsd_data['who'] === 'someone-else' && $lsd_data['item_type'] === 'IT Equipment') {
+    $submit_form = json_encode([
+        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            "N00EmVKFnd" => [
+                $borrower_info
+            ],
+            // WHO
+            "Sg2RTLnC5r"=> [
+                "id"=> "w-25nbYAp",
+                "label"=> "Myself"
+            ],
+            'ZfhX3CCX7D' => $lsd_data['encrypted'];
+    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
+    'TC9A_cNoXu' => $lsd_data['confidential'];
+    'lDIEb-U1m9' => $lsd_data['confidential_data'];
+    "9eJvzLeMS0" => [
+        "id" =>"9JrVQuqdIQS",
+        "label"=> "Staff / Faculty"
+    ],
+    // MANAGER IF STAFF
+    "0Qm43mG2vV" => 
+    $manager_info
+    ,
+    // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+    "6lJyeq9g1v" => [
+        "id" => $item_type_id,
+        "label"=> $lsd_data['item_type']
+    ],
+    // REPORTED TO UPD?
+    "7BHQb4jTbS" => [
+        "id" => $upd_id,
+        "label" => $lsd_data['upd']
+    ],
+    // SERIAL NUMBER
+    "7Gzhcg_35S" => $lsd_data['Serial ID'],
+
+    // SUBMITTER SIGNATURE
+    "EeUWxyyaOUR" => [
+        $submitter_sig
+    ],
+    // DEPT IF STAFF
+
+    "GOiwf3tjc0"=> [
+        "data"=> [
+            "AkMeIWWhoj"=> $dept_name,
+            "IOw4-l7NsM"=> $_SESSION['info'][2]
+        ],
+        "label" => $dept_name
+    ],
+    // MAKE
+    "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
+    // LSD
+    "Sc5_swYeHS"=> [
+        "id"=> $lsd_id,
+        "label"=> $lsd_data['lsd']
+    ],
+    // NARRATIVE
+    "dyaoRcFcOD" => $lsd_data['reason'],
+    // DESCR
+    "pNvpNnuav8" => $lsd_data['Descr'],
+    // TAG
+    "y7nFCmsLEg" => $lsd_data['Tag Number'],
+    // MODEL
+    "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
+    // DATE MISSING
+    "MiLvvsoH5a" => $lsd_data['date_reported'],
+    // CURRENT DATE
+    "vedcAP4N1t" => $current_date
+        ],
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
+    ]);
+
+}
+else if ($lsd_data['who'] === 'someone-else') {
+    $submit_form = json_encode([
+        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
+{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            "N00EmVKFnd" => [
+                $borrower_info
+            ],
+            // WHO
+            "Sg2RTLnC5r"=> [
+                "id"=> "w-25nbYAp",
+                "label"=> "Myself"
+            ],
+            "9eJvzLeMS0" => [
+                "id" =>"9JrVQuqdIQS",
+                "label"=> "Staff / Faculty"
+            ],
+            // MANAGER IF STAFF
+            "0Qm43mG2vV" => 
+            $manager_info
+            ,
+            // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
+            "6lJyeq9g1v" => [
+                "id" => $item_type_id,
+                "label"=> $lsd_data['item_type']
+            ],
+            // REPORTED TO UPD?
+            "7BHQb4jTbS" => [
+                "id" => $upd_id,
+                "label" => $lsd_data['upd']
+            ],
+            // SERIAL NUMBER
+            "7Gzhcg_35S" => $lsd_data['Serial ID'],
+
             // SUBMITTER SIGNATURE
             "EeUWxyyaOUR" => [
                 $submitter_sig
@@ -284,79 +524,6 @@ if ($lsd_data['who'] === 'Myself') {
         'actionId' => $action_id,
         'status' => 'completed'
     ]
-    ]);
-} else if ($lsd_data['who'] === 'someone-else') {
-    $submit_form = json_encode([
-        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        "N00EmVKFnd" => [
-            $borrower_info
-        ],
-        // WHO
-        "Sg2RTLnC5r"=> [
-            "id"=> "w-25nbYAp",
-            "label"=> "Myself"
-        ],
-        "9eJvzLeMS0" => [
-            "id" =>"9JrVQuqdIQS",
-            "label"=> "Staff / Faculty"
-        ],
-        // MANAGER IF STAFF
-        "0Qm43mG2vV" => 
-            $manager_info
-        ,
-        // ITEM TYPE (IT EQUIP, INSTRUCTIONAL, OTHER)
-        "6lJyeq9g1v" => [
-            "id" => $item_type_id,
-            "label"=> $lsd_data['item_type']
-        ],
-        // REPORTED TO UPD?
-        "7BHQb4jTbS" => [
-            "id" => $upd_id,
-            "label" => $lsd_data['upd']
-        ],
-        // SERIAL NUMBER
-        "7Gzhcg_35S" => $lsd_data['Serial ID'],
-
-        // SUBMITTER SIGNATURE
-        "EeUWxyyaOUR" => [
-            $submitter_sig
-        ],
-        // DEPT IF STAFF
-
-        "GOiwf3tjc0"=> [
-            "data"=> [
-                "AkMeIWWhoj"=> $dept_name,
-                "IOw4-l7NsM"=> $_SESSION['info'][2]
-            ],
-            "label" => $dept_name
-        ],
-        // MAKE
-        "Qb1ac69GLa" => $lsd_data['Make'] ?? 'N/A',
-        // LSD
-        "Sc5_swYeHS"=> [
-            "id"=> $lsd_id,
-            "label"=> $lsd_data['lsd']
-        ],
-        // NARRATIVE
-        "dyaoRcFcOD" => $lsd_data['reason'],
-        // DESCR
-        "pNvpNnuav8" => $lsd_data['Descr'],
-        // TAG
-        "y7nFCmsLEg" => $lsd_data['Tag Number'],
-        // MODEL
-        "y9obJL9NAo" => $lsd_data['Model'] ?? 'N/A',
-        // DATE MISSING
-        "MiLvvsoH5a" => $lsd_data['date_reported'],
-        // CURRENT DATE
-        "vedcAP4N1t" => $current_date
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
     ]);
 
 }

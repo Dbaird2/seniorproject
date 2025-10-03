@@ -364,6 +364,41 @@ $dept_name = $stmt->fetchColumn();
                             </td>
                         </tr>
                         <tr>
+                                <td class="lsd-it-equip-<?=$row['Tag Number']?>">
+                                    <div class="form-field-group">
+                                    <label>Did this equipment have any confidential information stored on it?</label>
+                                        <select id="lsd-it-equip-confidential-<?=$row['Tag Number']?>">
+                                            <option value=""></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-it-equip-confidential-<?=$row['Tag Number']?>">
+                                    <div class="form-field-group">
+                                    <label>Describe as completely as possible the nature of the confideial data that was stored on this equipment</label>
+                                        <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
+                                        id="lsd-it-equip-confidential-input-<?=$row['Tag Number']?>">
+                                    </div>
+                                </td>
+                                <td class="lsd-it-equip-<?=$row['Tag Number']?>">
+                                    <div class="form-field-group">
+                                    <label>Was the confidential data stored on this asset encrypted and/or password protected?</label>
+                                        <select id="lsd-it-equip-encrypted-<?=$row['Tag Number']?>">
+                                            <option value=""></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-it-equip-encrypted-<?=$row['Tag Number']?>">
+                                    <div class="form-field-group">
+                                    <label>Please describe how the data was protected</label>
+                                        <input type="text" id="lsd-it-equip-encrypted-input-<?=$row['Tag Number']?>">
+                                    </div>
+                                </td>
+                        </tr>
+                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Date Reported</label>
@@ -657,10 +692,35 @@ $dept_name = $stmt->fetchColumn();
                                 const insurance = document.getElementById('upd-insurance-' + tag);
                                 insurance.addEventListener('change', () => {
                                     console.log(assigned.value);
-                                    if (assigned.value === 'Yes') {
+                                    if (insurance.value === 'Yes') {
                                         showUI('lsd-upd-insurance', tag);
                                     } else {
                                         hideUI('lsd-upd-insurance', tag);
+                                    }
+                                });
+                                const it_equip = document.getElementById('item-type-' + tag);
+                                it_equip.addEventListener('change', () => {
+                                    console.log(assigned.value);
+                                    if (it_equip.value === 'IT Equipment') {
+                                        showUI('lsd-it-equip', tag);
+                                        const confidential = document.getElementById('lsd-it-equip-confidential-' + tag);
+                                        confidential.addEventListener('change', () => {
+                                            if (confidential.value === 'Yes') {
+                                                showUI('lsd-it-equip-confidential', tag);
+                                            } else {
+                                                hideUI('lsd-it-equip-confidential', tag);
+                                            }
+                                        });
+                                        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + tag);
+                                        encrypted.addEventListener('change', () => {
+                                            if (encrypted.value === 'Yes') {
+                                                showUI('lsd-it-equip-encrypted', tag);
+                                            } else {
+                                                hideUI('lsd-it-equip-encrypted', tag);
+                                            }
+                                        });
+                                    } else {
+                                        hideUI('lsd-it-equip', tag);
                                     }
                                 });
                             } else {
@@ -668,6 +728,7 @@ $dept_name = $stmt->fetchColumn();
                                 hideUI('lsd-upd-yes', tag);
                                 hideUI('lsd-upd-insurance', tag);
                                 hideUI('lsd-fill-', tag);
+                                hideUI('lsd-it-equip', tag);
                             }
                         });
                         const someone_else = document.getElementById('lsd-who-' + tag);
@@ -877,6 +938,10 @@ $dept_name = $stmt->fetchColumn();
                         const city = document.getElementById('upd-city-' + type.dataset.tag).value;
                         const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
                         const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+                        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+                        const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+                        const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+                        const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
 
                         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
                         const lsd_res = await fetch(url, {
@@ -916,6 +981,10 @@ $dept_name = $stmt->fetchColumn();
                                 city: city,
                                 zip: zip,
                                 state: state
+                                encrypted: encrypted,
+                                encrypted_data: encrypted_data,
+                                confidential: confidential,
+                                confidential_data: confidential_data
                             })
                         });
 
