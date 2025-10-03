@@ -356,6 +356,7 @@ $dept_name = $stmt->fetchColumn();
                                 <div class="form-field-group">
                                     <label>Item Type</label>
                                     <select id="item-type-<?= $row['Tag Number'] ?>">
+                                        <option value=""></option>
                                         <option value="IT Equipment">IT Equipment</option>
                                         <option value="Instructional Equipment">Instructional Equipment</option>
                                         <option value="Other">Other</option>
@@ -702,6 +703,7 @@ $dept_name = $stmt->fetchColumn();
                                 it_equip.addEventListener('change', () => {
                                     console.log(assigned.value);
                                     if (it_equip.value === 'IT Equipment') {
+                                        console.log(it_equip.value);
                                         showUI('lsd-it-equip', tag);
                                         const confidential = document.getElementById('lsd-it-equip-confidential-' + tag);
                                         confidential.addEventListener('change', () => {

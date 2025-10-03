@@ -83,12 +83,6 @@ foreach($_SESSION['data'] as $session) {
 }
 
 
-if ($lsd_data['item_type'] === 'IT Equipment') {
-    'ZfhX3CCX7D' => $lsd_data['encrypted'];
-    '8YYaqGi1u4' => $lsd_data['encrypted_data'];
-    'TC9A_cNoXu' => $lsd_data['confidential'];
-    'lDIEb-U1m9' => $lsd_data['confidential_data'];
-}
 $dept_id = $_SESSION['info'][2];
 
 $subdomain = "csub";
