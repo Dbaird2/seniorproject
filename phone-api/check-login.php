@@ -1,5 +1,8 @@
 <?php 
-require_once "../config.php";
+header("Access-Control-Allow-Oirigin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+include_once "../config.php";
 $decoded_data = file_get_contents('php://input');
 $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
