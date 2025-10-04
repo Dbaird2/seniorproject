@@ -36,5 +36,6 @@ if ($stmt->rowCount() > 0) {
         echo json_encode(['status'=>'Successfully logged in','api_key'=>$api_key]);
         exit;
     }
-    echo json_encode(['status'=>'Failed to login']);
-    exit;
+}
+echo json_encode(['status'=>'Failed to login']);
+exit;
