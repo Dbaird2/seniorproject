@@ -62,5 +62,5 @@ if ($stmt->rowCount() > 0) {
         exit;
     }
 }
-echo json_encode(['status'=>'Failed to login']);
+echo json_encode(['status'=>'Failed to login', 'email/user'=>$email, 'pw'=>$pw, 'hashed'=>$hashed_pw]);
 exit;
