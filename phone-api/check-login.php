@@ -24,7 +24,7 @@ try {
 }
 if ($stmt->rowCount() > 0) {
     $info = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (password_verify($pw, $info['pw']) {
+    if (password_verify($pw, $info['pw'])) {
         $length = 32; // Number of bytes for the random string, results in 64 hex characters
         $api_key = bin2hex(random_bytes($length));
 
@@ -53,7 +53,7 @@ if ($stmt->rowCount() > 0) {
     }
     if ($stmt->rowCount() > 0) {
         $info = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (password_verify($pw, $info['pw']) {
+        if (password_verify($pw, $info['pw'])) {
             $length = 32; // Number of bytes for the random string, results in 64 hex characters
             $api_key = bin2hex(random_bytes($length));
             try {
