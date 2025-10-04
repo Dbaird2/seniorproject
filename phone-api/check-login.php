@@ -23,6 +23,7 @@ try {
     exit;
 }
 if ($stmt->rowCount() > 0) {
+    echo json_encode(['status'=>'phone_key found']);
     $info = $stmt->fetch(PDO::FETCH_ASSOC);
     if (password_verify($pw, $info['pw'])) {
         $length = 32; // Number of bytes for the random string, results in 64 hex characters
@@ -43,7 +44,7 @@ if ($stmt->rowCount() > 0) {
 
 } else {
     try {
-        $select_user = "SELECT username FROM user_table WHERE (email = :email OR username = :email) limit 1";
+        $select_user = "SELECT pw, username FROM user_table WHERE (email = :email OR username = :email) limit 1";
         $stmt = $dbh->prepare($select);
         $stmt->execute([":email"=>$email]);
     } catch (PDOException $e) {
@@ -52,6 +53,7 @@ if ($stmt->rowCount() > 0) {
         exit;
     }
     if ($stmt->rowCount() > 0) {
+        echo json_encode(['status'=>'phone key not found, user found']);
         $info = $stmt->fetch(PDO::FETCH_ASSOC);
         if (password_verify($pw, $info['pw'])) {
             $length = 32; // Number of bytes for the random string, results in 64 hex characters
