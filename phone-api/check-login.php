@@ -17,11 +17,24 @@ if ($stmt->rowCount() > 0) {
     $length = 32; // Number of bytes for the random string, results in 64 hex characters
     $api_key = bin2hex(random_bytes($length));
 
-    $update = "UPDATE user_table SET phone_api = :api WHERE email = :email OR username = :email";
+    $update = "UPDATE user_table SET phone_key = :api WHERE email = :email OR username = :email";
     $stmt = $dbh->prepare($update);
     $stmt->execute([':api'=>$api_key, ":email"=>$email]);
     echo json_encode(['status'=>'Successfully logged in','api_key'=>$api_key]);
     exit;
-}
-echo json_encode(['status'=>'Failed to login']);
-exit;
+} else {
+    $select_user = "SELECT username FROM user_table WHERE (email = :email OR username = :email) AND pw = :pw";
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([":email"=>$email, ":pw"=>$hash_pw]);
+    if ($stmt->rowCount() > 0) {
+        $length = 32; // Number of bytes for the random string, results in 64 hex characters
+        $api_key = bin2hex(random_bytes($length));
+
+        $update = "UPDATE user_table SET phone_key = :api WHERE email = :email OR username = :email";
+        $stmt = $dbh->prepare($update);
+        $stmt->execute([':api'=>$api_key, ":email"=>$email]);
+        echo json_encode(['status'=>'Successfully logged in','api_key'=>$api_key]);
+        exit;
+    }
+    echo json_encode(['status'=>'Failed to login']);
+    exit;
