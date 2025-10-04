@@ -7,7 +7,7 @@ $decoded_data = file_get_contents('php://input');
 $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
-if (!empty($email) || !empty($pw)) {
+if (empty($email) || empty($pw)) {
     echo json_encode(['status'=>'Failed to login']);
     exit;
 }
@@ -23,7 +23,6 @@ try {
     exit;
 }
 if ($stmt->rowCount() > 0) {
-    echo json_encode(['status'=>'phone_key found']);
     $info = $stmt->fetch(PDO::FETCH_ASSOC);
     if (password_verify($pw, $info['pw'])) {
         $length = 32; // Number of bytes for the random string, results in 64 hex characters
@@ -45,7 +44,7 @@ if ($stmt->rowCount() > 0) {
 } else {
     try {
         $select_user = "SELECT pw, username FROM user_table WHERE (email = :email OR username = :email) limit 1";
-        $stmt = $dbh->prepare($select);
+        $stmt = $dbh->prepare($select_user);
         $stmt->execute([":email"=>$email]);
     } catch (PDOException $e) {
         $msg = $e->getMessage();
@@ -53,7 +52,6 @@ if ($stmt->rowCount() > 0) {
         exit;
     }
     if ($stmt->rowCount() > 0) {
-        echo json_encode(['status'=>'phone key not found, user found']);
         $info = $stmt->fetch(PDO::FETCH_ASSOC);
         if (password_verify($pw, $info['pw'])) {
             $length = 32; // Number of bytes for the random string, results in 64 hex characters
