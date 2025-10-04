@@ -3,12 +3,10 @@ header("Access-Control-Allow-Oirigin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 include_once "../config.php";
-if (!isset($_POST['pw'])) {
-    echo json_encode(['status'=>'Login failed']);
-    exit;
-}
-$pw = trim($_POST['pw']);
-$email = trim($_POST['email']);
+$decoded_data = file_get_contents('php://input');
+$data = json_decode($decoded_data, true);
+$pw = trim($data['pw']);
+$email = trim($data['email']);
 
 $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 
