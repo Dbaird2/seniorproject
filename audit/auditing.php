@@ -747,6 +747,11 @@ document.getElementById('dynamicForm').addEventListener('submit', function(e) {
         e.target.submit();
     }
 });
+document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+    }
+});
       </script>
       <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </div>
