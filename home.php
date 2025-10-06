@@ -355,7 +355,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" />
                         </svg>
-                        Start Self Audit
+                        Start Audit
                     </button>
                     <button class="action-btn" onclick="handleAction('search-departments')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -523,7 +523,7 @@ async function updateTicket(id, action) {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/search/search.php';
                 },
                 'view-audit-history': () => {
-                    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/audit-history.php';
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php';
                 },
                 'download-reports': () => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/download-reports.php';

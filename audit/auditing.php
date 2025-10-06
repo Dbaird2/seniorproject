@@ -274,12 +274,6 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $update_stmt->execute([":tag" => $tag, ':dept'=>$_SESSION['info'][2]]);*/
                         $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
                         $_SESSION['data'][$total_count]["Tag Number"] = $tag;
-                        $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
-                        $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
-                        $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
-                        $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
-                        $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
-                        $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         $_SESSION['data'][$total_count]["Descr"] = $result['asset_name'];
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
@@ -289,15 +283,15 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["PO No."] =  $result['po'];
                         $_SESSION['data'][$total_count]["Acq Date"] =  $result['date_added'];
                         $_SESSION['data'][$total_count]["COST Total Cost"] =  $result['asset_price'];
-                    } else {
-                        $_SESSION['data'][$total_count]["Unit"] =  '';
-                        $_SESSION['data'][$total_count]["Tag Number"] = $tag;
                         $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
                         $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
                         $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
                         $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
                         $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
                         $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
+                    } else {
+                        $_SESSION['data'][$total_count]["Unit"] =  '';
+                        $_SESSION['data'][$total_count]["Tag Number"] = $tag;
                         $_SESSION['data'][$total_count]["Descr"] = '';
                         $_SESSION['data'][$total_count]["Serial ID"] = '';
                         $_SESSION['data'][$total_count]["Location"] =  '';
@@ -307,6 +301,12 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["PO No."] =  '';
                         $_SESSION['data'][$total_count]["Acq Date"] =  '';
                         $_SESSION['data'][$total_count]["COST Total Cost"] =  '';
+                        $_SESSION['data'][$total_count]['Tag Status'] = 'Extra';
+                        $_SESSION['data'][$total_count]['Found Room Tag'] = $room_array[$index];
+                        $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
+                        $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
+                        $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                        $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                     }
                     $total_count++;
                 }
@@ -420,8 +420,8 @@ foreach ($data_slice as $index => $row) {
         <td>{$department}</td>
         <td>{$cost}</td>
         <td>{$po}</td>
-        <td><input class='room' name='previousRms[]' id='{$tag}' value='" . htmlspecialchars($found_room) . "'></td>
-        <td><input class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'></td>
+        <td><input class='room' name='previousRms[]' id='{$tag}' value='" . htmlspecialchars($found_room) . "' readonly></td>
+        <td><textarea class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'>$found_note</td>
         </tr>";
 }
 ?>

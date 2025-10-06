@@ -24,9 +24,8 @@
             padding: 20px;
         }
 
-        /* <CHANGE> Updated header to use CSUB blue background with gold text */
         .header {
-            background: linear-gradient(135deg, #003DA5 0%, #002a75 100%);
+            background: linear-gradient(135deg, #003DA5 0%, #0052CC 100%);
             padding: 40px 20px;
             text-align: center;
             border-radius: 12px;
@@ -56,9 +55,8 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* <CHANGE> Updated progress fill to use CSUB gold */
         .progress-fill {
-            background: linear-gradient(90deg, #FFB81C, #e6a519);
+            background: linear-gradient(90deg, #FFB81C, #FFA500);
             height: 8px;
             border-radius: 20px;
             transition: width 0.3s ease;
@@ -75,10 +73,9 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* <CHANGE> Updated step counter to use CSUB blue background with gold text */
         .step-counter {
             background: #003DA5;
-            color: #FFB81C;
+            color: white;
             padding: 8px 16px;
             border-radius: 20px;
             font-weight: 600;
@@ -89,7 +86,6 @@
             gap: 10px;
         }
 
-        /* <CHANGE> Updated navigation buttons to use CSUB gold background with blue text */
         .nav-btn {
             background: #FFB81C;
             color: #003DA5;
@@ -97,12 +93,12 @@
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
         .nav-btn:hover {
-            background: #e6a519;
+            background: #FFA500;
             transform: translateY(-1px);
         }
 
@@ -125,7 +121,6 @@
             display: block;
         }
 
-        /* <CHANGE> Updated step title to use CSUB blue */
         .step-title {
             color: #003DA5;
             font-size: 1.8rem;
@@ -136,7 +131,6 @@
             gap: 10px;
         }
 
-        /* <CHANGE> Updated step number to use CSUB blue background with gold text */
         .step-number {
             background: #003DA5;
             color: #FFB81C;
@@ -162,7 +156,6 @@
             text-align: center;
         }
 
-        /* <CHANGE> Updated image border to use CSUB gold */
         .step-image {
             max-width: 100%;
             height: auto;
@@ -194,10 +187,9 @@
             border-radius: 0 6px 6px 0;
         }
 
-        /* <CHANGE> Updated tip box to use CSUB blue accent */
         .tip-box {
-            background: #e6f0ff;
-            border-left: 4px solid #003DA5;
+            background: #FFF8E1;
+            border-left: 4px solid #FFB81C;
             padding: 15px 20px;
             margin: 20px 0;
             border-radius: 0 6px 6px 0;
@@ -210,7 +202,6 @@
             margin: 20px 0;
         }
 
-        /* <CHANGE> Updated action list heading to use CSUB blue */
         .action-list h4 {
             color: #003DA5;
             margin-bottom: 15px;
@@ -265,9 +256,8 @@
     </style>
 </head>
 <body>
-<?php $guide_title = 'How to Audit';  $guide_description = 'Step-by-step visual instruction to help you audit your department successfully.'; ?>
+<?php $guide_title = 'How to Add Profiles';  $guide_description = 'Step-by-step visual instruction to help you set up your profiles.'; ?>
     <div class="container">
-        <!-- Header Section -->
         <div class="header">
             <h1><?php echo isset($guide_title) ? $guide_title : 'Visual Process Guide'; ?></h1>
             <p><?php echo isset($guide_description) ? $guide_description : 'Step-by-step visual instructions to help you complete this process successfully.'; ?></p>
@@ -281,7 +271,7 @@
         <!-- Step Navigation -->
         <div class="step-navigation">
             <div class="step-counter">
-                Step <span id="currentStep">1</span> of <span id="totalSteps">5</span>
+                Step <span id="currentStep">1</span> of <span id="totalSteps">3</span>
             </div>
             <div class="nav-buttons">
                 <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)" disabled>Previous</button>
@@ -296,153 +286,64 @@
                 Getting Started
             </div>
             <div class="step-description">
-                Welcome to this auditing guide. Before we begin, there are two ways to start an audit: One, asset management can provide an excel sheet to insert. Two, simply click the audit button from the profile page that you can make <a href="https://dataworks-7b7x.onrender.com/asset-manager/asset-ui.php">Here</a>.
+                First locate the profile manage button on the navigation bar at the top of the page. This will take you to the profile management page where you can create your profiles.
             </div>
 
             <div class="image-container">
-                <img src="../pictures/audit-pics/profile-audit.png" alt="Getting started with profiles" class="step-image">
-                <div class="image-caption">Example: Profile Audit Button Page</div>
-            </div>
-            <div class="tip-box"></div>
-            <div class="image-container">
-                <img src="../pictures/audit-pics/upload.png" alt="Getting started with uploading" class="step-image">
-                <div class="image-caption">Example: Upload Excel Page</div>
-            </div>
-
-            <div class="tip-box">
-                <strong>💡 Tip:</strong> Make sure the excel is in a recognizable format. For more details on this check out this <a href="https://dataworks-7b7x.onrender.com/faq/audit-excel-format.php">page</a>. Once you start the audit there are 12 hours, starting from your login time, to save the audit.
-            </div>
-
-            <div class="action-list">
-                <h4>What you'll need:</h4>
-                <ol>
-                    <li>To be logged in</li>
-                    <li>Have a Valid Excel or Asset profile page</li>
-                </ol>
+                <img src="../pictures/profile-pics/step1.png" alt="Getting started with profiles" class="step-image">
+                <div class="image-caption">Example: Profile Button Location</div>
             </div>
         </div>
-
-        <!-- Step 2: Scanning -->
+        <!-- Step 2: Setting Up a Profile -->
         <div class="step-container" data-step="2">
             <div class="step-title">
                 <div class="step-number">2</div>
-                Inputting Tags
+                Profile Setup
             </div>
             <div class="step-description">
-                At the top left you will see Input fields. The left single one is the room tag number, middle is the associated building name followed by the room number. The vertical inputs to the right of the number are the tags being inputted.
-                <br><strong>The building and room number automatically populate</strong>.
-                <br>If you do not have a room tag while auditing, then look proceed to look for your room in the search top at the top of the page and input your building ID and room number to find the tag.
+                Towards the middle of the page locate the input and 'Add Profile' button to create a new profile. Make sure to name the profile something relevant to your department.
             </div>
 
             <div class="image-container">
-                <img src="../pictures/audit-pics/auditing.png" alt="Navigation screenshot" class="step-image">
-                <div class="image-caption">Room and Asset Insert</div>
+                <img src="../pictures/profile-pics/managing-profile.png" alt="Getting started with profiles" class="step-image">
+                <div class="image-caption">Example: Profile Managing</div>
             </div>
             <div class="step-description">
-                    Once you input your tags and submit, the assets in the table down below will change from red to green if they were found. If an asset was not found it will remain red. Any assets that were not part of the initial audit will be blue. 
-                    <br><strong>The toggle switch can be checked off to stop auto tabbing incase of an older tag</strong>.
-            </div>
-
-            <div class="tip-box">
-                <strong>💡 Tip:</strong> If your room does not have door tag (usually around the door hinges), then please contact distribution@csub.edu for one or put in a ticket through our chatbot assistant.
-            </div>
-            <div class="action-list">
-                <h4>Steps to follow:</h4>
-                <ol>
-                    <li>Input room tag/number</li>
-                    <li>Input all tags found in the room</li>
-                    <li>Click submit once tags run out</li>
-                </ol>
+                After creating the profile, you should see it appear in the list of profiles below. You can now start adding assets to this profile.
             </div>
         </div>
-
-        <!-- Step 3: Saving audit -->
+        <!-- Step 3: Adding assets to Profile -->
         <div class="step-container" data-step="3">
             <div class="step-title">
                 <div class="step-number">3</div>
-                Saving audit
+                Profile Asset Addition
             </div>
             <div class="step-description">
-                    Click the 'Save Audit' button located at the top right. It is recommended to also click the 'Export' button located in the middle towards the top. Once you click 'Save Audit' a insert field will appear. This field can be left blank, but it is preferred to write the name of anybody who has helped with the audit.
+                Towards the top left of the page should be an input field. Once you click on it a dropdown should appear with all your profiles. Select the profile you want to add assets to and load the profile.
             </div>
 
             <div class="image-container">
-                <img src="../pictures/audit-pics/saving-audit.png" alt="Main process screenshot" class="step-image">
-                <div class="image-caption">Completing Audit</div>
+                <img src="../pictures/profile-pics/profile-selecting.png" alt="Getting started with profiles" class="step-image">
+                <div class="image-caption">Example: Profile Selecting</div>
+            </div>
+            <div class="step-description">
+                After creating the profile, you should see it appear in the list of profiles below. You can now start adding assets to this profile.
             </div>
 
-            <!-- <div class="warning-box">
-                <strong>⚠️ Important:</strong> 
-            </div> -->
+            <div class="image-container">
+                <img src="../pictures/profile-pics/profile-selected.png" alt="Getting started with profiles" class="step-image">
+                <div class="image-caption">Example: Profile Selected</div>
+            </div>
 
-            <div class="action-list">
-                <h4>Steps:</h4>
-                <ol>
-                    <li>Locate Save Audit</li>
-                    <li>Click Save Audit</li>
-                    <li>Input any names of people who helped (optional)</li>
-                </ol>
+            <div class="step-description">
+                From here you can quick start adding assets using the quick start input on the top right (this will delete all assets in the profile and replace so be careful).
+                <br>A search bar is also available to search for assets by their tag. Along with a drop on each asset to change their background color to indicate status.
+                <br>Downloading a PDF or Excel sheet of the profile is also available above the table.
             </div>
         </div>
-
-        <!-- Step 4: Finding Saved Audits -->
-        <div class="step-container" data-step="4">
-            <div class="step-title">
-                <div class="step-number">4</div>
-                    Locating
-            </div>
-            <div class="step-description">
-                    Now hover over the audit button at the top and click 'History'. Here you can find your past and current audits. 
-            </div>
-
-            <div class="image-container">
-                <img src="../pictures/audit-pics/step1.png" alt="history screenshot" class="step-image">
-                <div class="image-caption"></div>
-            </div>
-
-             <div class="step-description">
-                    After clicking and searching for your Department ID, you will see your audits.
-            </div>
-
-            <div class="image-container">
-                <img src="../pictures/audit-pics/in-progress-audit.png" alt="history screenshot" class="step-image">
-                <div class="image-caption"></div>
-            </div>
-            <div class="step-description">
-                'Continue' will allow you to continue an audit where you left off at and 'Start Forms' will allow you to mass send any necessary Kuali forms needed for your department.
-            </div>
-
-              <div class="tip-box">
-                <strong>💡 Tip:</strong> If you accidentally clicked away during an audit. Clicking continue will put your right back to where you were.
-            </div>
-            <!-- <div class="highlight-box">
-                <strong>✅ Success indicators:</strong> Look for confirmation messages, updated status, or new entries in the system.
-            </div> -->
-        </div>
-
-        <!-- Step 5: Kuali Forms -->
-        <div class="step-container" data-step="5">
-            <div class="step-title">
-                <div class="step-number">5</div>
-                Kuali Forms
-            </div>
-            <div class="step-description">
-                Here you can select any forms you need to send out to faculty or staff. Once you select the forms you need, click 'Send Forms' at the bottom of the page.
-            </div>
-
-            <div class="image-container">
-                <img src="../pictures/audit-pics/form-selecting.png" alt="Selecting form screenshot" class="step-image">
-                <div class="image-caption">Final confirmation or next steps</div>
-            </div>
-
-             <div class="tip-box">
-                <strong>💡 Tip:</strong> Bulk transfer sends all assets into one form that is selected as 'Bulk Transfer'.
-            </div>
-    </div>
-
     <script>
         let currentStepNum = 1;
-        const totalSteps = 5;
+        const totalSteps = 3;
 
         function updateProgress() {
             const progress = (currentStepNum / totalSteps) * 100;

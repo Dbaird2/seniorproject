@@ -99,7 +99,7 @@ foreach($_SESSION['data'] as $session) {
             $lsd_data['encrypted'] = $data['encrypted'];
             $variables['data']['ZfhX3CCX7D']['label'] = $lsd_data['encrypted'];
             if ($lsd_data['encrypted'] === 'Yes') {
-                $variable['data']['ZfhX3CCX7D']['id'] = 'yes';
+                $variables['data']['ZfhX3CCX7D']['id'] = 'yes';
                 $lsd_data['encrypted_data'] = $data['encrypted_data'];
                 $variables['data']['8YYaqGi1u4'] = $lsd_data['encrypted_data'];
             } else {
