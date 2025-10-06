@@ -421,7 +421,7 @@ foreach ($data_slice as $index => $row) {
         <td>{$cost}</td>
         <td>{$po}</td>
         <td><input class='room' name='previousRms[]' id='{$tag}' value='" . htmlspecialchars($found_room) . "' readonly></td>
-        <td><textarea class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'>$found_note</td>
+        <td><textarea class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'>$found_note</textarea></td>
         </tr>";
 }
 ?>
