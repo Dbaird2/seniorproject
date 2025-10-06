@@ -1,7 +1,4 @@
 <?php
-// Minimal Kuali API runner (no JSON headers, no browser JS)
-
-// Optional: limit max runtime in seconds
 set_time_limit(300);
 
 $base = 'https://dataworks-7b7x.onrender.com/kualiAPI/';
@@ -24,12 +21,11 @@ foreach ($files as $file) {
         $response = @file_get_contents($url);
 
         if ($response === false) {
-            echo "❌ Failed: $url\n";
+            echo "❌ Failed: $url\n$response";
         } else {
-            echo "✅ Success: $url\n";
+            echo "✅ Success: $url\n$response";
         }
 
-        // Small delay between requests (optional)
         usleep(200000); // 0.2s
     } catch (Exception $e) {
         echo $e->getMessage();

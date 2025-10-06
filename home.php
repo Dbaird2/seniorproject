@@ -345,6 +345,12 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
                     <h3>Quick Actions</h3>
                 </div>
                 <div class="quick-actions">
+                    <button class="action-btn" onclick="handleAction('help')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" />
+                        </svg>
+                        Help Pages
+                    </button>
                     <button class="action-btn" onclick="handleAction('schedule-audit')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" />
@@ -513,6 +519,9 @@ async function updateTicket(id, action) {
 
         function handleAction(action) {
             const actions = {
+                'help': () => {
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/faq/all-faqs.php';
+                },
                 'schedule-audit': () => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/asset-manager/manage/manage-profile.php';
                 },
