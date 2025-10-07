@@ -17,7 +17,7 @@ $files = [
 ];
 
 foreach ($files as $file) {
-    $path = __DIR__ . '/kualiAPI/' . $file; // adjust if needed
+    $path = __DIR__ . '/' . $file; // adjust if needed
     echo "Running: $path\n";
 
     // run the script using PHP CLI
@@ -25,9 +25,9 @@ foreach ($files as $file) {
     exec($cmd . ' 2>&1', $output, $exitCode);
 
     if ($exitCode === 0) {
-        echo "Success: $file\n";
+        echo "Success: $file\n<br>";
     } else {
-        echo "Failed: $file (exit code $exitCode)\n";
+        echo "Failed: $file (exit code $exitCode)\n<br>";
     }
 
     // optionally show partial output for debugging
