@@ -6,7 +6,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = $result['cust_responsibility_time'];
+$skip = (int)$result['cust_responsibility_time'];
 $highest_time = date('c', $raw_ms / 1000);
 echo $raw_ms . '<br>';
 
