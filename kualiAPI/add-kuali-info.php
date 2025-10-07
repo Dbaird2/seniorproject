@@ -228,121 +228,218 @@ try {
     foreach ($edges as $index => $edge) {
         if (isset($edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'])) {
             $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
-        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
-            $dept_id = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
-        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
-            $dept_id = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
-        }
-        
-        if (isset($edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'])) {
             $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'];
-        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'])) {
-            $dept_name = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
-        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['AkMeIWWhoj'])) {
-            $dept_name = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
-        }
-
-        if (isset($edge['node']['data']['XeTTtfl6XW']['documentSetId'])) {
             $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'];
-        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['documentSetId'])) {
-            $documentSetId = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['documentSetId'];
-        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['documentSetId'])) {
-            $documentSetId = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['documentSetId'];
-        }
-
-        if (isset($edge['node']['data']['XeTTtfl6XW']['id'])) {
             $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
-        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'])) {
-            $dept_kuali_id = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
-        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'])) {
-            $dept_kuali_id = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'];
+        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
+            $array = $edge['node']['data']['r4XeMIe7yh']['data'];
+            $dept_id = $dept_info['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
+            $dept_name = $dept_info['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
+            $documentSetId = $dept_info['data']['Gsxde2JR77']['documentSetId'];
+            $dept_kuali_id = $dept_info['data']['Gsxde2JR77']['id'];
+        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
+            $array = $edge['node']['data']['HBG7HehhU8']['data'];
+            $dept_id = $dept_info['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
+            $dept_name = $dept_info['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
+            $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
+            $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
         }
+
         $update_time = $edge['node']['meta']['createdAt'];
-        if (isset($edge['node']['data']['XhBe3DNaU4'])) {
-            // NEW CUSTODIAN
-            $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
-            $c_full_name = '';
-            $custodian_array = explode(' ', $c_display_name);
-            $size = count($custodian_array);
-            $c_email = trim($custodian_array[$size - 1], "()");
-            $c_l_name = '';
-            for ($i = 0; $i < $size - 1; $i++) {
-                $c_full_name .= ' ' . $custodian_array[$i];
-                if ($i !== 0) {
-                    $c_l_name .= $custodian_array[$i];
+        if (isset($array)) {
+            foreach ($array as $dept_info) {
+                if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
+                    $dept_id = $dept_info['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
+                    $dept_name = $dept_info['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
+                    $documentSetId = $dept_info['data']['Gsxde2JR77']['documentSetId'];
+                    $dept_kuali_id = $dept_info['data']['Gsxde2JR77']['id'];
+                } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
+                    $dept_id = $dept_info['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
+                    $dept_name = $dept_info['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
+                    $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
+                    $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
                 }
+                if (isset($edge['node']['data']['XhBe3DNaU4'])) {
+                    // NEW CUSTODIAN
+                    $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
+                    $c_full_name = '';
+                    $custodian_array = explode(' ', $c_display_name);
+                    $size = count($custodian_array);
+                    $c_email = trim($custodian_array[$size - 1], "()");
+                    $c_l_name = '';
+                    for ($i = 0; $i < $size - 1; $i++) {
+                        $c_full_name .= ' ' . $custodian_array[$i];
+                        if ($i !== 0) {
+                            $c_l_name .= $custodian_array[$i];
+                        }
+                    }
+                    $c_full_name = trim($c_full_name);
+                    $email_split = explode('@', $c_email);
+                    $c_username = $email_split[0];
+                    $c_id = $edge['node']['data']['XhBe3DNaU4']['userId'];
+                    $c_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
+                    $type = $edge['node']['data']['XhBe3DNaU4']['signatureType'];
+                    $c_signature = $c_full_name;
+                    if ($type === 'type') {
+                        // Handle specific type case
+                        $c_signature = $edge['node']['data']['XhBe3DNaU4']['signedName'];
+                    } else {
+                        $c_signature = $c_full_name;
+                    }
+                    addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
+                }
+
+                if (isset($edge['node']['data']['04PgxWqAbE'])) {
+                    // MANAGER/DEAN SIGNATURE
+                    $m4_display_name = $edge['node']['data']['04PgxWqAbE']['displayName'];
+                    $m4_full_name = '';
+                    $m4_array = explode(' ', $m4_display_name);
+                    $size = count($m4_array);
+                    $m4_email = trim($m4_array[$size - 1], "()");
+                    $m4_l_name = '';
+                    for ($i = 0; $i < $size - 1; $i++) {
+                        $m4_full_name .= ' ' . $m4_array[$i];
+                    }
+                    for ($i = 1; $i < $size - 1; $i++) {
+                        $m4_l_name .= ' ' . $m4_array[$i];
+                    }
+
+                    $m4_full_name = trim($m4_full_name);
+                    $m4_f_name = $m4_array[0];
+                    $m4_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
+                    $m4_email_array = explode('@', $m4_email);
+                    $m4_username = $m4_email_array[0];
+                    $m4_id = $edge['node']['data']['04PgxWqAbE']['userId'];
+                    $type = $edge['node']['data']['04PgxWqAbE']['signatureType'];
+                    $m4_signature = $m4_full_name;
+                    if ($type === 'type') {
+                        // Handle specific type case
+                        $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
+                    }
+                    addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
+                }
+                if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
+                    // MANAGER/DEAN INFORMATION
+                    $m2_display_name = $m2_full_name = $edge['node']['data']['jTxoK_Wsh7']['displayName'];
+                    $m2_email = $edge['node']['data']['jTxoK_Wsh7']['email'];
+                    $email_array = explode('@', $m2_email);
+                    $m2_username = $email_array[0];
+                    $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
+                    $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
+                    $m2_signature = $m2_display_name;
+                    addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
+                }
+                if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
+                    // CUSTODIAN INFORMATION
+                    $m3_display_name =  $m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName'];
+                    $m3_email = $edge['node']['data']['kS_kp-Oo1y']['email'];
+                    $email_array = explode('@', $m3_email);
+                    $m3_username = $email_array[0];
+                    $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
+                    $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
+                    $m3_signature = $m3_display_name;
+                    addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
+                }
+                addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
             }
-            $c_full_name = trim($c_full_name);
-            $email_split = explode('@', $c_email);
-            $c_username = $email_split[0];
-            $c_id = $edge['node']['data']['XhBe3DNaU4']['userId'];
-            $c_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
-            $type = $edge['node']['data']['XhBe3DNaU4']['signatureType'];
-            $c_signature = $c_full_name;
-            if ($type === 'type') {
-                // Handle specific type case
-                $c_signature = $edge['node']['data']['XhBe3DNaU4']['signedName'];
-            } else {
+        } else {
+            if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
+                $dept_id = $dept_info['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
+                $dept_name = $dept_info['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
+                $documentSetId = $dept_info['data']['Gsxde2JR77']['documentSetId'];
+                $dept_kuali_id = $dept_info['data']['Gsxde2JR77']['id'];
+            } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
+                $dept_id = $dept_info['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
+                $dept_name = $dept_info['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
+                $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
+                $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
+            }
+            if (isset($edge['node']['data']['XhBe3DNaU4'])) {
+                // NEW CUSTODIAN
+                $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
+                $c_full_name = '';
+                $custodian_array = explode(' ', $c_display_name);
+                $size = count($custodian_array);
+                $c_email = trim($custodian_array[$size - 1], "()");
+                $c_l_name = '';
+                for ($i = 0; $i < $size - 1; $i++) {
+                    $c_full_name .= ' ' . $custodian_array[$i];
+                    if ($i !== 0) {
+                        $c_l_name .= $custodian_array[$i];
+                    }
+                }
+                $c_full_name = trim($c_full_name);
+                $email_split = explode('@', $c_email);
+                $c_username = $email_split[0];
+                $c_id = $edge['node']['data']['XhBe3DNaU4']['userId'];
+                $c_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
+                $type = $edge['node']['data']['XhBe3DNaU4']['signatureType'];
                 $c_signature = $c_full_name;
-            }
-            addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
-        }
-
-        if (isset($edge['node']['data']['04PgxWqAbE'])) {
-            // MANAGER/DEAN SIGNATURE
-            $m4_display_name = $edge['node']['data']['04PgxWqAbE']['displayName'];
-            $m4_full_name = '';
-            $m4_array = explode(' ', $m4_display_name);
-            $size = count($m4_array);
-            $m4_email = trim($m4_array[$size - 1], "()");
-            $m4_l_name = '';
-            for ($i = 0; $i < $size - 1; $i++) {
-                $m4_full_name .= ' ' . $m4_array[$i];
-            }
-            for ($i = 1; $i < $size - 1; $i++) {
-                $m4_l_name .= ' ' . $m4_array[$i];
+                if ($type === 'type') {
+                    // Handle specific type case
+                    $c_signature = $edge['node']['data']['XhBe3DNaU4']['signedName'];
+                } else {
+                    $c_signature = $c_full_name;
+                }
+                addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
             }
 
-            $m4_full_name = trim($m4_full_name);
-            $m4_f_name = $m4_array[0];
-            $m4_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
-            $m4_email_array = explode('@', $m4_email);
-            $m4_username = $m4_email_array[0];
-            $m4_id = $edge['node']['data']['04PgxWqAbE']['userId'];
-            $type = $edge['node']['data']['04PgxWqAbE']['signatureType'];
-            $m4_signature = $m4_full_name;
-            if ($type === 'type') {
-                // Handle specific type case
-                $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
+            if (isset($edge['node']['data']['04PgxWqAbE'])) {
+                // MANAGER/DEAN SIGNATURE
+                $m4_display_name = $edge['node']['data']['04PgxWqAbE']['displayName'];
+                $m4_full_name = '';
+                $m4_array = explode(' ', $m4_display_name);
+                $size = count($m4_array);
+                $m4_email = trim($m4_array[$size - 1], "()");
+                $m4_l_name = '';
+                for ($i = 0; $i < $size - 1; $i++) {
+                    $m4_full_name .= ' ' . $m4_array[$i];
+                }
+                for ($i = 1; $i < $size - 1; $i++) {
+                    $m4_l_name .= ' ' . $m4_array[$i];
+                }
+
+                $m4_full_name = trim($m4_full_name);
+                $m4_f_name = $m4_array[0];
+                $m4_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
+                $m4_email_array = explode('@', $m4_email);
+                $m4_username = $m4_email_array[0];
+                $m4_id = $edge['node']['data']['04PgxWqAbE']['userId'];
+                $type = $edge['node']['data']['04PgxWqAbE']['signatureType'];
+                $m4_signature = $m4_full_name;
+                if ($type === 'type') {
+                    // Handle specific type case
+                    $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
+                }
+                addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
             }
-            addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
+            if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
+                // MANAGER/DEAN INFORMATION
+                $m2_display_name = $m2_full_name = $edge['node']['data']['jTxoK_Wsh7']['displayName'];
+                $m2_email = $edge['node']['data']['jTxoK_Wsh7']['email'];
+                $email_array = explode('@', $m2_email);
+                $m2_username = $email_array[0];
+                $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
+                $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
+                $m2_signature = $m2_display_name;
+                addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
+            }
+            if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
+                // CUSTODIAN INFORMATION
+                $m3_display_name =  $m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName'];
+                $m3_email = $edge['node']['data']['kS_kp-Oo1y']['email'];
+                $email_array = explode('@', $m3_email);
+                $m3_username = $email_array[0];
+                $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
+                $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
+                $m3_signature = $m3_display_name;
+                addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
+            }
+            addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
+            $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
+            $update_stmt = $dbh->prepare($update_q);
+            $update_stmt->execute([$update_time]);
         }
-        if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
-            // MANAGER/DEAN INFORMATION
-            $m2_display_name = $m2_full_name = $edge['node']['data']['jTxoK_Wsh7']['displayName'];
-            $m2_email = $edge['node']['data']['jTxoK_Wsh7']['email'];
-            $email_array = explode('@', $m2_email);
-            $m2_username = $email_array[0];
-            $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
-            $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
-            $m2_signature = $m2_display_name;
-            addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
-        }
-        if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
-            // CUSTODIAN INFORMATION
-            $m3_display_name =  $m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName'];
-            $m3_email = $edge['node']['data']['kS_kp-Oo1y']['email'];
-            $email_array = explode('@', $m3_email);
-            $m3_username = $email_array[0];
-            $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
-            $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
-            $m3_signature = $m3_display_name;
-            addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
-        }
-        addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
-        $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
-        $update_stmt = $dbh->prepare($update_q);
-        $update_stmt->execute([$update_time]);
     }
 } catch (PDOException $e) {
     echo "Error with database " . $e->getMessage();
