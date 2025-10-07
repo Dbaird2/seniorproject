@@ -93,6 +93,7 @@ function randomPassword()
 
 function addInfo($username, $email, $form_id, $school_id, $signature, $full_name, $role)
 {
+    echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role; 
     global $dbh, $dept_id;
     $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($select);
@@ -138,6 +139,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
 
 function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name)
 {
+    echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name;
     global $dbh;
     global $dept_id, $dept_name;
     $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
@@ -174,6 +176,7 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
 
 function addSignature($username, $email, $form_id, $signature, $school_id, $dept_id, $f_name, $l_name, $role = 'user')
 {
+    echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role; 
     global $dbh;
     $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($select);
@@ -210,7 +213,8 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
         $insert = 'INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, form_id, school_id, signature) VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $dbh->prepare($insert);
-        $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $dept_id, $form_id, $school_id, $signature]);
+        $array_dept_id = '{' . $dept_id . '}';
+        $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
     }
 }
 
