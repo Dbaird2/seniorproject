@@ -123,7 +123,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
                 }
             }
             if (!$found) {
-                $update = 'UPDATE user_table SET custodian = ARRAY_APPEND(custodian, :dept_id) WHERE email = :email';
+                $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
                 $stmt = $dbh->prepare($update);
                 $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
             }
@@ -176,9 +176,9 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
     }
 }
 
-function addSignature($username, $email, $form_id, $signature, $school_id, $dept_id, $f_name, $l_name, $role = 'user')
+function addSignature($username, $email, $form_id, $signature, $school_id, $f_name, $l_name, $role = 'user')
 {
-    global $dbh;
+    global $dbh, $dept_id;
     $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($select);
     $stmt->execute([":email" => $email]);
@@ -205,7 +205,7 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
                 }
             }
             if (!$found) {
-                $update = 'UPDATE user_table SET custodian = ARRAY_APPEND(custodian, :dept_id) WHERE email = :email';
+                $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
                 $stmt = $dbh->prepare($update);
                 $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
             }
