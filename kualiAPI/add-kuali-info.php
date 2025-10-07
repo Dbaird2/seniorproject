@@ -6,9 +6,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$skip = (int)$result['cust_responsibility_time'];
-$highest_time = date('c', $raw_ms / 1000);
-echo $raw_ms . '<br>';
+$skip = (int)$result['cust_responsibility_time']; ?? 0
 
 $apikey = $result['kuali_key'];
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
@@ -155,10 +153,9 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
     }
 }
 
-function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name)
+function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name, $dept_id, $dept_name)
 {
     global $dbh;
-    global $dept_id, $dept_name;
     echo '<br>Add Department<br>';
     echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
     $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
@@ -238,10 +235,9 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $f_na
         $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
     }
 }
-$count = 0;
 try {
     foreach ($edges as $index => $edge) {
-        $count++;
+        $skip++;
         if (isset($edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'])) {
         } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
             $array = $edge['node']['data']['r4XeMIe7yh']['data'];
@@ -345,7 +341,7 @@ try {
                     $m3_signature = $m3_display_name;
                     addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
                 }
-                addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
+                addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id , $dept_name);
             }
         } else {
             $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
@@ -442,7 +438,7 @@ try {
 }
 $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
 $update_stmt = $dbh->prepare($update_q);
-$update_stmt->execute([$count]);
+$update_stmt->execute([$skip]);
 echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
 exit;
 
