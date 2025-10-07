@@ -1,8 +1,6 @@
 <?php
 set_time_limit(300);
 
-$base = 'https://dataworks-7b7x.onrender.com/kualiAPI/';
-    // TRANSFER & DW-TRANSFER TO BE ADDED
 $files = [
     'bulk-transfer.php',
     'add-kuali-info.php',
@@ -19,23 +17,22 @@ $files = [
 ];
 
 foreach ($files as $file) {
-    try {
-        $url = $base . $file;
-        echo "Fetching: $url\n";
+    $path = __DIR__ . '/kualiAPI/' . $file; // adjust if needed
+    echo "Running: $path\n";
 
-        $response = @file_get_contents($url);
+    // run the script using PHP CLI
+    $cmd = 'php ' . escapeshellarg($path);
+    exec($cmd . ' 2>&1', $output, $exitCode);
 
-        if ($response === false) {
-            echo "❌ Failed: $url\n";
-        } else {
-            echo "✅ Success: $url\n";
-        }
-
-        usleep(200000); // 0.2s
-    } catch (Exception $e) {
-        echo $e->getMessage();
+    if ($exitCode === 0) {
+        echo "Success: $file\n";
+    } else {
+        echo "Failed: $file (exit code $exitCode)\n";
     }
+
+    // optionally show partial output for debugging
+    echo implode("\n", array_slice($output, 0, 5)) . "\n\n";
+    usleep(200000); // 0.2s pause
 }
 
 echo "All done!\n";
-exit;
