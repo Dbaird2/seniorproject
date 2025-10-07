@@ -1,17 +1,15 @@
 <?php
-include_once("../config.php");
-require '../vendor/autoload.php';
+include_once "../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT cust_responsibility_time, kuali_key FROM kuali_table";
+$select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (string)$result['cust_responsibility_time'] ?? (string)0;
-echo 'Highest Time ' . $raw_ms . '<br>';
+$raw_ms = (int)$result['cust_responsibility_time'] ?? 0;
+$highest_time = date('c', $raw_ms / 1000);
 
 $apikey = $result['kuali_key'];
-
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
 
 $curl = curl_init($url);
@@ -20,42 +18,58 @@ curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
 $headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-
+        "Content-Type: application/json",
+            "Authorization: Bearer {$apikey}",
+            );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 $data = json_encode([
-    "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
-    "variables" => [
-        "appId" => "67bf42240472a7027dd17e97",
-        "skip" => 0,
-        "limit" => 200,
-        "sort" => [
-            "meta.createdAt"
-        ],
-        "query" => "",
-        "fields" => [
-            "type" => "AND",
-            "operators" => [
-                [
-                    "type" => "AND",
-                    "operators" => [
-                        [
-                            "field" => "meta.workflowStatus",
-                            "type" => "IS",
-                            "value" => "Complete"
-                        ],
-                        [
-                            "field" => "meta.createdAt",
-                            "type" => "RANGE",
-                            "min" => $raw_ms
-                        ]
-                    ]
-                ]
+    "query" => 'query (
+        $appId: ID!
+        $skip: Int!
+        $limit: Int!
+        $sort: [String!]
+        $query: String
+        $fields: Operator
+) {
+    app(id: $appId) {
+    id name documentConnection(
+        args: {
+        skip: $skip
+            limit: $limit
+            sort: $sort
+            query: $query
+            fields: $fields
+            }
+            keyBy: ID
+            ) {
+                totalCount edges {
+                node { id data meta } }
+                    pageInfo { hasNextPage hasPreviousPage skip limit }
+                }
+            }
+        }',
+"variables" => [
+    "appId" => "67bf42240472a7027dd17e97",
+    "skip" => 0,
+    "limit" => 100,
+    "sort" => ["meta.createdAt"],
+    "query" => "",
+    "fields" => [
+        "type" => "AND",
+        "operators" => [
+            [
+                "field" => "meta.workflowStatus",
+                "type" => "IS",
+                "value" => "Complete"
+            ],
+            [
+                "field" => "meta.createdAt",
+                "type" => "RANGE",
+                "min" => (string)$raw_ms
             ]
         ]
     ]
+]
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
