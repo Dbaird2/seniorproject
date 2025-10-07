@@ -6,7 +6,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$skip = (int)$result['cust_responsibility_time']; ?? 0
+$skip = (int)$result['cust_responsibility_time'] ?? 0;
 
 $apikey = $result['kuali_key'];
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
