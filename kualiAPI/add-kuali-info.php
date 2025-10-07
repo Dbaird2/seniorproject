@@ -251,7 +251,7 @@ try {
         if (isset($edge['node']['data']['XeTTtfl6XW']['id'])) {
             $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
         } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'])) {
-            $dept_kuali_id$edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
+            $dept_kuali_id = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
         } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'])) {
             $dept_kuali_id = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'];
         }
