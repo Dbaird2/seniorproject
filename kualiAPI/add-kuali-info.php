@@ -7,7 +7,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT cust_responsibility_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['cust_responsibility_time'] ?? 0;
+$raw_ms = (int)($result['cust_responsibility_time'] ?? 0);
 $highest_time = date('c', $raw_ms / 1000);
 echo 'Highest Time ' . $highest_time . '<br>';
 
@@ -50,7 +50,7 @@ $data = json_encode([
                         [
                             "field" => "meta.createdAt",
                             "type" => "RANGE",
-                            "min" => $highest_time
+                            "min" => (string)$raw_ms
                         ]
                     ]
                 ]

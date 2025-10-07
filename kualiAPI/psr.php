@@ -47,7 +47,7 @@ $data = json_encode([
                         [
                             "field" => "meta.createdAt",
                             "type" => "RANGE",
-                            "min" => $highest_time
+                            "min" => (string)$raw_ms
                         ]
                     ]
                 ]
