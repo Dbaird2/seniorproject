@@ -26,9 +26,9 @@ foreach ($files as $file) {
         $response = @file_get_contents($url);
 
         if ($response === false) {
-            echo "❌ Failed: $url\n$response";
+            echo "❌ Failed: $url\n";
         } else {
-            echo "✅ Success: $url\n$response";
+            echo "✅ Success: $url\n";
         }
 
         usleep(200000); // 0.2s
