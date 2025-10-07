@@ -154,7 +154,7 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
             $stmt = $dbh->prepare($update_dept);
             $stmt->execute([':manager' => $m_full_name, ':dept_id' => $dept_id]);
         }
-        $select_cust = 'SELECT dept_id, form_id, document_set_id FROM department WHERE custodian = ANY(:cust)';
+        $select_cust = 'SELECT dept_id, form_id, document_set_id FROM department WHERE :cust = ANY(custodian)';
         $stmt = $dbh->prepare($select_cust);
         $stmt->execute([':cust' => $c_display_name]);
         $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
