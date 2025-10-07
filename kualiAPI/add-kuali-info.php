@@ -224,10 +224,37 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $f_na
 
 try {
     foreach ($edges as $index => $edge) {
-        $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
-        $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
-        $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['documentSetId'];
-        $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'] ?? $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
+        if (isset($edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'])) {
+            $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
+        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
+            $dept_id = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
+        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
+            $dept_id = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
+        }
+        
+        if (isset($edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'])) {
+            $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'];
+        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'])) {
+            $dept_name = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
+        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['AkMeIWWhoj'])) {
+            $dept_name = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
+        }
+
+        if (isset($edge['node']['data']['XeTTtfl6XW']['documentSetId'])) {
+            $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'];
+        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['documentSetId'])) {
+            $documentSetId = $edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['documentSetId'];
+        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['documentSetId'])) {
+            $documentSetId = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['documentSetId'];
+        }
+
+        if (isset($edge['node']['data']['XeTTtfl6XW']['id'])) {
+            $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
+        } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'])) {
+            $dept_kuali_id$edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['id'];
+        } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'])) {
+            $dept_kuali_id = $edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['id'];
+        }
         $update_time = $edge['node']['meta']['createdAt'];
         if (isset($edge['node']['data']['XhBe3DNaU4'])) {
             // NEW CUSTODIAN
