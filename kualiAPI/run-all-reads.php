@@ -2,6 +2,7 @@
 set_time_limit(300);
 
 $base = 'https://dataworks-7b7x.onrender.com/kualiAPI/';
+    // TRANSFER & DW-TRANSFER TO BE ADDED
 $files = [
     'bulk-transfer.php',
     'add-kuali-info.php',
@@ -10,12 +11,11 @@ $files = [
     'bulk-psr.php',
     'check-out.php',
     'equip-loss-stole.php',
-    'psr.php'
+    'psr.php',
     'dataworks-read/dw-psr.php',
     'dataworks-read/dw-equip-loss-stole.php',
     'dataworks-read/dw-check-out.php',
-    'dataworks-read/dw-bulk-transfer.php',
-    // TRANSFER & DW-TRANSFER TO BE ADDED
+    'dataworks-read/dw-bulk-transfer.php'
 ];
 
 foreach ($files as $file) {
