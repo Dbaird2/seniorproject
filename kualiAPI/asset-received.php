@@ -85,7 +85,7 @@ try {
         $tag_data = $edge['node']['data']['0nVFqyLknC']['data'];
         $num = $edge['node']['data']['0FlHusDHFt'];    // # OF PCS
         $po = $edge['node']['data']['3BdpFK5t1I'];
-        if (preg_match('/(Order)(order)/', $po, $matches, PREG_OFFSET_CAPTURE)) {
+        if (preg_match('/(Order)(order)/i', $po, $matches, PREG_OFFSET_CAPTURE)) {
             $po = 0;
         } else {
             $po = (int)$po;

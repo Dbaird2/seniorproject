@@ -11,6 +11,11 @@ $files = [
     'check-out.php',
     'equip-loss-stole.php',
     'psr.php'
+    'dataworks-read/dw-psr.php'
+    'dataworks-read/dw-equip-loss-stole.php',
+    'dataworks-read/dw-check-out.php',
+    'dataworks-read/dw-bulk-transfer.php',
+    // TRANSFER & DW-TRANSFER TO BE ADDED
 ];
 
 foreach ($files as $file) {
