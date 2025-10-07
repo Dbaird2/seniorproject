@@ -51,7 +51,7 @@ $data = json_encode([
         }',
 "variables" => [
     "appId" => "67bf42240472a7027dd17e97",
-    "skip" => 0,
+    "skip" => $skip,
     "limit" => 100,
     "sort" => ["meta.createdAt"],
     "query" => "",
@@ -66,7 +66,7 @@ $data = json_encode([
             [
                 "field" => "meta.createdAt",
                 "type" => "RANGE",
-                "min" => (string)$raw_ms
+                "min" => '0'
             ]
         ]
     ]
@@ -238,9 +238,10 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $f_na
         $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
     }
 }
-
+$count = 0;
 try {
     foreach ($edges as $index => $edge) {
+        $count++;
         if (isset($edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'])) {
         } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
             $array = $edge['node']['data']['r4XeMIe7yh']['data'];
@@ -249,6 +250,7 @@ try {
         }
 
         $update_time = $edge['node']['meta']['createdAt'];
+        echo '<br>'.$update_time.'<br>';
         if (isset($array)) {
             foreach ($array as $dept_info) {
                 if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
@@ -432,15 +434,15 @@ try {
                 addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
             }
             addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
-            $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
-            $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([$update_time]);
         }
     }
 } catch (PDOException $e) {
     echo "Error with database " . $e->getMessage();
     exit;
 }
+$update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
+$update_stmt = $dbh->prepare($update_q);
+$update_stmt->execute([$count]);
 echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
 exit;
 
