@@ -285,7 +285,7 @@ try {
                 // Handle specific type case
                 $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
             }
-            addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'custodian');
+            addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
         }
         if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
             // MANAGER/DEAN INFORMATION
@@ -296,7 +296,7 @@ try {
             $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
             $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
             $m2_signature = $m2_display_name;
-            addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'custodian');
+            addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
         }
         if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
             // CUSTODIAN INFORMATION
