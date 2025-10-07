@@ -93,6 +93,7 @@ function randomPassword()
 
 function addInfo($username, $email, $form_id, $school_id, $signature, $full_name, $role)
 {
+    echo '<br>Add Info<br>';
     echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role; 
     global $dbh, $dept_id;
     $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
@@ -139,6 +140,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
 
 function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name)
 {
+    echo '<br>Add Department<br>';
     echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name;
     global $dbh;
     global $dept_id, $dept_name;
@@ -176,13 +178,14 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
 
 function addSignature($username, $email, $form_id, $signature, $school_id, $dept_id, $f_name, $l_name, $role = 'user')
 {
-    echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role; 
     global $dbh;
     $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($select);
     $stmt->execute([":email" => $email]);
     $info = $stmt->fetch(PDO::FETCH_ASSOC);
     $full_name = $f_name . ' ' . $l_name;
+    echo '<br>Add Signature<br>';
+    echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role; 
     if ($info) {
         if (empty($info['school_id'] || empty($info['form_id'] || empty($info['signature'])))) {
             $update = 'UPDATE user_table SET school_id = :school, form_id = :form , signature = :sig WHERE email = :email';
@@ -190,7 +193,7 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
             $stmt->execute([':school' => $school_id, ':form' => $form_id, ':sig' => $signature, ':email' => $email]);
         }
         if ($role === 'custodian') {
-            $select = 'SELECT dept_id FROM user_table WHERE :user = ANY(custodian)';
+            $select = 'SELECT dept_id FROM department WHERE :user = ANY(custodian)';
             $stmt = $dbh->prepare($select);
             $stmt->execute([':user' => $full_name]);
             $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -213,7 +216,7 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
         $insert = 'INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, form_id, school_id, signature) VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $dbh->prepare($insert);
-        $array_dept_id = '{' . $dept_id . '}';
+        $new_dept_id = '{' . $dept_id . '}';
         $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
     }
 }
