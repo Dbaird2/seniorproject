@@ -134,7 +134,9 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
         $insert = 'INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, form_id, school_id, signature) VALUES
             (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $dbh->prepare($insert);
-        $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $dept_id, $form_id, $school_id, $signature]);
+        $stmt = $dbh->prepare($insert);
+        $new_dept_id = '{' . $dept_id . '}';
+        $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
     }
 }
 
