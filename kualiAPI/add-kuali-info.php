@@ -9,6 +9,7 @@ $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['cust_responsibility_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
+echo 'Highest Time ' . $highest_time . '<br>';
 
 $apikey = $result['kuali_key'];
 
@@ -142,10 +143,10 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
 
 function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name)
 {
-    echo '<br>Add Department<br>';
-    echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name;
     global $dbh;
     global $dept_id, $dept_name;
+    echo '<br>Add Department<br>';
+    echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
     $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
     $dept_stmt = $dbh->prepare($select_dept);
     $dept_stmt->execute([":dept_id" => $dept_id]);
@@ -227,22 +228,10 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $f_na
 try {
     foreach ($edges as $index => $edge) {
         if (isset($edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'])) {
-            $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
-            $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'];
-            $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'];
-            $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
         } else if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
             $array = $edge['node']['data']['r4XeMIe7yh']['data'];
-            $dept_id = $dept_info['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
-            $dept_name = $dept_info['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
-            $documentSetId = $dept_info['data']['Gsxde2JR77']['documentSetId'];
-            $dept_kuali_id = $dept_info['data']['Gsxde2JR77']['id'];
         } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
             $array = $edge['node']['data']['HBG7HehhU8']['data'];
-            $dept_id = $dept_info['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
-            $dept_name = $dept_info['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
-            $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
-            $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
         }
 
         $update_time = $edge['node']['meta']['createdAt'];
@@ -343,17 +332,10 @@ try {
                 addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
             }
         } else {
-            if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
-                $dept_id = $dept_info['data']['Gsxde2JR77']['data']['IOw4-l7NsM'];
-                $dept_name = $dept_info['data']['Gsxde2JR77']['data']['AkMeIWWhoj'];
-                $documentSetId = $dept_info['data']['Gsxde2JR77']['documentSetId'];
-                $dept_kuali_id = $dept_info['data']['Gsxde2JR77']['id'];
-            } else if (isset($edge['node']['data']['HBG7HehhU8']['data'][0]['data']['HN8JcizYYj']['data']['IOw4-l7NsM'])) {
-                $dept_id = $dept_info['data']['HN8JcizYYj']['data']['IOw4-l7NsM'];
-                $dept_name = $dept_info['data']['HN8JcizYYj']['data']['AkMeIWWhoj'];
-                $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
-                $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
-            }
+            $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
+            $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'];
+            $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'];
+            $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
             if (isset($edge['node']['data']['XhBe3DNaU4'])) {
                 // NEW CUSTODIAN
                 $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
