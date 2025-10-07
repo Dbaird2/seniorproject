@@ -172,7 +172,8 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
     } else {
         $insert = 'INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?)';
         $insert_stmt = $dbh->prepare($insert);
-        $insert_stmt->execute([$dept_id, $dept_name, $c_display_name, $m_full_name, $documentSetId, $dept_kuali_id]);
+        $custodian = '{'.$c_display_name.'}';
+        $insert_stmt->execute([$dept_id, $dept_name, $custodian, $m_full_name, $documentSetId, $dept_kuali_id]);
     }
 }
 
