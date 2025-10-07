@@ -429,7 +429,7 @@ try {
                 $m3_signature = $m3_display_name;
                 addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
             }
-            addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name);
+            addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id, $dept_name);
         }
     }
 } catch (PDOException $e) {
