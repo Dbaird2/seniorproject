@@ -8,6 +8,7 @@ $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['cust_responsibility_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
+echo $raw_ms . '<br>';
 
 $apikey = $result['kuali_key'];
 $url = "https://csub.kualibuild.com/app/api/v0/graphql";
