@@ -104,7 +104,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
     $f_name = $name_array[0];
     $l_name_info = array_slice($name_array, 1);
     $l_name = implode(' ', $l_name_info);
-    if (count($info) > 0) {
+    if ($info) {
         if (empty($info['school_id'] || empty($info['form_id'] || empty($info['signature'])))) {
             $update = 'UPDATE user_table SET school_id = :school, form_id = :form , signature = :sig WHERE email = :email';
             $stmt = $dbh->prepare($update);
@@ -148,7 +148,7 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
     $dept_stmt = $dbh->prepare($select_dept);
     $dept_stmt->execute([":dept_id" => $dept_id]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
-    if (count($dept_info) > 0) {
+    if ($dept_info) {
         if ($dept_info['dept_manager'] !== $m_full_name) {
             $update_dept = "UPDATE department SET dept_manager = :manager WHERE dept_id = :dept_id";
             $stmt = $dbh->prepare($update_dept);
