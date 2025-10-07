@@ -111,7 +111,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
             $stmt->execute([':school' => $school_id, ':form' => $form_id, ':sig' => $signature, ':email' => $email]);
         }
         if ($role === 'custodian') {
-            $select = 'SELECT dept_id FROM user_table WHERE :user = ANY(custodian)';
+            $select = 'SELECT dept_id FROM department WHERE :user = ANY(custodian)';
             $stmt = $dbh->prepare($select);
             $stmt->execute([':user' => $full_name]);
             $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
