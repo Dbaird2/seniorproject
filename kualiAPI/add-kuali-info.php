@@ -130,7 +130,7 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
         $pw = randomPassword();
         $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
         $insert = 'INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, form_id, school_id, signature) VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $dbh->prepare($insert);
         $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $dept_id, $form_id, $school_id, $signature]);
     }
@@ -208,7 +208,7 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
         $pw = randomPassword();
         $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
         $insert = 'INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, form_id, school_id, signature) VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $dbh->prepare($insert);
         $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $dept_id, $form_id, $school_id, $signature]);
     }
@@ -258,6 +258,7 @@ try {
             $m4_array = explode(' ', $m4_display_name);
             $size = count($m4_array);
             $m4_email = trim($m4_array[$size - 1], "()");
+            $m4_l_name = '';
             for ($i = 0; $i < $size - 1; $i++) {
                 $m4_full_name .= ' ' . $m4_array[$i];
             }

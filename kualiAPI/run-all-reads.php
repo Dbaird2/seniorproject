@@ -20,11 +20,6 @@ foreach ($files as $file) {
     $path = __DIR__ . '/' . $file; // adjust if needed
     echo "Running: $path\n";
 
-    if (!is_file($target)) {
-        echo "⛔ Not found: $target\n\n";
-        continue;
-    }
-
     $output = [];
     $exitCode = null;
     // run the script using PHP CLI
