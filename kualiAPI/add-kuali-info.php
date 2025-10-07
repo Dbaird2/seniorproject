@@ -180,7 +180,7 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $dept
     $stmt->execute([":email" => $email]);
     $info = $stmt->fetch(PDO::FETCH_ASSOC);
     $full_name = $f_name . ' ' . $l_name;
-    if (count($info) > 0) {
+    if ($info) {
         if (empty($info['school_id'] || empty($info['form_id'] || empty($info['signature'])))) {
             $update = 'UPDATE user_table SET school_id = :school, form_id = :form , signature = :sig WHERE email = :email';
             $stmt = $dbh->prepare($update);
@@ -261,6 +261,10 @@ try {
             for ($i = 0; $i < $size - 1; $i++) {
                 $m4_full_name .= ' ' . $m4_array[$i];
             }
+            for ($i = 1; $i < $size - 1; $i++) {
+                $m4_l_name .= ' ' . $m4_array[$i];
+            }
+
             $m4_full_name = trim($m4_full_name);
             $m4_f_name = $m4_array[0];
             $m4_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
@@ -273,7 +277,7 @@ try {
                 // Handle specific type case
                 $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
             }
-            addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, $title, 'custodian');
+            addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'custodian');
         }
         if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
             // MANAGER/DEAN INFORMATION
