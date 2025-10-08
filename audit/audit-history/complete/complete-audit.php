@@ -150,14 +150,14 @@ $variables['data']['55-0zfJWML']['lastName'] = $mana_info['l_name'];
 $variables['data']['55-0zfJWML']['schoolId'] = $mana_info['school_id'];
 $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
-if (count($variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'])) {
+if (isset($variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'])) {
     $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
     $variables['data']['R0rMnJsvtQ']['Label'] = 'Yes';
 } else {
     $variables['data']['R0rMnJsvtQ']['id'] = 'no';
     $variables['data']['R0rMnJsvtQ']['Label'] = 'No';
 }
-if (count($variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'])) {
+if (isset($variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'])) {
     $variables['data']['3WfG7CrNND']['id'] = 'yes';
     $variables['data']['3WfG7CrNND']['Label'] = 'Yes';
 } else {
@@ -242,7 +242,7 @@ $variables['status'] = 'completed';
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables;
+'variables' => $variables
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
