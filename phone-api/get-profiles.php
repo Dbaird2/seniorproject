@@ -24,9 +24,13 @@ try {
 $info = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
-        echo json_encode(['status'=>'success']);
+        $select = 'SELECT distinct(profile_name) as profiles FROM user_asset_profile WHERE email = :email';
+        $stmt = $dbh->prepare($select);
+        $stmt->execute([':email'=>$email]);
+        $profiles = $stmt->fetchAll();
+        echo json_encode(['status'=>'Ok','profiles'=>$profiles['profiles']]);
         exit;
     }
 }
-echo json_encode(['status'=>'Failed to login']);
+echo json_encode(['status'=>'fail']);
 exit;
