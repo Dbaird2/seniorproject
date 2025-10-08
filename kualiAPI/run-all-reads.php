@@ -1,4 +1,5 @@
 <?php
+include_once __DIR__ . '/../config.php';
 set_time_limit(300);
 
 $files = [
