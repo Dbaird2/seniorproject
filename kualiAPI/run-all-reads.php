@@ -18,23 +18,19 @@ $files = [
 ];
 
 foreach ($files as $file) {
-    $path = __DIR__ . '/' . $file; // adjust if needed
-    echo "Running: $path\n";
+    echo 'Starting: ' . $path . "<br>";
+    $path = 'https://dataworks-7b7x.onrender.com/kualiAPI/' . $file; // adjust if needed
+    $curl = curl_init($path);
 
-    $output = [];
-    $exitCode = null;
-    // run the script using PHP CLI
-    $cmd = 'php ' . escapeshellarg($path);
-    exec($cmd . ' 2>&1', $output, $exitCode);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    if ($exitCode === 0) {
-        echo "Success: $file\n<br>";
-    } else {
-        echo "Failed: $file (exit code $exitCode)\n<br>";
-    }
+    $resp = curl_exec($curl);
+    curl_close($curl);
 
-    // optionally show partial output for debugging
-    echo implode("\n", array_slice($output, 0, 5)) . "\n\n";
+    $response = json_decode($resp, true);
+    echo "<pre><br>";
+    var_dump($response);
+    echo "</pre>";
     usleep(200000); // 0.2s pause
 }
 
