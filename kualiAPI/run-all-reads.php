@@ -18,8 +18,8 @@ $files = [
 ];
 
 foreach ($files as $file) {
-    echo 'Starting: ' . $path . "<br>";
     $path = 'https://dataworks-7b7x.onrender.com/kualiAPI/' . $file; // adjust if needed
+    echo '<br>Starting: ' . $path . "<br>";
     $curl = curl_init($path);
 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -28,7 +28,7 @@ foreach ($files as $file) {
     curl_close($curl);
 
     $response = json_decode($resp, true);
-    echo "<pre><br>";
+    echo "<pre>";
     var_dump($response);
     echo "</pre>";
     usleep(200000); // 0.2s pause
