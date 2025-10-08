@@ -335,7 +335,7 @@ if (!empty($data['dept_id']) && !empty($data['audit_id'])) {
     $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
     $tag = $lsd_data['Tag Number'];
     $doc_id = '68c73600df46a3027d2bd386';
-    $input_array = $id . ',' . $doc_id . ',in-progress, ' . $tag;
+    $input_array =  $id . ',lsd,in-progress, ' . $tag;
 
     $dept = $data['dept_id'];
     $audit_id = $data['audit_id'];

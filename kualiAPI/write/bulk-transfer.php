@@ -441,9 +441,9 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 if (!empty($data['bulk_t_tags'][0]['dept_id']) && !empty($data['bulk_t_tags'][0]['audit_id'])) {
     $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
-    $input_array = $id . ',' . $document_id . ',in-progress'; 
+    $input_array = $id . ',transfer,in-progress'; 
     foreach ($transfer_data as $tag_info) {
-        $input_array .= ', ' . $tag_info['Tag Number'];
+        $input_array .= ',' . $tag_info['Tag Number'];
     }
 
     $dept = $data['bulk_t_tags'][0]['dept_id'];
