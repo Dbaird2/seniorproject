@@ -35,13 +35,13 @@
 }
 
 .nav-ui li a:hover {
-  color: #0ea5e9;
+  color: #003594;
 }
 
 .is-manager button {
   margin-left: 20px;
   padding: 9px 25px;
-  background-color: #0ea5e9;
+  background-color: #003594;
   border: none;
   border-radius: 5px;
   color: white;
@@ -50,17 +50,22 @@
 }
 
 .is-manager button:hover {
-  background-color: #0284c7;
+  background-color: #001a70;
   transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(255, 199, 44, 0.3);
 }
 
-/* Updated background to light blue and white gradient theme */
-.is-ajax,
-.is-manager {
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #ffffff 100%);
+/* Updated background to CSUB cream and white gradient theme */
+.page-wrapper {
+  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
+}
+
+.is-ajax,
+.is-manager {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .page-container {
@@ -98,18 +103,20 @@
 }
 
 .btn-excel {
-  background: linear-gradient(135deg, #28a745, #20c997);
+  background: linear-gradient(135deg, #003594, #001a70);
   color: white;
 }
 
 .btn-pdf {
-  background: linear-gradient(135deg, #dc3545, #fd7e14);
-  color: white;
+  background: linear-gradient(135deg, #ffc72c, #d4a825);
+  color: #001a70;
+  font-weight: 600;
 }
 
 .btn-audit {
-  background: linear-gradient(135deg, #ffc107, #fd7e14);
-  color: #212529;
+  background: linear-gradient(135deg, #ffc72c, #d4a825);
+  color: #001a70;
+  font-weight: 600;
 }
 
 .btn-delete {
@@ -138,9 +145,9 @@
   font-size: 14px;
 }
 
-/* Updated table header to light blue gradient */
+/* Updated table header to CSUB primary blue gradient */
 .modern-table thead {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  background: linear-gradient(135deg, #003594, #001a70);
   color: white;
   position: sticky;
   top: 0;
@@ -159,7 +166,7 @@
 
 .modern-table td {
   padding: 14px 12px;
-  border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+  border-bottom: 1px solid rgba(0, 53, 148, 0.1);
   vertical-align: middle;
 }
 
@@ -167,19 +174,19 @@
   transition: all 0.2s ease;
 }
 
-/* Updated hover effect to light blue */
+/* Updated hover effect to CSUB primary blue */
 .modern-table tbody tr:hover {
-  background: rgba(14, 165, 233, 0.08);
+  background: rgba(0, 53, 148, 0.08);
   transform: scale(1.001);
 }
 
 .modern-table tbody tr:nth-child(even) {
-  background: rgba(224, 242, 254, 0.3);
+  background: rgba(245, 230, 189, 0.3);
 }
 
-/* Updated asset tag to light blue gradient */
+/* Updated asset tag to CSUB primary blue gradient */
 .asset-tag {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  background: linear-gradient(135deg, #003594, #001a70);
   color: white;
   padding: 4px 8px;
   border-radius: 6px;
@@ -187,13 +194,13 @@
   font-size: 12px;
 }
 
-/* Updated textarea border to light blue */
+/* Updated textarea border to CSUB primary blue */
 .asset-note {
   width: 100%;
   min-width: 150px;
   min-height: 60px;
   padding: 8px 12px;
-  border: 2px solid rgba(14, 165, 233, 0.2);
+  border: 2px solid rgba(0, 53, 148, 0.2);
   border-radius: 8px;
   font-family: inherit;
   font-size: 13px;
@@ -204,9 +211,9 @@
 
 .asset-note:focus {
   outline: none;
-  border-color: #0ea5e9;
+  border-color: #003594;
   background: white;
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
 }
 
 .asset-note::placeholder {
@@ -225,9 +232,9 @@
   margin-top: 50px;
 }
 
-/* Updated empty state heading to light blue */
+/* Updated empty state heading to CSUB primary blue */
 .empty-state h3 {
-  color: #0ea5e9;
+  color: #003594;
   font-size: 24px;
   margin-bottom: 10px;
   font-weight: 600;
@@ -240,10 +247,9 @@
 }
 
 /* Enhanced input field styling with modern design */
-.search-tags input[type="text"],
 .is-manager input[type="search"] {
   padding: 12px 16px;
-  border: 2px solid rgba(14, 165, 233, 0.2);
+  border: 2px solid rgba(0, 53, 148, 0.2);
   border-radius: 8px;
   font-size: 14px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -256,14 +262,14 @@
 
 .is-manager input[type="search"]:focus {
   outline: none;
-  border-color: #0ea5e9;
+  border-color: #003594;
   background: white;
-  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 53, 148, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
 .is-manager input[type="search"]:hover {
-  border-color: #0ea5e9;
+  border-color: #003594;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -378,6 +384,10 @@
     width: 100%;
     margin-left: 0;
     margin-top: 10px;
+  }
+
+  .page-wrapper {
+    padding: 1rem;
   }
 }
 

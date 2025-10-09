@@ -130,6 +130,9 @@ try {
             if (preg_match('/^D/', $dept_id)) {
                 echo "<br>Dept Id Format Good<br>";
             }
+            $update_q = "UPDATE asset_info SET dept_id = :dept WHERE asset_tag = :tag";
+            $update_stmt = $dbh->prepare($update_q);
+            $update_stmt->execute([":dept" => $dept_id, ":tag" => $tag]);
             if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
                 $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
@@ -210,9 +213,9 @@ try {
                         echo "<br>Bldg ID " . $bldg_id . " ";
                         echo "Bldg Name " . $bldg_name . " ";
                         echo "Room location " . $room_loc . "<br>";
-                        $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
+                        $update_q = "UPDATE asset_info SET room_tag = :room_tag WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($update_q);
-                        $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+                        $update_stmt->execute([":room_tag" => $room_tag, ":tag" => $tag]);
                     }
                     echo "<br>Updated Tag in database<br>";
                 } else { 

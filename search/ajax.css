@@ -1,71 +1,84 @@
+/* Updated row colors to CSUB cream and white */
 .row-even {
-    background-color: #f0f8ff;
+  background-color: #f5e6bd;
 }
 
 .row-odd {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
 .asset-table tr {
-    min-height: 2.5rem;
+  min-height: 2.5rem;
 }
+/* Updated table header colors to CSUB primary blue */
 #is-ajax th {
-    font-size: 0.8rem;
-    color:#2c3e50;
-    padding: 10px 10px;
-    border: 1px solid #ddd;
-    text-align: center;
+  font-size: 0.8rem;
+  color: #ffffff;
+  background-color: #003594;
+  padding: 10px 10px;
+  border: 1px solid #707372;
+  text-align: center;
 }
+/* Updated table cell text color to CSUB dark blue */
 #is-ajax td {
-    font-size:0.8rem;
-    font-weight: 500;
-    color:#2c3e50;
-    padding: 0 5px 15px;
-    border: 1px solid #ddd;
-    text-align: center;
-
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #001a70;
+  padding: 0 5px 15px;
+  border: 1px solid #707372;
+  text-align: center;
 }
 .table-div {
 }
 @keyframes fadeIn {
-    from {
-        opacity: 0; /* Start completely transparent */
-    }
-    to {
-        opacity: 1; /* End fully opaque */
-    }
+  from {
+    opacity: 0; /* Start completely transparent */
+  }
+  to {
+    opacity: 1; /* End fully opaque */
+  }
 }
 
 /* Apply the animation to the desired element */
 .is-ajax {
-    place-items:center;
-    opacity: 0; /* Ensures it starts invisible before animation */
-    animation: fadeIn 0.5s ease-in-out forwards; /* Apply the animation */
-    /* animation-name: fadeIn (name of the
+  place-items: center;
+  opacity: 0; /* Ensures it starts invisible before animation */
+  animation: fadeIn 0.5s ease-in-out forwards; /* Apply the animation */
+  /* animation-name: fadeIn (name of the
      * keyframes) */
-    /* animation-duration: 2s (how long the animation takes) */
-    /* animation-timing-function: ease-in-out (speed curve) */
-    /* animation-fill-mode: forwards (maintains the end state) */
+  /* animation-duration: 2s (how long the animation takes) */
+  /* animation-timing-function: ease-in-out (speed curve) */
+  /* animation-fill-mode: forwards (maintains the end state) */
 }
+/* Updated button to CSUB primary blue with gold text */
 #button-9 {
-    background-color: #405cf5;
-    border-radius: 6px;
-    border-width: 0;
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.8rem;
-    height: 44px;
-    line-height: 1.15;
-    margin: 12px 0 0;
-    outline: none;
-    padding: 0 25px;
-    min-width:90px;
+  background-color: #003594;
+  border-radius: 6px;
+  border-width: 0;
+  box-shadow: rgba(50, 50, 93, 0.1) 0 0 0 1px inset, rgba(50, 50, 93, 0.1) 0 2px 5px 0, rgba(0, 0, 0, 0.07) 0 1px 1px 0;
+  box-sizing: border-box;
+  color: #ffc72c;
+  cursor: pointer;
+  font-size: 0.8rem;
+  height: 44px;
+  line-height: 1.15;
+  margin: 12px 0 0;
+  outline: none;
+  padding: 0 25px;
+  min-width: 90px;
+  transition: all 0.3s ease;
 }
+
+/* Added button hover state with CSUB dark blue */
+#button-9:hover {
+  background-color: #001a70;
+  transform: translateY(-2px);
+  box-shadow: rgba(50, 50, 93, 0.2) 0 4px 8px 0, rgba(0, 0, 0, 0.1) 0 2px 4px 0;
+}
+
 .modal-backdrop {
-    z-index: 1040 !important;
+  z-index: 1040 !important;
 }
 .modal {
-    z-index: 1050 !important;
+  z-index: 1050 !important;
 }
 

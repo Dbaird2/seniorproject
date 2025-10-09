@@ -1,321 +1,413 @@
 * {
-    margin: 0;
+  margin: 0;
 }
-.is-search {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    background: lightblue;
-    min-height: 100vh;
-    display: block;
-    flex-direction: normal;
-    align-items: normal;
-    padding: 20px;
+
+/* Updated to CSUB color theme with cream and blue gradient */
+.page-wrapper {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue",
+    sans-serif;
+  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
+  min-height: 100vh;
+  display: block;
+  flex-direction: normal;
+  align-items: normal;
+  padding: 20px;
 }
-.is-search ul {
-    display:flex;
-    flex-direction: column;
-    justify-content: left;
+
+.page-wrapper ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
 }
 
 .element::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
+
+/* Updated input styling with CSUB primary blue */
 #insert-tags-div input {
-    padding: 14px 16px;
-    border: 2px solid #e3f2fd;
-    border-radius: 10px;
-    font-size: 10px;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-    color: #333;
+  padding: 14px 16px;
+  border: 2px solid #003594;
+  border-radius: 10px;
+  font-size: 10px;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
 }
-#dynamicForm{
-    display:flex;
-    align-items: flex-start;
-    max-height: 175px;
-    overflow-y: auto;
-    width: fit-content;
-    scrollbar-width: none;
 
+#insert-tags-div input:focus {
+  outline: none;
+  border-color: #001a70;
+  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
 }
+
+#dynamicForm {
+  display: flex;
+  align-items: flex-start;
+  max-height: 175px;
+  overflow-y: auto;
+  width: fit-content;
+  scrollbar-width: none;
+}
+
 .filter-section {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
 }
+
+/* Updated status dropdown with CSUB primary blue */
 #my-status {
-    width: 10%;
-    padding: 14px 16px;
-    border: 2px solid #e3f2fd;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-    color: #333;
-    text-align: center;
-    display: block;
-    place-self: center;
+  width: 10%;
+  padding: 14px 16px;
+  border: 2px solid #003594;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  display: block;
+  place-self: center;
+  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
 }
-#my-input{
-    width: 25%;
-    padding: 14px 16px;
-    border: 2px solid #e3f2fd;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-    color: #333;
-    text-align: center;
-    display: block;
-    place-self: center;
+
+#my-status:focus {
+  outline: none;
+  border-color: #001a70;
+  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
 }
+
+/* Updated input with CSUB primary blue */
+#my-input {
+  width: 25%;
+  padding: 14px 16px;
+  border: 2px solid #003594;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  display: block;
+  place-self: center;
+  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
+}
+
+#my-input:focus {
+  outline: none;
+  border-color: #001a70;
+  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+}
+
+/* Updated table inputs with CSUB primary blue */
 .table input {
-    padding: 14px 16px;
-    border: 2px solid #e3f2fd;
-    border-radius: 10px;
-    font-size: 10px;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-    color: #333;
-    text-align: center;
-
+  padding: 14px 16px;
+  border: 2px solid #003594;
+  border-radius: 10px;
+  font-size: 10px;
+  transition: all 0.3s ease;
+  background-color: white;
+  color: #333;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
 }
+
+.table input:focus {
+  outline: none;
+  border-color: #001a70;
+  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+}
+
 .div-table {
-    width:100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    scrollbar-width: none;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
 
-}
 .table {
-    border-collapse: collapse;
-    width:100%;
-    text-align: center;
-    padding:10px 10px;
-    max-height:350px;
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+  padding: 10px 10px;
+  max-height: 350px;
 }
+
 .table td {
-    min-height:100px;
-    height:25px;
+  min-height: 100px;
+  height: 25px;
 }
+
 @media (max-width: 768px) {
-    .is-search {
-        flex-direction: column;
-    }
-    .div-table {
-        width:100%;
-    }
-    .is-search button {
-        width: 30%;
-    }
+  .page-wrapper {
+    flex-direction: column;
+  }
+  .div-table {
+    width: 100%;
+  }
+  .page-wrapper button {
+    width: 30%;
+  }
 }
+
 .found {
-    color: green;
+  color: #16a34a;
+  font-weight: 600;
 }
+
 .not-found {
-    color:red;
+  color: #dc2626;
+  font-weight: 600;
 }
+
+/* Updated extra status to CSUB primary blue */
 .extra {
-    color: rgb(45, 45, 247);
+  color: #003594;
+  font-weight: 600;
 }
+
+/* Updated row colors with CSUB cream tones */
 .row-odd {
-    background-color: #f0f8ff;
+  background-color: #f5e6bd;
 }
+
+.row-even {
+  background-color: white;
+}
+
+/* Updated link colors to CSUB primary blue */
 .row-even a,
 .row-odd a {
-    color: black;
-    text-decoration: none;
+  color: #003594;
+  text-decoration: none;
+  font-weight: 500;
 }
+
+.row-even a:hover,
+.row-odd a:hover {
+  color: #001a70;
+  text-decoration: underline;
+}
+
 #inputContainer {
-    max-height:70vh;
-    overflow-y: auto;
+  max-height: 70vh;
+  overflow-y: auto;
 }
+
 .room-label {
-    font-weight: bold;
+  font-weight: bold;
+  color: #003594;
 }
-.wrapper li{
-    text-align:left;
-    list-style-type: none;
+
+.wrapper li {
+  text-align: left;
+  list-style-type: none;
 }
+
 .wrapper {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-evenly;
 }
+
 .wrapper h3 {
-    text-align: center;
+  text-align: center;
+  color: #003594;
 }
+
 .wrapper button {
-    justify-content: center;
+  justify-content: center;
 }
+
 .show-tags {
-    max-height:65vh;
-    overflow-y: auto;
-}
-.is-search button {
-    padding: 10px;
-    background: transparent;
-    color: darkblue;
-    border: outset 1px darkblue;
-    border-radius: 50px;
-    font-size: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+  max-height: 65vh;
+  overflow-y: auto;
 }
 
-/* The
- *  *
- *  switch
- *   *
- *   -
- *    *
- *    the
- *     *
- *     box
- *      *
- *      around
- *       *
- *       the
- *        *
- *        slider
- *         *
- *         */
+/* Updated button styling with CSUB primary blue and gold gradient */
+.page-wrapper button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.2);
+}
+
+.page-wrapper button:hover {
+  background: linear-gradient(135deg, #001a70 0%, #003594 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.3);
+  border: 1px solid #ffc72c;
+}
+
+.page-wrapper button:active {
+  transform: translateY(0);
+}
+
+/* The switch - the box around the slider */
 .switch {
-    font-size: 17px;
-    position: relative;
-    display: inline-block;
-    width: 4em;
-    height: 2em;
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 4em;
+  height: 2em;
 }
 
-/* Hide default HTML
- * checkbox */
+/* Hide default HTML checkbox */
 .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-/* The slider */
+/* Updated slider with CSUB gray */
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 30px;
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #707372;
+  transition: 0.4s;
+  border-radius: 30px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 1.6em;
-    width: 1.6em;
-    border-radius: 20px;
-    left: 0.2em;
-    bottom: 0.2em;
-    background-color: white;
-    transition: 0.4s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  content: "";
+  height: 1.6em;
+  width: 1.6em;
+  border-radius: 20px;
+  left: 0.2em;
+  bottom: 0.2em;
+  background-color: white;
+  transition: 0.4s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Updated checked slider to CSUB primary blue */
 .switch input:checked + .slider {
-    background-color: #4cc9f0;
+  background-color: #003594;
 }
 
 .switch input:focus + .slider {
-    box-shadow: 0 0 1px #4cc9f0;
+  box-shadow: 0 0 1px #003594;
 }
 
 .switch input:checked + .slider:before {
-    transform: translateX(2em);
-    background-color: #4cc9f0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translateX(2em);
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .slider:after {
-    content: "OFF";
-    color: white;
-    position: absolute;
-    right: 0.5em;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.8em;
-    transition: opacity 0.4s;
-    opacity: 1;
+  content: "OFF";
+  color: white;
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8em;
+  transition: opacity 0.4s;
+  opacity: 1;
 }
 
 .switch input:checked + .slider:after {
-    content: "ON";
-    left: 0.5em;
-    opacity: 1;
-    right: auto;
+  content: "ON";
+  left: 0.5em;
+  opacity: 1;
+  right: auto;
 }
 
-.is-search h4 {
-    background: linear-gradient(135deg, green, lightgray);
-
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: linear-gradient(135deg, green, lightgray);
-    font-variant-caps:petite-caps;
-    animation-name: example;
-    animation-duration: 4s;
+/* Updated h4 gradient to CSUB colors */
+.page-wrapper h4 {
+  background: linear-gradient(135deg, #003594, #ffc72c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-variant-caps: petite-caps;
+  animation-name: example;
+  animation-duration: 4s;
 }
+
 @keyframes example {
-    0%   {color: bisque;}
-    25%  {color: lightblue;}
-    50%  {color: lightgray;}
-    100% {color: gray;}
+  0% {
+    -webkit-text-fill-color: #f5e6bd;
+  }
+  25% {
+    -webkit-text-fill-color: #ffc72c;
+  }
+  50% {
+    -webkit-text-fill-color: #707372;
+  }
+  100% {
+    -webkit-text-fill-color: #003594;
+  }
 }
+
+/* Updated table cell styling with CSUB cream */
 td {
-    padding: 15px;
-    background-color: rgba(255,255,255,0.2);
-    color: black;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #1e293b;
+  border-bottom: 1px solid #f5e6bd;
 }
 
-
-thead {
-    th {
-        color: white;
-        background-color: #55608f;
-    }
+/* Updated table header with CSUB primary blue gradient */
+thead th {
+  color: white;
+  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  padding: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
 }
 
-tbody {
-    tr {
-        &:hover {
-            background-color: rgba(255,255,255,0.3);
-        }
-    }
-    td {
-        position: relative;
-        &:hover {
-            &:before {
-                background-color: rgba(255,255,255,0.2);
-            }
-        }
-    }
+tbody tr:hover {
+  background-color: rgba(0, 53, 148, 0.1);
 }
+
+tbody td {
+  position: relative;
+}
+
+tbody td:hover:before {
+  background-color: rgba(0, 53, 148, 0.05);
+}
+
+/* Updated snackbar with CSUB primary blue gradient */
 #snackbar {
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
-  background-color: #333;
+  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
   color: #fff;
   text-align: center;
-  border-radius: 2px;
+  border-radius: 8px;
   padding: 16px;
   position: fixed;
   z-index: 1;
   left: 50%;
   bottom: 30px;
   font-size: 17px;
+  box-shadow: 0 4px 12px rgba(0, 53, 148, 0.4);
 }
 
 #snackbar.show {
@@ -325,21 +417,46 @@ tbody {
 }
 
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
+

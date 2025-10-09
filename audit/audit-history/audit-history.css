@@ -6,7 +6,7 @@
 
 .page-wrapper {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #bae6fd 100%);
+  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
   min-height: 100vh;
   padding: 2rem;
   color: #1e293b;
@@ -36,7 +36,7 @@
 }
 
 .is-history thead tr {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
 }
 
 .is-history th {
@@ -47,7 +47,7 @@
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  border-bottom: 3px solid #0369a1;
+  border-bottom: 3px solid #001a70;
 }
 
 .is-history th:first-child {
@@ -64,9 +64,9 @@
 }
 
 .is-history tbody tr:hover {
-  background: rgba(14, 165, 233, 0.05);
+  background: rgba(0, 53, 148, 0.05);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 53, 148, 0.1);
 }
 
 .is-history tbody tr.even {
@@ -74,7 +74,7 @@
 }
 
 .is-history tbody tr.odd {
-  background: rgba(224, 242, 254, 0.3);
+  background: rgba(245, 230, 189, 0.3);
 }
 
 .is-history tbody tr:last-child td:first-child {
@@ -93,7 +93,7 @@
 
 .is-history td:first-child {
   font-weight: 600;
-  color: #0284c7;
+  color: #003594;
 }
 
 /* Action Links Styling */
@@ -115,12 +115,12 @@
 }
 
 .continue-link {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
   color: white;
 }
 
 .continue-link:hover {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  background: linear-gradient(135deg, #001a70 0%, #003594 100%);
 }
 
 .start-link {
@@ -142,12 +142,13 @@
 }
 
 .pdf-link {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
+  background: linear-gradient(135deg, #ffc72c 0%, #d4a825 100%);
+  color: #001a70;
+  font-weight: 600;
 }
 
 .pdf-link:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: linear-gradient(135deg, #d4a825 0%, #b89420 100%);
 }
 
 .excel-link {

@@ -214,6 +214,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
 </head>
 
 <body>
+<div class="page-wrapper">
     <div class="dashboard-container">
         <!-- Welcome Section -->
         <div class="welcome-section">
@@ -494,6 +495,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
                 </div>
             </div>
         </div>
+    </div>
 
     <script>
 async function updateTicket(id, action) {

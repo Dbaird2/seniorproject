@@ -82,6 +82,7 @@ function checkForm($id, $tag) {
         $regex = '/\b('.$tag.')\b/i';
         if ($id === $form_id) {
             foreach ($array as $form_index => $form) {
+                $form = trim($form, '{}"');
                 if (preg_match($tag_regex, $form)) {
                     $new_form = str_replace('in-progress', 'complete', $form);
                     break;
