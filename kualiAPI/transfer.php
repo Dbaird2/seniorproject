@@ -193,18 +193,17 @@ function bldgChange() {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        if (!empty($data['data']['6JHs3W0-CL'])) {
-            $room_loc = $data['data']['6JHs3W0-CL'];
-        }
-        
-
         if (!empty($data['data']['zZztPX8Pcw'])) {
             $room_loc = $data['data']['zZztPX8Pcw'];
+        } else if (!empty($data['data']['CeMwzz3mnp'])) {
+            $room_loc = $data['data']['CeMwzz3mnp'];
+        } else if (!empty($data['data']['6JHs3W0-CL'])) {
+            $room_loc = $data['data']['6JHs3W0-CL'];
         }
         if (isset($data['data']['hXHmCy0mek']['label'])) {
             $bldg_name = $data['data']['hXHmCy0mek']['label'];
-        } else if (isset($data['data']['JjGDmuCa8_']['label'])) {
-            $bldg_name = $data['data']['JjGDmuCa8_']['label'];
+        } else if (!empty($data['data']['YtHlHUNY_q']['label'])) {
+            $bldg_name = $data['data']['YtHlHUNY_q']['label'];
         }
         echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
         
