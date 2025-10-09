@@ -112,7 +112,7 @@ $count = 1;
 try {
     foreach ($edges as $index => $edge) {
         $update_time = $edge['node']['meta']['createdAt'];
-
+        
         if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
             continue;
@@ -134,6 +134,9 @@ try {
             if (preg_match('/^D/', $dept_id)) {
                 echo "<br>Dept Id Format Good<br>";
             }
+            $update_q = "UPDATE asset_info SET dept_id = :dept_id WHERE asset_tag = :tag";
+            $update_stmt = $dbh->prepare($update_q);
+            $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
             if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
                 $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
                 $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
@@ -179,11 +182,7 @@ try {
                     $stmt->execute([':id'=>$bldg_id, ":name"=>$bldg_name]);
                     echo "<br>Bldg name was different. Fixing<br>";
                 }
-            } else {
-                echo "<br>Building name or id was not found skipping<br>";
-                continue;
             }
-
 
             $room_tag_found = false;
             try{ 
@@ -214,9 +213,9 @@ try {
                         echo "<br>Bldg ID " . $bldg_id . " ";
                         echo "Bldg Name " . $bldg_name . " ";
                         echo "Room location " . $room_loc . "<br>";
-                        $update_q = "UPDATE asset_info SET dept_id = :dept, room_tag = :room_tag WHERE asset_tag = :tag";
+                        $update_q = "UPDATE asset_info SET room_tag = :room_tag WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($update_q);
-                        $update_stmt->execute([":dept" => $dept_id, ":room_tag" => $room_tag, ":tag" => $tag]);
+                        $update_stmt->execute([":room_tag" => $room_tag, ":tag" => $tag]);
                     }
                     echo "<br>Updated Tag in database<br>";
                 } else { 
