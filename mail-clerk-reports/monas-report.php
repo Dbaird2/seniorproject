@@ -294,7 +294,7 @@ if (isset($_POST['submit'])) {
                     $new_ref_sheet->setCellValue('Q' . $ref_index, $ref[7]);
                 }
                 $new_ref_sheet->setCellValue('I'.$ref_index, "=SUM(F".$ref_index.", G".$ref_index.",H".$ref_index.")");
-                $new_ref_sheet->setCellValue('R'.$ref_index, "=(I".$ref_index)");
+                $new_ref_sheet->setCellValue('R'.$ref_index, "=(I".$ref_index.")");
 
                 $ref_index++;
             }
