@@ -139,22 +139,26 @@ function deptChange() {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        if (!empty($data['data']['6JHs3W0-CL'])) {
-            $room_loc = $data['data']['6JHs3W0-CL'];
-        }
         if (isset($data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'])) {
             $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
             $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
+        } else if (isset($data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'])) {
+            $dept_id = $data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'];
+            $dept_name = $data['data']['qvczWxUOzQ']['data']['AkMeIWWhoj'];
         }
-
-        if (!empty($data['data']['zZztPX8Pcw'])) {
+        if (isset($data['data']['zZztPX8Pcw'])) {
             $room_loc = $data['data']['zZztPX8Pcw'];
+        } else if (isset($data['data']['CeMwzz3mnp'])) {
+            $room_loc = $data['data']['CeMwzz3mnp'];
+        } else if (isset($data['data']['6JHs3W0-CL'])) {
+            $room_loc = $data['data']['6JHs3W0-CL'];
         }
         if (isset($data['data']['hXHmCy0mek']['label'])) {
             $bldg_name = $data['data']['hXHmCy0mek']['label'];
-        } else if (isset($data['data']['JjGDmuCa8_']['label'])) {
-            $bldg_name = $data['data']['JjGDmuCa8_']['label'];
+        } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
+            $bldg_name = $data['data']['YtHlHUNY_q']['label'];
         }
+
         echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
         
         if (!empty($bldg_name) && !empty($room_loc)) {
@@ -193,19 +197,19 @@ function bldgChange() {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        if (!empty($data['data']['zZztPX8Pcw'])) {
+        if (isset($data['data']['zZztPX8Pcw'])) {
             $room_loc = $data['data']['zZztPX8Pcw'];
-        } else if (!empty($data['data']['CeMwzz3mnp'])) {
+        } else if (isset($data['data']['CeMwzz3mnp'])) {
             $room_loc = $data['data']['CeMwzz3mnp'];
-        } else if (!empty($data['data']['6JHs3W0-CL'])) {
+        } else if (isset($data['data']['6JHs3W0-CL'])) {
             $room_loc = $data['data']['6JHs3W0-CL'];
         }
         if (isset($data['data']['hXHmCy0mek']['label'])) {
             $bldg_name = $data['data']['hXHmCy0mek']['label'];
-        } else if (!empty($data['data']['YtHlHUNY_q']['label'])) {
+        } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
             $bldg_name = $data['data']['YtHlHUNY_q']['label'];
         }
-        echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
+        echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
         
         if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc);
