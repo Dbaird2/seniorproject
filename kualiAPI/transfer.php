@@ -139,12 +139,24 @@ function deptChange() {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
-        $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
         if (!empty($data['data']['6JHs3W0-CL'])) {
             $room_loc = $data['data']['6JHs3W0-CL'];
         }
-        $bldg_name = ['data']['hXHmCy0mek']['label'];
+        if (isset($data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'])) {
+            $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
+            $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
+        }
+
+        if (!empty($data['data']['zZztPX8Pcw'])) {
+            $room_loc = $data['data']['zZztPX8Pcw'];
+        }
+        if (isset(['data']['hXHmCy0mek']['label'])) {
+            $bldg_name = ['data']['hXHmCy0mek']['label'];
+        } else if (isset(['data']['JjGDmuCa8_']['label'])) {
+            $bldg_name = ['data']['JjGDmuCa8_']['label'];
+        }
+        echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
+        
         if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc);
         }
@@ -184,7 +196,18 @@ function bldgChange() {
         if (!empty($data['data']['6JHs3W0-CL'])) {
             $room_loc = $data['data']['6JHs3W0-CL'];
         }
-        $bldg_name = ['data']['hXHmCy0mek']['label'];
+        
+
+        if (!empty($data['data']['zZztPX8Pcw'])) {
+            $room_loc = $data['data']['zZztPX8Pcw'];
+        }
+        if (isset(['data']['hXHmCy0mek']['label'])) {
+            $bldg_name = ['data']['hXHmCy0mek']['label'];
+        } else if (isset(['data']['JjGDmuCa8_']['label'])) {
+            $bldg_name = ['data']['JjGDmuCa8_']['label'];
+        }
+        echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
+        
         if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc);
         }
@@ -205,6 +228,7 @@ function busChange() {
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
         $tag = $data['data']['XZlIFEDX6Y'];
+        echo $tag . '<br>';
         checkTag($tag);
         if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
             echo "<br>Tag field empty<br>";
