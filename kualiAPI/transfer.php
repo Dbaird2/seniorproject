@@ -94,7 +94,7 @@ foreach ($edges as $index => $edge) {
         
 echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
 exit;
-function checkBldg($bldg_name, $room_loc) {
+function checkBldg($bldg_name, $room_loc, $tag) {
     global $dbh;
     $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = :name';
     $stmt = $dbh->prepare($select);
@@ -162,7 +162,7 @@ function deptChange() {
         echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
         
         if (!empty($bldg_name) && !empty($room_loc)) {
-            checkBldg($bldg_name, $room_loc);
+            checkBldg($bldg_name, $room_loc, $tag);
         }
 
         $dept_id = substr($dept_id, 0, 6);
@@ -212,7 +212,7 @@ function bldgChange() {
         echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
         
         if (!empty($bldg_name) && !empty($room_loc)) {
-            checkBldg($bldg_name, $room_loc);
+            checkBldg($bldg_name, $room_loc, $tag);
         }
 
         try {
