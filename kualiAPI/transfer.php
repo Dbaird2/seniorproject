@@ -145,7 +145,7 @@ function deptChange() {
             $room_loc = $data['data']['6JHs3W0-CL'];
         }
         $bldg_name = ['data']['hXHmCy0mek']['label'];
-        if (!empty($bldg_name) && !empty($room_loc) {
+        if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc);
         }
 
