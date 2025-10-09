@@ -5,11 +5,11 @@ if (file_exists(__DIR__ . '/.env')) {
     Dotenv::createImmutable(__DIR__)->safeLoad();
 }
 
-$db_host = $envx('DB_HOST');
-$db_port = $envx('DB_PORT', '5432');
-$db_name = $envx('DB_NAME');
-$db_user = $envx('DB_USER');
-$db_pass = $envx('DB_PASS');
+$db_host = envx('DB_HOST');
+$db_port = envx('DB_PORT', '5432');
+$db_name = envx('DB_NAME');
+$db_user = envx('DB_USER');
+$db_pass = envx('DB_PASS');
 if (!$db_host || !$db_name || !$db_user || !$db_port) {
     error_log('DB config missing: host/port/name/user not set');
     http_response_code(500);
