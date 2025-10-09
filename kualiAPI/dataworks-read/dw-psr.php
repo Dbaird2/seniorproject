@@ -6,7 +6,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT dw_psr_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['dw_psr_time'] ?? 0;
+$raw_ms = $result['dw_psr_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
 $apikey = $result['kuali_key'];
@@ -27,7 +27,7 @@ $data = json_encode([
     "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
     "variables" => [
         "appId" => "68d09dcd7688dc028af9b5e7",
-        "skip" => 0,
+        "skip" => $raw_ms,
         "limit" => 200,
         "sort" => [
             "meta.createdAt"
@@ -43,11 +43,6 @@ $data = json_encode([
                             "field" => "meta.workflowStatus",
                             "type" => "IS",
                             "value" => "Complete"
-                        ],
-                        [
-                            "field" => "meta.createdAt",
-                            "type" => "RANGE",
-                            "min" => $highest_time
                         ]
                     ]
                 ]
@@ -73,8 +68,10 @@ $CMP = "/^\d+/";
 $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
 
+$count = 0 +$raw_ms;
 try {
     foreach ($edges as $index => $edge) {
+        $count++;
         $update_time = $edge['node']['meta']['createdAt'];
         $tag_data = $edge['node']['data']['W_Uw0hSpff']['data'];
         foreach ($tag_data as $data) {
@@ -92,7 +89,7 @@ try {
 
             $update_kuali = "UPDATE kuali_table SET dw_psr_time = :time";
             $update_stmt = $dbh->prepare($update_kuali);
-            $update_stmt->execute([":time" => $update_time]);
+            $update_stmt->execute([":time" => $count]);
         }
     }
 } catch (PDOException $e) {

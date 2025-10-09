@@ -50,7 +50,7 @@ $data = json_encode([
         }',
 "variables" => [
     "appId" => "68c73600df46a3027d2bd386",
-    "skip" => 0,
+    "skip" => $raw_ms,
     "limit" => 100,
     "sort" => ["meta.createdAt"],
     "query" => "",
@@ -61,11 +61,6 @@ $data = json_encode([
                 "field" => "meta.workflowStatus",
                 "type" => "IS",
                 "value" => "Complete"
-            ],
-            [
-                "field" => "meta.createdAt",
-                "type" => "RANGE",
-                "min" => (string)$raw_ms
             ]
         ]
     ]
@@ -109,6 +104,7 @@ $edges = $decode_true['data']['app']['documentConnection']['edges'];
 
 
 $count = 1;
+$count2 = $raw_ms + 0;
 try {
     foreach ($edges as $index => $edge) {
         $update_time = $edge['node']['meta']['createdAt'];
@@ -228,7 +224,7 @@ try {
             try {
                 $update_kuali_time = "UPDATE kuali_table SET dw_bulk_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali_time);
-                $update_stmt->execute([":time"=>$update_time]);
+                $update_stmt->execute([":time"=>$count2]);
             } catch (PDOException $e) {
                 echo "error updating kuali_table " . $e->getMessage();
             }

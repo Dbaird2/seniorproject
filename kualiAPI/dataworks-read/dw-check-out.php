@@ -27,7 +27,7 @@ $data = json_encode([
     "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
     "variables" => [
         "appId" => "68bf09aaadec5e027fe35187",
-        "skip" => 0,
+        "skip" => $raw_ms,
         "limit" => 300,
         "sort" => [
             "meta.createdAt"
@@ -43,11 +43,6 @@ $data = json_encode([
                             "field" => "meta.workflowStatus",
                             "type" => "IS",
                             "value" => "Complete"
-                        ],
-                        [
-                            "field" => "meta.createdAt",
-                            "type" => "RANGE",
-                            "min" => $highest_time
                         ]
                     ]
                 ]
@@ -73,8 +68,10 @@ $CMP = "/^\d+/";
 $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
 $count = 1;
+$count2 = 0 + $raw_ms;
 try {
     foreach ($edges as $index => $edge) {
+        $count2++;
         $update_time = $edge['node']['meta']['createdAt'];
         $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
         $check_out = $check_in = false;
@@ -117,7 +114,7 @@ try {
 
                 $update_kuali = "UPDATE kuali_table SET dw_check_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $update_time]);
+                $update_stmt->execute([":time" => $count2]);
             }
         }
         echo "<br>" . $count++;

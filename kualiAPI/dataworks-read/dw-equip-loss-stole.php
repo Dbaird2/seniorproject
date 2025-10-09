@@ -27,7 +27,7 @@ $data = json_encode([
     "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
     "variables" => [
         "appId" => "68d09e41d599f1028a9b9457",
-        "skip" => 0,
+        "skip" => $raw_ms,
         "limit" => 200,
         "sort" => [
             "meta.createdAt"
@@ -43,11 +43,6 @@ $data = json_encode([
                             "field" => "meta.workflowStatus",
                             "type" => "IS",
                             "value" => "Complete"
-                        ],
-                        [
-                            "field" => "meta.createdAt",
-                            "type" => "RANGE",
-                            "min" => $highest_time
                         ]
                     ]
                 ]
@@ -73,8 +68,10 @@ $CMP = "/^\d+/";
 $FDN = "/^F[DN]?\d+$/";
 $SPA = "/^SP\d+$/";
 
+$count = 0 + $raw_ms;
 try {
     foreach ($edges as $index => $edge) {
+        $count++;
         $update_time = $edge['node']['meta']['createdAt'];
         if (isset($edge['node']['data']['y7nFCmsLEg'])) {
             $tag = $edge['node']['data']['y7nFCmsLEg'];
@@ -93,7 +90,7 @@ try {
 
             $update_kuali = "UPDATE kuali_table SET equip_lost_stol_time = :time";
             $update_stmt = $dbh->prepare($update_kuali);
-            $update_stmt->execute([":time" => $update_time]);
+            $update_stmt->execute([":time" => $count]);
         }
     }
 } catch (PDOException $e) {
