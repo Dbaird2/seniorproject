@@ -6,7 +6,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT dw_lsd_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['equip_lost_stol_time'] ?? 0;
+$raw_ms = (int)$result['dw_lsd_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
 $apikey = $result['kuali_key'];
