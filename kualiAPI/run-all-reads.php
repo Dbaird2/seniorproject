@@ -22,7 +22,6 @@ dwLsd ();
 dwPsr ();
 function addKualiInfo () {
     global $dbh, $result;
-    $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
     $skip = (int)$result['cust_responsibility_time'] ?? 0;
 
     $apikey = $result['kuali_key'];
@@ -615,7 +614,6 @@ function assetAddition () {
 }
 function assetReceived () {
     global $dbh, $result;
-    $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
     $raw_ms = (int)$result['asset_received_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
 
