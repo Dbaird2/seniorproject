@@ -33,13 +33,13 @@ $asset_type = $tag_data['type2'] ?? 'Laptop';
 
 /* DEPT NAME */
 $dept_id = $_SESSION['deptid'];
-$select_dept = 'SELECT dept_name, documentsetid, kuali_id FROM department WHERE dept_id = :dept_id';
+$select_dept = 'SELECT dept_name, document_set_id, form_id FROM department WHERE dept_id = :dept_id';
 $dept_stmt = $dbh->prepare($select_dept);
 $dept_stmt->execute([':dept_id' => $dept_id]);
 $dept_data = $dept_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_data['dept_name'] ?? 'Unknown Department';
-$documentsetid = $dept_data['documentsetid'] ?? '';
-$kuali_id = $dept_data['kuali_id'] ?? '';
+$documentsetid = $dept_data['document_set_id'] ?? '';
+$kuali_id = $dept_data['form_id'] ?? '';
 if (empty($kuali_id) || empty($documentsetid)) {
     $dept_key = 'isFMbCuv8e';
     $dept_info = [

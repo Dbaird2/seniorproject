@@ -143,6 +143,7 @@
 .table td {
   min-height: 100px;
   height: 25px;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {

@@ -14,17 +14,24 @@ URL: https://dataworks-7b7x.onrender.com
 ## 🚀 Usage Instructions
 Only Management can create accounts. Contact rrazo2@csub.edu or bwholgemuth2@csub.edu for an account
 ## To Do
-- Help pages 
-- Complete audit page so you can check the type of form needed for each asset,
-insert into db the actionId's, check once a day to see if they're complete if
-all are complete, then change audit to complete
 - Create endpoints for phone fetch requests
-- Update location from TRANSFER FORMS (waiting on form fix)
+- Update location from TRANSFER FORMS 
 ## Needs testing
 - Create TRANSFER, PSR, and CHECK-OUT forms from search page
-- Make auditing from other users profiles functionality work & make profile
-  viewer as well
 - Audit updating
 - Updates from KUALI 
 ## 10/3 Updates
 - lsd.php refactored for more dynamic submitting
+- Made auditing from other users profiles functionality work & made profile
+  viewer as well
+## 10/9 CSS Updates To Do & Other
+- Help pages 
+- Made 2 pages. One to check if the forms from an audit are submitted and
+completed and the other for automatically submitting the audit complete form.
+- Login / Reset Password / Forgot / Signup pages
+- Landing Page
+- Form Pages
+- Profile Management Page
+- Audit Search Page
+- Upload Audit Page
+
