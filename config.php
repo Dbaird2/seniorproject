@@ -1,23 +1,16 @@
 <?php
 use Dotenv\Dotenv;
 require __DIR__ . '/vendor/autoload.php';
-if (file_exists(__DIR__ . '/.env')) {
-    Dotenv::createImmutable(__DIR__)->safeLoad();
+if (file_exists(__DIR__ . '/etc/secrets/DB_HOST')) {
+    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
 }
-
-$db_host = envx('DB_HOST');
-$db_port = envx('DB_PORT', '5432');
-$db_name = envx('DB_NAME');
-$db_user = envx('DB_USER');
-$db_pass = envx('DB_PASS');
-if (!$db_host || !$db_name || !$db_user || !$db_port) {
-    error_log('DB config missing: host/port/name/user not set');
-    http_response_code(500);
-    exit('Server configuration error.');
-}
-/*
+$db_host = $_ENV['DB_HOST'] ?? NULL;
+$db_port = $_ENV['DB_PORT'] ?? NULL;
+$db_name = $_ENV['DB_NAME'] ?? NULL;
+$db_user = $_ENV['DB_USER'] ?? NULL;
 $db_pass = $_ENV['DB_PASS'] ?? NULL;
- */
+$db_pass = $_ENV['DB_PASS'] ?? NULL;
 
 try {
     if (session_status() === PHP_SESSION_NONE) {
@@ -26,11 +19,8 @@ try {
         session_start();
         $_SESSION['app_pass'] = $_ENV['APP_PASS'] ?? NULL;
     }
-    $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, [ 
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false
-        ,]);
+    $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, array());
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Set up session only once
 } catch (PDOException $e) {
     error_log($e->getMessage());
