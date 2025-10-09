@@ -150,10 +150,10 @@ function deptChange() {
         if (!empty($data['data']['zZztPX8Pcw'])) {
             $room_loc = $data['data']['zZztPX8Pcw'];
         }
-        if (isset(['data']['hXHmCy0mek']['label'])) {
-            $bldg_name = ['data']['hXHmCy0mek']['label'];
-        } else if (isset(['data']['JjGDmuCa8_']['label'])) {
-            $bldg_name = ['data']['JjGDmuCa8_']['label'];
+        if (isset($data['data']['hXHmCy0mek']['label'])) {
+            $bldg_name = $data['data']['hXHmCy0mek']['label'];
+        } else if (isset($data['data']['JjGDmuCa8_']['label'])) {
+            $bldg_name = $data['data']['JjGDmuCa8_']['label'];
         }
         echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
         
