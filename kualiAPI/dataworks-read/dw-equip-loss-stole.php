@@ -88,7 +88,7 @@ try {
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":tag" => $tag]);
 
-            $update_kuali = "UPDATE kuali_table SET equip_lost_stol_time = :time";
+            $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
             $update_stmt = $dbh->prepare($update_kuali);
             $update_stmt->execute([":time" => $count]);
         }
