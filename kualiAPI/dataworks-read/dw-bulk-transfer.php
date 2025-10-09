@@ -3,7 +3,7 @@ include_once __DIR__ . "/../../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
+$select = "SELECT dw_bulk_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['bulk_transfer_time'] ?? 0;
@@ -226,7 +226,7 @@ try {
                 echo "error updating asset " . $e->getMessage();
             }
             try {
-                $update_kuali_time = "UPDATE kuali_table SET bulk_transfer_time = :time";
+                $update_kuali_time = "UPDATE kuali_table SET dw_bulk_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali_time);
                 $update_stmt->execute([":time"=>$update_time]);
             } catch (PDOException $e) {

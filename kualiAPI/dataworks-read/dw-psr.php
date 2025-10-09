@@ -3,7 +3,7 @@ include_once __DIR__ .  "/../../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT psr_time, kuali_key FROM kuali_table";
+$select = "SELECT dw_psr_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['psr_time'] ?? 0;
@@ -90,7 +90,7 @@ try {
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":tag" => $tag]);
 
-            $update_kuali = "UPDATE kuali_table SET psr_time = :time";
+            $update_kuali = "UPDATE kuali_table SET dw_psr_time = :time";
             $update_stmt = $dbh->prepare($update_kuali);
             $update_stmt->execute([":time" => $update_time]);
         }

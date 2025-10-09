@@ -3,7 +3,7 @@ include_once __DIR__ . "/../../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT equip_lost_stol_time, kuali_key FROM kuali_table";
+$select = "SELECT dw_lsd_time, kuali_key FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 $raw_ms = (int)$result['equip_lost_stol_time'] ?? 0;
