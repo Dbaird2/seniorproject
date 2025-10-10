@@ -446,7 +446,7 @@ if ($audit_schedules) {
               </div>
             </div>
             <div class="badges">
-            <button class="ticket-btn" value="<?= $audit['dept_id']" onclick="updateTicket(<?= json_encode($audit['dept_id'])?>, 'delete')">Delete</button>
+            <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick="updateTicket(<?= json_encode($audit['dept_id']) ?>, 'delete')">Delete</button>
             </div>
           </div>
           <div class="info"><?php $audit['dept_id'] . ' ' . $audit['audit_date']?></div>

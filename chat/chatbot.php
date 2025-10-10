@@ -72,7 +72,7 @@ class OnboardingConversation extends Conversation
                 $this->say('I could not detect your login.');
                 return;
             }
-            $this->email = $answer->getText();
+            $this->email = $_SESSION['email'] ?? $answer->getText();
             $this->askQuestion();
 
         });
