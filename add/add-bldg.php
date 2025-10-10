@@ -48,7 +48,9 @@ if (isset($_GET['room-num'])) {
     $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
     $room_nums = $_GET['room-num'];
-    $room_tags = $_GET['room-tag'];
+    echo "<pre>";
+    var_dump($_GET);
+    echo "</pre>";
 
     $seen = [];
     $new_room_nums = [];
@@ -56,22 +58,9 @@ if (isset($_GET['room-num'])) {
         if (!isset($seen[trim($room)]) && $room !== '') {
             $seen[trim($room)] = true;
             $new_room_nums[] = trim($room);
-            $new_room_tags[] = trim($room_tags[$index]);
         }
     }
 
-    $seen = [];
-    $room_tags = [];
-    $room_nums = [];
-    foreach ($new_room_tags as $index => $tag) {
-        if (!isset($seen[$tag]) && $tag !== '') {
-            $seen[$tag] = true;
-            $room_tags[] = $tag;
-            $room_nums[] = $new_room_nums[$index];
-        }
-    }
-
-    $check_tag_avail = "SELECT room_tag FROM room_table WHERE room_tag = :tag";
     $check_room_avail = "SELECT * FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
     $insert_room = "INSERT INTO room_table (room_loc, bldg_id) VALUES (?, ?)";
     $delete_room = "DELETE FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
@@ -82,9 +71,6 @@ if (isset($_GET['room-num'])) {
             $room_stmt = $dbh->prepare($check_room_avail);
             $room_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
             $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
-            $room_tag_stmt = $dbh->prepare($check_tag_avail);
-            $room_tag_stmt->execute([":tag"=>$room_tags[$index]]);
-            $tag_check = $room_tag_stmt->fetch(PDO::FETCH_ASSOC);
             if ($_GET['add-remove-room'] === 'add') {
                 if (!$room_check && !$tag_check) {
                     $insert_stmt = $dbh->prepare($insert_room);

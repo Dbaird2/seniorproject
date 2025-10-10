@@ -107,9 +107,11 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $scanned_tags[] = $row;
         $scanned_notes[] = ($found === true && $_SESSION['data'][$found_at]['Found Note'] !== '') ? $_SESSION['data'][$found_at]['Found Note'] : '';
         $scanned_times[] = ($found === true && $_SESSION['data'][$found_at]['Found Timestamp'] !== '') ? $_SESSION['data'][$found_at]['Found Timestamp'] : $_POST['dynamicTime'][$index];
+        /*
         $scanned_rooms[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Tag'] !== '') ? $_SESSION['data'][$found_at]['Found Room Tag'] : $_POST['room-tag'];
         $scanned_room_nums[] = ($found === true && !empty($_SESSION['data'][$found_at]['Found Room Number']) && isset($_SESSION['data'][$found_at]['Found Room Number'])) ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
         $scanned_bldg[] = ($found === true && isset($_SESSION['data'][$found_at]['Found Building Name']) && !empty($_SESSION['data'][$found_at]['Found Building Name']) !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
+         */
     }
     $skip = false;
     $check_if_right = "SELECT room_loc FROM room_table r JOIN bldg_table b ON r.bldg_id = b.bldg_id WHERE r.room_loc = :loc AND b.bldg_name = :name AND r.room_tag = :tag";

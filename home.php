@@ -419,6 +419,54 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
             </section>
         </div>
     </div>
+            <div class="actions-section">
+                <div class="actions-header">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                    </svg>
+                    <h3>Quick Actions</h3>
+                </div>
+            <section class="feed" aria-live="polite">
+                <div id="date-list" class="scroll">
+<?php 
+$select = 'SELECT a.custodian, a.dept_id, d.dept_name, a.audit_date FROM audit_schedule a LEFT JOIN department d ON a.dept_id = d.dept_id';
+$stmt = $dbh->query($select);
+$audit_schedules = $stmt->fetchAll();
+if ($audit_schedules) {
+    foreach ($audit_schdules as $index => $audit) {
+?>        
+        <article class="schedule">
+          <div class="row">
+            <div class="who">
+
+            <div class="avatar" title="<?= $audit['custodian']?>"><?= $audit['custodian']?></div>
+              <div>
+              <div><?= $index['custodian'] ?></div>
+              <div class="when" title="<?= $audit['audit_date']?>"><?= $audit['audit_date']?></div>
+              </div>
+            </div>
+            <div class="badges">
+            <button class="ticket-btn" value="<?= $audit['dept_id']" onclick="updateTicket(<?= json_encode($audit['dept_id'])?>, 'delete')">Delete</button>
+            </div>
+          </div>
+          <div class="info"><?php $audit['dept_id'] . ' ' . $audit['audit_date']?></div>
+        </article>
+<?php
+    }
+} else {
+?>
+          <div class="empty">No audits scheduled.</div>
+<?php 
+}
+?>
+
+</div>
+                <div class="footer">
+                    <div><span id="count2">0</span> tickets · auto-updates</div>
+                </div>
+            </section>
+                
+        </div>
 </div>
 <?php } ?>
         </div>
@@ -500,6 +548,25 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
     <script>
 async function updateTicket(id, action) {
     const API_URL = '/api/update-tickets.php';
+    const params = new URLSearchParams();
+    if (id) params.set('id', id);
+    if (action) params.set('action', action);
+
+    console.log('params: ' + params);
+    try {
+        const res = await fetch(`${API_URL}?${params.toString()}`, {
+        headers: {
+        'Accept': 'application/json'
+    }
+    });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+    } catch (err) {
+        console.warn('Error updating ticket:', err);
+    }
+}
+async function updateAudit(id, action) {
+    const API_URL = '/api/update-audits.php';
     const params = new URLSearchParams();
     if (id) params.set('id', id);
     if (action) params.set('action', action);
@@ -678,7 +745,7 @@ function switchChart(type) {
         </script>
 <script>
         // ===== Configuration =====
-        const API_URL = '/api/tickets.php'; // Adjust to your backend endpoint
+        const API_URL = '/api/tickets.php'; 
 
         // ===== Utilities =====
         const el = (sel) => document.querySelector(sel);
