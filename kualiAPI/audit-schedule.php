@@ -76,7 +76,7 @@ try {
         $custodian = $edge['node']['data']['Unwly2UM1p']['firstName'] . ' ' . $edge['node']['data']['Unwly2UM1p']['lastName'];
 
         if (!empty($edge['node']['data']['epSRSrkGXT'])) {
-            $manager = $edge[['node']'data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
+            $manager = $edge['node']['data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
         }
         if (!empty($edgep['node']['data']['F8sTie5FDP'])) {
             $dept_id = $edge['node']['data']['F8sTie5FDP'];
