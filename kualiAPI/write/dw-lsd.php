@@ -55,7 +55,10 @@ if (empty($apikey)) {
 $display_name = $submitter_info['username'];
 $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 // SUBMITTER
+// SIG
 $variables['data']['Tscy6BxbSj'] = $full_name;
+// NAME
+$variables['data']['WDA7EMUZg_'] = $full_name;
 $school_id = $submitter_info['school_id'] ?? '';
 $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
