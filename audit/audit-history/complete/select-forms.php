@@ -304,67 +304,67 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
                                 </div>
                             </td>
-<?php if (!in_array($audit_id, [4,5,6])) { ?>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Submitting For</label>
-                                    <select id="lsd-who-<?= $row['Tag Number'] ?>">
-                                        <option value="Myself">Myself</option>
-                                        <option value="someone-else">Someone Else</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="lsd-fill-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Borrower Email</label>
-                                    <input type="text" id="lsd-fill-for-<?= $row['Tag Number'] ?>" placeholder="Enter email...">
-                                </div>
-                            </td>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Position</label>
-                                    <select id="lsd-position-<?= $row['Tag Number'] ?>">
-                                        <option value="Staff/Faculty">Staff/Faculty</option>
-                                        <option value="Student">Student</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Condition</label>
-                                    <select id="lsd-condition-<?= $row['Tag Number'] ?>">
-                                        <option value="Lost">Lost</option>
-                                        <option value="Stolen">Stolen</option>
-                                        <option value="Destroyed">Destroyed</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Detailed Narrative</label>
-                                    <textarea id="lsd-narrative-<?= $row['Tag Number'] ?>" placeholder="Provide detailed description..."></textarea>
-                                </div>
-                            </td>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Reported to UPD?</label>
-                                    <select id="upd-<?= $row['Tag Number'] ?>">
-                                        <option value="No">No</option>
-                                        <option value="Yes">Yes</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Item Type</label>
-                                    <select id="item-type-<?= $row['Tag Number'] ?>">
-                                        <option value=""></option>
-                                        <option value="IT Equipment">IT Equipment</option>
-                                        <option value="Instructional Equipment">Instructional Equipment</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </td>
+                            <?php if (!in_array($audit_id, [4, 5, 6])) { ?>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Submitting For</label>
+                                        <select id="lsd-who-<?= $row['Tag Number'] ?>">
+                                            <option value="Myself">Myself</option>
+                                            <option value="someone-else">Someone Else</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-fill-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Borrower Email</label>
+                                        <input type="text" id="lsd-fill-for-<?= $row['Tag Number'] ?>" placeholder="Enter email...">
+                                    </div>
+                                </td>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Position</label>
+                                        <select id="lsd-position-<?= $row['Tag Number'] ?>">
+                                            <option value="Staff/Faculty">Staff/Faculty</option>
+                                            <option value="Student">Student</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Condition</label>
+                                        <select id="lsd-condition-<?= $row['Tag Number'] ?>">
+                                            <option value="Lost">Lost</option>
+                                            <option value="Stolen">Stolen</option>
+                                            <option value="Destroyed">Destroyed</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Detailed Narrative</label>
+                                        <textarea id="lsd-narrative-<?= $row['Tag Number'] ?>" placeholder="Provide detailed description..."></textarea>
+                                    </div>
+                                </td>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Reported to UPD?</label>
+                                        <select id="upd-<?= $row['Tag Number'] ?>">
+                                            <option value="No">No</option>
+                                            <option value="Yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                    <div class="form-field-group">
+                                        <label>Item Type</label>
+                                        <select id="item-type-<?= $row['Tag Number'] ?>">
+                                            <option value=""></option>
+                                            <option value="IT Equipment">IT Equipment</option>
+                                            <option value="Instructional Equipment">Instructional Equipment</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </td>
                         </tr>
                         <tr>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -542,39 +542,39 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-state-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
-<?php } ?>
-                            <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Checking Out For</label>
-                                    <select class="who-<?= $row['Tag Number'] ?>">
-                                        <option value="myself">Myself</option>
-                                        <option value="someone-else">Someone Else</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
-                                    <label>Borrower Name</label>
-                                    <input type="text" name="full-name" id="full-name" placeholder="Full name of borrower">
-                                </div>
-                            </td>
-                            <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Condition</label>
-                                    <select id="check-condition-<?= $row['Tag Number'] ?>">
-                                        <option value="new">New</option>
-                                        <option value="good">Good</option>
-                                        <option value="used">Used</option>
-                                        <option value="damanged">Damaged</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
-                                <div class="form-field-group">
-                                    <label>Notes</label>
-                                    <textarea id="check-notes-<?= $row['Tag Number'] ?>" placeholder="Additional notes..."></textarea>
-                                </div>
-                            </td>
+                        <?php } ?>
+                        <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Checking Out For</label>
+                                <select class="who-<?= $row['Tag Number'] ?>">
+                                    <option value="myself">Myself</option>
+                                    <option value="someone-else">Someone Else</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <label>Borrower Name</label>
+                                <input type="text" name="full-name" id="full-name" placeholder="Full name of borrower">
+                            </div>
+                        </td>
+                        <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Condition</label>
+                                <select id="check-condition-<?= $row['Tag Number'] ?>">
+                                    <option value="new">New</option>
+                                    <option value="good">Good</option>
+                                    <option value="used">Used</option>
+                                    <option value="damanged">Damaged</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Notes</label>
+                                <textarea id="check-notes-<?= $row['Tag Number'] ?>" placeholder="Additional notes..."></textarea>
+                            </div>
+                        </td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -586,6 +586,7 @@ $audit_id = $_SESSION['info'][5];
     </div>
 <script>
 const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
+
 function hideUI(type, tag) {
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
@@ -917,116 +918,133 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     } else if (val === 'lsd') {
         if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
-        const who = document.getElementById('lsd-who-' + type.dataset.tag).value;
-        const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag).value;
-        const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
-        const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
-        const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
-        const upd = document.getElementById('upd-' + type.dataset.tag).value;
-        const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
-        const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
-        const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
-        const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
-        const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
-        const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
-        const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
-        const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
-        const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
-        const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
-        const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
-        const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
-        const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
-        const security = document.getElementById('upd-security-' + type.dataset.tag).value;
-        const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
-        const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
-        const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
-        const company = document.getElementById('upd-company-' + type.dataset.tag).value;
-        const street = document.getElementById('upd-street-' + type.dataset.tag).value;
-        const city = document.getElementById('upd-city-' + type.dataset.tag).value;
-        const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
-        const state = document.getElementById('upd-state-' + type.dataset.tag).value;
-        const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
-        const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
-        const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-        const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+            const who = document.getElementById('lsd-who-' + type.dataset.tag).value;
+            const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag).value;
+            const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
+            const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
+            const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
+            const upd = document.getElementById('upd-' + type.dataset.tag).value;
+            const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
+            const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
+            const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
+            const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
+            const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
+            const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
+            const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
+            const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
+            const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
+            const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
+            const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
+            const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
+            const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
+            const security = document.getElementById('upd-security-' + type.dataset.tag).value;
+            const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
+            const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
+            const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
+            const company = document.getElementById('upd-company-' + type.dataset.tag).value;
+            const street = document.getElementById('upd-street-' + type.dataset.tag).value;
+            const city = document.getElementById('upd-city-' + type.dataset.tag).value;
+            const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
+            const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+            const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+            const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+            const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+            const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
 
-        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
-        const lsd_res = await fetch(url, {
-        method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-        },
-            body: JSON.stringify({
-            tag: type.dataset.tag,
-                who: who,
-                borrower: borrower,
-                position: position,
-                lsd: lsd,
-                reason: reason,
-                dept_id: dept_id,
-                audit_id: audit_id,
-                upd: upd,
-                item_type: item_type,
-                date_reported: date_reported,
-                date_last_seen: date_last_seen,
-                time_last_seen: time_last_seen,
-                by_whom: by_whom,
-                upd_location: upd_location,
-                secured: secured,
-                access_keys: access_keys,
-                assigned_staff: assigned_staff,
-                who_assigned: who_assigned,
-                recovery_steps: recovery_steps,
-                precautions: precautions,
-                authorized: authorized,
-                security: security,
-                reported: reported,
-                explain: explain,
-                insurance: insurance,
-                company: company,
-                street: street,
-                city: city,
-                zip: zip,
-                state: state,
-                encrypted: encrypted,
-                encrypted_data: encrypted_data,
-                confidential: confidential,
-                confidential_data: confidential_data
-        })
-        });
+            url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
+            const lsd_res = await fetch(url, {
+            method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+            },
+                body: JSON.stringify({
+                tag: type.dataset.tag,
+                    who: who,
+                    borrower: borrower,
+                    position: position,
+                    lsd: lsd,
+                    reason: reason,
+                    dept_id: dept_id,
+                    audit_id: audit_id,
+                    upd: upd,
+                    item_type: item_type,
+                    date_reported: date_reported,
+                    date_last_seen: date_last_seen,
+                    time_last_seen: time_last_seen,
+                    by_whom: by_whom,
+                    upd_location: upd_location,
+                    secured: secured,
+                    access_keys: access_keys,
+                    assigned_staff: assigned_staff,
+                    who_assigned: who_assigned,
+                    recovery_steps: recovery_steps,
+                    precautions: precautions,
+                    authorized: authorized,
+                    security: security,
+                    reported: reported,
+                    explain: explain,
+                    insurance: insurance,
+                    company: company,
+                    street: street,
+                    city: city,
+                    zip: zip,
+                    state: state,
+                    encrypted: encrypted,
+                    encrypted_data: encrypted_data,
+                    confidential: confidential,
+                    confidential_data: confidential_data
+            })
+            });
+            if (!lsd_res.ok) {
+                const text = await lsd_res.text();
+                throw new Error(`HTTP ${lsd_res.status}: ${text}`);
+            } else {
+                const clone = lsd_res.clone();
+                try {
+                    const data = await lsd_res.json();
+                    console.log("Lsd response (JSON):", data);
+                    hideUI('row', type.dataset.tag);
+                    type.value = '';
+                } catch {
+                    const text = await clone.text();
+                    console.log("Lsd response (text):", text);
+                    hideUI('row', type.dataset.tag);
+                    type.value = '';
+                }
+            }
         } else {
-        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
-        const lsd_res = await fetch(url, {
-        method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-        },
-            body: JSON.stringify({
-            tag: type.dataset.tag,
-                dept_id: dept_id,
-                audit_id: audit_id
-        })
-        });
+            url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
+            const lsd_res = await fetch(url, {
+            method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+            },
+                body: JSON.stringify({
+                tag: type.dataset.tag,
+                    dept_id: dept_id,
+                    audit_id: audit_id
+            })
+            });
 
-        if (!lsd_res.ok) {
-            const text = await lsd_res.text();
-            throw new Error(`HTTP ${lsd_res.status}: ${text}`);
-        } else {
-            const clone = lsd_res.clone();
-            try {
-                const data = await lsd_res.json();
-                console.log("Lsd response (JSON):", data);
-                hideUI('row', type.dataset.tag);
-                type.value = '';
-            } catch {
-                const text = await clone.text();
-                console.log("Lsd response (text):", text);
-                hideUI('row', type.dataset.tag);
-                type.value = '';
+            if (!lsd_res.ok) {
+                const text = await lsd_res.text();
+                throw new Error(`HTTP ${lsd_res.status}: ${text}`);
+            } else {
+                const clone = lsd_res.clone();
+                try {
+                    const data = await lsd_res.json();
+                    console.log("Lsd response (JSON):", data);
+                    hideUI('row', type.dataset.tag);
+                    type.value = '';
+                } catch {
+                    const text = await clone.text();
+                    console.log("Lsd response (text):", text);
+                    hideUI('row', type.dataset.tag);
+                    type.value = '';
+                }
             }
         }
     }
-    });
 
     console.log('bulk_tags', bulk_t_tags);
     console.log('lsd', lsd_tags);
@@ -1106,8 +1124,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     });
+    });
 });
 </script>
-</body>
+                </body>
 
 </html>
