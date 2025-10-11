@@ -162,6 +162,11 @@ echo "<pre>";
 echo $custodian;
 var_dump($custodian_info);
 echo "</pre>";
+
+$variables['documentId'] = $doucment_id;
+$variables['actionId'] = $action_id;
+$variables['status'] = 'completed';
+
 // CUSTODIAN
 $variables['data']['NpD2RP-waL']['displayName'] = $custodian_info['displayName'];
 $variables['data']['NpD2RP-waL']['schoolId'] = $custodian_info['schoolId'];
