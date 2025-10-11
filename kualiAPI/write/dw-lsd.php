@@ -11,6 +11,16 @@ if (!isset($_POST)) {
 }
 
 $variables = [[]];
+$echo = function($type, $msg) {
+    echo $type . ': ' . $msg . '<br>';
+    return;
+};
+$array_echo = function ($msg) {
+    echo "<pre>";
+    var_dump($msg);
+    echo "</pre>";
+    return;
+};
 
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
@@ -188,11 +198,9 @@ $variables['documentId'] = $document_id;
 $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 
-echo "<pre>";
-echo $custodian;
-var_dump($custodian_info);
-echo $variables['data']['sQZpV5OhTo'];
-echo "</pre>";
+$echo('Custodian', $custodian);
+$array_echo($custodian_info);
+$echo('Date', $variables['data']['sQZpV5OhTo'];
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
