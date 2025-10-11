@@ -200,7 +200,7 @@ $variables['status'] = 'completed';
 
 $echo('Custodian', $custodian);
 $array_echo($custodian_info);
-$echo('Date', $variables['data']['sQZpV5OhTo'];
+$echo('Date', $variables['data']['sQZpV5OhTo']);
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
