@@ -310,6 +310,80 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
                 <div class="completion-text"><?php echo $mgmt_diff->days; ?> days Until Due</div>
             </div>
         </div>
+        <!-- Audit Overdue Type Overview -->
+        <div class="audit-overview">
+            <div class="audit-type-card spa">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Previous SPA Audit</div>
+                    <div class="audit-badge spa">Special Purpose</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: <?php echo $prev_spa_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $prev_spa; ?></div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $current_date; ?></div>
+                        <div class="audit-stat-label"><?= $prev_spa ?? 'Incomplete' ?></div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill spa" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="audit-type-card self">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Previous Self Audits</div>
+                    <div class="audit-badge self">Self Assessment</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: <?php echo $self_prev_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $self_prev_completion_status ?? 0; ?>% Audits Finished</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $self_prev_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $self_prev_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill self" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="audit-type-card mgmt">
+
+                <div class="audit-type-header">
+                    <div class="audit-type-title">Previous Management Audits</div>
+                    <div class="audit-badge mgmt">Management</div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: <?php echo $mgmt_prev_completion_status ?? 0; ?>%"></div>
+                </div>
+                <div class="completion-text"><?php echo $mgmt_prev_completion_status ?? 0; ?>% Audits Finished</div>
+                <div class="audit-stats">
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?php echo $mgmt_prev_audits_in_progress; ?></div>
+                        <div class="audit-stat-label">In Progress</div>
+                    </div>
+                    <div class="audit-stat">
+                        <div class="audit-stat-number"><?= $mgmt_prev_audits_complete ?></div>
+                        <div class="audit-stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="completion-bar">
+                    <div class="completion-fill mgmt" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
         <!-- Main Content Grid -->
         <div class="content-grid">
             <!-- Department Audit Distribution Chart -->
@@ -419,13 +493,11 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
             </section>
         </div>
     </div>
+</div>
 <?php } ?>
             <div class="actions-section">
                 <div class="actions-header">
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-                    </svg>
-                    <h3>Quick Actions</h3>
+                    <h3>Audit Schedules</h3>
                 </div>
             <section class="feed" aria-live="polite">
                 <div id="date-list" class="scroll">
@@ -463,80 +535,6 @@ if ($audit_schedules) {
 </div>
 </div>
         </div>
-        <!-- Audit Overdue Type Overview -->
-        <div class="audit-overview">
-            <div class="audit-type-card spa">
-
-                <div class="audit-type-header">
-                    <div class="audit-type-title">Previous SPA Audit</div>
-                    <div class="audit-badge spa">Special Purpose</div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill spa" style="width: <?php echo $prev_spa_status ?? 0; ?>%"></div>
-                </div>
-                <div class="completion-text"><?php echo $prev_spa; ?></div>
-                <div class="audit-stats">
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?php echo $current_date; ?></div>
-                        <div class="audit-stat-label"><?= $prev_spa ?? 'Incomplete' ?></div>
-                    </div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill spa" style="width: 100%"></div>
-                </div>
-            </div>
-
-            <div class="audit-type-card self">
-
-                <div class="audit-type-header">
-                    <div class="audit-type-title">Previous Self Audits</div>
-                    <div class="audit-badge self">Self Assessment</div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill self" style="width: <?php echo $self_prev_completion_status ?? 0; ?>%"></div>
-                </div>
-                <div class="completion-text"><?php echo $self_prev_completion_status ?? 0; ?>% Audits Finished</div>
-                <div class="audit-stats">
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?php echo $self_prev_audits_in_progress; ?></div>
-                        <div class="audit-stat-label">In Progress</div>
-                    </div>
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?= $self_prev_audits_complete ?></div>
-                        <div class="audit-stat-label">Completed</div>
-                    </div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill self" style="width: 100%"></div>
-                </div>
-            </div>
-
-            <div class="audit-type-card mgmt">
-
-                <div class="audit-type-header">
-                    <div class="audit-type-title">Previous Management Audits</div>
-                    <div class="audit-badge mgmt">Management</div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill mgmt" style="width: <?php echo $mgmt_prev_completion_status ?? 0; ?>%"></div>
-                </div>
-                <div class="completion-text"><?php echo $mgmt_prev_completion_status ?? 0; ?>% Audits Finished</div>
-                <div class="audit-stats">
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?php echo $mgmt_prev_audits_in_progress; ?></div>
-                        <div class="audit-stat-label">In Progress</div>
-                    </div>
-                    <div class="audit-stat">
-                        <div class="audit-stat-number"><?= $mgmt_prev_audits_complete ?></div>
-                        <div class="audit-stat-label">Completed</div>
-                    </div>
-                </div>
-                <div class="completion-bar">
-                    <div class="completion-fill mgmt" style="width: 100%"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
 async function updateTicket(id, action) {

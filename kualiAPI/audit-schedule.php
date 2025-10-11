@@ -61,25 +61,30 @@ try {
     foreach ($edges as $index => $edge) {
         $raw_ms++;
 
-        $time = $edge['data']['tYz59qALVK'];
-        $date = $edge['data']['ChU6eQjeRf'];
+        $time = $edge['node']['data']['tYz59qALVK'];
+        $date = $edge['node']['data']['ChU6eQjeRf'];
         $new_date = $time+$date;
         $date = new DateTime();
         $date->setTimestamp($new_date);
 
-        $date_time = $date->format('Y-m-d H:i:s');
-        $custodian = $edge['data']['Unwly2UM1p']['firstName'] . ' ' . $edge['data']['Unwly2UM1p']['lastName'];
-
-        if (!empty($edge['data']['epSRSrkGXT'])) {
-            $manager = $edge['data']['epSRSrkGXT']['firstName'] . ' ' . $edge['data']['epSRSrkGXT']['lastName'];
+        $now = microtime(true);
+        if ($now > $new_date) {
+            continue;
         }
-        if (!empty($edge['data']['F8sTie5FDP'])) {
-            $dept_id = $edge['data']['F8sTie5FDP'];
-        } else if (!empty($edge['data']['dTFWWegtgK']['data'])) {
-            $departments = $edge['data']['dTFWWegtgK'];
+        
+        $date_time = $date->format('Y-m-d H:i:s');
+        $custodian = $edge['node']['data']['Unwly2UM1p']['firstName'] . ' ' . $edge['node']['data']['Unwly2UM1p']['lastName'];
+
+        if (!empty($edge['node']['data']['epSRSrkGXT'])) {
+            $manager = $edge[['node']'data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
+        }
+        if (!empty($edgep['node']['data']['F8sTie5FDP'])) {
+            $dept_id = $edge['node']['data']['F8sTie5FDP'];
+        } else if (!empty($edge['node']['data']['dTFWWegtgK']['data'])) {
+            $departments = $edge['node']['data']['dTFWWegtgK'];
             foreach ($departments as $dept) {
-                $dept_id = $dept['data']['IOw4-l7NsM'];
-                $dept_name = $dept['data']['AkMeIWWhoj'];
+                $dept_id = $dept['node']['data']['IOw4-l7NsM'];
+                $dept_name = $dept['node']['data']['AkMeIWWhoj'];
                 $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
                 $stmt = $dbh->prepare($insert);
                 $stmt->execute([$dept_name, $date_time, $custodian]);
