@@ -161,11 +161,9 @@ $custodian_info = getSignature(query: $get_info, person_name: $custodian, type: 
 echo "<pre>";
 echo $custodian;
 var_dump($custodian_info);
+
 echo "</pre>";
 
-$variables['documentId'] = $doucment_id;
-$variables['actionId'] = $action_id;
-$variables['status'] = 'completed';
 
 // CUSTODIAN
 $variables['data']['NpD2RP-waL']['displayName'] = $custodian_info['displayName'];
@@ -186,6 +184,10 @@ $variables['data']['5mMKjTfnND']['username'] = $manager_info['username'];
 $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
+
+$variables['documentId'] = $document_id;
+$variables['actionId'] = $action_id;
+$variables['status'] = 'completed';
 
 $ms_time = round(microtime(true) * 1000);
 $submit_form = json_encode([
