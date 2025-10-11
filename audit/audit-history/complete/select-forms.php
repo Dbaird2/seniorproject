@@ -48,7 +48,7 @@ $audit_id = $_SESSION['info'][5];
         }
 
         .table-wrapper {
-            margin-top: -330px;
+            margin-top: 0;
             overflow-x: auto;
             padding: 1.5rem;
         }
@@ -304,7 +304,7 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
                                 </div>
                             </td>
-                            <?php if (!in_array($audit_id, [4, 5, 6])) { ?>
+                            <?php if (!in_array((int)$audit_id, [4, 5, 6])) { ?>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
                                         <label>Submitting For</label>
@@ -680,7 +680,7 @@ document.addEventListener("DOMContentLoaded", function() {
         hideUI('lsd-fill-', tag);
     }
 
-    if (form_type.value === 'lsd') {
+    if (form_type.value === 'lsd' && (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6)) {
         const upd = document.getElementById('upd-' + tag);
         upd.addEventListener('change', () => {
         console.log(upd.value);
@@ -1046,9 +1046,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    console.log('bulk_tags', bulk_t_tags);
-    console.log('lsd', lsd_tags);
-    console.log('psr', psr_tags);
 
     if (psr_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
