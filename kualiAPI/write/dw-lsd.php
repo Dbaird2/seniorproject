@@ -190,10 +190,11 @@ $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
 
 // DATE
-$date = new DateTime();
-$today = $date->format('m/d/Y');
-$variables['data']['sQZpV5OhTo'] = $today;
-
+/*
+$date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
+$current_date = $date->format('m/d/Y');
+$variables['data']["sQZpV5OhTo"] = $current_date;
+ */
 $variables['documentId'] = $document_id;
 $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
