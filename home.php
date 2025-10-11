@@ -419,6 +419,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
             </section>
         </div>
     </div>
+<?php } ?>
             <div class="actions-section">
                 <div class="actions-header">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -459,16 +460,8 @@ if ($audit_schedules) {
 <?php 
 }
 ?>
-
 </div>
-                <div class="footer">
-                    <div><span id="count2">0</span> tickets · auto-updates</div>
-                </div>
-            </section>
-                
-        </div>
 </div>
-<?php } ?>
         </div>
         <!-- Audit Overdue Type Overview -->
         <div class="audit-overview">

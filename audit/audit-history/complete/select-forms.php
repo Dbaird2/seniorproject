@@ -5,6 +5,7 @@ $select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
 $stmt = $dbh->prepare($select_dept);
 $stmt->execute([":id" => $_SESSION['info'][2]]);
 $dept_name = $stmt->fetchColumn();
+$audit_id = $_SESSION['info'][5];
 ?>
 <!DOCTYPE html>
 <html>
@@ -303,6 +304,7 @@ $dept_name = $stmt->fetchColumn();
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
                                 </div>
                             </td>
+<?php if (!in_array($audit_id, [4,5,6])) { ?>
                             <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Submitting For</label>
@@ -540,6 +542,7 @@ $dept_name = $stmt->fetchColumn();
                                     <input type="text" id="upd-state-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
+<?php } ?>
                             <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Checking Out For</label>
@@ -582,6 +585,7 @@ $dept_name = $stmt->fetchColumn();
         </div>
     </div>
 <script>
+const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 function hideUI(type, tag) {
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
@@ -912,6 +916,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     } else if (val === 'lsd') {
+        if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
         const who = document.getElementById('lsd-who-' + type.dataset.tag).value;
         const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag).value;
         const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
@@ -989,6 +994,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 confidential_data: confidential_data
         })
         });
+        } else {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
+        const lsd_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+            tag: type.dataset.tag,
+                dept_id: dept_id,
+                audit_id: audit_id
+        })
+        });
 
         if (!lsd_res.ok) {
             const text = await lsd_res.text();
@@ -997,12 +1015,12 @@ document.addEventListener("DOMContentLoaded", function() {
             const clone = lsd_res.clone();
             try {
                 const data = await lsd_res.json();
-                console.log("bulk-transfer response (JSON):", data);
+                console.log("Lsd response (JSON):", data);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
             } catch {
                 const text = await clone.text();
-                console.log("bulk-transfer response (text):", text);
+                console.log("Lsd response (text):", text);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
             }
