@@ -24,10 +24,15 @@ if (isset($_POST['user'])) {
     $delete = false;
     try {
         if (!empty($new_dept) && $new_dept !== $old_dept) {
-            $update_q = "UPDATE user_table SET dept_id = :dept::VARCHAR[] WHERE email = :email";
-            $update_stmt = $dbh->prepare($update_q);
-            $new_dept = '{' .$new_dept.'}';
-            $update_stmt->execute([":dept"=>$new_dept, ":email"=>$email]);
+                $update_q = "UPDATE user_table SET dept_id = array[]::VARCHAR[] WHERE email = :email";
+                $update_stmt = $dbh->prepare($update_q);
+                $update_stmt->execute([":dept"=>$dept, ":email"=>$email]);
+                $new_dept = explode(',', $new_dept);
+            foreach ($new_dept as $dept) {
+                $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept) WHERE email = :email';
+                $update_stmt = $dbh->prepare($update);
+                $update_stmt->execute([":dept"=>$dept, ":email"=>$email]);
+            }
         } 
         if (!empty($new_role) && $new_role !== $old_role) {
             $update_q = "UPDATE user_table SET u_role= :role WHERE email = :email";

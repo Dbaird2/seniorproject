@@ -136,9 +136,24 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
                 }
             }
             if (!$found) {
-                $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
-                $stmt = $dbh->prepare($update);
-                $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':dept_id'=>$dept_id]);
+                $users = $stmt->fetchAll();
+                $found = false;
+                if ($users) {
+                    foreach ($users as $user) {
+                        if ($user['email'] === $email) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$found) {
+                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                }
             }
         }
     } else {
@@ -179,6 +194,7 @@ function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_
             }
         }
         if (!$found) {
+
             $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust) WHERE dept_id = :id';
             $update_stmt = $dbh->prepare($update);
             $update_stmt->execute([':cust' => $c_display_name, ':id' => $dept_id]);
@@ -220,9 +236,24 @@ function addSignature($username, $email, $form_id, $signature, $school_id, $f_na
                 }
             }
             if (!$found) {
-                $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
-                $stmt = $dbh->prepare($update);
-                $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':dept_id'=>$dept_id]);
+                $users = $stmt->fetchAll();
+                $found = false;
+                if ($users) {
+                    foreach ($users as $user) {
+                        if ($user['email'] === $email) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$found) {
+                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                }
             }
         }
     } else {

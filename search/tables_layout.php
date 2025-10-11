@@ -607,9 +607,6 @@ foreach ($result as $row) {
                                 <input type="hidden" id="old_f_name" name="old_f_name" value="<?= $f_name ?>">
                                 <input type="hidden" id="old_l_name" name="old_l_name" value="<?= $l_name ?>">
 
-                                    <?php foreach ($dept2 as $index=>$dept_row) { ?>
-                                    <input type="hidden" id="old_dept" name="old_dept[]" value=<?= $dept_row ?>>
-<?php } ?>
                                     <label for="asset_tag">Username:</label>
                                     <input type="text" id="username" name="username" value="<?= $username ?>" readonly>
                                     <br>
@@ -638,7 +635,7 @@ foreach ($result as $row) {
                                     <input type="text" id="l_name" name="l_name" value="<?= $l_name ?>" readonly>
                                     <br>
                                     <label for="location">Department ID:</label>
-                                    <input type="text" id="dept_ids" name="dept_ids[]" value="<?= $dept ?>">
+                                    <input type="text" id="dept_ids" name="dept_ids" value="<?= $dept ?>">
                                     <br>
                                     <button type="submit" value="<?= $email ?>" name="delete-user">Delete User</button>
                                     <button data-tag="<?$safe_tag?>"  type="submit" name="user">Update User</button>

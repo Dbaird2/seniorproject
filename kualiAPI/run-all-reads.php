@@ -152,9 +152,24 @@ keyBy: ID
                     }
                 }
                 if (!$found) {
-                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                    $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
+                    $stmt = $dbh->prepare($select);
+                    $stmt->execute([':dept_id'=>$dept_id]);
+                    $users = $stmt->fetchAll();
+                    $found = false;
+                    if ($users) {
+                        foreach ($users as $user) {
+                            if ($user['email'] === $email) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!$found) {
+                        $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                        $stmt = $dbh->prepare($update);
+                        $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                    }
                 }
             }
         } else {
@@ -236,9 +251,24 @@ keyBy: ID
                     }
                 }
                 if (!$found) {
-                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                    $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
+                    $stmt = $dbh->prepare($select);
+                    $stmt->execute([':dept_id'=>$dept_id]);
+                    $users = $stmt->fetchAll();
+                    $found = false;
+                    if ($users) {
+                        foreach ($users as $user) {
+                            if ($user['email'] === $email) {
+                                $found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!$found) {
+                        $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                        $stmt = $dbh->prepare($update);
+                        $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
+                    }
                 }
             }
         } else {
