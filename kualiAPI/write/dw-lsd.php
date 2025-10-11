@@ -12,10 +12,6 @@ if (!isset($_POST)) {
 
 $variables = [[]];
 
-// DATE
-$date = new DateTime();
-$today = $date->format('m/d/Y');
-$variables['data']['sQZpV5OhTo'] = $today;
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $myself = $someone_else = false;
@@ -161,11 +157,6 @@ if (!$action_id || !$document_id) {
 }
 $custodian = $dept_info['cust'];
 $custodian_info = getSignature(query: $get_info, person_name: $custodian, type: 'info');
-echo "<pre>";
-echo $custodian;
-var_dump($custodian_info);
-
-echo "</pre>";
 
 
 // CUSTODIAN
@@ -188,11 +179,20 @@ $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
 
+// DATE
+$date = new DateTime();
+$today = $date->format('m/d/Y');
+$variables['data']['sQZpV5OhTo'] = $today;
+
 $variables['documentId'] = $document_id;
 $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 
-$ms_time = round(microtime(true) * 1000);
+echo "<pre>";
+echo $custodian;
+var_dump($custodian_info);
+echo $variables['data']['sQZpV5OhTo'];
+echo "</pre>";
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
