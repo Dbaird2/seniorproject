@@ -26,7 +26,7 @@ if (isset($_POST['user'])) {
         if (!empty($new_dept) && $new_dept !== $old_dept) {
                 $update_q = "UPDATE user_table SET dept_id = array[]::VARCHAR[] WHERE email = :email";
                 $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":dept"=>$dept, ":email"=>$email]);
+                $update_stmt->execute([":email"=>$email]);
                 $new_dept = explode(',', $new_dept);
             foreach ($new_dept as $dept) {
                 $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept) WHERE email = :email';
