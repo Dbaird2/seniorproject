@@ -5,7 +5,7 @@ check_auth('high');
 $bldg_msg = $bldg_color = '';
 $room_msg = [[]];
 if (isset($_GET['bldg-id'])) {
-    $bldg_name = isset($_GET['bldg-name']) ? trim(strtoupper($_GET['bldg-name'])) : exit('Missing building name.');
+    $bldg_name = isset($_GET['bldg-name']) ? trim($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id'];
     $check_bldg_name = "SELECT bldg_name, bldg_id from bldg_table where bldg_name = :bldg_name OR bldg_id = :bldg_id";
 
@@ -15,7 +15,6 @@ if (isset($_GET['bldg-id'])) {
 
     try {
         if ($_GET['add-remove'] === 'add') {
-            echo "add";
             if (!$already_in_db) {
                 $insert_bldg = "INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)";
 
@@ -29,7 +28,6 @@ if (isset($_GET['bldg-id'])) {
                 $bldg_color = 'red';
             }
         } else if ($_GET['add-remove'] === 'remove') {
-            echo "remove";
             if ($already_in_db) {
                 $delete_bldg = "DELETE FROM bldg_table WHERE bldg_name = :bldg_name AND bldg_id = :bldg_id";
                 $delete_stmt = $dbh->prepare($delete_bldg);
@@ -48,9 +46,6 @@ if (isset($_GET['room-num'])) {
     $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
     $room_nums = $_GET['room-num'];
-    echo "<pre>";
-    var_dump($_GET);
-    echo "</pre>";
 
     $seen = [];
     $new_room_nums = [];
@@ -72,9 +67,9 @@ if (isset($_GET['room-num'])) {
             $room_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
             $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
             if ($_GET['add-remove-room'] === 'add') {
-                if (!$room_check && !$tag_check) {
+                if (!$room_check) {
                     $insert_stmt = $dbh->prepare($insert_room);
-                    $insert_stmt->execute([$room, $bldg_id, $room_tags[$index]]);
+                    $insert_stmt->execute([$room, $bldg_id]);
 
                     echo "Adding " . $room;
 
@@ -224,17 +219,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             new_room.classList.add("form-input");
 
 
-            const div2 = document.createElement("div");
-            const new_tag = document.createElement("input");
-            new_tag.setAttribute('type', 'text');
-            new_tag.setAttribute('name', 'room-tag[]');
-            new_tag.setAttribute('placeholder', 'Enter Room Tag');
-            new_tag.classList.add("form-input");
-
             div.appendChild(new_room);
             room_form.appendChild(div);
-            div2.appendChild(new_tag);
-            room_form.appendChild(div2);
         }
     </script>
 </body>
