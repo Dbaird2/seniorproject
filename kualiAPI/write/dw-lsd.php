@@ -10,7 +10,7 @@ if (!isset($_POST)) {
     die("Not submitted yet.");
 }
 
-$variables [[]];
+$variables = [[]];
 
 // DATE
 $date = new DateTime();
@@ -69,9 +69,9 @@ if (empty($school_id) || empty($form_id)) {
     $display_name = $submitter_info['username'];
     $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
         // SUBMITTER
-    $school_id = $submitter_info['school_id'] ?? '';
+    $school_id = $submitter_info['school_id'];
     $signature = $submitter_info['signature'] ?? $full_name;
-    $form_id = $submitter_info['form_id'] ?? '';
+    $form_id = $submitter_info['form_id'];
 
     $variables['data']['WDA7EMUZg_'] = $full_name;
 }
@@ -156,6 +156,7 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
+$custodian = $dept_info['cust'];
 $custodian_info = getSignature(query: $get_info, person_name: $custodian, type: 'info');
 // CUSTODIAN
 $variables['data']['NpD2RP-waL']['displayName'] = $custodian_info['displayName'];
