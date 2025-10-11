@@ -77,7 +77,7 @@ if (empty($school_id) || empty($form_id)) {
 }
 
 
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[0] as cust FROM department d WHERE dept_id = :dept_id";
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
 $get_mana_stmt->execute([":dept_id"=>$dept_id]);
 $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
@@ -158,6 +158,10 @@ if (!$action_id || !$document_id) {
 }
 $custodian = $dept_info['cust'];
 $custodian_info = getSignature(query: $get_info, person_name: $custodian, type: 'info');
+echo "<pre>";
+echo $custodian;
+var_dump($custodian_info);
+echo "</pre>";
 // CUSTODIAN
 $variables['data']['NpD2RP-waL']['displayName'] = $custodian_info['displayName'];
 $variables['data']['NpD2RP-waL']['schoolId'] = $custodian_info['schoolId'];
