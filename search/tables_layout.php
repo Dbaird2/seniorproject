@@ -203,11 +203,6 @@ foreach ($all_bus as $bus) {
 <br>
     <input type="text" id="lsd-fill-for-<?=$safe_tag?>" placeholder="Email of Borrower" style="display:none;">
 <br>
-    <select id="lsd-position-<?=$safe_tag?>">
-        <option value="Staff/Faculty">Staff/Faculty</option>
-        <option value="Student">Student</option>
-    </select>
-<br>
     <select id="lsd-<?=$safe_tag?>">
         <option value="Lost">Lost</option>
         <option value="Stolen">Stolen</option>
@@ -227,6 +222,11 @@ foreach ($all_bus as $bus) {
         <option value="Instructional Equipment">Instructional Equipment</option>
         <option value="Other">Other</option>
     </select>
+    
+    <div class='it-equipment-<?=$safe_tag?>' style='display:none;'>
+        <select id=''>
+</div>
+        
 <br>
 </div>
 <!-- -->

@@ -331,18 +331,16 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-if (!empty($data['dept_id']) && !empty($data['audit_id'])) {
-    $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
-    $tag = $lsd_data['Tag Number'];
-    $doc_id = '68c73600df46a3027d2bd386';
-    $input_array =  $id . ',lsd,in-progress, ' . $tag;
+$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
+$tag = $lsd_data['Tag Number'];
+$doc_id = '68c73600df46a3027d2bd386';
+$input_array =  $id . ',lsd,in-progress, ' . $tag;
 
-    $dept = $data['dept_id'];
-    $audit_id = $data['audit_id'];
-    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
-    $update_stmt = $dbh->prepare($update);
-    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
-}
+$dept = $data['dept_id'];
+$audit_id = $data['audit_id'];
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+$update_stmt = $dbh->prepare($update);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
 curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp_data]);

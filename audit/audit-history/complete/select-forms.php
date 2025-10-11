@@ -436,16 +436,20 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Was the area/room secured?</label>
                                     <input type="text" id="upd-secured-<?= $row['Tag Number'] ?>">
+                                    <select id='upd-secured-<?=$row['Tag Number']?>'>
+                                        <option value='No'>No</option>
+                                        <option value='Yes'>Yes</option>
+                                    </select>
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
-                            <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <td class="lsd-upd-access-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Who has access keys?</label>
                                     <input type="text" id="upd-access-keys-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Does your department have and assigned staff member responsible for equipment?</label>
@@ -496,7 +500,7 @@ $audit_id = $_SESSION['info'][5];
                                     </select>
                                 </div>
                             </td>
-                            <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <td class="lsd-upd-explain-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Explain</label>
                                     <input type="text" id="upd-explain-<?= $row['Tag Number'] ?>">
@@ -688,21 +692,35 @@ document.addEventListener("DOMContentLoaded", function() {
             showUI('lsd-upd', tag);
             const assigned = document.getElementById('upd-assigned-staff-' + tag);
             assigned.addEventListener('change', () => {
-            console.log(assigned.value);
-            if (assigned.value === 'Yes') {
-                showUI('lsd-upd-yes', tag);
-            } else {
-                hideUI('lsd-upd-yes', tag);
-            }
+                if (assigned.value === 'Yes') {
+                    showUI('lsd-upd-yes', tag);
+                } else {
+                    hideUI('lsd-upd-yes', tag);
+                }
             });
             const insurance = document.getElementById('upd-insurance-' + tag);
             insurance.addEventListener('change', () => {
-            console.log(assigned.value);
-            if (insurance.value === 'Yes') {
-                showUI('lsd-upd-insurance', tag);
-            } else {
-                hideUI('lsd-upd-insurance', tag);
-            }
+                if (insurance.value === 'Yes') {
+                    showUI('lsd-upd-insurance', tag);
+                } else {
+                    hideUI('lsd-upd-insurance', tag);
+                }
+            });
+            const secured = document.getElementById('secured-'+tag);
+            secured.addEventListener('change', () => {
+                if (secured.value === 'Yes') {
+                    showUI('lsd-upd-access', tag);
+                } else {
+                    hideUI('lsd-upd-access', tag);
+                }
+            });
+            const local = document.getElementById('local-authorities-'+tag);
+            local.addEventListener('change', () => {
+                if (local.value === 'Yes') {
+                    showUI('lsd-upd-explain', tag);
+                } else {
+                    hideUI('lsd-upd-explain', tag);
+                }
             });
         }
         });

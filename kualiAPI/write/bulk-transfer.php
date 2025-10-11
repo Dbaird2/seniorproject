@@ -451,7 +451,6 @@ if (!empty($data['bulk_t_tags'][0]['dept_id']) && !empty($data['bulk_t_tags'][0]
     $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
     $update_stmt = $dbh->prepare($update);
     $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
-}
 
 curl_close($curl);
 echo json_encode([$ms_time
