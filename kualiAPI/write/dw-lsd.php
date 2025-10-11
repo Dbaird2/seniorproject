@@ -60,11 +60,9 @@ if (empty($apikey)) {
 }
 $display_name = $submitter_info['username'];
 $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-// SUBMITTER
-// SIG
-$variables['data']['Tscy6BxbSj'] = $full_name;
 // NAME
 $variables['data']['WDA7EMUZg_'] = $full_name;
+
 $school_id = $submitter_info['school_id'] ?? '';
 $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
@@ -190,14 +188,21 @@ $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
 
 // DATE
-/*
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
 $current_date = $date->format('m/d/Y');
 $variables['data']["sQZpV5OhTo"] = $current_date;
- */
+
 $variables['documentId'] = $document_id;
 $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
+
+// SUBMITTER SIG
+$variables['data']['Tscy6BxbSj']['actionId'] = $action_id;
+$variables['data']['Tscy6BxbSj']['date'] = $current_date;
+$variables['data']['Tscy6BxbSj']['displayName'] = $submitter_info['f_name'] . ' ' .$submitter_info['l_name'] . ' ('. $_SESSION['email']. ')';
+$variables['data']['Tscy6BxbSj']['signatureType'] = 'type';
+$variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
+$variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['form_id'];
 
 $echo('Custodian', $custodian);
 $array_echo($custodian_info);
