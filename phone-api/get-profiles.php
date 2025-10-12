@@ -28,7 +28,7 @@ if ($info) {
         $stmt = $dbh->prepare($select);
         $stmt->execute([':email'=>$email]);
         $profiles = $stmt->fetchAll();
-        echo json_encode(['status'=>'Ok','profiles'=>$profiles['profiles']]);
+        echo json_encode(['status'=>'Ok','profiles'=>$profiles]);
         exit;
     }
 }
