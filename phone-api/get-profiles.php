@@ -13,7 +13,7 @@ if (empty($email) || empty($pw)) {
 }
 
 try {
-    $select_user = "SELECT email FROM user_table WHERE (email = :email OR username = :email) limit 1";
+    $select_user = "SELECT email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
     $stmt = $dbh->prepare($select_user);
     $stmt->execute([":email"=>$email]);
 } catch (PDOException $e) {
