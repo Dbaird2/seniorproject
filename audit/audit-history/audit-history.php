@@ -170,6 +170,7 @@ include_once("../../config.php");
     } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
         $color = 'green';
     }
+    echo '<tr>';
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
@@ -190,6 +191,7 @@ include_once("../../config.php");
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
         echo "<td><a class='action-link delete-link' href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept['dept_id'])) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Delete</a></td>";
     }
+    echo '</tr>';
 }
 
 function notStart($type) {

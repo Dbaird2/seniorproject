@@ -32,7 +32,7 @@ $it_select = "SELECT type2, serial_id, asset_name, bus_unit from asset_info WHER
 $it_stmt = $dbh->prepare($it_select);
 $it_stmt->execute([":tag"=>$data['asset_tag']]);
 $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
-if (in_array($if_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
+if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
     $variables['data']['xPQtXjuWnk']['id'] = 'yes';
     $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
 } else {
@@ -41,12 +41,12 @@ if (in_array($if_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
 }
 // IS THIS A (form type)
 $form_type_id = match($data['form_type'])) {
-    'bus' => '',
+    'bus' => 'BhQ_qXc6Tji',
     'dept' => '9A_6UOlDb',
     'location' => 'LfK1qG_G6'
 };
 $form_type = match($data['form_type'])) {
-    'bus' => '',
+    'bus' => 'Business Unit change (for example from BKSPA to BKCMP)',
     'dept' => 'From one department to another department ',
     'location' => 'Building/Room/Location change (Business Unit stays the same)'
 };
@@ -55,7 +55,34 @@ $variables['data']['_GODY1FjEy']['label'] = $form_type;
 
 $email_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE email = :email";
 $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) = :name";
+$dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
+
+// GET CURRENT MANAGER INFO
+$stmt = $dbh->prepare($dept_select);
+$stmt->execute([':id'=>$_SESSION['deptid']]);
+$current_manager = $stmt->fetchColumn();
+
+$current_manager_info = getSignature(query: $name_select, person_name: $current_manager, type: 'info');
+$variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
+$variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
+$variables['data']['u7YkM8hmb']['firstName'] = $currnet_manager_info['firstName'];
+$variables['data']['u7YkM8hmb']['id'] = $current_manager_info['id'];
+$variables['data']['u7YkM8hmb']['label'] = $current_manager_info['label'];
+$variables['data']['u7YkM8hmb']['lastName'] = $current_manager_info['lastName'];
+$variables['data']['u7YkM8hmb']['schoolId'] = $current_manager_info['schoolId'];
+$variables['data']['u7YkM8hmb']['username'] = $current_manager_info['username'];
+
 // ASSETS
+$bus_id = function ($type) {
+    $id = match ($type) {
+        'BKCMP' => 'NLNTmkvx_u',
+        'BKSPA' => 'ztmVBnRjT1',
+        'BKSTU' => 'Duom3fxkyA',
+        'BKFDN' => 'Xi6koaglZc',
+        'BKASI' => 'E9lk-ahtpd',
+    };
+    return $id;
+};
 if ($data['bldg'] === 'Yes') {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['bldg'];
@@ -86,10 +113,33 @@ if ($data['form_type'] === 'dept') {
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
     $manager_info = getSignature(query: $name_select, person_name: $manager, type: 'info');
-    $variables['data']['SZ24nXDBVk'] = $manager_info;
+        $info = [
+            'displayName' => $person_name,
+            'email'     => $person_info['email'],
+            'firstName'    => $person_info['f_name'],
+            'id'   => $person_info['form_id'],
+            'label'     => $person_info['f_name'].' '.$person_info['l_name'],
+            'lastName'    => $person_info['l_name'],
+            'schoolId' => $person_info['school_id'],
+            'username'  => $person_info['username'],
+        ];
+    $variables['data']['SZ24nXDBVk']['displayName'] = $manager_info['displayName'];
+    $variables['data']['SZ24nXDBVk']['email'] = $manager_info['email'];
+    $variables['data']['SZ24nXDBVk']['firstName'] = $manager_info['firstName'];
+    $variables['data']['SZ24nXDBVk']['id'] = $manager_info['id'];
+    $variables['data']['SZ24nXDBVk']['label'] = $manager_info['label'];
+    $variables['data']['SZ24nXDBVk']['lastName'] = $manager_info['lastName'];
+    $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
+    $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['label'] = $data['dept_name'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $data['dept_name'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
+} else if ($data['form_type'] === 'bus') {
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['label'] = $it_related['bus_unit'];
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['id'] = $bus_id($it_related['bus_unit']);
+
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['label'] = $data['new_bus'];
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['id'] = $bus_id($data['new_bus']);
 }
 $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
 $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
@@ -175,7 +225,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-if (!empty($data['dept_id']) && !empty($data['audit_id'])) {
+if ($data['audit'] === 'true') {
     $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
     $tag = $lsd_data['Tag Number'];
     $doc_id = '68c73600df46a3027d2bd386';

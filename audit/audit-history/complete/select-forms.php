@@ -558,7 +558,7 @@ $audit_id = $_SESSION['info'][5];
                             <div class="form-field-group">
                                 <label>Checking Out For</label>
                                 <select class="who-<?= $row['Tag Number'] ?>">
-                                    <option value="myself">Myself</option>
+                                    <option value="Myself">Myself</option>
                                     <option value="someone-else">Someone Else</option>
                                 </select>
                             </div>
@@ -951,6 +951,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const upd = document.getElementById('upd-' + type.dataset.tag).value;
             const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
             const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
+            const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag).value;
             const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
             const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
             const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
@@ -971,10 +972,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const city = document.getElementById('upd-city-' + type.dataset.tag).value;
             const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
             const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+            const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
             const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
             const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
             const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-            const confidential_data = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+            const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
 
             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
             const lsd_res = await fetch(url, {
