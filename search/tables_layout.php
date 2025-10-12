@@ -235,7 +235,7 @@ foreach ($all_bus as $bus) {
 <div class="check-<?= $safe_tag?>" style="display: none;">
     <select id="who-<?=$safe_tag?>">
         <option value="Myself">Myself</option>
-        <option value="Someone Else">Someone Else</option>
+        <option value="someone-else">Someone Else</option>
     </select>
     <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
     <select id="check-condition-<?=$safe_tag?>">
@@ -670,15 +670,17 @@ function showFormType(form)
         hideUI('check', tag);
     }
 
+    console.log(tag, type_value);
     if (type_value === 'check-out' || type_value === 'check-in') {
         document.querySelector('.check-'+tag).style.display = 'inline';
         const someone_else = document.getElementById('who-'+tag);
+        console.log(someone_else);
         someone_else.addEventListener('change', () => {
-        if (someone_else.value === 'Someone Else') {
-            document.getElementById('someone-else-'+tag).style.display = 'inline';
-        } else {
-            document.getElementById('someone-else-'+tag).style.display = 'none';
-        }
+            if (someone_else.value === 'someone-else') {
+                document.getElementById('someone-else-'+tag).style.display = 'inline';
+            } else {
+                document.getElementById('someone-else-'+tag).style.display = 'none';
+            }
         });
         hideUI('lsd', tag);
         hideUI('transfer', tag);
