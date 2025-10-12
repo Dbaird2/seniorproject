@@ -389,8 +389,8 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Was the confidential data stored on this asset encrypted and/or password protected?</label>
                                     <select id="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>">
                                         <option value=""></option>
-                                        <option value="Yes">Yes</option>
                                         <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
                                     </select>
                                 </div>
                             </td>
@@ -406,6 +406,12 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Date Reported</label>
                                     <input type="date" id="upd-date-reported-<?= $row['Tag Number'] ?>">
+                                </div>
+                            </td>
+                            <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
+                                    <label>Time Reported</label>
+                                    <input type="time" id="upd-time-reported-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -432,10 +438,11 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-location-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Was the area/room secured?</label>
-                                    <input type="text" id="upd-secured-<?= $row['Tag Number'] ?>">
                                     <select id='upd-secured-<?=$row['Tag Number']?>'>
                                         <option value='No'>No</option>
                                         <option value='Yes'>Yes</option>
@@ -448,8 +455,6 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-access-keys-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Does your department have and assigned staff member responsible for equipment?</label>
@@ -477,6 +482,8 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-precautions-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>If this equipment was used off-campus who authorized its use?</label>
@@ -489,14 +496,12 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-security-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Was the loss or theft reported to local authorities?</label>
                                     <select id="upd-reported-<?= $row['Tag Number'] ?>">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
                                     </select>
                                 </div>
                             </td>
@@ -506,12 +511,14 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-explain-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Do you have insurance?</label>
                                     <select id="upd-insurance-<?= $row['Tag Number'] ?>">
-                                        <option value="Yes">Yes</option>
                                         <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
                                     </select>
                                 </div>
                             </td>
@@ -602,7 +609,7 @@ function hideUI(type, tag) {
 function showUI(type, tag) {
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
-    el.style.display = 'table-cell';
+        el.style.display = 'table-cell';
     });
 }
 
@@ -706,7 +713,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     hideUI('lsd-upd-insurance', tag);
                 }
             });
-            const secured = document.getElementById('secured-'+tag);
+            const secured = document.getElementById('upd-secured-'+tag);
             secured.addEventListener('change', () => {
                 if (secured.value === 'Yes') {
                     showUI('lsd-upd-access', tag);
@@ -714,7 +721,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     hideUI('lsd-upd-access', tag);
                 }
             });
-            const local = document.getElementById('local-authorities-'+tag);
+            const local = document.getElementById('upd-reported-'+tag);
             local.addEventListener('change', () => {
                 if (local.value === 'Yes') {
                     showUI('lsd-upd-explain', tag);
