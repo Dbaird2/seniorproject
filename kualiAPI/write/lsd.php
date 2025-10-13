@@ -83,7 +83,13 @@ foreach($_SESSION['data'] as $session) {
             $variables['data']['g06BrWDC42']['label'] = $data['secured'];
             if ($data['secured'] === 'Yes') {
                 $variables['data']['g06BrWDC42']['id'] = 'yes';
-                $access_key = getSignature(query: $select, email:$data['access_keys'], type: 'info');
+
+                if (preg_match('/@/i', $data['access_keys'])) {
+                    $email = explode('@', $data['access_keys']);
+                    $access_key = getSignature(query: $select, email:$email[0], type: 'info');
+                } else {
+                    $access_key = getSignature(query: $select, email:$email[0], type: 'info');
+                }
                 $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
                 $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
                 $variables['data']['Ctc-VTU0KG']['firstName'] = $access_keys['firstName'];
@@ -255,7 +261,8 @@ $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $data['borrower'])) {
-        $borrower_signature = getSignature(query: $get_info_email, email: $data['borrower'], type: 'info');
+        $email = explode('@', $data['borrower']);
+        $borrower_signature = getSignature(query: $get_info_email, email: $email[0], type: 'info');
     } else {
         $borrower_signature = getSignature(query: $get_info_name, person_name: $data['borrower'], type: 'info');
     }
@@ -354,10 +361,8 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
 $tag = $data['Tag Number'];
-$doc_id = '68c73600df46a3027d2bd386';
-$input_array =  $id . ',lsd,in-progress, ' . $tag;
+$input_array =  $document_id . ',lsd,in-progress, ' . $tag;
 
 $dept = $data['dept_id'];
 $audit_id = $data['audit_id'];

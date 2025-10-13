@@ -439,18 +439,16 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-if (!empty($data['bulk_t_tags'][0]['dept_id']) && !empty($data['bulk_t_tags'][0]['audit_id'])) {
-    $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
-    $input_array = $id . ',transfer,in-progress'; 
-    foreach ($transfer_data as $tag_info) {
-        $input_array .= ',' . $tag_info['Tag Number'];
-    }
+$input_array = $document_id . ',transfer,in-progress'; 
+foreach ($transfer_data as $tag_info) {
+    $input_array .= ',' . $tag_info['Tag Number'];
+}
 
-    $dept = $data['bulk_t_tags'][0]['dept_id'];
-    $audit_id = $data['bulk_t_tags'][0]['audit_id'];
-    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
-    $update_stmt = $dbh->prepare($update);
-    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+$dept = $data['bulk_t_tags'][0]['dept_id'];
+$audit_id = $data['bulk_t_tags'][0]['audit_id'];
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+$update_stmt = $dbh->prepare($update);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
 
 curl_close($curl);
 echo json_encode([$ms_time

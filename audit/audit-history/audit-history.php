@@ -171,6 +171,7 @@ include_once("../../config.php");
         $color = 'green';
     }
     echo '<tr>';
+    echo '<td>';
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
@@ -196,6 +197,7 @@ include_once("../../config.php");
 
 function notStart($type) {
     echo '<tr>';
+    echo '<td>';
     echo "<td>". $type ."</td>";
     echo "<td style='color:red;'>Not Started</td>";
     echo '</tr>';

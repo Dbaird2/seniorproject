@@ -219,10 +219,10 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-$id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
+$array_echo($resp_data);
+
 $tag = $data['tag'];
-$doc_id = '68e94e8a58fd2e028d5ec88f';
-$input_array =  $id . ',lsd,in-progress, ' . $tag;
+$input_array =  $document_id . ',lsd,in-progress, ' . $tag;
 
 $dept = $data['dept_id'];
 $audit_id = $data['audit_id'];
