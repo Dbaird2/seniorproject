@@ -1022,6 +1022,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     upd: upd,
                     item_type: item_type,
                     date_reported: date_reported,
+                    time_reported: time_reported,
                     date_last_seen: date_last_seen,
                     time_last_seen: time_last_seen,
                     by_whom: by_whom,
