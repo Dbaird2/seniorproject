@@ -367,13 +367,19 @@ $audit_id = $_SESSION['info'][5];
                                 </td>
                         </tr>
                         <tr>
+                            <td class="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
+                                    <label>Describe the item lost</label>
+                                    <input type="text" 
+                                        id="upd-describe-<?= $row['Tag Number'] ?>">
+                                </div>
+                            </td>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Did this equipment have any confidential information stored on it?</label>
                                     <select id="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>">
-                                        <option value=""></option>
-                                        <option value="Yes">Yes</option>
                                         <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
                                     </select>
                                 </div>
                             </td>
@@ -388,7 +394,6 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Was the confidential data stored on this asset encrypted and/or password protected?</label>
                                     <select id="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>">
-                                        <option value=""></option>
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
@@ -534,7 +539,6 @@ $audit_id = $_SESSION['info'][5];
                                     <input type="text" id="upd-street-<?= $row['Tag Number'] ?>">
                                 </div>
                             </td>
-                            <br>
                             <td class="lsd-upd-insurance-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>City</label>
@@ -624,6 +628,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const tag = form_type.dataset.tag;
     console.log(form_type.value, tag);
     if (form_type.value === '') {
+            hideUI('lsd-it-equip', tag);
         hideUI('lsd-upd-explain', tag);
         hideUI('lsd-upd-access', tag);
         hideUI('check-out', tag);
@@ -651,6 +656,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
+            hideUI('lsd-it-equip', tag);
         hideUI('check-in', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
@@ -674,6 +680,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
+            hideUI('lsd-it-equip', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
@@ -688,6 +695,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'psr') {
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
+            hideUI('lsd-it-equip', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('check-in', tag);
@@ -796,6 +804,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'bulk-transfer') {
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
+            hideUI('lsd-it-equip', tag);
         hideUI('lsd-upd-yes', tag);
         hideUI('lsd-upd', tag);
         hideUI('lsd-upd-yes', tag);
@@ -805,6 +814,7 @@ document.addEventListener("DOMContentLoaded", function() {
         hideUI('psr', tag);
         hideUI('lsd', tag);
         hideUI('lsd-fill-', tag);
+            hideUI('lsd-it-equip', tag);
     }
 
     form_class.forEach(el => {
