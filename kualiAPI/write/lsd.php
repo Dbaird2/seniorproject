@@ -41,6 +41,13 @@ foreach($_SESSION['data'] as $session) {
             $variables['data']['ox__1hiShH']['label'] = $data['insurance'];
             // DATE REPORTED
             $variables['data']["4Zogjk4pQu"] = $data['date_reported'];
+            //
+            if (isset($data['authorized'] && !empty($data['authorized'])) {
+                $variables['data']['LzLr2MJkD1'] = $data['authorized'];
+            }
+            if (isset($data['security'] && !empty($data['security'])) {
+                $variables['data']['iMnLnEYNVk'] = $data['security'];
+            }
 
             $time_split = explode(':', $data['time_reported']);
             $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
@@ -56,58 +63,58 @@ foreach($_SESSION['data'] as $session) {
             } else {
                 $variables['data']['ox__1hiShH']['id'] = 'no';
             }
-                $variables['data']['zG7O4wyxU0']['label'] = $data['reported'];
-                if ($variables['data']['zG7O4wyxU0']['label'] === 'Yes') {
-                    $variables['data']['zG7O4wyxU0']['id'] = 'yes';
-                    $variables['data']['UMKALbaGtJ'] = $data['explain'];
-                }
-                $variables['data']['SBIzD8D7Z0'] = $data['precautions'];
-                $variables['data']['FOqDM2nFYU'] = $data['recovery_steps'];
-                $variables['data']['Ak2ZRPlsUo']['label'] = $data['assigned_staff'];
-                if ($data['assigned_staff'] === 'Yes') {
-                    $variables['data']['Ak2ZRPlsUo']['id'] = 'yes';
-                    $variables['data']['TY_xRD84-r'] = $data['who_assigned'];
-                } else {
-                    $variables['data']['Ak2ZRPlsUo']['id'] = 'no';
-                }
-                // GET INFO
-                $variables['data']['g06BrWDC42']['label'] = $data['secured'];
-                if ($data['secured'] === 'Yes') {
+            $variables['data']['zG7O4wyxU0']['label'] = $data['reported'];
+            if ($variables['data']['zG7O4wyxU0']['label'] === 'Yes') {
+                $variables['data']['zG7O4wyxU0']['id'] = 'yes';
+                $variables['data']['UMKALbaGtJ'] = $data['explain'];
+            }
+            $variables['data']['SBIzD8D7Z0'] = $data['precautions'];
+            $variables['data']['FOqDM2nFYU'] = $data['recovery_steps'];
+            $variables['data']['Ak2ZRPlsUo']['label'] = $data['assigned_staff'];
+            if ($data['assigned_staff'] === 'Yes') {
+                $variables['data']['Ak2ZRPlsUo']['id'] = 'yes';
+                $variables['data']['TY_xRD84-r'] = $data['who_assigned'];
+            } else {
+                $variables['data']['Ak2ZRPlsUo']['id'] = 'no';
+            }
+            // GET INFO
+            $variables['data']['g06BrWDC42']['label'] = $data['secured'];
+            if ($data['secured'] === 'Yes') {
                 $variables['data']['g06BrWDC42']['id'] = 'yes';
-                    $access_key = getSignature(query: $select, email:$data['access_keys'], type: 'info');
-                    $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
-                    $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
-                    $variables['data']['Ctc-VTU0KG']['firstName'] = $access_keys['firstName'];
-                    $variables['data']['Ctc-VTU0KG']['id'] = $access_keys['id'];
-                    $variables['data']['Ctc-VTU0KG']['label'] = $access_keys['label'];
-                    $variables['data']['Ctc-VTU0KG']['lastName'] = $access_keys['lastName'];
-                    $variables['data']['Ctc-VTU0KG']['schoolId'] = $access_keys['schoolId'];
-                    $variables['data']['Ctc-VTU0KG']['username'] = $access_keys['username'];
-                } else {
-                    $variables['data']['g06BrWDC42']['id'] = 'no';
-                }
+                $access_key = getSignature(query: $select, email:$data['access_keys'], type: 'info');
+                $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
+                $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
+                $variables['data']['Ctc-VTU0KG']['firstName'] = $access_keys['firstName'];
+                $variables['data']['Ctc-VTU0KG']['id'] = $access_keys['id'];
+                $variables['data']['Ctc-VTU0KG']['label'] = $access_keys['label'];
+                $variables['data']['Ctc-VTU0KG']['lastName'] = $access_keys['lastName'];
+                $variables['data']['Ctc-VTU0KG']['schoolId'] = $access_keys['schoolId'];
+                $variables['data']['Ctc-VTU0KG']['username'] = $access_keys['username'];
+            } else {
+                $variables['data']['g06BrWDC42']['id'] = 'no';
+            }
 
-                $by_whom = getSignature(query: $select, email: $data['by_whom'], type: 'info');
-                $variables['data']['KMAw0Ejpx6']['displayName'] = $by_whom['displayName'];
-                $variables['data']['KMAw0Ejpx6']['email'] = $by_whom['email'];
-                $variables['data']['KMAw0Ejpx6']['firstName'] = $by_whom['firstName'];
-                $variables['data']['KMAw0Ejpx6']['id'] = $by_whom['id'];
-                $variables['data']['KMAw0Ejpx6']['label'] = $by_whom['label'];
-                $variables['data']['KMAw0Ejpx6']['lastName'] = $by_whom['lastName'];
-                $variables['data']['KMAw0Ejpx6']['schoolId'] = $by_whom['schoolId'];
-                $variables['data']['KMAw0Ejpx6']['username'] = $by_whom['username'];
+            $by_whom = getSignature(query: $select, email: $data['by_whom'], type: 'info');
+            $variables['data']['KMAw0Ejpx6']['displayName'] = $by_whom['displayName'];
+            $variables['data']['KMAw0Ejpx6']['email'] = $by_whom['email'];
+            $variables['data']['KMAw0Ejpx6']['firstName'] = $by_whom['firstName'];
+            $variables['data']['KMAw0Ejpx6']['id'] = $by_whom['id'];
+            $variables['data']['KMAw0Ejpx6']['label'] = $by_whom['label'];
+            $variables['data']['KMAw0Ejpx6']['lastName'] = $by_whom['lastName'];
+            $variables['data']['KMAw0Ejpx6']['schoolId'] = $by_whom['schoolId'];
+            $variables['data']['KMAw0Ejpx6']['username'] = $by_whom['username'];
 
-                $variables['data']['J8QRY5L38L'] = $data['upd_location'];
+            $variables['data']['J8QRY5L38L'] = $data['upd_location'];
 
-                $time_split = explode(':', $data['time_last_seen']);
-                $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
-                $variables['data']['h2_zTuDZQd'] = $seconds;
-                $variables['data']['1SSyW5r5fB'] = $data['date_last_seen'];
+            $time_split = explode(':', $data['time_last_seen']);
+            $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
+            $variables['data']['h2_zTuDZQd'] = $seconds;
+            $variables['data']['1SSyW5r5fB'] = $data['date_last_seen'];
         }
         // ---------------------------------------------------------------------------------------
         // IT EQUIPMENT YES
         if ($data['item_type'] === 'IT Equipment') {
-            $variables['data']['soVHBJJb_4'] = $data['item_lost_description'];
+            $variables['data']['soVHBJJb_4'] = $data['describe_asset'];
             $variables['data']['ZfhX3CCX7D']['label'] = $data['encrypted'];
             if ($data['encrypted'] === 'Yes') {
                 $variables['data']['ZfhX3CCX7D']['id'] = 'yes';
@@ -190,11 +197,11 @@ $headers = array(
     "Authorization: Bearer {$apikey}",
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
+$form1 = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
 "appId": "68d09e41d599f1028a9b9457"
       }}';
 
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $form1);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -244,11 +251,18 @@ $submitter_sig = getSignature(query: $select, email: $email, action_id: $action_
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $data['borrower'])) {
-        $borrower_signature = getSignature(query: $get_info_email, email: $data['borrower'], action_id: $action_id);
+        $borrower_signature = getSignature(query: $get_info_email, email: $data['borrower'], type: 'info');
     } else {
-        $borrower_signature = getSignature(query: $get_info_name, person_name: $data['borrower'], action_id: $action_id);
+        $borrower_signature = getSignature(query: $get_info_name, person_name: $data['borrower'], type: 'info');
     }
-    $variables['data']["N00EmVKFnd"] = $borrower_info;
+    $variables['data']["N00EmVKFnd"]['displayName'] = $borrower_signature['displayName'];
+    $variables['data']["N00EmVKFnd"]['email'] = $borrower_signature['email'];
+    $variables['data']["N00EmVKFnd"]['firstName'] = $borrower_signature['firstName'];
+    $variables['data']["N00EmVKFnd"]['id'] = $borrower_signature['id'];
+    $variables['data']["N00EmVKFnd"]['label'] = $borrower_signature['label'];
+    $variables['data']["N00EmVKFnd"]['lastName'] = $borrower_signature['lastName'];
+    $variables['data']["N00EmVKFnd"]['schoolId'] = $borrower_signature['schoolId'];
+    $variables['data']["N00EmVKFnd"]['username'] = $borrower_signature['username'];
 }
 $upd_id = match ($data['upd']) {
 "No" => "CbModhwutSo",
