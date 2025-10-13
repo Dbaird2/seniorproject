@@ -42,10 +42,10 @@ foreach($_SESSION['data'] as $session) {
             // DATE REPORTED
             $variables['data']["4Zogjk4pQu"] = $data['date_reported'];
             //
-            if (isset($data['authorized'] && !empty($data['authorized'])) {
+            if (isset($data['authorized']) && !empty($data['authorized'])) {
                 $variables['data']['LzLr2MJkD1'] = $data['authorized'];
             }
-            if (isset($data['security'] && !empty($data['security'])) {
+            if (isset($data['security']) && !empty($data['security'])) {
                 $variables['data']['iMnLnEYNVk'] = $data['security'];
             }
 
