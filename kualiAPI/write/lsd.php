@@ -145,8 +145,7 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 
-
-$dept_id = $_SESSION['info'][2];
+$dept_id =  (!empty($data['dept_id']) ? $data['dept_id'] : $_SESSION['info'][2];
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -256,7 +255,7 @@ if (!$action_id || !$document_id) {
 }
 
 $manager_info = getSignature(query: $get_info, person_name: $manager, type: 'info');
-$submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
+$submitter_sig = getSignature(query: $get_info, email: $email, action_id: $action_id);
 
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
