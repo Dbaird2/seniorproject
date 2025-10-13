@@ -50,7 +50,7 @@ foreach($_SESSION['data'] as $session) {
             }
 
             $time_split = explode(':', $data['time_reported']);
-            $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
+            $seconds = (int)$time_split[0] * 3600 + (int)$time_split[1] * 60;
             $variables['data']['1CBE3qoL2S'] = $seconds;
 
             if (strtolower($data['insurance']) === 'yes') { 
@@ -107,7 +107,7 @@ foreach($_SESSION['data'] as $session) {
             $variables['data']['J8QRY5L38L'] = $data['upd_location'];
 
             $time_split = explode(':', $data['time_last_seen']);
-            $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
+            $seconds = (int)$time_split[0] * 3600 + (int)$time_split[1] * 60;
             $variables['data']['h2_zTuDZQd'] = $seconds;
             $variables['data']['1SSyW5r5fB'] = $data['date_last_seen'];
         }

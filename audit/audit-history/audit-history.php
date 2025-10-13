@@ -195,7 +195,9 @@ include_once("../../config.php");
 }
 
 function notStart($type) {
+    echo '<tr>';
     echo "<td>". $type ."</td>";
     echo "<td style='color:red;'>Not Started</td>";
+    echo '</tr>';
 }
 
