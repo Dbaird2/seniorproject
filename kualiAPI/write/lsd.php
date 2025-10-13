@@ -145,7 +145,7 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 
-$dept_id =  (!empty($data['dept_id']) ? $data['dept_id'] : $_SESSION['info'][2];
+$dept_id =  (isset($data['dept_id'])&& !empty($data['dept_id'])) ? $data['dept_id'] : $_SESSION['info'][2];
 
 $subdomain = "csub";
 // SUBMITTER INFO
