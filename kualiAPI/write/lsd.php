@@ -40,7 +40,9 @@ foreach($_SESSION['data'] as $session) {
         if (strtolower($data['upd']) === 'yes') {
             $variables['data']['ox__1hiShH']['label'] = $data['insurance'];
             // DATE REPORTED
-            $variables['data']["4Zogjk4pQu"] = $data['date_reported'];
+            $date = new DateTime($data['date_reported']);
+            $new_date = $date->format('m/d/Y');
+            $variables['data']["4Zogjk4pQu"] = $new_date;
             //
             if (isset($data['authorized']) && !empty($data['authorized'])) {
                 $variables['data']['LzLr2MJkD1'] = $data['authorized'];
@@ -109,7 +111,9 @@ foreach($_SESSION['data'] as $session) {
             $time_split = explode(':', $data['time_last_seen']);
             $seconds = (int)$time_split[0] * 3600 + (int)$time_split[1] * 60;
             $variables['data']['h2_zTuDZQd'] = $seconds;
-            $variables['data']['1SSyW5r5fB'] = $data['date_last_seen'];
+            $date = new DateTime($data['date_last_seen'];
+            $new_date = $date->format('m/d/Y');
+            $variables['data']['1SSyW5r5fB'] = $new_date;
         }
         // ---------------------------------------------------------------------------------------
         // IT EQUIPMENT YES
@@ -327,7 +331,9 @@ $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
 $variables['data']["vedcAP4N1t"] = $current_date;
 // DATE DISCOVERED MISSING
-$variables['data']["fy16ygj_ST"] = $data['date_missing'];
+$date = new DateTime($data['date_missing']);
+$new_date = $date->format('m/d/Y');
+$variables['data']["fy16ygj_ST"] = $new_date;
 // DATE MISSING
 $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
