@@ -1,5 +1,5 @@
 <?php
-function checkForm($id, $tag) {
+function checkForm($id, $tag, (string)$app_id) {
     global $dept_id, $dept_name, $audit_id, $dbh, $apikey, $form_info;
     $select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
     $select_stmt = $dbh->query($select);
@@ -45,21 +45,11 @@ function checkForm($id, $tag) {
     }
 }',
     "variables" => [
-        "appId" => "68c73600df46a3027d2bd386",
+        "appId" => $app_id,
         "skip" => 0,
         "limit" => 100,
         "sort" => ["meta.createdAt"],
         "query" => $tag,
-        "fields" => [
-            "type" => "AND",
-            "operators" => [
-                [
-                    "field" => "meta.workflowStatus",
-                    "type" => "IS",
-                    "value" => "Complete"
-                ]
-            ]
-        ]
     ]
     ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -74,28 +64,34 @@ function checkForm($id, $tag) {
     $decode_true = json_decode($resp, true);
     $edges = $decode_true['data']['app']['documentConnection']['edges'];
     $tag_regex = '/\b('.$tag.')\b/i';
-    $array = explode('@', $form_info);
-    $new_form_info = '';
+    $form_status = '';
     foreach ($edges as $index => $edge) {
         $update_time = $edge['node']['meta']['createdAt'];
         $form_id = $edge['node']['id'];
         $regex = '/\b('.$tag.')\b/i';
         if ($id === $form_id) {
+            $status = $edge['node']['meta']['workflowStatus'];
+            if ($status === 'In Progress') {
+                return false;
+            }
+            if ($status === 'Denied') {
+                $form_status = 'denied';
+            }
+            if ($status === 'Complete') {
+                $form_status = 'complete';
+            }
+
             foreach ($array as $form_index => $form) {
                 $form = trim($form, '{}"');
                 if (preg_match($tag_regex, $form)) {
-                    $new_form = str_replace('in-progress', 'complete', $form);
+                    $new_form = str_replace('in-progress', $form_status, $form);
                     break;
                 }
                 echo "<br>" . $new_form . "<br>";
             }
-            $update = 'UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :in-progress) WHERE audit_id = :aid AND dept_id = :dept_id';
+            $update = 'UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :in-progress), check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
             $stmt = $dbh->prepare($update);
-            $stmt->execute([':in-progress'=>$form ':aid'=>$audit_id, ':dept_id'=>$dept_id]);
-
-            $update = 'UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
-            $stmt = $dbh->prepare($update);
-            $stmt->execute([':complete'=>$new_form':aid'=>$audit_id, ':dept_id'=>$dept_id]);
+            $stmt->execute([':in-progress'=>$form ':aid'=>$audit_id, ':dept_id'=>$dept_id, ':complete'=>$new_form]);
             return true;
         }
     }

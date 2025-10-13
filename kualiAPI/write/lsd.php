@@ -117,7 +117,7 @@ foreach($_SESSION['data'] as $session) {
             $time_split = explode(':', $data['time_last_seen']);
             $seconds = (int)$time_split[0] * 3600 + (int)$time_split[1] * 60;
             $variables['data']['h2_zTuDZQd'] = $seconds;
-            $date = new DateTime($data['date_last_seen'];
+            $date = new DateTime($data['date_last_seen']);
             $new_date = $date->format('m/d/Y');
             $variables['data']['1SSyW5r5fB'] = $new_date;
         }
