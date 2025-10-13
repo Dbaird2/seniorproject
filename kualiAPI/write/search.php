@@ -87,7 +87,7 @@ function searchName($search_name = '', $apikey = '', $dept_id = '')
 
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
+            $insert_stmt->execute([trim($id), trim($username), trim($email),trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}']);
             try {
                 /*
                                     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -205,7 +205,7 @@ function searchEmail($email = '', $apikey = '', $dept_id = '')
 
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([$id, $username, $email, $f_name, $l_name, $schoolid, 'user', $hashed_pw, '{' . $dept_id . '}']);
+            $insert_stmt->execute([trim($id), trim($username), trim($email), trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}']);
             try {
                 /*
                 $mail = new PHPMailer\PHPMailer\PHPMailer(true);

@@ -624,6 +624,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const tag = form_type.dataset.tag;
     console.log(form_type.value, tag);
     if (form_type.value === '') {
+        hideUI('lsd-upd-explain', tag);
+        hideUI('lsd-upd-access', tag);
         hideUI('check-out', tag);
         hideUI('check-in', tag);
         hideUI('lsd', tag);
@@ -647,6 +649,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
+                hideUI('lsd-upd-explain', tag);
+                hideUI('lsd-upd-access', tag);
         hideUI('check-in', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
@@ -668,6 +672,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
+                hideUI('lsd-upd-explain', tag);
+                hideUI('lsd-upd-access', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
@@ -680,6 +686,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (form_type.value === 'psr') {
+                hideUI('lsd-upd-explain', tag);
+                hideUI('lsd-upd-access', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('check-in', tag);
@@ -694,42 +702,48 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'lsd' && (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6)) {
         const upd = document.getElementById('upd-' + tag);
         upd.addEventListener('change', () => {
-        console.log(upd.value);
-        if (upd.value === 'Yes') {
-            showUI('lsd-upd', tag);
-            const assigned = document.getElementById('upd-assigned-staff-' + tag);
-            assigned.addEventListener('change', () => {
-                if (assigned.value === 'Yes') {
-                    showUI('lsd-upd-yes', tag);
-                } else {
-                    hideUI('lsd-upd-yes', tag);
-                }
-            });
-            const insurance = document.getElementById('upd-insurance-' + tag);
-            insurance.addEventListener('change', () => {
-                if (insurance.value === 'Yes') {
-                    showUI('lsd-upd-insurance', tag);
-                } else {
-                    hideUI('lsd-upd-insurance', tag);
-                }
-            });
-            const secured = document.getElementById('upd-secured-'+tag);
-            secured.addEventListener('change', () => {
-                if (secured.value === 'Yes') {
-                    showUI('lsd-upd-access', tag);
-                } else {
-                    hideUI('lsd-upd-access', tag);
-                }
-            });
-            const local = document.getElementById('upd-reported-'+tag);
-            local.addEventListener('change', () => {
-                if (local.value === 'Yes') {
-                    showUI('lsd-upd-explain', tag);
-                } else {
-                    hideUI('lsd-upd-explain', tag);
-                }
-            });
-        }
+            console.log(upd.value);
+            if (upd.value === 'Yes') {
+                showUI('lsd-upd', tag);
+                const assigned = document.getElementById('upd-assigned-staff-' + tag);
+                assigned.addEventListener('change', () => {
+                    if (assigned.value === 'Yes') {
+                        showUI('lsd-upd-yes', tag);
+                    } else {
+                        hideUI('lsd-upd-yes', tag);
+                    }
+                });
+                const insurance = document.getElementById('upd-insurance-' + tag);
+                insurance.addEventListener('change', () => {
+                    if (insurance.value === 'Yes') {
+                        showUI('lsd-upd-insurance', tag);
+                    } else {
+                        hideUI('lsd-upd-insurance', tag);
+                    }
+                });
+                const secured = document.getElementById('upd-secured-'+tag);
+                secured.addEventListener('change', () => {
+                    if (secured.value === 'Yes') {
+                        showUI('lsd-upd-access', tag);
+                    } else {
+                        hideUI('lsd-upd-access', tag);
+                    }
+                });
+                const local = document.getElementById('upd-reported-'+tag);
+                local.addEventListener('change', () => {
+                    if (local.value === 'Yes') {
+                        showUI('lsd-upd-explain', tag);
+                    } else {
+                        hideUI('lsd-upd-explain', tag);
+                    }
+                });
+            } else {
+                document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+                hideUI('lsd-upd-explain', tag);
+                hideUI('lsd-upd-access', tag);
+                hideUI('lsd-upd-insurance', tag);
+                hideUI('lsd-upd-yes', tag);
+            }
         });
         const someone_else = document.getElementById('lsd-who-' + tag);
         someone_else.addEventListener('change', () => {
@@ -780,6 +794,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     if (form_type.value === 'bulk-transfer') {
+                hideUI('lsd-upd-explain', tag);
+                hideUI('lsd-upd-access', tag);
         hideUI('lsd-upd-yes', tag);
         hideUI('lsd-upd', tag);
         hideUI('lsd-upd-yes', tag);

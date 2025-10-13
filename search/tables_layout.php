@@ -218,13 +218,14 @@ foreach ($all_bus as $bus) {
     </select>
 <br>
     <select id="item-type-<?=$safe_tag?>">
-        <option value="IT Equipment">IT Equipment</option>
         <option value="Instructional Equipment">Instructional Equipment</option>
+        <option value="IT Equipment">IT Equipment</option>
         <option value="Other">Other</option>
     </select>
     
     <div class='it-equipment-<?=$safe_tag?>' style='display:none;'>
-        <select id=''>
+        <select id=''></select>
+    </div>
 </div>
         
 <br>
