@@ -367,7 +367,7 @@ $audit_id = $_SESSION['info'][5];
                                 </td>
                         </tr>
                         <tr>
-                            <td class="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Describe the item lost</label>
                                     <input type="text" 
@@ -1043,6 +1043,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     zip: zip,
                     state: state,
                     encrypted: encrypted,
+                    describe_asset: describe_asset,
                     encrypted_data: encrypted_data,
                     confidential: confidential,
                     confidential_data: confidential_data

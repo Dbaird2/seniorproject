@@ -44,7 +44,7 @@ foreach($_SESSION['data'] as $session) {
 
             $time_split = explode(':', $data['time_reported']);
             $seconds = $time_split[0] * 3600 + $time_split[1] * 60;
-            $variables['data']["1CBE3qoL2S"] = $seconds;
+            $variables['data']['1CBE3qoL2S'] = $seconds;
 
             if (strtolower($data['insurance']) === 'yes') { 
                 $variables['data']['B4_rSiiFLc'] = $data['state'] ?? 'N/A';
