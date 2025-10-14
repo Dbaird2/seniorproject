@@ -880,14 +880,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (check_type === 'someone-else') {
             borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
+            if (check_type === 'someone-else' && split_name.length < 2) {
+                //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+                exit;
+            }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
 
-        if (check_type === 'Myself' && split_name < 2) {
-            document.getElementById('check-out-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-            exit;
-        }
 
         const out_res = await fetch(url, {
         method: 'POST',
@@ -930,14 +930,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (check_type === 'someone-else') {
             borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
+        if (check_type === 'someone-else' && split_name.length < 2) {
+            //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
 
-        if (check_type === 'Myself' && split_name < 2) {
-            //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-            exit;
-        }
 
         const in_res = await fetch(url, {
         method: 'POST',
