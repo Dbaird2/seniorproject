@@ -580,7 +580,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="New">New</option>
                                     <option value="Good">Good</option>
                                     <option value="Used">Used</option>
-                                    <option value="Damanged">Damaged</option>
+                                    <option value="Damaged">Damaged</option>
                                 </select>
                             </div>
                         </td>
@@ -588,6 +588,16 @@ $audit_id = $_SESSION['info'][5];
                             <div class="form-field-group">
                                 <label>Notes</label>
                                 <textarea id="check-notes-<?= $row['Tag Number'] ?>" placeholder="Additional notes..."></textarea>
+                            </div>
+                        </td>
+                        <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Item Type</label>
+                                <select id="check-item-type-<?= $row['Tag Number'] ?>">
+                                    <option value="Laptop">Laptop</option>
+                                    <option value="Desktop">Desktop</option>
+                                    <option value="Tablet">Tablet</option>
+                                </select>
                             </div>
                         </td>
                         </tr>
@@ -887,7 +897,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
-
+        const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
 
         const out_res = await fetch(url, {
         method: 'POST',
@@ -895,7 +905,8 @@ document.addEventListener("DOMContentLoaded", function() {
             'Content-Type': 'application/json'
         },
             body: JSON.stringify({
-            form_type: 'Checking Out Equipment',
+            form_type: 'check-out',
+                item_type: item_type,
                 tag: type.dataset.tag,
                 who: check_type,
                 borrower: borrower,
@@ -937,6 +948,7 @@ document.addEventListener("DOMContentLoaded", function() {
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
+        const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
 
 
         const in_res = await fetch(url, {
@@ -945,7 +957,8 @@ document.addEventListener("DOMContentLoaded", function() {
             'Content-Type': 'application/json'
         },
             body: JSON.stringify({
-            form_type: 'Returning Equipment',
+            form_type: 'check-in',
+                item_type: item_type,
                 tag: type.dataset.tag,
                 who: check_type,
                 borrower: borrower,

@@ -18,6 +18,7 @@ $who = $data['who'];
 $note = $data['notes'];
 $condition = $data['condition'];
 $tag = $data['tag'];
+$asset_type = $data['item_type'];
 $now_array = new DateTime();
 $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
@@ -29,7 +30,6 @@ $tag_stmt->execute([':tag' => $tag]);
 $tag_data = $tag_stmt->fetch(PDO::FETCH_ASSOC);
 $serial = $tag_data['serial_num'] ?? 'N/A';
 $asset_name = $tag_data['asset_name'] ?? 'Unknown Asset';
-$asset_type = $tag_data['type2'] ?? 'Laptop';
 
 /* DEPT NAME */
 $dept_id = $_SESSION['deptid'];
@@ -88,7 +88,9 @@ $kuali_asset_type = [
     "id" => $asset_type_id,
     "label" => $asset_type
 ];
-
+if ($who === 'someone-else'){
+    $who = 'Someone Else';
+}
 $who_id = match ($who) {
     "Myself" => "fK-8m6dzx",
     "Someone Else" => "y89ptC2TA"
