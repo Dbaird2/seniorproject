@@ -928,7 +928,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
+            borrower = document.querySelector('.someone-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
         if (check_type === 'someone-else' && split_name.length < 2) {
             //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
