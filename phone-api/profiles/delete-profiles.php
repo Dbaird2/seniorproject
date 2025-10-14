@@ -26,7 +26,7 @@ $info = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
         $delete = 'DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name';
-        $stmt = $dbh->prepare($update);
+        $stmt = $dbh->prepare($delete);
         $stmt->execute([':email'=>$email, ':name'=>$profile_name]);
         echo json_encode(['status'=>'Ok']);
         exit;
