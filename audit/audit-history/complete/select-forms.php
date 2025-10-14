@@ -897,7 +897,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify({
             form_type: 'Checking Out Equipment',
                 tag: type.dataset.tag,
-                type: check_type,
+                who: check_type,
                 borrower: borrower,
                 condition: condition,
                 dept_id: dept_id,
@@ -947,7 +947,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify({
             form_type: 'Returning Equipment',
                 tag: type.dataset.tag,
-                type: check_type,
+                who: check_type,
                 borrower: borrower,
                 condition: condition,
                 dept_id: dept_id,
