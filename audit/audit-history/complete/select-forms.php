@@ -875,12 +875,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     } else if (val == 'check-out') {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value || return;
+        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value || return;
+            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
         } 
-        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value || return;
+        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
         const split_name = borrower.split(' ');
 
@@ -925,12 +925,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     } else if (val == 'check-in') {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
-        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value || return;
+        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value || return;
+            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
         } 
-        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value || return;
+        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
         const split_name = borrower.split(' ');
 
@@ -975,10 +975,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     } else if (val === 'lsd') {
         if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
-            const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value || return;
+            const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
             let borrower = '';
             if (who === 'someone-else') {
-                borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value || return;
+                borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
             } 
             const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
             const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
@@ -1026,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 'Content-Type': 'application/json'
             },
                 body: JSON.stringify({
-                tag: type.dataset.tag,
+                    tag: type.dataset.tag,
                     who: who,
                     borrower: borrower,
                     position: position,
