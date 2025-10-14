@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
-include_once "../config.php";
+include_once "../../config.php";
 $decoded_data = file_get_contents('php://input');
 $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
