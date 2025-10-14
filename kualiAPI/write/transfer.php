@@ -62,7 +62,7 @@ $stmt = $dbh->prepare($dept_select);
 $stmt->execute([':id'=>$_SESSION['deptid']]);
 $current_manager = $stmt->fetchColumn();
 
-$current_manager_info = getSignature(query: $name_select, person_name: $current_manager, type: 'info');
+$current_manager_info = getSignature(person_name: $current_manager, type: 'info');
 $variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
 $variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
 $variables['data']['u7YkM8hmb']['firstName'] = $currnet_manager_info['firstName'];
@@ -112,7 +112,7 @@ if ($data['form_type'] === 'dept') {
     $dept_stmt->execute([':dept'=>$data['dept_name']]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
-    $manager_info = getSignature(query: $name_select, person_name: $manager, type: 'info');
+    $manager_info = getSignature(person_name: $manager, type: 'info');
         $info = [
             'displayName' => $person_name,
             'email'     => $person_info['email'],
@@ -205,7 +205,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$submitter_sig = getSignature(query: $email_select, email: $_SESSION['email'], action_id: $action_id);
+$submitter_sig = getSignature(email: $_SESSION['email'], action_id: $action_id);
 $variables['data']['ne3KPx1Wy3'] = $submitter_sig;
 
 $variables['documentId'] = $document_id;

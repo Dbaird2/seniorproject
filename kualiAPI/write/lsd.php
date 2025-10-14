@@ -86,9 +86,9 @@ foreach($_SESSION['data'] as $session) {
 
                 if (preg_match('/@/i', $data['access_keys'])) {
                     $email = explode('@', $data['access_keys']);
-                    $access_key = getSignature(query: $select, email:$email[0], type: 'info');
+                    $access_key = getSignature(email:$email[0], type: 'info');
                 } else {
-                    $access_key = getSignature(query: $select, email:$email[0], type: 'info');
+                    $access_key = getSignature(email:$email[0], type: 'info');
                 }
                 $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
                 $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
@@ -102,7 +102,7 @@ foreach($_SESSION['data'] as $session) {
                 $variables['data']['g06BrWDC42']['id'] = 'no';
             }
 
-            $by_whom = getSignature(query: $select, email: $data['by_whom'], type: 'info');
+            $by_whom = getSignature(email: $data['by_whom'], type: 'info');
             $variables['data']['KMAw0Ejpx6']['displayName'] = $by_whom['displayName'];
             $variables['data']['KMAw0Ejpx6']['email'] = $by_whom['email'];
             $variables['data']['KMAw0Ejpx6']['firstName'] = $by_whom['firstName'];
@@ -254,16 +254,16 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$manager_info = getSignature(query: $get_info, person_name: $manager, type: 'info');
-$submitter_sig = getSignature(query: $get_info, email: $email, action_id: $action_id);
+$manager_info = getSignature(person_name: $manager, type: 'info');
+$submitter_sig = getSignature(email: $email, action_id: $action_id);
 
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $data['borrower'])) {
         $email = explode('@', $data['borrower']);
-        $borrower_signature = getSignature(query: $get_info_email, email: $email[0], type: 'info');
+        $borrower_signature = getSignature(email: $email[0], type: 'info');
     } else {
-        $borrower_signature = getSignature(query: $get_info_name, person_name: $data['borrower'], type: 'info');
+        $borrower_signature = getSignature(person_name: $data['borrower'], type: 'info');
     }
     $variables['data']["N00EmVKFnd"]['displayName'] = $borrower_signature['displayName'];
     $variables['data']["N00EmVKFnd"]['email'] = $borrower_signature['email'];

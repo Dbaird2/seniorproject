@@ -164,7 +164,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 $custodian = $dept_info['cust'];
-$custodian_info = getSignature(query: $get_info, person_name: $custodian, type: 'info');
+$custodian_info = getSignature(person_name: $custodian, type: 'info');
 
 
 // CUSTODIAN
@@ -176,7 +176,7 @@ $variables['data']['NpD2RP-waL']['username'] = $custodian_info['username'];
 $variables['data']['NpD2RP-waL']['firstName'] = $custodian_info['firstName'];
 $variables['data']['NpD2RP-waL']['lastName'] = $custodian_info['lastName'];
 
-$manager_info = getSignature(query: $get_info, person_name: $manager, type: 'info');
+$manager_info = getSignature(person_name: $manager, type: 'info');
 // MANAGER
 $variables['data']['5mMKjTfnND']['displayName'] = $manager_info['displayName'];
 $variables['data']['5mMKjTfnND']['schoolId'] = $manager_info['schoolId'];
@@ -185,7 +185,7 @@ $variables['data']['5mMKjTfnND']['id'] = $manager_info['id'];
 $variables['data']['5mMKjTfnND']['username'] = $manager_info['username'];
 $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
-$submitter_sig = getSignature(query: $select, email: $email, action_id: $action_id);
+$submitter_sig = getSignature(email: $email, action_id: $action_id);
 
 // DATE
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));

@@ -166,7 +166,6 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 /*-----------------------------------------------------------------------------*/
-$get_info = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :full_name";
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($form_type === 'Returning Equipment') {
@@ -180,7 +179,7 @@ if ($form_type === 'Returning Equipment') {
     $custodian_data = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
     $custodian_name = $custodian_data[0]['custodian'] ?? '';
 
-    $custodian_info = getSignature(query: $get_info, person_name: $custodian_name, type: 'info');
+    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
 
     $variables['data']['_fBI_Ezliu']['displayName'] = $custodian_info['displayName'];
     $variables['data']['_fBI_Ezliu']['email'] = $custodian_info['email'];
@@ -201,7 +200,7 @@ if ($form_type === 'Returning Equipment') {
     $manager_data = $manager_stmt->fetch(PDO::FETCH_ASSOC);
     $manager_name = $manager_data['dept_manager'] ?? '';
 
-    $manager_info = getSignature(query: $get_info, person_name: $manager_name, type: 'info');
+    $manager_info = getSignature(person_name: $manager_name, type: 'info');
     /* GET MANAGER ID FOR GRAPHQL */
     $variables['data']['NdN80WJusb']['displayName'] = $manager_info['displayName'];
     $variables['data']['NdN80WJusb']['email'] = $manager_info['email'];
@@ -213,8 +212,7 @@ if ($form_type === 'Returning Equipment') {
 }
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
-    $get_borrower = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :full_name";
-    $borrowers_info = getSignature(query: $get_borrower, person_name: $borrower, type: 'info');
+    $borrowers_info = getSignature(person_name: $borrower, type: 'info');
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
     $variables['data']['J06VDujK2F']['email'] = $borrowers_info['email'];
