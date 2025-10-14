@@ -134,11 +134,11 @@ $headers = array(
     "Authorization: Bearer {$apikey}",
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
+$form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
 "appId": "68bf09aaadec5e027fe35187"
           }}';
 
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
