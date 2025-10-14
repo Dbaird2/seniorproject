@@ -570,7 +570,7 @@ $audit_id = $_SESSION['info'][5];
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
-                                <input type="text" name="full-name" id="someone-else-<?php$row['Tag Number']?>" placeholder="Full name of borrower">
+                                <input type="text" name="full-name" id="someone-else-<?=$row['Tag Number']?>" placeholder="Full name of borrower">
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
