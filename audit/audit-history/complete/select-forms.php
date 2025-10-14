@@ -570,17 +570,17 @@ $audit_id = $_SESSION['info'][5];
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
-                                <input type="text" name="full-name" id="full-name" placeholder="Full name of borrower">
+                                <input type="text" name="full-name" id="someone-else-<?php$row['Tag Number']?>" placeholder="Full name of borrower">
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                             <div class="form-field-group">
                                 <label>Condition</label>
                                 <select id="check-condition-<?= $row['Tag Number'] ?>">
-                                    <option value="new">New</option>
-                                    <option value="good">Good</option>
-                                    <option value="used">Used</option>
-                                    <option value="damanged">Damaged</option>
+                                    <option value="New">New</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Used">Used</option>
+                                    <option value="Damanged">Damaged</option>
                                 </select>
                             </div>
                         </td>
@@ -878,7 +878,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someone-else-' + type.dataset.tag)?.value;
+            borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
             if (check_type === 'someone-else' && split_name.length < 2) {
                 //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
@@ -928,7 +928,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someone-else-' + type.dataset.tag)?.value;
+            borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
         if (check_type === 'someone-else' && split_name.length < 2) {
             //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
