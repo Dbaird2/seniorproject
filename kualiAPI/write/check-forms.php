@@ -166,7 +166,7 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 /*-----------------------------------------------------------------------------*/
-$get_info = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :fullname";
+$get_info = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :full_name";
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($form_type === 'Returning Equipment') {
@@ -213,7 +213,7 @@ if ($form_type === 'Returning Equipment') {
 }
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
-    $get_borrower = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :fullname";
+    $get_borrower = "SELECT form_id, email, first_name, last_name, school_id, username FROM user_table WHERE CONCAT(first_name, ' ' , last_name) = :full_name";
     $borrowers_info = getSignature(query: $get_borrower, person_name: $borrower, type: 'info');
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
@@ -256,10 +256,10 @@ if ($who !== 'Myself') {
     $check_type_date = $date->format('m/d/Y');
     $variables['data']['JXLJ_AOov-']['actionId'] = $action_id;
     $variables['data']['JXLJ_AOov-']['date'] = $now;
-    $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_first . ' ' . $submitter_lab . ' ('. $_SESSION['email'] . ')';
+    $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_first . ' ' . $submitter_last . ' ('. $_SESSION['email'] . ')';
     $variables['data']['JXLJ_AOov-']['signatureType'] = 'type';
     $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_first . ' ' .$submitter_last;
-    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_form__id;
+    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_form_id;
     /*---------------------------------*/
 }
 
