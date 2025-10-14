@@ -188,7 +188,7 @@ if (!$action_id) {
 /*-----------------------------------------------------------------------------*/
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
-if ($form_type === 'check-in') {
+if ($form_type === 'Returning Equipment') {
 
     $check_type_date_key = '73dNIwQS0c';
     $check_type_date = $date->format('m/d/Y');
@@ -222,7 +222,7 @@ if ($form_type === 'check-in') {
     $authority_key = '_fBI_Ezliu';
     $authority_info['_fBI_Ezliu'] = [
         'displayName' => $custodian_info['f_name'] . ' ' . $custodian_info['l_name'],
-        'email' => $_SESSION['email'],
+        'email' => $_custodian_info['email'],
         'firstName' => $custodian_info['f_name'],
         'id' => $custodian_info['form_id'],
         'label' => $custodian_info['f_name'] . ' ' . $custodian_info['l_name'],
