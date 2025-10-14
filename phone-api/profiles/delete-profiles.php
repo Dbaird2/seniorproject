@@ -7,6 +7,7 @@ $decoded_data = file_get_contents('php://input');
 $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
+$profile_name = trim($data['profile_name']);
 if (empty($email) || empty($pw)) {
     echo json_encode(['status'=>'Failed to login']);
     exit;
@@ -24,11 +25,10 @@ try {
 $info = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
-        $select = 'SELECT distinct(profile_name) as profiles FROM user_asset_profile WHERE email = :email';
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':email'=>$email]);
-        $profiles = $stmt->fetchAll();
-        echo json_encode(['status'=>'Ok','profiles'=>$profiles]);
+        $delete = 'DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name';
+        $stmt = $dbh->prepare($update);
+        $stmt->execute([':email'=>$email, ':name'=>$profile_name]);
+        echo json_encode(['status'=>'Ok']);
         exit;
     }
 }
