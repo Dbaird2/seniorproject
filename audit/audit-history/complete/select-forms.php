@@ -874,11 +874,11 @@ document.addEventListener("DOMContentLoaded", function() {
             code: code
         });
     } else if (val == 'check-out') {
-        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
-            borrower = document.querySelector('.someonel-else-' + type.dataset.tag)?.value;
+            borrower = document.querySelector('.someone-else-' + type.dataset.tag)?.value;
             const split_name = borrower.split(' ');
             if (check_type === 'someone-else' && split_name.length < 2) {
                 //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
@@ -924,7 +924,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     } else if (val == 'check-in') {
-        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-out.php";
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         if (check_type === 'someone-else') {
