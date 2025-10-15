@@ -262,7 +262,7 @@ if ($who !== 'Myself') {
 }
 
 $variables['documentId'] = $document_id;
-$varibales['actionId'] = $action_id;
+$variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 $variables['data']['0LZvRo9vT5'] = $note;
 $variables['data']['BOZIA6hewQ'] = $tag;
