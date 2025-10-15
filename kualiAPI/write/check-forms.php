@@ -40,7 +40,7 @@ $dept_data = $dept_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_data['dept_name'] ?? 'Unknown Department';
 $documentsetid = $dept_data['document_set_id'] ?? '';
 $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
-$variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $dept_name;
+$variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $dept_id;
 $variables['data']['isFMbCuv8e']['label'] = $dept_name;
 $kuali_id = $dept_data['form_id'] ?? '';
 if (!empty($kuali_id) && !empty($documentsetid)) {
@@ -173,13 +173,13 @@ if ($form_type === 'Returning Equipment') {
     $check_type_date = $date->format('m/d/Y');
     $variables['data']['73dNIwQS0c'] = $check_type_date;
 
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id";
+    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
     $custodian_stmt = $dbh->prepare($custodian);
     $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    $custodian_data = $custodian_stmt->fetch(PDO::FETCH_ASSOC);
-    $custodian_name = $custodian_data[0]['custodian'] ?? '';
+    $custodian_name = $custodian_stmt->fetchColumn();
 
     $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
+    echo json_encode([$custodian_info]);
 
     $variables['data']['_fBI_Ezliu']['displayName'] = $custodian_info['displayName'];
     $variables['data']['_fBI_Ezliu']['email'] = $custodian_info['email'];
@@ -201,6 +201,9 @@ if ($form_type === 'Returning Equipment') {
     $manager_name = $manager_data['dept_manager'] ?? '';
 
     $manager_info = getSignature(person_name: $manager_name, type: 'info');
+    echo "<pre>";
+    var_dump($manager_info);
+    echo "</pre>";
     /* GET MANAGER ID FOR GRAPHQL */
     $variables['data']['NdN80WJusb']['displayName'] = $manager_info['displayName'];
     $variables['data']['NdN80WJusb']['email'] = $manager_info['email'];
@@ -213,6 +216,25 @@ if ($form_type === 'Returning Equipment') {
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
     $borrowers_info = getSignature(person_name: $borrower, type: 'info');
+    echo "<pre>";
+    var_dump($borrowers_info);
+    echo "</pre>";
+    try {
+    $get_dept = "SELECT UNNEST(dept_id) FROM user_table WHERE email = :email";
+    $stmt = $dbh->prepare($get_dept);
+    $stmt->execute([':email'=>$borrowers_info['email']]);
+    $new_dept_id = $stmt->fetchColumn();
+    if ($new_dept_id) {
+        $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
+        $stmt = $dbh->prepare($get_dept_name);
+        $stmt->execute([':id'=>$new_dept_id]);
+        $new_dept_name = $stmt->fetchColumn();
+        if ($new_dept_name) {
+            $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
+            $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $new_dept_id;
+            $variables['data']['isFMbCuv8e']['label'] = $dept_name;
+        }
+    }
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
     $variables['data']['J06VDujK2F']['email'] = $borrowers_info['email'];
