@@ -219,7 +219,6 @@ if ($who !== 'Myself') {
     echo "<pre>";
     var_dump($borrowers_info);
     echo "</pre>";
-    try {
     $get_dept = "SELECT UNNEST(dept_id) FROM user_table WHERE email = :email";
     $stmt = $dbh->prepare($get_dept);
     $stmt->execute([':email'=>$borrowers_info['email']]);
