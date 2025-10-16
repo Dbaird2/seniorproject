@@ -89,10 +89,9 @@ async function closeModal(dept, index) {
 */
 
 window.onclick = function(event) {
-    console.log(event);
-    if (event.target == document.getElementById('form-modal-' + dept + '-' + index)) {
-        document.getElementById('form-modal-' + dept + '-' + index).style.display = "none";
-    }
+    console.log(event.target);
+    const modal = event.target;
+    modal.style.display = 'none';
 }
 </script>
 </body>
