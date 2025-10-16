@@ -165,11 +165,11 @@ include_once("../../config.php");
         $audit_type[8] = 'SPA Audit';
         $audit_type[9] = 'Overdue SPA Audit';
     }
-    $color = 'red';
+    $color = '#707372';
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
-        $color = 'yellow';
+        $color = '#FFC72C';
     } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
-        $color = 'green';
+        $color = '#003594';
     }
 
     echo '<tr>';
@@ -250,7 +250,7 @@ include_once("../../config.php");
                     preg_match($CMP, $form) || preg_match($FDN, $form) ||
                     preg_match($SPA, $form)
                 ) {
-                    echo '<span style="font-weight:800; color: #003DA5;"> ' . $form . ' </span>';
+                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
             }
         }
