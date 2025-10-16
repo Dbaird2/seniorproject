@@ -446,10 +446,10 @@ foreach ($transfer_data as $tag_info) {
 }
 
 echo json_encode(['data'=>$tag_data]);
-$audit_id = $tag_data['bulk_t_tags']['audit_id'];
-$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
+$audit_id = $tag_data['audit_id'];
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
-$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 
 curl_close($curl);
 echo json_encode([$ms_time
