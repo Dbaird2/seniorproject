@@ -9,6 +9,7 @@ include_once("../../config.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit History</title>
     <link rel="stylesheet" href="audit-history.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -49,7 +50,7 @@ include_once("../../config.php");
             $dept_stmt = $dbh->query($depts);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_submitted FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute();
         } else {
@@ -59,7 +60,7 @@ include_once("../../config.php");
             $dept_stmt->execute([":search" => $search]);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_submitted FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute([':search' => $search]);
         }
@@ -170,8 +171,93 @@ include_once("../../config.php");
     } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
         $color = 'green';
     }
+
     echo '<tr>';
-    echo '<td>';
+    if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept['dept_id'] && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
+        echo "<td><a href='#' data-dept='$dept' data-id='$curr_index' class='modal-btn' style='color: #003DA5; text-decoration: none; padding: 8px 12px; background-color: #FFB81C; border-radius: 4px; display: inline-block; transition: all 0.3s ease;'><i class='fa fa-search'></i></a></td>";
+        $check_forms = $audits[$curr_index]['check_forms'];
+        echo "<div id='form-modal-$dept-$curr_index' class='modal'>";
+        //$check_forms = $audits[$curr_index]['check_forms'];
+        echo '<div class="modal-content">';
+        echo "<span class='close'>&times;</span>";
+        echo "<h3 style='color: #003DA5; border-bottom: 2px solid #FFB81C; padding-bottom: 10px; margin-top: 0;'>Audit Form Details</h3>";
+        if (empty($check_forms)) {
+            echo "<p style='color: #003DA5;'>No Loss/Stolen/Damaged Reports Submitted</p>";
+            echo "<p style='color: #003DA5;'>No Transfer Reports Submitted</p>";
+        } else {
+            $ASI = "/^A[SI]?\d+$/";
+            $STU = "/^S[RC]?[TU]?\d+$/";
+            $CMP = "/^\d+/";
+            $FDN = "/^F[DN]?\d+$/";
+            $SPA = "/^SP\d+$/";
+            $trim_forms = trim($check_forms, '{}');
+            $form_array = explode(',', $trim_forms);
+            $counter = 0;
+            foreach ($form_array as $index => $form) {
+                $form = trim($form, '"');
+                if ($form === 'lsd') {
+                    if ($index > 1) {
+                        echo '<br>';
+                    }
+                    echo '<span style="color: #003DA5; font-weight: 600;">Loss/Stolen/Damaged Form: </span>';
+                    continue;
+                } else if ($form === 'transfer') {
+                    if ($index > 1) {
+                        echo '<br>';
+                    }
+                    echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form </span>';
+                    continue;
+                }
+                if ($form === 'in-progress') {
+                    $color = '#FFFF00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+
+?>
+            <span style='color: <?= $color ?> ;'>In Progress </span>
+<?php
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'complete') {
+                    $color = '#00FF00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+
+?>
+            <span style='color: <?= $color ?> ;'>Complete </span>
+<?php
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'withdrawn') {
+                    $color = '#FF2F00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+
+?>
+            <span style='color: <?= $color ?> ;'>Withdrawn </span>
+<?php
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'denied') {
+                    $color = '#FF0000';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+?>
+            <span style='color: <?= $color ?> ;'>Denied </span>
+            <span style="font-weight:700; color: #003DA5;"> Tags </span>
+<?php
+                    continue;
+                }
+                if (
+                    preg_match($ASI, $form) || preg_match($STU, $form) ||
+                    preg_match($CMP, $form) || preg_match($FDN, $form) ||
+                    preg_match($SPA, $form)
+                ) {
+                    echo '<span style="font-weight:800; color: #003DA5;"> ' . $form . ' </span>';
+                }
+            }
+        }
+        echo '</div>';
+        echo '</div>';
+    } else {
+        echo '<td></td>';
+    }
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
@@ -202,4 +288,31 @@ function notStart($type) {
     echo "<td style='color:red;'>Not Started</td>";
     echo '</tr>';
 }
+?>
+<script>
+ document.addEventListener('DOMContentLoaded', () => {
+        const modal_btn = document.querySelectorAll('.modal-btn');
+        const span = document.querySelectorAll('.close');
+        modal_btn.forEach(function(btn) {
+            btn.addEventListener('click', () => {
+                const dept = btn.dataset.dept;
+                const index = btn.dataset.id;
+                document.getElementById('form-modal-' + dept + '-' + index).style.display = 'block';
+                span.forEach(function(btn) {
+                    btn.addEventListener('click', () => {
+                        document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
+                    });
+                });
+                window.onclick = function(event) {
+                    if (event.target == document.getElementById('form-modal-' + dept + '-' + index)) {
+                        document.getElementById('form-modal-' + dept + '-' + index).style.display = "none";
+                    }
+                }
+            });
+
+        });
+
+    });
+
+</script>
 
