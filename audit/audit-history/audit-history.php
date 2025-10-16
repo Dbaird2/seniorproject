@@ -289,8 +289,11 @@ function notStart($type) {
     echo '</tr>';
 }
 ?>
+</div>
+</div>
 <script>
  document.addEventListener('DOMContentLoaded', () => {
+        console.log('hello');
         const modal_btn = document.querySelectorAll('.modal-btn');
         const span = document.querySelectorAll('.close');
         console.log(modal_btn, span);
