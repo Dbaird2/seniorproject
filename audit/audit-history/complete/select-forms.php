@@ -1128,6 +1128,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
+    });
 
 
     if (psr_tags.length !== 0) {
@@ -1203,7 +1204,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
-    });
     });
 });
 </script>
