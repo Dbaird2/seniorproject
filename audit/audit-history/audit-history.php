@@ -293,10 +293,13 @@ function notStart($type) {
  document.addEventListener('DOMContentLoaded', () => {
         const modal_btn = document.querySelectorAll('.modal-btn');
         const span = document.querySelectorAll('.close');
+        console.log(modal_btn, span);
         modal_btn.forEach(function(btn) {
+            console.log(btn);
             btn.addEventListener('click', () => {
                 const dept = btn.dataset.dept;
                 const index = btn.dataset.id;
+                console.log(dept, index);
                 document.getElementById('form-modal-' + dept + '-' + index).style.display = 'block';
                 span.forEach(function(btn) {
                     btn.addEventListener('click', () => {
