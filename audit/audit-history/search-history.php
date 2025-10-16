@@ -91,7 +91,9 @@ async function closeModal(dept, index) {
 window.onclick = function(event) {
     console.log(event.target);
     const modal = event.target;
-    modal.style.display = 'none';
+    if (modal.classList.contains('modal')) {
+        modal.style.display = 'none';
+    }
 }
 </script>
 </body>
