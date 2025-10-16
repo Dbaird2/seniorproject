@@ -174,12 +174,13 @@ include_once("../../config.php");
 
     echo '<tr>';
     if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
-        echo "<td><a href='#' data-dept='$dept' data-id='$curr_index' class='modal-btn' style='color: #003DA5; text-decoration: none; padding: 8px 12px; background-color: #FFB81C; border-radius: 4px; display: inline-block; transition: all 0.3s ease;'><i class='fa fa-search'></i></a></td>";
+        echo "<td><a href='#' data-dept='$dept' data-id='$curr_index' class='modal-btn' onclick='openModal(".json_encode($dept)."," .json_encode($curr_index).")' style='color: #003DA5; text-decoration: none; padding: 8px 12px; background-color: #FFB81C; border-radius: 4px; display: inline-block; transition: all 0.3s ease;'><i class='fa fa-search'></i></a></td>";
+
         $check_forms = $audits[$curr_index]['check_forms'];
         echo "<div id='form-modal-$dept-$curr_index' class='modal'>";
         //$check_forms = $audits[$curr_index]['check_forms'];
         echo '<div class="modal-content">';
-        echo "<span class='close'>&times;</span>";
+        echo "<span class='close' onclick='closeModal("json_encode($dept)","json_encode($curr_index)")'>&times;</span>";
         echo "<h3 style='color: #003DA5; border-bottom: 2px solid #FFB81C; padding-bottom: 10px; margin-top: 0;'>Audit Form Details</h3>";
         if (empty($check_forms)) {
             echo "<p style='color: #003DA5;'>No Loss/Stolen/Damaged Reports Submitted</p>";

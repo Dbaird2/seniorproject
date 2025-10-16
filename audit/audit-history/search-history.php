@@ -57,6 +57,13 @@ include_once("../../navbar.php");
     </div>
   </div>
 <script>
+async function openModal(dept_id, index) {
+    document.getElementById('form-modal-' + dept + '-' + index).style.display = 'block';
+}
+async function closeModal(dept_id, index) {
+    document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
+}
+/*
  document.addEventListener('DOMContentLoaded', () => {
         console.log('hello');
         const modal_btn = document.querySelectorAll('.modal-btn');
@@ -74,17 +81,18 @@ include_once("../../navbar.php");
                         document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
                     });
                 });
-                window.onclick = function(event) {
-                    if (event.target == document.getElementById('form-modal-' + dept + '-' + index)) {
-                        document.getElementById('form-modal-' + dept + '-' + index).style.display = "none";
-                    }
-                }
             });
 
         });
 
     });
+*/
 
+window.onclick = function(event) {
+    if (event.target == document.getElementById('form-modal-' + dept + '-' + index)) {
+        document.getElementById('form-modal-' + dept + '-' + index).style.display = "none";
+    }
+}
 </script>
 </body>
 </html>
