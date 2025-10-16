@@ -10,6 +10,7 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
+$tag_data = $data;
 $transfer_data = [[]];
 $index = 0;
 foreach ($data['bulk_t_tags'] as $tag) {
@@ -444,14 +445,14 @@ foreach ($transfer_data as $tag_info) {
     $input_array .= ',' . $tag_info['Tag Number'];
 }
 
-$dept = $data['bulk_t_tags'][0]['dept_id'];
-$audit_id = $data['bulk_t_tags'][0]['audit_id'];
+$audit_id = $tag_data['bulk_t_tags'][0]['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
 
 curl_close($curl);
 echo json_encode([$ms_time
+    ,$tag_data
     ,$document_id
     ,$full_name
     ,$cust_1
