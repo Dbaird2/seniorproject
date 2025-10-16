@@ -278,7 +278,8 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
                         $_SESSION['data'][$total_count]["Serial ID"] = $result['serial_num'];
                         $_SESSION['data'][$total_count]["Location"] =  $result['bldg_id'] . '-' . $result['room_loc'];
                         $_SESSION['data'][$total_count]["VIN"] =  '';
-                        $_SESSION['data'][$total_count]["Custodian"] =  trim(trim($result['custodian'], '{}'), '"');
+                        $custodian = str_replace('"', '', $result['custodian']);
+                        $_SESSION['data'][$total_count]["Custodian"] =  trim($custodian, '{}');
                         $_SESSION['data'][$total_count]["Dept"] = $result['dept_id'];
                         $_SESSION['data'][$total_count]["PO No."] =  $result['po'];
                         $_SESSION['data'][$total_count]["Acq Date"] =  $result['date_added'];
