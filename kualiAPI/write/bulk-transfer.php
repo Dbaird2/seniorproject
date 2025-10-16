@@ -446,7 +446,7 @@ foreach ($transfer_data as $tag_info) {
 }
 
 echo json_encode(['data'=>$tag_data]);
-$audit_id = $tag_data['bulk_t_tags'][0]['audit_id'];
+$audit_id = $tag_data['bulk_t_tags']['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);

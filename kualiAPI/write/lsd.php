@@ -11,6 +11,7 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
+$tag_data = $data;
 echo json_encode([$data]);
 $variables = [[]];
 foreach($_SESSION['data'] as $session) {
@@ -363,11 +364,11 @@ $resp_data = json_decode($resp, true);
 $tag = $data['Tag Number'];
 $input_array =  $document_id . ',lsd,in-progress, ' . $tag;
 
-$dept = $data['dept_id'];
+
 $audit_id = $data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ':array') WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
-$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept, ":id"=>$audit_id]);
+$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp_data]);
