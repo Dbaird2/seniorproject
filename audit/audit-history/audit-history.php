@@ -289,9 +289,8 @@ function notStart($type) {
     echo '</tr>';
 }
 ?>
-</div>
-</div>
 <script>
+/*
  document.addEventListener('DOMContentLoaded', () => {
         console.log('hello');
         const modal_btn = document.querySelectorAll('.modal-btn');
@@ -319,6 +318,6 @@ function notStart($type) {
         });
 
     });
-
+*/
 </script>
 
