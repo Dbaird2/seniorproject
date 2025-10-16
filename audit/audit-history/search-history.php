@@ -57,10 +57,10 @@ include_once("../../navbar.php");
     </div>
   </div>
 <script>
-async function openModal(dept_id, index) {
+async function openModal(dept, index) {
     document.getElementById('form-modal-' + dept + '-' + index).style.display = 'block';
 }
-async function closeModal(dept_id, index) {
+async function closeModal(dept, index) {
     document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
 }
 /*
@@ -89,6 +89,7 @@ async function closeModal(dept_id, index) {
 */
 
 window.onclick = function(event) {
+    console.log(event);
     if (event.target == document.getElementById('form-modal-' + dept + '-' + index)) {
         document.getElementById('form-modal-' + dept + '-' + index).style.display = "none";
     }
