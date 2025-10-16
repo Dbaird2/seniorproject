@@ -109,15 +109,15 @@ include_once("../../config.php");
                                 }
                             }
                             if ($curr) {
-                                displayAuditData($curr_index, $dept);
+                                displayAuditData($curr_index, $dept['dept_id']);
                             } else {
                                 notStart($curr_type);
                             }
                             if ($previous) {
-                                displayAuditData($previous_index, $dept);
+                                displayAuditData($previous_index, $dept['dept_id']);
                             }
                             if ($old_ongoing) {
-                                displayAuditData($old_ongoing_index, $dept);
+                                displayAuditData($old_ongoing_index, $dept['dept_id']);
                             }
                             if (!$old_ongoing && !$previous) {
                                 notStart($old_type);
