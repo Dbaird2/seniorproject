@@ -63,7 +63,7 @@ $stmt = $dbh->prepare($dept_select);
 $stmt->execute([':id'=>$_SESSION['deptid']]);
 $current_manager = $stmt->fetchColumn();
 
-$current_manager_info = getSignature(person_name: $current_manager, type: 'info', dept_id: $audit_dept);
+$current_manager_info = getInfoName($current_manager, $audit_dept);
 $variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
 $variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
 $variables['data']['u7YkM8hmb']['firstName'] = $currnet_manager_info['firstName'];
@@ -113,7 +113,7 @@ if ($data['form_type'] === 'dept') {
     $dept_stmt->execute([':dept'=>$data['dept_name']]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
-    $manager_info = getSignature(person_name: $manager, type: 'info', dept_id: $dept_info['dept_id']);
+    $manager_info = getIfnoName($manager, $dept_info['dept_id']);
         $info = [
             'displayName' => $person_name,
             'email'     => $person_info['email'],
@@ -206,7 +206,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$submitter_sig = getSignature(email: $_SESSION['email'], action_id: $action_id, dept_id: $_SESSION['deptid']);
+$submitter_sig = getSigEmail($_SESSION['email'], $_SESSION['deptid']);
 $variables['data']['ne3KPx1Wy3'] = $submitter_sig;
 
 $variables['documentId'] = $document_id;

@@ -151,11 +151,11 @@ function getSubmitterSig() {
     $select_stmt->execute([":email" => $_SESSION['email']]);
     $sub = $select_stmt->fetch(PDO::FETCH_ASSOC);
     $school_id = $submitter_info['school_id'] ?? '';
-    $signature = $submitter_info['signature'] ?? $full_name;
+    $signature = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
     $form_id = $submitter_info['form_id'] ?? '';
     $email_array = explode('@', $email);
     if (empty($school_id) || empty($form_id)) {
-        searchEmail($email_array[0], $apikey, $dept_id);
+        searchEmail($email_array[0], $sub['kuali_key'], $_SESSION['deptid']);
         $select_stmt = $dbh->prepare($select);
         $select_stmt->execute([":email" => $_SESSION['email']]);
         $sub = $select_stmt->fetch(PDO::FETCH_ASSOC);

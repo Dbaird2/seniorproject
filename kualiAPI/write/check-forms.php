@@ -203,22 +203,7 @@ if ($who !== 'Myself') {
 } else {
     /*---------------------------------*/
     /* SIGNATURE */
-    $get_sig_data = 'SELECT form_id, signature, school_id, f_name, l_name, username FROM user_table WHERE email = :email';
-    $get_stmt = $dbh->prepare($get_sig_data);
-    $get_stmt->execute([':email' => $_SESSION['email']]);
-    $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
-    /* GET FIRST PART OF EMAIL TO USE FOR SEARCHING */
-    $email_array = explode('@', $_SESSION['email']);
-    if ($email_array[0] !== $submitter_info['username']) {
-        $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';
-        $update_stmt = $dbh->prepare($update_user);
-        $update_stmt->execute([':username' => $email_array[0], ":email" => $_SESSION['email']]);
-    }
-    if (empty($submitter_info['form_id']) || empty($submitter_info['school_id'])) {
-        searchEmail($_SESSION['email'], $apikey, $dept_id);
-        $get_stmt->execute([':email' => $_SESSION['email']]);
-        $submitter_info = $get_stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    $submitter_info = getSugmitterSig();
 
     $submitter_sig = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
     $submitter_id = $submitter_info['school_id'];
