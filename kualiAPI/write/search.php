@@ -17,7 +17,7 @@ $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 }
 function searchName($search_name = '', $apikey = '', $dept_id = '')
 {
-    include_once "../../vendor/autoload.php";
+    include_once __DIR__ . "/../../vendor/autoload.php";
     global $dbh;
     $name_array = explode(' ', $search_name);
     $user_f_name = $name_array[0];
@@ -143,8 +143,8 @@ function searchName($search_name = '', $apikey = '', $dept_id = '')
 }
 function searchEmail($email = '', $apikey = '', $dept_id = '')
 {
-    include_once '../../config.php';
-    include_once "../../vendor/autoload.php";
+    include_once __DIR__ . "/../../vendor/autoload.php";
+    global $dbh;
     $email_array = explode('@', $email);
     $input_username = $email_array[0];
     $subdomain = "csub";

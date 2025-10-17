@@ -166,6 +166,7 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 /*-----------------------------------------------------------------------------*/
+$new_dept_id = '';
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($who !== 'Myself') {
@@ -200,8 +201,6 @@ if ($who !== 'Myself') {
     $variables['data']['J06VDujK2F']['username'] = $borrowers_info['username'];
 } else {
     /*---------------------------------*/
-    $date = new DateTime();
-    $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
     /* SIGNATURE */
     $get_sig_data = 'SELECT form_id, signature, school_id, f_name, l_name, username FROM user_table WHERE email = :email';
     $get_stmt = $dbh->prepare($get_sig_data);
@@ -236,22 +235,23 @@ if ($who !== 'Myself') {
     $variables['data']['JXLJ_AOov-']['userId'] = $submitter_form_id;
     /*---------------------------------*/
 }
-if ($form_type === 'Returning Equipment') {
+$custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
+$custodian_stmt = $dbh->prepare($custodian);
+if (!empty($new_dept_id)) {
+    $custodian_stmt->execute([':dept_id' => $new_dept_id]);
+    echo $new_dept_id . '<br>';
+} else {
+    $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
+    echo $_SESSION['deptid'] . '<br>';
+}
+$custodian_name = $custodian_stmt->fetchColumn();
+echo $custodian_name . '<br>';
 
+$custodian_info = getSignature(person_name: $custodian_name, type: 'info');
+echo json_encode([$custodian_info]);
     $check_type_date = $date->format('m/d/Y');
+if ($form_type === 'Returning Equipment') {
     $variables['data']['73dNIwQS0c'] = $check_type_date;
-
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
-    $custodian_stmt = $dbh->prepare($custodian);
-    if (isset($new_dept_id) && !empty($new_dept)) {
-        $custodian_stmt->execute([':dept_id' => $new_dept_id]);
-    } else {
-        $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    }
-    $custodian_name = $custodian_stmt->fetchColumn();
-
-    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
-    echo json_encode([$custodian_info]);
 
     $variables['data']['_fBI_Ezliu']['displayName'] = $custodian_info['displayName'];
     $variables['data']['_fBI_Ezliu']['email'] = $custodian_info['email'];
@@ -261,24 +261,8 @@ if ($form_type === 'Returning Equipment') {
     $variables['data']['_fBI_Ezliu']['schoolId'] = $custodian_info['schoolId'];
     $variables['data']['_fBI_Ezliu']['username'] = $custodian_info['username'];
 } else {
-    $check_type_date_key = '-StvOCXWsX';
-    $check_type_date = $date->format('m/d/Y');
     $variables['data']['-StvOCXWsX'] = $check_type_date;
 
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
-    $custodian_stmt = $dbh->prepare($custodian);
-    if (isset($new_dept_id) && !empty($new_dept)) {
-        $custodian_stmt->execute([':dept_id' => $new_dept_id]);
-    } else {
-        $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    }
-    $custodian_name = $custodian_stmt->fetchColumn();
-
-    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
-    echo "<pre>";
-    var_dump($manager_info);
-    echo "</pre>";
-    /* GET MANAGER ID FOR GRAPHQL */
     $variables['data']['NdN80WJusb']['displayName'] = $custodian_info['displayName'];
     $variables['data']['NdN80WJusb']['email'] = $custodian_info['email'];
     $variables['data']['NdN80WJusb']['firstName'] = $custodian_info['firstName'];
@@ -302,9 +286,11 @@ $submit_form = json_encode([
 ]);
 
 /*-----------------------------------------------------------------------------*/
+/*
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+ */
 $resp = curl_exec($curl);
 curl_close($curl);
 
