@@ -168,50 +168,6 @@ if (!$action_id) {
 /*-----------------------------------------------------------------------------*/
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
-if ($form_type === 'Returning Equipment') {
-
-    $check_type_date = $date->format('m/d/Y');
-    $variables['data']['73dNIwQS0c'] = $check_type_date;
-
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
-    $custodian_stmt = $dbh->prepare($custodian);
-    $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    $custodian_name = $custodian_stmt->fetchColumn();
-
-    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
-    echo json_encode([$custodian_info]);
-
-    $variables['data']['_fBI_Ezliu']['displayName'] = $custodian_info['displayName'];
-    $variables['data']['_fBI_Ezliu']['email'] = $custodian_info['email'];
-    $variables['data']['_fBI_Ezliu']['firstName'] = $custodian_info['firstName'];
-    $variables['data']['_fBI_Ezliu']['id'] = $custodian_info['id'];
-    $variables['data']['_fBI_Ezliu']['label'] = $custodian_info['label'];
-    $variables['data']['_fBI_Ezliu']['schoolId'] = $custodian_info['schoolId'];
-    $variables['data']['_fBI_Ezliu']['username'] = $custodian_info['username'];
-} else {
-    $check_type_date_key = '-StvOCXWsX';
-    $check_type_date = $date->format('m/d/Y');
-    $variables['data']['-StvOCXWsX'] = $check_type_date;
-
-
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
-    $custodian_stmt = $dbh->prepare($custodian);
-    $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    $custodian_name = $custodian_stmt->fetchColumn();
-
-    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
-    echo "<pre>";
-    var_dump($manager_info);
-    echo "</pre>";
-    /* GET MANAGER ID FOR GRAPHQL */
-    $variables['data']['NdN80WJusb']['displayName'] = $custodian_info['displayName'];
-    $variables['data']['NdN80WJusb']['email'] = $custodian_info['email'];
-    $variables['data']['NdN80WJusb']['firstName'] = $custodian_info['firstName'];
-    $variables['data']['NdN80WJusb']['id'] = $custodian_info['id'];
-    $variables['data']['NdN80WJusb']['label'] = $custodian_info['label'];
-    $variables['data']['NdN80WJusb']['schoolId'] = $custodian_info['schoolId'];
-    $variables['data']['NdN80WJusb']['username'] = $custodian_info['username'];
-}
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
     $borrowers_info = getSignature(person_name: $borrower, type: 'info');
@@ -279,6 +235,57 @@ if ($who !== 'Myself') {
     $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_first . ' ' .$submitter_last;
     $variables['data']['JXLJ_AOov-']['userId'] = $submitter_form_id;
     /*---------------------------------*/
+}
+if ($form_type === 'Returning Equipment') {
+
+    $check_type_date = $date->format('m/d/Y');
+    $variables['data']['73dNIwQS0c'] = $check_type_date;
+
+    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
+    $custodian_stmt = $dbh->prepare($custodian);
+    if (isset($new_dept_id) && !empty($new_dept) {
+        $custodian_stmt->execute([':dept_id' => $new_dept_id]);
+    } else {
+        $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
+    }
+    $custodian_name = $custodian_stmt->fetchColumn();
+
+    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
+    echo json_encode([$custodian_info]);
+
+    $variables['data']['_fBI_Ezliu']['displayName'] = $custodian_info['displayName'];
+    $variables['data']['_fBI_Ezliu']['email'] = $custodian_info['email'];
+    $variables['data']['_fBI_Ezliu']['firstName'] = $custodian_info['firstName'];
+    $variables['data']['_fBI_Ezliu']['id'] = $custodian_info['id'];
+    $variables['data']['_fBI_Ezliu']['label'] = $custodian_info['label'];
+    $variables['data']['_fBI_Ezliu']['schoolId'] = $custodian_info['schoolId'];
+    $variables['data']['_fBI_Ezliu']['username'] = $custodian_info['username'];
+} else {
+    $check_type_date_key = '-StvOCXWsX';
+    $check_type_date = $date->format('m/d/Y');
+    $variables['data']['-StvOCXWsX'] = $check_type_date;
+
+    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
+    $custodian_stmt = $dbh->prepare($custodian);
+    if (isset($new_dept_id) && !empty($new_dept) {
+        $custodian_stmt->execute([':dept_id' => $new_dept_id]);
+    } else {
+        $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
+    }
+    $custodian_name = $custodian_stmt->fetchColumn();
+
+    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
+    echo "<pre>";
+    var_dump($manager_info);
+    echo "</pre>";
+    /* GET MANAGER ID FOR GRAPHQL */
+    $variables['data']['NdN80WJusb']['displayName'] = $custodian_info['displayName'];
+    $variables['data']['NdN80WJusb']['email'] = $custodian_info['email'];
+    $variables['data']['NdN80WJusb']['firstName'] = $custodian_info['firstName'];
+    $variables['data']['NdN80WJusb']['id'] = $custodian_info['id'];
+    $variables['data']['NdN80WJusb']['label'] = $custodian_info['label'];
+    $variables['data']['NdN80WJusb']['schoolId'] = $custodian_info['schoolId'];
+    $variables['data']['NdN80WJusb']['username'] = $custodian_info['username'];
 }
 
 $variables['documentId'] = $document_id;
