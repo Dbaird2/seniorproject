@@ -1,5 +1,5 @@
 <?php
-function getInfoEmail($email, $dept_id) {
+function getInfoName($person_name, $dept_id) {
     global $dbh, $apikey;
     $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";
     $get_name_stmt = $dbh->prepare($query);
@@ -31,7 +31,7 @@ function getInfoEmail($email, $dept_id) {
     ];
     return $info;
 }
-function getSigEmail($email, $dept_id) {
+function getSigName($person_name, $dept_id) {
     global $dbh, $apikey, $action_id;
     $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";
     $get_name_stmt = $dbh->prepare($query);
@@ -61,7 +61,7 @@ function getSigEmail($email, $dept_id) {
     ];
     return $signature;
 }
-function getInfoName($person_name, $dept_id) {
+function getInfoEmail($email, $dept_id) {
     global $dbh, $apikey, $action_id;
     $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE email = :email";
     $get_name_stmt = $dbh->prepare($query);
@@ -101,7 +101,7 @@ function getInfoName($person_name, $dept_id) {
     return $info;
 }
 
-function getSigName($person_name, $dept_id) {
+function getSigEmail($email, $dept_id) {
     global $dbh, $apikey, $action_id;
     $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE email = :email";
     $get_name_stmt = $dbh->prepare($query);
