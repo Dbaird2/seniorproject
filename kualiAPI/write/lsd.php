@@ -12,6 +12,7 @@ if (!isset($_POST)) {
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $tag_data = $data;
+$audit_dept = $data['dept_id'];
 echo json_encode([$data]);
 $variables = [[]];
 foreach($_SESSION['data'] as $session) {
@@ -87,9 +88,9 @@ foreach($_SESSION['data'] as $session) {
 
                 if (preg_match('/@/i', $data['access_keys'])) {
                     $email = explode('@', $data['access_keys']);
-                    $access_key = getSignature(email:$email[0], type: 'info');
+                    $access_key = getSignature(email:$email[0], type: 'info', dept_id: $audit_dept);
                 } else {
-                    $access_key = getSignature(email:$email[0], type: 'info');
+                    $access_key = getSignature(email:$data['access_keys'], type: 'info', dept_id: $audit_dept);
                 }
                 $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
                 $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
@@ -103,7 +104,7 @@ foreach($_SESSION['data'] as $session) {
                 $variables['data']['g06BrWDC42']['id'] = 'no';
             }
 
-            $by_whom = getSignature(email: $data['by_whom'], type: 'info');
+            $by_whom = getSignature(email: $data['by_whom'], type: 'info', dept_id: $audit_dept);
             $variables['data']['KMAw0Ejpx6']['displayName'] = $by_whom['displayName'];
             $variables['data']['KMAw0Ejpx6']['email'] = $by_whom['email'];
             $variables['data']['KMAw0Ejpx6']['firstName'] = $by_whom['firstName'];
@@ -255,16 +256,16 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$manager_info = getSignature(person_name: $manager, type: 'info');
-$submitter_sig = getSignature(email: $email, action_id: $action_id);
+$manager_info = getSignature(person_name: $manager, type: 'info', dept_id: $audit_dept);
+$submitter_sig = getSignature(email: $email, action_id: $action_id, dept_id: $_SESSION['deptid']);
 
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $data['borrower'])) {
         $email = explode('@', $data['borrower']);
-        $borrower_signature = getSignature(email: $email[0], type: 'info');
+        $borrower_signature = getSignature(email: $email[0], type: 'info', dept_id: $audit_dept);
     } else {
-        $borrower_signature = getSignature(person_name: $data['borrower'], type: 'info');
+        $borrower_signature = getSignature(person_name: $data['borrower'], type: 'info', dept_id: $audit_dept);
     }
     $variables['data']["N00EmVKFnd"]['displayName'] = $borrower_signature['displayName'];
     $variables['data']["N00EmVKFnd"]['email'] = $borrower_signature['email'];

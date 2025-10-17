@@ -46,6 +46,7 @@ foreach($_SESSION['data'] as $session) {
 
 
 $dept_id = $_SESSION['info'][2];
+$audit_dept_id = $data['dept_id'];
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -116,11 +117,11 @@ $headers = array(
     "Authorization: Bearer {$apikey}",
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
+$form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
 "appId": "68e94e8a58fd2e028d5ec88f"
       }}';
 
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -164,7 +165,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 $custodian = $dept_info['cust'];
-$custodian_info = getSignature(person_name: $custodian, type: 'info');
+$custodian_info = getSignature(person_name: $custodian, type: 'info', dept_id: $audit_dept_id);
 
 
 // CUSTODIAN
@@ -176,7 +177,7 @@ $variables['data']['NpD2RP-waL']['username'] = $custodian_info['username'];
 $variables['data']['NpD2RP-waL']['firstName'] = $custodian_info['firstName'];
 $variables['data']['NpD2RP-waL']['lastName'] = $custodian_info['lastName'];
 
-$manager_info = getSignature(person_name: $manager, type: 'info');
+$manager_info = getSignature(person_name: $manager, type: 'info', dept_id: $audit_dept_id);
 // MANAGER
 $variables['data']['5mMKjTfnND']['displayName'] = $manager_info['displayName'];
 $variables['data']['5mMKjTfnND']['schoolId'] = $manager_info['schoolId'];
@@ -187,7 +188,7 @@ $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $echo('Custodian', $manager);
 $array_echo($manager_info);
-$submitter_sig = getSignature(email: $email, action_id: $action_id);
+$submitter_sig = getSignature(email: $email, action_id: $action_id, dept_id: $dept_id);
 
 // DATE
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));

@@ -1,5 +1,5 @@
 <?php
-function getSignature($person_name = '', $email = '', $type = 'signature', $action_id = '') {
+function getSignature($person_name = '', $email = '', $type = 'signature', $action_id = '', $dept_id = '') {
     if (empty($person_name) && empty($email)) {
         echo json_encode(['empty email & name']);
         return;
@@ -13,7 +13,7 @@ function getSignature($person_name = '', $email = '', $type = 'signature', $acti
         return;
     }
 
-    global $dbh, $apikey, $dept_id;
+    global $dbh, $apikey;
     try {
         if (!empty($person_name)) {
             $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";

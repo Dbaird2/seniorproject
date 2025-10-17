@@ -14,6 +14,7 @@ $data = json_decode($encoded_data, true);
 echo json_encode(['tags'=>$data]);
 $variables = [[]];
 $email = $_SESSION['email'];
+$audit_dept = $data['dept_id'];
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -62,7 +63,7 @@ $stmt = $dbh->prepare($dept_select);
 $stmt->execute([':id'=>$_SESSION['deptid']]);
 $current_manager = $stmt->fetchColumn();
 
-$current_manager_info = getSignature(person_name: $current_manager, type: 'info');
+$current_manager_info = getSignature(person_name: $current_manager, type: 'info', dept_id: $audit_dept);
 $variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
 $variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
 $variables['data']['u7YkM8hmb']['firstName'] = $currnet_manager_info['firstName'];
@@ -112,7 +113,7 @@ if ($data['form_type'] === 'dept') {
     $dept_stmt->execute([':dept'=>$data['dept_name']]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
-    $manager_info = getSignature(person_name: $manager, type: 'info');
+    $manager_info = getSignature(person_name: $manager, type: 'info', dept_id: $dept_info['dept_id']);
         $info = [
             'displayName' => $person_name,
             'email'     => $person_info['email'],
@@ -157,11 +158,11 @@ $headers = array(
     "Authorization: Bearer {$apikey}",
 );
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
+$form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
 "appId": "68d09e41d599f1028a9b9457"
       }}';
 
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
 
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -205,7 +206,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$submitter_sig = getSignature(email: $_SESSION['email'], action_id: $action_id);
+$submitter_sig = getSignature(email: $_SESSION['email'], action_id: $action_id, dept_id: $_SESSION['deptid']);
 $variables['data']['ne3KPx1Wy3'] = $submitter_sig;
 
 $variables['documentId'] = $document_id;
