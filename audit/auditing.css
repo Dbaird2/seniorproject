@@ -1,3 +1,4 @@
+/* AUDITING CSS */
 * {
   margin: 0;
 }
@@ -460,4 +461,30 @@ tbody td:hover:before {
     opacity: 0;
   }
 }
+/* Updated button styling with CSUB blue and gold */
+button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #003da5 0%, #002870 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 61, 165, 0.2);
+}
 
+button:hover {
+  background: linear-gradient(135deg, #ffb81c 0%, #e5a319 100%);
+  color: #003da5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 184, 28, 0.4);
+  border: 1px solid #003da5;
+}
+
+button:active {
+  transform: translateY(0);
+}

@@ -194,24 +194,23 @@ if ($form_type === 'Returning Equipment') {
     $variables['data']['-StvOCXWsX'] = $check_type_date;
 
 
-    $manager_select = "SELECT dept_manager FROM department WHERE dept_id = :dept_id";
-    $manager_stmt = $dbh->prepare($manager_select);
-    $manager_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    $manager_data = $manager_stmt->fetch(PDO::FETCH_ASSOC);
-    $manager_name = $manager_data['dept_manager'] ?? '';
+    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
+    $custodian_stmt = $dbh->prepare($custodian);
+    $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
+    $custodian_name = $custodian_stmt->fetchColumn();
 
-    $manager_info = getSignature(person_name: $manager_name, type: 'info');
+    $custodian_info = getSignature(person_name: $custodian_name, type: 'info');
     echo "<pre>";
     var_dump($manager_info);
     echo "</pre>";
     /* GET MANAGER ID FOR GRAPHQL */
-    $variables['data']['NdN80WJusb']['displayName'] = $manager_info['displayName'];
-    $variables['data']['NdN80WJusb']['email'] = $manager_info['email'];
-    $variables['data']['NdN80WJusb']['firstName'] = $manager_info['firstName'];
-    $variables['data']['NdN80WJusb']['id'] = $manager_info['id'];
-    $variables['data']['NdN80WJusb']['label'] = $manager_info['label'];
-    $variables['data']['NdN80WJusb']['schoolId'] = $manager_info['schoolId'];
-    $variables['data']['NdN80WJusb']['username'] = $manager_info['username'];
+    $variables['data']['NdN80WJusb']['displayName'] = $custodian_info['displayName'];
+    $variables['data']['NdN80WJusb']['email'] = $custodian_info['email'];
+    $variables['data']['NdN80WJusb']['firstName'] = $custodian_info['firstName'];
+    $variables['data']['NdN80WJusb']['id'] = $custodian_info['id'];
+    $variables['data']['NdN80WJusb']['label'] = $custodian_info['label'];
+    $variables['data']['NdN80WJusb']['schoolId'] = $custodian_info['schoolId'];
+    $variables['data']['NdN80WJusb']['username'] = $custodian_info['username'];
 }
 if ($who !== 'Myself') {
     $borrower = $data['borrower'];
