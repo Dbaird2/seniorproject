@@ -13,13 +13,14 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 /* DATA FROM POST */
 /* CHECK IN OR OUT */
-$form_type = $data['form_type'];
+$form_type = trim($data['form_type']);
 /* MYSELF/SOMEONEELSE */
-$who = $data['who'];
-$note = $data['notes'];
-$condition = $data['condition'];
+$who = trim($data['who']);
+$note = trim($data['notes']);
+$audit_dept = trim($data['dept_id']);
+$condition = trim($data['condition']);
 $tag = $data['tag'];
-$asset_type = $data['item_type'];
+$asset_type = trim($data['item_type']);
 $now_array = new DateTime();
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
@@ -170,8 +171,8 @@ $new_dept_id = '';
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($who !== 'Myself') {
-    $borrower = $data['borrower'];
-    $borrowers_info = getSignature(person_name: $borrower, type: 'info');
+    $borrower = trim($data['borrower']);
+    $borrowers_info = getInfoName($borrower, $audit_dept);
     echo "<pre>";
     var_dump($borrowers_info);
     echo "</pre>";
@@ -247,7 +248,7 @@ if (!empty($new_dept_id)) {
 $custodian_name = $custodian_stmt->fetchColumn();
 echo $custodian_name . '<br>';
 
-$custodian_info = getSignature(person_name: $custodian_name, type: 'info');
+$custodian_info = getInfoName($custodian_name, $audit_dept);
 echo json_encode([$custodian_info]);
     $check_type_date = $date->format('m/d/Y');
 if ($form_type === 'Returning Equipment') {

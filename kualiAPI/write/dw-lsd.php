@@ -50,39 +50,13 @@ $audit_dept_id = $data['dept_id'];
 
 $subdomain = "csub";
 // SUBMITTER INFO
-$select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
-$email = $_SESSION['email'];
-$select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":email" => $_SESSION['email']]);
-$submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$apikey = $submitter_info['kuali_key'];
+$submitter = getSubmitterSig();
+$apikey = $submitter['apikey'];
 if (empty($apikey)) {
     die("API Key Not Found");
 }
-$display_name = $submitter_info['username'];
-$full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 // NAME
-$variables['data']['WDA7EMUZg_'] = $full_name;
-
-$school_id = $submitter_info['school_id'] ?? '';
-$signature = $submitter_info['signature'] ?? $full_name;
-$form_id = $submitter_info['form_id'] ?? '';
-$email_array = explode('@', $email);
-if (empty($school_id) || empty($form_id)) {
-    searchEmail($email_array[0], $apikey, $dept_id);
-    $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
-    $email = $_SESSION['email'];
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":email" => $_SESSION['email']]);
-    $display_name = $submitter_info['username'];
-    $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-        // SUBMITTER
-    $school_id = $submitter_info['school_id'];
-    $signature = $submitter_info['signature'] ?? $full_name;
-    $form_id = $submitter_info['form_id'];
-
-    $variables['data']['WDA7EMUZg_'] = $full_name;
-}
+$variables['data']['WDA7EMUZg_'] = $submitter['fullName'];
 
 
 $get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = :dept_id";
@@ -99,11 +73,6 @@ $variables['data']['lVtSabqSUh']['data']['IOw4-l7NsM'] = $dept_id;
 $get_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $get_info_email = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where email = :email";
 $get_info_name = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-
-
-if (!$apikey) {
-    die("No API key found for user.");
-}
 
 $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -165,7 +134,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 $custodian = $dept_info['cust'];
-$custodian_info = getSignature(person_name: $custodian, type: 'info', dept_id: $audit_dept_id);
+$custodian_info = getInfoName($custodian, $audit_dept_id);
 
 
 // CUSTODIAN
@@ -177,7 +146,7 @@ $variables['data']['NpD2RP-waL']['username'] = $custodian_info['username'];
 $variables['data']['NpD2RP-waL']['firstName'] = $custodian_info['firstName'];
 $variables['data']['NpD2RP-waL']['lastName'] = $custodian_info['lastName'];
 
-$manager_info = getSignature(person_name: $manager, type: 'info', dept_id: $audit_dept_id);
+$manager_info = getInfoName($manager, $audit_dept_id);
 // MANAGER
 $variables['data']['5mMKjTfnND']['displayName'] = $manager_info['displayName'];
 $variables['data']['5mMKjTfnND']['schoolId'] = $manager_info['schoolId'];
@@ -188,7 +157,7 @@ $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $echo('Custodian', $manager);
 $array_echo($manager_info);
-$submitter_sig = getSignature(email: $email, action_id: $action_id, dept_id: $dept_id);
+$submitter_sig = getSigEmail($email, $dept_id);
 
 // DATE
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
