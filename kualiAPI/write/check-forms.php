@@ -11,6 +11,9 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
+echo "<pre>";
+var_dump($data);
+echo "</pre>";
 /* DATA FROM POST */
 /* CHECK IN OR OUT */
 $form_type = trim($data['form_type']);
@@ -181,7 +184,7 @@ if ($who !== 'Myself') {
         $new_dept_name = $stmt->fetchColumn();
         if ($new_dept_name) {
             $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
-            $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $new_dept_id;
+            $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $audit_dept;
             $variables['data']['isFMbCuv8e']['label'] = $dept_name;
         }
 
