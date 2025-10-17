@@ -167,7 +167,6 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 /*-----------------------------------------------------------------------------*/
-$new_dept_id = '';
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($who !== 'Myself') {
@@ -176,21 +175,15 @@ if ($who !== 'Myself') {
     echo "<pre>";
     var_dump($borrowers_info);
     echo "</pre>";
-    $get_dept = "SELECT UNNEST(dept_id) FROM user_table WHERE email = :email";
-    $stmt = $dbh->prepare($get_dept);
-    $stmt->execute([':email'=>$borrowers_info['email']]);
-    $new_dept_id = $stmt->fetchColumn();
-    if ($new_dept_id) {
         $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
         $stmt = $dbh->prepare($get_dept_name);
-        $stmt->execute([':id'=>$new_dept_id]);
+        $stmt->execute([':id'=>$audit_dept]);
         $new_dept_name = $stmt->fetchColumn();
         if ($new_dept_name) {
             $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
             $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $new_dept_id;
             $variables['data']['isFMbCuv8e']['label'] = $dept_name;
         }
-    }
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
     $variables['data']['J06VDujK2F']['email'] = $borrowers_info['email'];

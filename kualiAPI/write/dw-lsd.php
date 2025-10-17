@@ -157,7 +157,7 @@ $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $echo('Custodian', $manager);
 $array_echo($manager_info);
-$submitter_sig = getSigEmail($email, $dept_id);
+$submitter_sig = getSigEmail($email, $_SESSION['deptid']);
 
 // DATE
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));

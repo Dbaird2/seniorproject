@@ -164,12 +164,18 @@ function addInfo($username, $email, $form_id, $school_id, $signature, $full_name
         $stmt = $dbh->prepare($insert);
         $stmt = $dbh->prepare($insert);
         $new_dept_id = '{' . $dept_id . '}';
-        $stmt->execute([$username, $hashed_pw, $email, $role, $f_name, $l_name, $new_dept_id, $form_id, $school_id, $signature]);
+        $stmt->execute([trim($username), $hashed_pw, trim($email), trim($role), trim($f_name), trim($l_name), trim($new_dept_id), trim($form_id), trim($school_id), trim($signature)]);
     }
 }
 
 function addDepartment($documentSetId, $dept_kuali_id, $c_display_name, $m_full_name, $dept_id, $dept_name)
 {
+    $documentSetId = trim($documentSetId);
+    $dept_kuali_id = trim($dept_kuali_id);
+    $c_display_name = trim($c_display_name);
+    $m_full_name = trim($m_full_name);
+    $dept_id = trim($dept_id);
+    $dept_name = trim($dept_name);
     global $dbh;
     echo '<br>Add Department<br>';
     echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
@@ -352,27 +358,27 @@ try {
                 }
                 if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                     // MANAGER/DEAN INFORMATION
-                    $m2_display_name = $m2_full_name = $edge['node']['data']['jTxoK_Wsh7']['displayName'];
-                    $m2_email = $edge['node']['data']['jTxoK_Wsh7']['email'];
+                    $m2_display_name = $m2_full_name = trim($edge['node']['data']['jTxoK_Wsh7']['displayName']);
+                    $m2_email = trim($edge['node']['data']['jTxoK_Wsh7']['email']);
                     $email_array = explode('@', $m2_email);
                     $m2_username = $email_array[0];
-                    $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
-                    $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
-                    $m2_signature = $m2_display_name;
+                    $m2_id = trim($edge['node']['data']['jTxoK_Wsh7']['id']);
+                    $m2_school_id = trim($edge['node']['data']['jTxoK_Wsh7']['schoolId']);
+                    $m2_signature = trim($m2_display_name);
                     addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
                 }
                 if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
                     // CUSTODIAN INFORMATION
-                    $m3_display_name =  $m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName'];
-                    $m3_email = $edge['node']['data']['kS_kp-Oo1y']['email'];
+                    $m3_display_name = trim($m3_full_name = $edge['node']['data']['kS_kp-Oo1y']['displayName']);
+                    $m3_email = trim($edge['node']['data']['kS_kp-Oo1y']['email'];)
                     $email_array = explode('@', $m3_email);
-                    $m3_username = $email_array[0];
-                    $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
-                    $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
-                    $m3_signature = $m3_display_name;
+                    $m3_username = trim($email_array[0]);
+                    $m3_id = trim($edge['node']['data']['kS_kp-Oo1y']['id']);
+                    $m3_school_id = trim($edge['node']['data']['kS_kp-Oo1y']['schoolId']);
+                    $m3_signature = trim($m3_display_name);
                     addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
                 }
-                addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id , $dept_name);
+                addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m4_full_name), trim($dept_id), trim($dept_name));
             }
         } else {
             $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
@@ -460,7 +466,7 @@ try {
                 $m3_signature = $m3_display_name;
                 addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
             }
-            addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id, $dept_name);
+            addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m4_full_name), trim($dept_id), trim($dept_name));
         }
     }
 } catch (PDOException $e) {

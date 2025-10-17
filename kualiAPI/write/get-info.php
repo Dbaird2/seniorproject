@@ -82,7 +82,7 @@ function getInfoEmail($email, $dept_id) {
     if ((empty($person_info['form_id']) || empty($person_info['school_id']))) {
         searchEmail($person_info['email'], $apikey, $dept_id);
         $get_name_stmt = $dbh->prepare($query);
-        $get_name_stmt->execute([":email" => $person_name]);
+        $get_name_stmt->execute([":email" => $person_info['email']]);
         $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
     }
     $now_array = new DateTime();                              
@@ -122,7 +122,7 @@ function getSigEmail($email, $dept_id) {
     if ((empty($person_info['form_id']) || empty($person_info['school_id']))) {
         searchEmail($person_info['email'], $apikey, $dept_id);
         $get_name_stmt = $dbh->prepare($query);
-        $get_name_stmt->execute([":email" => $person_name]);
+        $get_name_stmt->execute([":email" => $person_info['email']]);
         $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
     }
     $now_array = new DateTime();                              
@@ -145,16 +145,13 @@ function getSubmitterSig() {
     $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
     $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
-    $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
+    $select = "SELECT email, kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
     $email = $_SESSION['email'];
     $select_stmt = $dbh->prepare($select);
     $select_stmt->execute([":email" => $_SESSION['email']]);
     $sub = $select_stmt->fetch(PDO::FETCH_ASSOC);
-    $school_id = $submitter_info['school_id'] ?? '';
-    $signature = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-    $form_id = $submitter_info['form_id'] ?? '';
     $email_array = explode('@', $email);
-    if (empty($school_id) || empty($form_id)) {
+    if (empty($sub['school_id']) || empty($sub['form_id'])) {
         searchEmail($email_array[0], $sub['kuali_key'], $_SESSION['deptid']);
         $select_stmt = $dbh->prepare($select);
         $select_stmt->execute([":email" => $_SESSION['email']]);
