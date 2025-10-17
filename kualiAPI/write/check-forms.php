@@ -243,7 +243,7 @@ if ($form_type === 'Returning Equipment') {
 
     $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
     $custodian_stmt = $dbh->prepare($custodian);
-    if (isset($new_dept_id) && !empty($new_dept) {
+    if (isset($new_dept_id) && !empty($new_dept)) {
         $custodian_stmt->execute([':dept_id' => $new_dept_id]);
     } else {
         $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
@@ -267,7 +267,7 @@ if ($form_type === 'Returning Equipment') {
 
     $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
     $custodian_stmt = $dbh->prepare($custodian);
-    if (isset($new_dept_id) && !empty($new_dept) {
+    if (isset($new_dept_id) && !empty($new_dept)) {
         $custodian_stmt->execute([':dept_id' => $new_dept_id]);
     } else {
         $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);

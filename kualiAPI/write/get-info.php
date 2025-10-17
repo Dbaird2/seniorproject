@@ -1,17 +1,21 @@
 <?php
 function getSignature($person_name = '', $email = '', $type = 'signature', $action_id = '') {
     if (empty($person_name) && empty($email)) {
+        echo json_encode(['empty email & name']);
         return;
     }
     if ($type === 'signature' && empty($action_id)) {
+        echo json_encode(['empty action id for type signature']);
         return;
     }
     if ($type !== 'signature' && $type !== 'info') {
+        echo json_encode(['type invalid']);
         return;
     }
+
     global $dbh, $apikey, $dept_id;
     try {
-        if (!empty($person_name) && $person_name !== '') {
+        if (!empty($person_name)) {
             $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";
             $get_name_stmt = $dbh->prepare($query);
             $get_name_stmt->execute([":full_name"=>$person_name]);
@@ -22,16 +26,17 @@ function getSignature($person_name = '', $email = '', $type = 'signature', $acti
             }
             $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
         }
-        if (!empty($email) && $email !== '') {
+        if (!empty($email)) {
             $query = "SELECT f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE email = :email";
             $get_name_stmt = $dbh->prepare($query);
             $get_name_stmt->execute([":email"=>$email]);
-            if ($get_name_stmt->rowCount() === 0) {
+            $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+            if ($person_info) {
                 searchEmail($email, $apikey, $dept_id);
                 $get_name_stmt = $dbh->prepare($query);
                 $get_name_stmt->execute([":email" => $email]);
-            }
             $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+            }
             $email_array = explode('@', $email);
             if ($email_array[0] !== $person_info['username']) {           
                 $update_user = 'UPDATE user_table SET username = :username WHERE email = :email';               
@@ -53,17 +58,7 @@ function getSignature($person_name = '', $email = '', $type = 'signature', $acti
             }
         }
     } catch (PDOException $e) {
-        if (!empty($email)) {
-            searchEmail($person_info['email'], $apikey, $dept_id);
-            $get_name_stmt = $dbh->prepare($query);
-            $get_name_stmt->execute([":email" => $person_name]);
-            $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
-        } else {
-            searchName($person_name, $apikey, $dept_id);
-            $get_name_stmt = $dbh->prepare($query);
-            $get_name_stmt->execute([":full_name" => $person_name]);
-            $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
-        }
+        echo json_encode(['error with db in get-info'=>$e->getMessage()]);
     }
     $now_array = new DateTime();                              
     $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
