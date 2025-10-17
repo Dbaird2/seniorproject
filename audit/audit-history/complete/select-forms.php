@@ -626,6 +626,22 @@ function showUI(type, tag) {
         el.style.display = 'table-cell';
     });
 }
+function hideAll(tag) {
+    hideUI('lsd-it-equip', tag);
+    hideUI('lsd-upd-explain', tag);
+    hideUI('lsd-upd-access', tag);
+    hideUI('check-out', tag);
+    hideUI('check-in', tag);
+    hideUI('lsd', tag);
+    hideUI('psr', tag);
+    hideUI('bulk-transfer', tag);
+    hideUI('lsd-upd-yes', tag);
+    hideUI('lsd-upd', tag);
+    hideUI('lsd-upd-yes', tag);
+    hideUI('lsd-upd-insurance', tag);
+    hideUI('lsd-fill-', tag);
+    return;
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     const dept_id = <?= json_encode($_SESSION['info'][2], true) ?>;
@@ -638,19 +654,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const tag = form_type.dataset.tag;
     console.log(form_type.value, tag);
     if (form_type.value === '') {
-            hideUI('lsd-it-equip', tag);
-        hideUI('lsd-upd-explain', tag);
-        hideUI('lsd-upd-access', tag);
-        hideUI('check-out', tag);
-        hideUI('check-in', tag);
-        hideUI('lsd', tag);
-        hideUI('psr', tag);
-        hideUI('bulk-transfer', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd-insurance', tag);
-        hideUI('lsd-fill-', tag);
+        hideAll(tag);
         return;
     }
     const form_class = document.querySelectorAll('.' + form_type.value + '-' + form_type.dataset.tag);
@@ -812,19 +816,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     if (form_type.value === 'bulk-transfer') {
-                hideUI('lsd-upd-explain', tag);
-                hideUI('lsd-upd-access', tag);
-            hideUI('lsd-it-equip', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd-insurance', tag);
-        hideUI('check-out', tag);
-        hideUI('check-in', tag);
-        hideUI('psr', tag);
-        hideUI('lsd', tag);
-        hideUI('lsd-fill-', tag);
-            hideUI('lsd-it-equip', tag);
+        hideAll(tag);
     }
 
     form_class.forEach(el => {
@@ -927,11 +919,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Check out response (JSON):", data);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
+                hideAll(type.dataset.tag);
             } catch {
                 const text = await clone.text();
                 console.log("Check out response (text):", text);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
+                hideAll(type.dataset.tag);
             }
         }
     } else if (val == 'check-in') {
@@ -979,11 +973,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Check in response (JSON):", data);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
+                hideAll(type.dataset.tag);
             } catch {
                 const text = await clone.text();
                 console.log("Check in response (text):", text);
                 hideUI('row', type.dataset.tag);
                 type.value = '';
+                hideAll(type.dataset.tag);
             }
         }
     } else if (val === 'lsd') {
@@ -1088,11 +1084,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log("Lsd response (JSON):", data);
                     hideUI('row', type.dataset.tag);
                     type.value = '';
+                hideAll(type.dataset.tag);
                 } catch {
                     const text = await clone.text();
                     console.log("Lsd response (text):", text);
                     hideUI('row', type.dataset.tag);
                     type.value = '';
+                hideAll(type.dataset.tag);
                 }
             }
         } else {
@@ -1119,11 +1117,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     console.log("Lsd response (JSON):", data);
                     hideUI('row', type.dataset.tag);
                     type.value = '';
+                    hideAll(type.dataset.tag);
                 } catch {
                     const text = await clone.text();
                     console.log("Lsd response (text):", text);
                     hideUI('row', type.dataset.tag);
                     type.value = '';
+                    hideAll(type.dataset.tag);
                 }
             }
         }
@@ -1154,15 +1154,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 const data = await psr_res.json();
                 console.log("PSR response (JSON):", data);
                 psr_tags.forEach(async (value) => {
-                hideUI('row', value);
-                type.value = '';
+                    hideUI('row', value);
+                    type.value = '';
+                    hideAll(value);
                 });
             } catch {
                 const text = await clone.text();
                 console.log("PSR response (text):", text);
                 psr_tags.forEach(async (value) => {
-                hideUI('row', value);
-                type.value = '';
+                    hideUI('row', value);
+                    type.value = '';
+                    hideAll(value);
                 });
             }
         }
@@ -1191,15 +1193,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 const data = await bulk_t_res.json();
                 console.log("bulk-transfer response (JSON):", data);
                 bulk_t_tags.forEach(async (value) => {
-                hideUI('row', value);
-                type.value = '';
+                    hideUI('row', value);
+                    hideAll(value);
+                    type.value = '';
                 });
             } catch {
                 const text = await clone.text();
                 console.log("bulk-transfer response (text):", text);
                 psr_tags.forEach(async (value) => {
-                hideUI('row', value);
-                type.value = '';
+                    hideUI('row', value);
+                    hideAll(value);
+                    type.value = '';
                 });
             }
         }
@@ -1207,6 +1211,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
-                </body>
-
+</body>
 </html>

@@ -185,6 +185,8 @@ $variables['data']['5mMKjTfnND']['id'] = $manager_info['id'];
 $variables['data']['5mMKjTfnND']['username'] = $manager_info['username'];
 $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
+$echo('Custodian', $manager);
+$array_echo($manager_info);
 $submitter_sig = getSignature(email: $email, action_id: $action_id);
 
 // DATE

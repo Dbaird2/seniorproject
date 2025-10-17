@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             foreach ($result as $index => $row) {
                 if (!empty($row['asset_notes'])) {
                     $info = explode(',', $row['asset_notes']);
+                } else {
+                    $info = '';
                 }
                 $_SESSION['data'][$index]['Unit'] = $row['bus_unit'];
                 $_SESSION['data'][$index]['Tag Number'] = $row['asset_tag'];
