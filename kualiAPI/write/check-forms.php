@@ -180,7 +180,7 @@ if ($who !== 'Myself') {
     echo "</pre>";
         $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
         $stmt = $dbh->prepare($get_dept_name);
-        $stmt->execute([':id'=>$audit_dept]);
+        $stmt->execute([':id'=>$data['dept_id']]);
         $new_dept_name = $stmt->fetchColumn();
         if ($new_dept_name) {
             $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
@@ -219,13 +219,8 @@ if ($who !== 'Myself') {
 }
 $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
 $custodian_stmt = $dbh->prepare($custodian);
-if (!empty($new_dept_id)) {
-    $custodian_stmt->execute([':dept_id' => $new_dept_id]);
-    echo $new_dept_id . '<br>';
-} else {
-    $custodian_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    echo $_SESSION['deptid'] . '<br>';
-}
+    $custodian_stmt->execute([':dept_id' => $data['dept_id']]);
+    echo $data['dept_id'] . '<br>';
 $custodian_name = $custodian_stmt->fetchColumn();
 echo $custodian_name . '<br>';
 
