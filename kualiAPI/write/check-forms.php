@@ -183,9 +183,9 @@ if ($who !== 'Myself') {
         $stmt->execute([':id'=>$data['dept_id']]);
         $new_dept_name = $stmt->fetchColumn();
         if ($new_dept_name) {
-            $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
+            $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $new_dept_name;
             $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $audit_dept;
-            $variables['data']['isFMbCuv8e']['label'] = $dept_name;
+            $variables['data']['isFMbCuv8e']['label'] = $new_dept_name;
         }
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
@@ -263,11 +263,9 @@ $submit_form = json_encode([
 ]);
 
 /*-----------------------------------------------------------------------------*/
-/*
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
- */
 $resp = curl_exec($curl);
 curl_close($curl);
 
