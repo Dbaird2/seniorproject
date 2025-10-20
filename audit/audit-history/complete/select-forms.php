@@ -640,6 +640,7 @@ $audit_id = $_SESSION['info'][5];
         </div>
         <div style="text-align: center;">
             <button id="submit">Submit Forms</button>
+                                    <label class="error-label" id='sub-label'></label>
         </div>
     </div>
 <script>
@@ -681,8 +682,8 @@ function displayError(type, reason) {
     document.getElementById(type).textContent =  reason;
     return false;
 }
-function hideError(tag, type) {
-    document.getElementById(type + tag).textContent =  '';
+function hideError(type) {
+    document.getElementById(type).textContent =  '';
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -1167,6 +1168,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     if (valid_forms) {
+        hideError('sub-label', 'Missing form information.');
         const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
         method: 'POST',
             headers: {
@@ -1191,6 +1193,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log("Update DB response (text):", text);
             }
         }
+    } else {
+        displayError('sub-label', 'Missing form information.');
     }
 
     if (valid_forms) {
