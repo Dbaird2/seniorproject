@@ -949,7 +949,6 @@ document.addEventListener("DOMContentLoaded", function() {
             //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
             exit;
         }
-    } 
     const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
     if (condition === '' ) {
         displayError(tag, 'check-condition-feedback-', 'Condition cannot be empty');
