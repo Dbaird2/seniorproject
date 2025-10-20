@@ -1,727 +1,792 @@
 /* Removed body styling and added page-wrapper to scope styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .page-wrapper {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
-  min-height: 100vh;
-  color: #333;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    /* <CHANGE> Updated gradient to use CSUB gold tones */
+    background: linear-gradient(135deg, #FFB81C 0%, #ffffff 50%, #FFB81C 100%);
+    min-height: 100vh;
+    color: #333;
 }
 
 .dashboard-container {
-  width: 100%;
-  min-height: 50vh;
-  padding: 20px;
-  overflow-y: auto;
+    width: 100%;
+    min-height: 50vh;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 .welcome-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 25px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.15);
-  border: 1px solid rgba(14, 165, 233, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 25px;
+    /* <CHANGE> Changed shadow to CSUB blue */
+    box-shadow: 0 4px 20px rgba(0, 53, 148, 0.15);
+    border: 1px solid rgba(0, 53, 148, 0.1);
 }
 
 .welcome-section h1 {
-  color: #003594;
-  font-size: 2.2rem;
-  margin-bottom: 8px;
-  font-weight: 600;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .welcome-section p {
-  color: #707372;
-  font-size: 1.1rem;
+    color: #707372;
+    font-size: 1.1rem;
 }
 
 .audit-overview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .audit-type-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 25px;
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    /* <CHANGE> Changed border to CSUB gold */
+    border: 1px solid rgba(255, 184, 28, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* <CHANGE> Changed shadow to CSUB gold */
+    box-shadow: 0 4px 20px rgba(255, 184, 28, 0.15);
 }
 
 .audit-type-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(14, 165, 233, 0.2);
+    transform: translateY(-5px);
+    /* <CHANGE> Changed hover shadow to CSUB gold */
+    box-shadow: 0 8px 30px rgba(255, 184, 28, 0.3);
 }
 
 .audit-type-card.spa {
-  border-left: 5px solid #003594;
+    /* <CHANGE> Using CSUB blue */
+    border-left: 5px solid #003DA5;
 }
 
 .audit-type-card.fdn {
-  border-left: 5px solid #001a70;
+    /* <CHANGE> Using CSUB gold */
+    border-left: 5px solid #FFB81C;
 }
 
 .audit-type-card.self {
-  border-left: 5px solid #003594;
+    /* <CHANGE> Using CSUB blue */
+    border-left: 5px solid #003DA5;
 }
 
 .audit-type-card.mgmt {
-  border-left: 5px solid #001a70;
+    /* <CHANGE> Using CSUB gold */
+    border-left: 5px solid #FFB81C;
 }
 
 .audit-type-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .audit-type-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #0f172a;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #0f172a;
 }
 
 .audit-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
 }
 
 .audit-badge.spa {
-  background: #003594;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
 }
 
 .audit-badge.fdn {
-  background: #001a70;
+    /* <CHANGE> Using CSUB gold with dark text */
+    background: #FFB81C;
+    color: #003DA5;
 }
 
 .audit-badge.self {
-  background: #003594;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
 }
 
 .audit-badge.mgmt {
-  background: #001a70;
+    /* <CHANGE> Using CSUB gold with dark text */
+    background: #FFB81C;
+    color: #003DA5;
 }
 
 .audit-stats {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
 }
 
 .audit-stat {
-  text-align: center;
+    text-align: center;
 }
 
 .audit-stat-number {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #003594;
+    font-size: 2rem;
+    font-weight: bold;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
 }
 
 .audit-stat-label {
-  font-size: 0.8rem;
-  color: #707372;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    font-size: 0.8rem;
+    color: #707372;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .completion-bar {
-  background: #f5e6bd;
-  border-radius: 10px;
-  height: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
+    /* <CHANGE> Using light CSUB gold */
+    background: rgba(255, 184, 28, 0.2);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .completion-fill {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.3s ease;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
 }
 
 .completion-fill.spa {
-  background: #003594;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
 }
 
 .completion-fill.fdn {
-  background: #001a70;
+    /* <CHANGE> Using CSUB gold */
+    background: #FFB81C;
 }
 
 .completion-fill.self {
-  background: #003594;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
 }
 
 .completion-fill.mgmt {
-  background: #001a70;
+    /* <CHANGE> Using CSUB gold */
+    background: #FFB81C;
 }
 
 .completion-text {
-  font-size: 0.9rem;
-  color: #707372;
-  text-align: center;
+    font-size: 0.9rem;
+    color: #707372;
+    text-align: center;
 }
 
 .content-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 25px;
-  margin-bottom: 25px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
 .chart-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 30px;
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    /* <CHANGE> Changed border to CSUB gold */
+    border: 1px solid rgba(255, 184, 28, 0.3);
+    /* <CHANGE> Changed shadow to CSUB blue */
+    box-shadow: 0 4px 20px rgba(0, 61, 165, 0.1);
 }
 
 .chart-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .chart-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .chart-title h3 {
-  color: #003594;
-  font-size: 1.5rem;
-  font-weight: 600;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .chart-controls {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .ticket-btn,
 .chart-btn {
-  background: rgba(0, 53, 148, 0.1);
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  color: #003594;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
+    /* <CHANGE> Using CSUB blue background */
+    background: rgba(0, 61, 165, 0.1);
+    border: 1px solid rgba(0, 61, 165, 0.3);
+    color: #003DA5;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .chart-btn:hover,
 .chart-btn.active {
-  background: #003594;
-  color: white;
-  border-color: #003594;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
+    color: white;
+    border-color: #003DA5;
 }
 
 .ticket-btn:hover {
-  background: #003594;
-  color: white;
-  border-color: #003594;
+    /* <CHANGE> Using CSUB gold */
+    background: #FFB81C;
+    color: #003DA5;
+    border-color: #FFB81C;
 }
 
 .icon {
-  width: 24px;
-  height: 24px;
-  fill: #003594;
+    width: 24px;
+    height: 24px;
+    /* <CHANGE> Using CSUB blue */
+    fill: #003DA5;
 }
 
 .chart-placeholder {
-  display: flex;
-  border-radius: 12px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #707372;
-  height: 400px;
+    display: flex;
+    border-radius: 12px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #707372;
+    height: 400px;
 }
 
 .chart-placeholder-icon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+    font-size: 4rem;
+    margin-bottom: 20px;
 }
 
 .chart-placeholder-text {
-  font-size: 1.3rem;
-  font-weight: 500;
-  margin-bottom: 10px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 10px;
 }
 
 .chart-placeholder-subtext {
-  font-size: 1rem;
-  opacity: 0.7;
-  text-align: center;
-  max-width: 300px;
+    font-size: 1rem;
+    opacity: 0.7;
+    text-align: center;
+    max-width: 300px;
 }
 
 .actions-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 30px;
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    /* <CHANGE> Changed border to CSUB gold */
+    border: 1px solid rgba(255, 184, 28, 0.3);
+    /* <CHANGE> Changed shadow to CSUB blue */
+    box-shadow: 0 4px 20px rgba(0, 61, 165, 0.1);
 }
 
 .actions-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
 }
 
 .actions-header h3 {
-  color: #003594;
-  font-size: 1.5rem;
-  font-weight: 600;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .quick-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .action-btn {
-  background: linear-gradient(135deg, #003594, #001a70);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 18px 24px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  text-decoration: none;
-  font-weight: 500;
+    /* <CHANGE> Using CSUB blue gradient */
+    background: linear-gradient(135deg, #003DA5, #0052CC);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 24px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .action-btn:hover {
-  background: linear-gradient(135deg, #001a70, #003594);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(255, 199, 44, 0.3);
-  border: 1px solid #ffc72c;
+    /* <CHANGE> Using CSUB blue to gold gradient on hover */
+    background: linear-gradient(135deg, #003DA5, #FFB81C);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 184, 28, 0.4);
+    border: 1px solid #FFB81C;
 }
 
 .action-btn.secondary {
-  background: linear-gradient(135deg, #001a70, #003594);
+    /* <CHANGE> Using CSUB gold gradient */
+    background: linear-gradient(135deg, #FFB81C, #FFA500);
+    color: #003DA5;
+    font-weight: 600;
 }
 
 .action-btn.secondary:hover {
-  background: linear-gradient(135deg, #003594, #001a70);
-  box-shadow: 0 8px 25px rgba(255, 199, 44, 0.3);
+    /* <CHANGE> Using gold to blue gradient on hover */
+    background: linear-gradient(135deg, #FFA500, #003DA5);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 61, 165, 0.4);
 }
 
 .action-btn.warning {
-  background: linear-gradient(135deg, #ffc72c, #d4a825);
-  color: #001a70;
-  font-weight: 600;
+    /* <CHANGE> Using CSUB gold gradient */
+    background: linear-gradient(135deg, #FFB81C, #FFA500);
+    color: #003DA5;
+    font-weight: 600;
 }
 
 .action-btn.warning:hover {
-  background: linear-gradient(135deg, #d4a825, #b89420);
-  box-shadow: 0 8px 25px rgba(255, 199, 44, 0.3);
+    /* <CHANGE> Darker gold gradient on hover */
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    box-shadow: 0 8px 25px rgba(255, 184, 28, 0.4);
 }
 
 .action-btn.purple {
-  background: linear-gradient(135deg, #001a70, #003594);
+    /* <CHANGE> Changed from purple to CSUB blue gradient */
+    background: linear-gradient(135deg, #003DA5, #0052CC);
 }
 
 .action-btn.purple:hover {
-  background: linear-gradient(135deg, #003594, #001a70);
-  box-shadow: 0 8px 25px rgba(0, 53, 148, 0.3);
+    /* <CHANGE> Blue to gold gradient on hover */
+    background: linear-gradient(135deg, #0052CC, #FFB81C);
+    box-shadow: 0 8px 25px rgba(255, 184, 28, 0.4);
 }
 
 .department-alerts {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 30px;
-  border: 1px solid rgba(14, 165, 233, 0.2);
-  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    /* <CHANGE> Changed border to CSUB gold */
+    border: 1px solid rgba(255, 184, 28, 0.3);
+    /* <CHANGE> Changed shadow to CSUB blue */
+    box-shadow: 0 4px 20px rgba(0, 61, 165, 0.1);
 }
 
 .alerts-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .alerts-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .alerts-header h3 {
-  color: #003594;
-  font-size: 1.5rem;
-  font-weight: 600;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .alert-badge {
-  background: #ef4444;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 15px;
-  font-size: 0.9rem;
-  font-weight: 600;
+    background: #ef4444;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .alert-items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
 }
 
 .alert-item {
-  background: rgba(239, 68, 68, 0.1);
-  border-radius: 12px;
-  padding: 20px;
-  border-left: 4px solid #ef4444;
-  transition: transform 0.3s ease;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid #ef4444;
+    transition: transform 0.3s ease;
 }
 
 .alert-item:hover {
-  transform: translateY(-2px);
+    transform: translateY(-2px);
 }
 
 .alert-item.warning {
-  background: rgba(245, 158, 11, 0.1);
-  border-left-color: #f59e0b;
+    /* <CHANGE> Using CSUB gold for warning alerts */
+    background: rgba(255, 184, 28, 0.15);
+    border-left-color: #FFB81C;
 }
 
 .alert-item.info {
-  background: rgba(14, 165, 233, 0.1);
-  border-left-color: #0ea5e9;
+    /* <CHANGE> Using CSUB blue for info alerts */
+    background: rgba(0, 61, 165, 0.1);
+    border-left-color: #003DA5;
 }
 
 .alert-title {
-  font-weight: 600;
-  color: #0f172a;
-  font-size: 1rem;
-  margin-bottom: 8px;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1rem;
+    margin-bottom: 8px;
 }
 
 .alert-time {
-  font-size: 0.9rem;
-  color: #64748b;
+    font-size: 0.9rem;
+    color: #64748b;
 }
 
 /* Ticket Box Styling */
 .ticket-box {
-  margin: 0;
-  background: rgba(255, 255, 255, 0.95);
-  color: #0f172a;
-  font:
+    margin: 0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #0f172a;
+    font:
     14px / 1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-  min-height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
 .app {
-  width: min(1100px, 100%);
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 12px;
+    width: min(1100px, 100%);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
 }
 
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: .2px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #003594;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* <CHANGE> Using CSUB blue */
+    color: #003DA5;
 }
 
 .title .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #003594;
-  box-shadow: 0 0 12px #003594;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    /* <CHANGE> Using CSUB gold */
+    background: #FFB81C;
+    box-shadow: 0 0 12px #FFB81C;
 }
 
 .controls {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .controls input,
 .controls select {
-  background: white;
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  color: #0f172a;
-  padding: 8px 10px;
-  border-radius: 10px;
-  outline: none;
-  min-width: 180px;
-  transition: border-color 0.3s ease;
+    background: white;
+    /* <CHANGE> Using CSUB blue border */
+    border: 1px solid rgba(0, 61, 165, 0.3);
+    color: #0f172a;
+    padding: 8px 10px;
+    border-radius: 10px;
+    outline: none;
+    min-width: 180px;
+    transition: border-color 0.3s ease;
 }
 
 .controls input:focus,
 .controls select:focus {
-  border-color: #003594;
+    /* <CHANGE> Using CSUB gold on focus */
+    border-color: #FFB81C;
 }
 
 .controls button {
-  background: #003594;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .controls button:hover {
-  background: #001a70;
+    /* <CHANGE> Using CSUB gold on hover */
+    background: #FFB81C;
+    color: #003DA5;
 }
 
 .feed {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 53, 148, 0.2);
-  border-radius: 16px;
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  min-height: 540px;
+    background: rgba(255, 255, 255, 0.5);
+    /* <CHANGE> Using CSUB gold border */
+    border: 1px solid rgba(255, 184, 28, 0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 540px;
 }
 
 .scroll {
-  font-weight: 600;
-  overflow: auto;
-  padding: 12px;
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 10px;
+    font-weight: 600;
+    overflow: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
 }
 
 .ticket {
-  display: grid;
-  gap: 8px;
-  background: #f5e6bd;
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  border-radius: 14px;
-  padding: 12px;
-  box-shadow: 0 4px 15px rgba(0, 53, 148, 0.1);
+    display: grid;
+    gap: 8px;
+    /* <CHANGE> Using light CSUB gold background */
+    background: rgba(255, 184, 28, 0.1);
+    /* <CHANGE> Using CSUB blue border */
+    border: 1px solid rgba(0, 61, 165, 0.3);
+    border-radius: 14px;
+    padding: 12px;
+    /* <CHANGE> Using CSUB blue shadow */
+    box-shadow: 0 4px 15px rgba(0, 61, 165, 0.1);
 }
 
 .row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
 }
 
 .who {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  color: #64748b;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: #64748b;
 }
 
 .avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #003594;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  color: white;
-  font-weight: 600;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    /* <CHANGE> Using CSUB blue */
+    background: #003DA5;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    /* <CHANGE> Using CSUB gold border */
+    border: 1px solid #FFB81C;
+    color: white;
+    font-weight: 600;
 }
 
 .badges {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .badge {
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  background: rgba(0, 53, 148, 0.1);
-  font-size: 12px;
-  color: #003594;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    /* <CHANGE> Using CSUB blue border and background */
+    border: 1px solid rgba(0, 61, 165, 0.3);
+    background: rgba(0, 61, 165, 0.1);
+    font-size: 12px;
+    color: #003DA5;
 }
 
 .badge.success {
-  background: rgba(0, 26, 112, 0.15);
-  border-color: rgba(0, 26, 112, 0.35);
-  color: #001a70;
+    /* <CHANGE> Using CSUB gold for success */
+    background: rgba(255, 184, 28, 0.15);
+    border-color: rgba(255, 184, 28, 0.5);
+    color: #CC8800;
 }
 
 .badge.warn {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: #dc2626;
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.35);
+    color: #dc2626;
 }
 
 .when {
-  color: #64748b;
-  font-size: 12px;
+    color: #64748b;
+    font-size: 12px;
 }
 
 .info {
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-size: 14px;
-  line-height: 1.45;
-  color: #0f172a;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #0f172a;
 }
 
 .footer {
-  border-top: 1px solid rgba(0, 53, 148, 0.2);
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #707372;
-  font-size: 12px;
+    /* <CHANGE> Using CSUB gold border */
+    border-top: 1px solid rgba(255, 184, 28, 0.3);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #707372;
+    font-size: 12px;
 }
 
 .footer button {
-  background: transparent;
-  border: 1px solid rgba(0, 53, 148, 0.3);
-  color: #003594;
-  padding: 6px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+    background: transparent;
+    /* <CHANGE> Using CSUB blue border */
+    border: 1px solid rgba(0, 61, 165, 0.3);
+    color: #003DA5;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .footer button:hover {
-  background: #003594;
-  color: white;
-  border-color: #003594;
+    /* <CHANGE> Using CSUB gold on hover */
+    background: #FFB81C;
+    color: #003DA5;
+    border-color: #FFB81C;
 }
 
 .empty {
-  text-align: center;
-  padding: 40px 10px;
-  color: #64748b;
+    text-align: center;
+    padding: 40px 10px;
+    color: #64748b;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 1024px) {
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
 
-  .audit-overview {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
+    .audit-overview {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 15px;
-  }
+    .dashboard-container {
+        padding: 15px;
+    }
 
-  .welcome-section {
-    padding: 20px;
-  }
+    .welcome-section {
+        padding: 20px;
+    }
 
-  .welcome-section h1 {
-    font-size: 1.8rem;
-  }
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
 
-  .audit-overview {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
+    .audit-overview {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
 
-  .chart-section,
-  .actions-section,
-  .department-alerts {
-    padding: 20px;
-  }
+    .chart-section,
+    .actions-section,
+    .department-alerts {
+        padding: 20px;
+    }
 
-  .chart-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-  .chart-controls {
-    width: 100%;
-    justify-content: flex-start;
-  }
+    .chart-controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
 
-  .chart-placeholder {
-    height: 300px;
-  }
+    .chart-placeholder {
+        height: 300px;
+    }
 
-  .alert-items {
-    grid-template-columns: 1fr;
-  }
+    .alert-items {
+        grid-template-columns: 1fr;
+    }
 
-  .action-btn {
-    padding: 16px 20px;
-    font-size: 1rem;
-  }
+    .action-btn {
+        padding: 16px 20px;
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
-  .dashboard-container {
-    padding: 10px;
-  }
+    .dashboard-container {
+        padding: 10px;
+    }
 
-  .welcome-section h1 {
-    font-size: 1.5rem;
-  }
+    .welcome-section h1 {
+        font-size: 1.5rem;
+    }
 
-  .audit-type-card {
-    padding: 20px;
-  }
+    .audit-type-card {
+        padding: 20px;
+    }
 
-  .audit-stat-number {
-    font-size: 1.5rem;
-  }
+    .audit-stat-number {
+        font-size: 1.5rem;
+    }
 }
-

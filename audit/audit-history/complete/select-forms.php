@@ -649,7 +649,7 @@ $audit_id = $_SESSION['info'][5];
 const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
 function hideUI(type, tag) {
-    console.log(type, tag);
+    //console.log(type, tag);
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
     el.style.display = 'none';
@@ -680,7 +680,7 @@ function hideAll(tag) {
     return;
 }
 function displayError(type, reason, check, form_status) {
-    console.log(type, reason);
+    //console.log(type, reason);
     if (check === '') {
         document.getElementById(type).textContent =  reason;
         return false;
@@ -702,9 +702,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     forms_needed.forEach(form_type => {
     form_type.addEventListener('change', () => {
-    console.log('Changed input', form_type, form_type.value);
+    //console.log('Changed input', form_type, form_type.value);
     const tag = form_type.dataset.tag;
-    console.log(form_type.value, tag);
+    //console.log(form_type.value, tag);
     if (form_type.value === '') {
         hideAll(tag);
         return;
@@ -713,7 +713,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'check-out') {
         someone_else = document.querySelector('.who-' + tag);
         someone_else.addEventListener('change', () => {
-        console.log(someone_else.value);
+        //console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
             document.querySelector('.someone-else-' + tag).style.display = 'block';
         } else {
@@ -737,7 +737,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'check-in') {
         const someone_else = document.querySelector('.who-' + tag);
         someone_else.addEventListener('change', () => {
-        console.log(someone_else.value);
+        //console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
             document.querySelector('.someone-else-' + tag).style.display = 'block';
         } else {
@@ -776,7 +776,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (form_type.value === 'lsd' && (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6)) {
         const upd = document.getElementById('upd-' + tag);
         upd.addEventListener('change', () => {
-            console.log(upd.value);
+            //console.log(upd.value);
             if (upd.value === 'Yes') {
                 showUI('lsd-upd', tag);
                 const assigned = document.getElementById('upd-assigned-staff-' + tag);
@@ -822,10 +822,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         const someone_else = document.getElementById('lsd-who-' + tag);
         someone_else.addEventListener('change', () => {
-        console.log(someone_else.value);
+        //console.log(someone_else.value);
         if (someone_else.value === 'someone-else') {
             document.querySelector('.lsd-fill-' + tag).style.display = 'table-cell';
-            console.log(document.querySelector('.lsd-fill-' + tag));
+            //console.log(document.querySelector('.lsd-fill-' + tag));
         } else {
             document.querySelector('.lsd-fill-' + tag).style.display = 'none';
         }
@@ -836,11 +836,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         const it_equip = document.getElementById('item-type-' + tag);
-        console.log(it_equip);
+        //console.log(it_equip);
         it_equip.addEventListener('change', () => {
-        console.log(it_equip.value);
+        //console.log(it_equip.value);
         if (it_equip.value === 'IT Equipment') {
-            console.log(it_equip.value);
+            //console.log(it_equip.value);
             showUI('lsd-it-equip', tag);
             const confidential = document.getElementById('lsd-it-equip-confidential-' + tag);
             confidential.addEventListener('change', () => {
@@ -1092,10 +1092,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const clone = form_submitted.clone();
             try {
                 const data = await form_submitted.json();
-                console.log("Update DB response (JSON):", data);
+                //console.log("Update DB response (JSON):", data);
             } catch {
                 const text = await clone.text();
-                console.log("Update DB response (text):", text);
+                //console.log("Update DB response (text):", text);
             }
         }
     } else {
