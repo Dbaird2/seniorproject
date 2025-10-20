@@ -646,6 +646,7 @@ $audit_id = $_SESSION['info'][5];
 const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
 function hideUI(type, tag) {
+    console.log(type, tag);
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
     el.style.display = 'none';
@@ -677,7 +678,7 @@ function hideAll(tag) {
 }
 function displayError(type, reason) {
     console.log(type, reason);
-    document.getElementById(type + tag).textContent =  reason;
+    document.getElementById(type).textContent =  reason;
     return false;
 }
 function hideError(tag, type) {
@@ -1195,6 +1196,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (valid_forms) {
     forms_needed.forEach(async (type) => {
     const val = type.value;
+    const tag = form_type.dataset.tag;
 
     if (val == 'bulk-transfer') {
         bulk_t_tags.push(type.dataset.tag);

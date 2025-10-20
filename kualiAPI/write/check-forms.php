@@ -199,7 +199,7 @@ if ($who !== 'Myself') {
 } else {
     /*---------------------------------*/
     /* SIGNATURE */
-    $submitter_info = getSugmitterSig();
+    $submitter_info = getSubmitterSig();
 
     $submitter_sig = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
     $submitter_id = $submitter_info['school_id'];
