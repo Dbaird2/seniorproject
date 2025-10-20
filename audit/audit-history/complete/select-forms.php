@@ -302,7 +302,7 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Reason for Disposal</label>
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
-                                    <label id='psr-reason-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label id='psr-reason-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                             <?php if (!in_array((int)$audit_id, [4, 5, 6])) { ?>
@@ -313,7 +313,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Myself">Myself</option>
                                             <option value="someone-else">Someone Else</option>
                                         </select>
-                                    <label id='lsd-who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label id='lsd-who-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-fill-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -597,7 +597,7 @@ $audit_id = $_SESSION['info'][5];
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
                                 <input type="text" name="full-name" id="someone-else-<?=$row['Tag Number']?>" placeholder="Full name of borrower">
-                                    <label id='someone-else-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label id='someone-else-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -673,13 +673,11 @@ function hideAll(tag) {
 }
 function displayError(tag, type, reason) {
     console.log(type+ tag, reason);
-    document.getElementById(type + tag).style.display = 'block';
-    document.getElementById(type + tag).value =  reason;
+    document.getElementById(type + tag).textContent =  reason;
     return false;
 }
 function hideError(tag, type) {
-    document.getElementById(type + tag).style.display = 'none';
-    document.getElementById(type + tag).value =  '';
+    document.getElementById(type + tag).textContent =  '';
 }
 
 document.addEventListener("DOMContentLoaded", function() {
