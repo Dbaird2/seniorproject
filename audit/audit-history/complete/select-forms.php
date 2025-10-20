@@ -172,6 +172,10 @@ $audit_id = $_SESSION['info'][5];
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .error-label {
+            color: red;
+            font-size: x-small;
+        }
 
         #submit {
             background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
@@ -302,7 +306,7 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Reason for Disposal</label>
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
-                                    <label id='psr-reason-feedback-<?= $row['Tag Number'] ?>' ></label>
+                                    <label class="error-label" id='psr-reason-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                             <?php if (!in_array((int)$audit_id, [4, 5, 6])) { ?>
@@ -313,14 +317,14 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Myself">Myself</option>
                                             <option value="someone-else">Someone Else</option>
                                         </select>
-                                    <label id='lsd-who-feedback-<?= $row['Tag Number'] ?>'></label>
+                                    <label class="error-label" id='lsd-who-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-fill-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
                                         <label>Borrower Email</label>
                                         <input type="text" id="lsd-fill-for-<?= $row['Tag Number'] ?>" placeholder="Enter email...">
-                                        <label id='lsd-fill-for-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                        <label class="error-label" id='lsd-fill-for-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -340,7 +344,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Stolen">Stolen</option>
                                             <option value="Destroyed">Destroyed</option>
                                         </select>
-                                    <label id='lsd-condition-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-condition-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -348,7 +352,7 @@ $audit_id = $_SESSION['info'][5];
                                         <label>Detailed Narrative</label>
                                         <textarea id="lsd-narrative-<?= $row['Tag Number'] ?>" placeholder="Provide detailed description..."></textarea>
                                     </div>
-                                    <label id='lsd-narrative-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-narrative-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
@@ -357,7 +361,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="No">No</option>
                                             <option value="Yes">Yes</option>
                                         </select>
-                                        <label id='upd-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                        <label class="error-label" id='upd-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -369,7 +373,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Instructional Equipment">Instructional Equipment</option>
                                             <option value="Other">Other</option>
                                         </select>
-                                    <label id='item-type-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='item-type-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                         </tr>
@@ -379,7 +383,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Describe the item lost</label>
                                     <input type="text" 
                                         id="upd-describe-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-describe-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-describe-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -389,7 +393,7 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
-                                    <label id='lsd-it-equip-confidential-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-it-equip-confidential-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -397,7 +401,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Describe as completely as possible the nature of the confideial data that was stored on this equipment</label>
                                     <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
                                         id="lsd-it-equip-confidential-input-<?= $row['Tag Number'] ?>">
-                                    <label id='lsd-it-equip-confidential-input-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-it-equip-confidential-input-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -407,14 +411,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
-                                    <label id='lsd-it-equip-encrypted-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-it-equip-encrypted-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Please describe how the data was protected</label>
                                     <input type="text" id="lsd-it-equip-encrypted-input-<?= $row['Tag Number'] ?>">
-                                    <label id='lsd-it-equip-encrypted-input-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='lsd-it-equip-encrypted-input-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                         </tr>
@@ -424,7 +428,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Date Reported</label>
                                     <input type="date" id="upd-date-reported-<?= $row['Tag Number'] ?>">
                                 </div>
-                                    <label id='upd-date-reported-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-date-reported-feedback-<?= $row['Tag Number'] ?>'></label>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
@@ -436,28 +440,28 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Date Last Seen</label>
                                     <input type="date" id="upd-date-last-seen-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-date-last-seen-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-date-last-seen-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Time Last Seen</label>
                                     <input type="time" id="upd-time-last-seen-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-time-last-seen-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-time-last-seen-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>By Whom?</label>
                                     <input type="text" id="upd-by-whom-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-by-whom-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-by-whom-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Location</label>
                                     <input type="text" id="upd-location-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-location-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-location-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                         </tr>
@@ -469,14 +473,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value='No'>No</option>
                                         <option value='Yes'>Yes</option>
                                     </select>
-                                    <label id='upd-secured-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-secured-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-access-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Who has access keys?</label>
                                     <input type="text" id="upd-access-keys-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-access-keys-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-access-keys-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -486,28 +490,28 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
-                                    <label id='upd-assigned-staff-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-assigned-staff-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-yes-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Who?</label>
                                     <input type="text" id="upd-who-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-who-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>What steps were taken to recover the asset?</label>
                                     <input type="text" id="upd-recovery-steps-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-recovery-steps-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-recovery-steps-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>What precautions are in effect to prevent loss or theft?</label>
                                     <input type="text" id="upd-precautions-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-precautions-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-precautions-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                         </tr>
@@ -531,14 +535,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
-                                    <label id='upd-reported-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-reported-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-explain-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Explain</label>
                                     <input type="text" id="upd-explain-<?= $row['Tag Number'] ?>">
-                                    <label id='upd-explain-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='upd-explain-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                         </tr>
@@ -590,14 +594,14 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Myself">Myself</option>
                                     <option value="someone-else">Someone Else</option>
                                 </select>
-                                    <label id='who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='who-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
                                 <input type="text" name="full-name" id="someone-else-<?=$row['Tag Number']?>" placeholder="Full name of borrower">
-                                    <label id='someone-else-feedback-<?= $row['Tag Number'] ?>'></label>
+                                    <label class="error-label" id='someone-else-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -609,7 +613,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Used">Used</option>
                                     <option value="Damaged">Damaged</option>
                                 </select>
-                                    <label id='check-condition-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='check-condition-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -626,7 +630,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Desktop">Desktop</option>
                                     <option value="Tablet">Tablet</option>
                                 </select>
-                                    <label id='check-item-type-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
+                                    <label class="error-label" id='check-item-type-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         </tr>
@@ -671,8 +675,8 @@ function hideAll(tag) {
     hideUI('lsd-fill-', tag);
     return;
 }
-function displayError(tag, type, reason) {
-    console.log(type+ tag, reason);
+function displayError(type, reason) {
+    console.log(type, reason);
     document.getElementById(type + tag).textContent =  reason;
     return false;
 }
@@ -881,14 +885,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
         const code = document.getElementById('psr-code-' + type.dataset.tag).value;
         if (reason === '') {
-            displayError(tag, 'psr-reason-feedback-', 'Reason cannot be empty');
+            displayError('psr-reason-feedback-'+tag, 'Reason cannot be empty');
             valid_forms = false;
             // document.getElementById('psr-reason-feedback-'+type.dataset.tag).style.display = 'block';
             // document.getElementById('psr-reason-feedback-'+type.dataset.tag).textContent = 'Reason cannot be empty';
         }
         if (code === '') {
             valid_forms = false;
-            displayError(tag, 'psr-code-feedback-', 'Code cannot be empty');
+            displayError('psr-code-feedback-'+tag, 'Code cannot be empty');
             // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
             // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Code cannot be empty';
         } else {
@@ -897,7 +901,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         if (check_type === '') {
             valid_forms = false;
-            displayError(tag, 'who-feedback-', 'Submitter type cannot be empty');
+            displayError('who-feedback-' + tag, 'Submitter type cannot be empty');
             // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
             // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Type cannot be empty';
             
@@ -907,26 +911,26 @@ document.addEventListener("DOMContentLoaded", function() {
             let borrower = '';
             borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             if (borrower === '') {
-                displayError(tag, 'someone-else-feedback-', 'Borrower cannot be empty');
+                displayError('someone-else-feedback-' + tag, 'Borrower cannot be empty');
                 valid_forms = false;
             }
             const split_name = borrower.split(' ');
             const email_regex = /(@)/;
 
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-                displayError(tag, 'someone-else-feedback-', 'Invalid Borrower');
+                displayError('someone-else-feedback-' + tag, 'Invalid Borrower');
                 valid_forms = false;
             }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         if (condition === '' ) {
-            displayError(tag, 'check-condition-feedback-', 'Condition cannot be empty');
+            displayError('check-condition-feedback-' + tag, 'Condition cannot be empty');
             valid_forms = false;
         }
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
         const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
         if (item_type === '' ) {
-            displayError(tag, 'check-item-type-feedback-', 'Item Type cannot be empty');
+            displayError('check-item-type-feedback-'+tag, 'Item Type cannot be empty');
             valid_forms = false;
         }
 
@@ -935,27 +939,27 @@ document.addEventListener("DOMContentLoaded", function() {
         let borrower = '';
         borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
         if (borrower === '') {
-            displayError(tag, 'someone-else-feedback-', 'Borrower cannot be empty');
+            displayError('someone-else-feedback-'+tag, 'Borrower cannot be empty');
             valid_forms = false;
         }
         const split_name = borrower.split(' ');
         const email_regex = /(@)/;
 
         if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-            displayError(tag, 'someone-else-feedback-', 'Invalid Borrower');
+            displayError('someone-else-feedback-'+tag, 'Invalid Borrower');
             valid_forms = false;
             //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
             exit;
         }
     const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
     if (condition === '' ) {
-        displayError(tag, 'check-condition-feedback-', 'Condition cannot be empty');
+        displayError('check-condition-feedback-' + tag, 'Condition cannot be empty');
         valid_forms = false;
     }
     const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
     const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
     if (item_type === '' ) {
-        displayError(tag, 'check-item-type-feedback-', 'Item Type cannot be empty');
+        displayError('check-item-type-feedback-' + tag, 'Item Type cannot be empty');
         valid_forms = false;
     }
 
@@ -967,14 +971,14 @@ document.addEventListener("DOMContentLoaded", function() {
             let borrower = '';
             borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
             if (borrower === '') {
-                displayError(tag, 'lsd-fill-for-feedback-', 'Borrower cannot be empty');
+                displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty');
                 valid_forms = false;
             }
             const split_name = borrower.split(' ');
             const email_regex = /(@)/;
 
             if (who === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-                displayError(tag, 'lsd-fill-for-feedback-', 'Invalid Borrower');
+                displayError('lsd-fill-for-feedback-'+tag, 'Invalid Borrower');
                 valid_forms = false;
             }
             // REQUIRED
