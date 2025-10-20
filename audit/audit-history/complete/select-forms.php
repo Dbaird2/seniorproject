@@ -603,7 +603,7 @@ $audit_id = $_SESSION['info'][5];
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
                                 <input type="text" name="full-name" id="someone-else-<?=$row['Tag Number']?>" placeholder="Full name of borrower">
-                                    <label class="error-label" id='someone-else-feedback-<?= $row['Tag Number'] ?>'></label>
+                                <label class="error-label" id='someone-else-feedback-<?= $row['Tag Number'] ?>'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -664,6 +664,9 @@ function showUI(type, tag) {
     });
 }
 function hideAll(tag) {
+    document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+    hideUI('lsd-it-equip-encrypted', tag);
+    hideUI('lsd-it-equip-confidential', tag);
     hideUI('lsd-it-equip', tag);
     hideUI('lsd-upd-explain', tag);
     hideUI('lsd-upd-access', tag);
@@ -720,6 +723,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
+            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+                hideUI('lsd-it-equip-encrypted', tag);
+                hideUI('lsd-it-equip-confidential', tag);
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
             hideUI('lsd-it-equip', tag);
@@ -744,6 +750,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
+            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+                hideUI('lsd-it-equip-encrypted', tag);
+                hideUI('lsd-it-equip-confidential', tag);
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
             hideUI('lsd-it-equip', tag);
@@ -759,6 +768,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (form_type.value === 'psr') {
+            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+                hideUI('lsd-it-equip-encrypted', tag);
+                hideUI('lsd-it-equip-confidential', tag);
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
             hideUI('lsd-it-equip', tag);
@@ -915,7 +927,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
             }
-        } 
+        }
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
             valid_forms = displayError('check-condition-feedback-' + tag, 'Condition cannot be empty', condition, valid_forms);
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
@@ -925,16 +937,18 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (val == 'check-in') {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
-        borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
+        if (check_type !== 'Myself') {
+            borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             valid_forms = displayError('someone-else-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
-        const split_name = borrower.split(' ');
-        const email_regex = /(@)/;
+            const split_name = borrower.split(' ');
+            const email_regex = /(@)/;
 
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
                 valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
             } else {
                 valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
             }
+        }
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
         valid_forms = displayError('check-condition-feedback-' + tag, 'Condition cannot be empty', condition, valid_forms);
     const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
@@ -947,15 +961,16 @@ document.addEventListener("DOMContentLoaded", function() {
             // REQUIRED
             const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
             let borrower = '';
-            borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
-            valid_forms = displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
-            const split_name = borrower.split(' ');
-            const email_regex = /(@)/;
+            if (who !== 'Myself') {
+                borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
+                valid_forms = displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
+                const split_name = borrower.split(' ');
+                const email_regex = /(@)/;
 
-            if (who === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-                valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
-            } else {
-                valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
+                if (split_name.length < 2 && !email_regex.test(borrower)) {
+                    valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
+                } else {
+                }
             }
             // REQUIRED
             const position = document.getElementById('lsd-position-' + type.dataset.tag).value;

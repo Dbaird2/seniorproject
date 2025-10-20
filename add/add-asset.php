@@ -124,7 +124,7 @@ $stmt = $dbh->prepare($query);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT DISTINCT dept_id FROM dept_table";
+$query = "SELECT DISTINCT dept_id FROM deptartment";
 $stmt = $dbh->prepare($query);
 $stmt->execute();
 $dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
