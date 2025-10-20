@@ -680,7 +680,7 @@ function hideAll(tag) {
     return;
 }
 function displayError(type, reason, check, form_status) {
-    //console.log(type, reason);
+    console.log(type, reason, check, form_status);
     if (check === '') {
         document.getElementById(type).textContent =  reason;
         return false;
