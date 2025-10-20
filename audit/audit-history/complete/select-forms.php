@@ -704,7 +704,7 @@ document.addEventListener("DOMContentLoaded", function() {
     form_type.addEventListener('change', () => {
     //console.log('Changed input', form_type, form_type.value);
     const tag = form_type.dataset.tag;
-    //console.log(form_type.value, tag);
+    //.log(form_type.value, tag);
     if (form_type.value === '') {
         hideAll(tag);
         return;
@@ -1063,7 +1063,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (confidential === 'Yes') {
                     // REQUIRED
                     const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
-                    valid_forms = displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.', confidetial_data, valid_forms);
+                    valid_forms = displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.', confidential_data, valid_forms);
                 }
             }
 
