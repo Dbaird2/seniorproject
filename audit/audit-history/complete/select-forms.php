@@ -639,8 +639,8 @@ $audit_id = $_SESSION['info'][5];
             </table>
         </div>
         <div style="text-align: center;">
+            <label class="error-label" id='sub-label'></label>
             <button id="submit">Submit Forms</button>
-                                    <label class="error-label" id='sub-label'></label>
         </div>
     </div>
 <script>
@@ -950,8 +950,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
             displayError('someone-else-feedback-'+tag, 'Invalid Borrower');
             valid_forms = false;
-            //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-            exit;
         }
     const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
     if (condition === '' ) {
@@ -1222,7 +1220,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const split_name = borrower.split(' ');
             if (check_type === 'someone-else' && split_name.length < 2) {
                 //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-                exit;
             }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
@@ -1275,7 +1272,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const split_name = borrower.split(' ');
         if (check_type === 'someone-else' && split_name.length < 2) {
             //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-            exit;
         }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
