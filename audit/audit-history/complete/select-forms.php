@@ -876,6 +876,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const audit_id = <?= json_encode($_SESSION['info'][5]) ?>;
 
     forms_needed.forEach(async (type) => {
+    const tag = type.dataset.tag;
     const val = type.value;
     if (val == 'psr') {
         const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
