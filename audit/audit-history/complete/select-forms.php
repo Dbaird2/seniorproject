@@ -300,6 +300,7 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="SALE (SEE SAM SECTION 3520)">SALE (SEE SAM SECTION 3520)</option>
                                         <option value="TRADE-IN (SHOW TRADE-IN PRICE OFFERED)">TRADE-IN (SHOW TRADE-IN PRICE OFFERED)</option>
                                     </select>
+                                    <label class="error-label" id='psr-code-feedback-<?= $row['Tag Number'] ?>' ></label>
                                 </div>
                             </td>
                             <td class="psr-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -334,6 +335,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Staff/Faculty">Staff/Faculty</option>
                                             <option value="Student">Student</option>
                                         </select>
+                                    <label class="error-label" id='lsd-position-feedback-<?= $row['Tag Number'] ?>'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
