@@ -677,13 +677,20 @@ function hideAll(tag) {
     hideUI('lsd-fill-', tag);
     return;
 }
-function displayError(type, reason) {
+function displayError(type, reason, check, form_status) {
     console.log(type, reason);
-    document.getElementById(type).textContent =  reason;
-    return false;
-}
-function hideError(type) {
-    document.getElementById(type).textContent =  '';
+    if (check === '') {
+        document.getElementById(type).textContent =  reason;
+        return false;
+    } else {
+        document.getElementById(type).textContent =  '';
+    }
+
+    if (!form_status) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -887,82 +894,50 @@ document.addEventListener("DOMContentLoaded", function() {
     if (val == 'psr') {
         const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
         const code = document.getElementById('psr-code-' + type.dataset.tag).value;
-        if (reason === '') {
-            displayError('psr-reason-feedback-'+tag, 'Reason cannot be empty');
-            valid_forms = false;
-            // document.getElementById('psr-reason-feedback-'+type.dataset.tag).style.display = 'block';
-            // document.getElementById('psr-reason-feedback-'+type.dataset.tag).textContent = 'Reason cannot be empty';
-        }
-        if (code === '') {
-            valid_forms = false;
-            displayError('psr-code-feedback-'+tag, 'Code cannot be empty');
-            // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
-            // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Code cannot be empty';
-        } else {
-        }
+            valid_forms = displayError('psr-reason-feedback-'+tag, 'Reason cannot be empty', reason, valid_forms);
+            valid_forms = displayError('psr-code-feedback-'+tag, 'Code cannot be empty', code, valid_forms);
     } else if (val == 'check-out') {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
-        if (check_type === '') {
-            valid_forms = false;
-            displayError('who-feedback-' + tag, 'Submitter type cannot be empty');
-            // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
-            // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Type cannot be empty';
+        valid_forms = displayError('who-feedback-' + tag, 'Submitter type cannot be empty', check_type, valid_forms);
             
-        }
         let borrower = '';
         if (check_type === 'someone-else') {
             let borrower = '';
             borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
-            if (borrower === '') {
-                displayError('someone-else-feedback-' + tag, 'Borrower cannot be empty');
-                valid_forms = false;
-            }
+            valid_forms = displayError('someone-else-feedback-' + tag, 'Borrower cannot be empty', borrower, valid_forms);
             const split_name = borrower.split(' ');
             const email_regex = /(@)/;
 
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-                displayError('someone-else-feedback-' + tag, 'Invalid Borrower');
-                valid_forms = false;
+                valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
+            } else {
+                valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
             }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
-        if (condition === '' ) {
-            displayError('check-condition-feedback-' + tag, 'Condition cannot be empty');
-            valid_forms = false;
-        }
+            valid_forms = displayError('check-condition-feedback-' + tag, 'Condition cannot be empty', condition, valid_forms);
         const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
         const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
-        if (item_type === '' ) {
-            displayError('check-item-type-feedback-'+tag, 'Item Type cannot be empty');
-            valid_forms = false;
-        }
+            valid_forms = displayError('check-item-type-feedback-'+tag, 'Item Type cannot be empty', item_type, valid_forms);
 
     } else if (val == 'check-in') {
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
         borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
-        if (borrower === '') {
-            displayError('someone-else-feedback-'+tag, 'Borrower cannot be empty');
-            valid_forms = false;
-        }
+            valid_forms = displayError('someone-else-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
         const split_name = borrower.split(' ');
         const email_regex = /(@)/;
 
-        if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-            displayError('someone-else-feedback-'+tag, 'Invalid Borrower');
-            valid_forms = false;
-        }
-    const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
-    if (condition === '' ) {
-        displayError('check-condition-feedback-' + tag, 'Condition cannot be empty');
-        valid_forms = false;
-    }
+            if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
+                valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
+            } else {
+                valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
+            }
+        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
+        valid_forms = displayError('check-condition-feedback-' + tag, 'Condition cannot be empty', condition, valid_forms);
     const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
     const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
-    if (item_type === '' ) {
-        displayError('check-item-type-feedback-' + tag, 'Item Type cannot be empty');
-        valid_forms = false;
-    }
+        valid_forms = displayError('check-item-type-feedback-' + tag, 'Item Type cannot be empty', item_type, valid_forms);
 
 
     } else if (val === 'lsd') {
@@ -971,148 +946,92 @@ document.addEventListener("DOMContentLoaded", function() {
             const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
             let borrower = '';
             borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
-            if (borrower === '') {
-                displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty');
-                valid_forms = false;
-            }
+            valid_forms = displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
             const split_name = borrower.split(' ');
             const email_regex = /(@)/;
 
             if (who === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
-                displayError('lsd-fill-for-feedback-'+tag, 'Invalid Borrower');
-                valid_forms = false;
+                valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
+            } else {
+                valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', 'good', valid_forms);
             }
             // REQUIRED
             const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
-            if (position === '') {
-                displayError( 'lsd-position-feedback-' + type.dataset.tag, 'Please select the position.');
-                valid_forms = false;
-            }
+            valid_forms = displayError( 'lsd-position-feedback-' + type.dataset.tag, 'Please select the position.', position, valid_forms);
 
             // REQUIRED
             const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
-            if (lsd === '') {
-                displayError('lsd-condition-feedback-' + type.dataset.tag, 'Please specify the current condition.');
-                valid_forms = false;
-            }
+            valid_forms = displayError('lsd-condition-feedback-' + type.dataset.tag, 'Please specify the current condition.', lsd, valid_forms);
 
             // REQUIRED
             const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
-            if (reason === '') {
-                displayError('lsd-narrative-feedback-' + type.dataset.tag, 'Please provide a reason or narrative.');
-                valid_forms = false;
-            }
+            valid_forms = displayError('lsd-narrative-feedback-' + type.dataset.tag, 'Please provide a reason or narrative.', reason, valid_forms);
 
             // REQUIRED
             const upd = document.getElementById('upd-' + type.dataset.tag).value;
-            if (upd === '') {
-                displayError('upd-feedback-' + type.dataset.tag, 'Please specify if an update is required.');
-                valid_forms = false;
-            }
+            valid_forms = displayError('upd-feedback-' + type.dataset.tag, 'Please specify if an update is required.', upd, valid_forms);
 
             // REQUIRED
             const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
-            if (item_type === '') {
-                displayError('item-type-feedback-' + type.dataset.tag, 'Please select the item type.');
-                valid_forms = false;
-            }
+            valid_forms = displayError('item-type-feedback-' + type.dataset.tag, 'Please select the item type.', item_type, valid_forms);
 
             if (upd === 'Yes') {
                 // REQUIRED
                 const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
-                if (date_reported === '') {
-                    displayError('upd-date-reported-feedback-' + type.dataset.tag, 'Please enter the date reported.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-date-reported-feedback-' + type.dataset.tag, 'Please enter the date reported.', date_reported, valid_forms);
 
                 const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag).value;
 
                 // REQUIRED
                 const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
-                if (date_last_seen === '') {
-                    displayError('upd-date-last-seen-feedback-' + type.dataset.tag, 'Please enter the date the item was last seen.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-date-last-seen-feedback-' + type.dataset.tag, 'Please enter the date the item was last seen.', date_last_seen, valid_forms);
 
                 // REQUIRED
                 const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
-                if (time_last_seen === '') {
-                    displayError('upd-time-last-seen-feedback-' + type.dataset.tag, 'Please enter the time the item was last seen.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-time-last-seen-feedback-' + type.dataset.tag, 'Please enter the time the item was last seen.', time_last_seen, valid_forms);
 
                 // REQUIRED
                 const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
-                if (by_whom === '') {
-                    displayError('upd-by-whom-feedback-' + type.dataset.tag, 'Please specify who last saw or handled the item.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-by-whom-feedback-' + type.dataset.tag, 'Please specify who last saw or handled the item.', by_whom, valid_forms);
 
                 // REQUIRED
                 const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
-                if (upd_location === '') {
-                    displayError('upd-location-feedback-' + type.dataset.tag, 'Please enter the location of the update.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-location-feedback-' + type.dataset.tag, 'Please enter the location of the update.', upd_location, valid_forms);
 
                 // REQUIRED
                 const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
-                if (secured === '') {
-                    displayError('upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.', secured, valid_forms);
 
                 // REQUIRED
                 const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
-                if (access_keys === '') {
-                    displayError('upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.', access_keys, valid_forms);
 
                 // REQUIRED
                 const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
-                if (assigned_staff === '') {
-                    displayError('upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.', assigned_staff, valid_forms);
 
                 // REQUIRED
                 const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
-                if (who_assigned === '') {
-                    displayError('upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.', who_assigned, valid_forms);
 
                 // REQUIRED
                 const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
-                if (recovery_steps === '') {
-                    displayError('upd-recovery-steps-feedback-' + type.dataset.tag, 'Please describe the recovery steps taken.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-recovery-steps-feedback-' + type.dataset.tag, 'Please describe the recovery steps taken.', recovery_steps, valid_forms);
 
                 // REQUIRED
                 const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
-                if (precautions === '') {
-                    displayError('upd-precautions-feedback-' + type.dataset.tag, 'Please describe the precautions in place.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-precautions-feedback-' + type.dataset.tag, 'Please describe the precautions in place.', precautions, valid_forms);
 
                 const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
                 const security = document.getElementById('upd-security-' + type.dataset.tag).value;
 
                 // REQUIRED
                 const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
-                if (reported === '') {
-                    displayError('upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.', reported, valid_forms);
 
                 // REQUIRED
                 const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
-                if (explain === '') {
-                    displayError('upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.', explain, valid_forms);
 
                 const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
                 const company = document.getElementById('upd-company-' + type.dataset.tag).value;
@@ -1123,41 +1042,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // REQUIRED
                 const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
-                if (describe_asset === '') {
-                    displayError('upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.', describe_asset, valid_forms);
 
                 // REQUIRED
                 const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
-                if (encrypted === '') {
-                    displayError('lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.', encrypted, valid_forms);
 
                 if (encrypted === 'Yes') {
                     // REQUIRED
                     const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
-                    if (encrypted_data === '') {
-                        displayError('lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.');
-                        valid_forms = false;
-                    }
+                    valid_forms = displayError('lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.', encrypted_data, valid_forms);
                 }
 
                 // REQUIRED
                 const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-                if (confidential === '') {
-                    displayError('lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.');
-                    valid_forms = false;
-                }
+                valid_forms = displayError('lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.', confidential, valid_forms);
 
                 if (confidential === 'Yes') {
                     // REQUIRED
                     const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
-                    if (confidential_data === '') {
-                        displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.');
-                        valid_forms = false;
-                    }
+                    valid_forms = displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.', confidetial_data, valid_forms);
                 }
             }
 
@@ -1167,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     if (valid_forms) {
-        hideError('sub-label', 'Missing form information.');
+        displayError('sub-label', 'Missing form information.', 'good', valid_forms);
         const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
         method: 'POST',
             headers: {
@@ -1193,7 +1097,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     } else {
-        displayError('sub-label', 'Missing form information.');
+        displayError('sub-label', 'Missing form information.', '', valid_forms);
     }
 
     if (valid_forms) {
