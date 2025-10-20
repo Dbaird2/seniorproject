@@ -985,35 +985,35 @@ document.addEventListener("DOMContentLoaded", function() {
             // REQUIRED
             const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
             if (position === '') {
-                displayError(type.dataset.tag, 'lsd-position-feedback-' + type.dataset.tag, 'Please select the position.');
+                displayError( 'lsd-position-feedback-' + type.dataset.tag, 'Please select the position.');
                 valid_forms = false;
             }
 
             // REQUIRED
             const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
             if (lsd === '') {
-                displayError(type.dataset.tag, 'lsd-condition-feedback-' + type.dataset.tag, 'Please specify the current condition.');
+                displayError('lsd-condition-feedback-' + type.dataset.tag, 'Please specify the current condition.');
                 valid_forms = false;
             }
 
             // REQUIRED
             const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
             if (reason === '') {
-                displayError(type.dataset.tag, 'lsd-narrative-feedback-' + type.dataset.tag, 'Please provide a reason or narrative.');
+                displayError('lsd-narrative-feedback-' + type.dataset.tag, 'Please provide a reason or narrative.');
                 valid_forms = false;
             }
 
             // REQUIRED
             const upd = document.getElementById('upd-' + type.dataset.tag).value;
             if (upd === '') {
-                displayError(type.dataset.tag, 'upd-feedback-' + type.dataset.tag, 'Please specify if an update is required.');
+                displayError('upd-feedback-' + type.dataset.tag, 'Please specify if an update is required.');
                 valid_forms = false;
             }
 
             // REQUIRED
             const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
             if (item_type === '') {
-                displayError(type.dataset.tag, 'item-type-feedback-' + type.dataset.tag, 'Please select the item type.');
+                displayError('item-type-feedback-' + type.dataset.tag, 'Please select the item type.');
                 valid_forms = false;
             }
 
@@ -1021,7 +1021,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // REQUIRED
                 const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
                 if (date_reported === '') {
-                    displayError(type.dataset.tag, 'upd-date-reported-feedback-' + type.dataset.tag, 'Please enter the date reported.');
+                    displayError('upd-date-reported-feedback-' + type.dataset.tag, 'Please enter the date reported.');
                     valid_forms = false;
                 }
 
@@ -1030,70 +1030,70 @@ document.addEventListener("DOMContentLoaded", function() {
                 // REQUIRED
                 const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
                 if (date_last_seen === '') {
-                    displayError(type.dataset.tag, 'upd-date-last-seen-feedback-' + type.dataset.tag, 'Please enter the date the item was last seen.');
+                    displayError('upd-date-last-seen-feedback-' + type.dataset.tag, 'Please enter the date the item was last seen.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
                 if (time_last_seen === '') {
-                    displayError(type.dataset.tag, 'upd-time-last-seen-feedback-' + type.dataset.tag, 'Please enter the time the item was last seen.');
+                    displayError('upd-time-last-seen-feedback-' + type.dataset.tag, 'Please enter the time the item was last seen.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
                 if (by_whom === '') {
-                    displayError(type.dataset.tag, 'upd-by-whom-feedback-' + type.dataset.tag, 'Please specify who last saw or handled the item.');
+                    displayError('upd-by-whom-feedback-' + type.dataset.tag, 'Please specify who last saw or handled the item.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
                 if (upd_location === '') {
-                    displayError(type.dataset.tag, 'upd-location-feedback-' + type.dataset.tag, 'Please enter the location of the update.');
+                    displayError('upd-location-feedback-' + type.dataset.tag, 'Please enter the location of the update.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
                 if (secured === '') {
-                    displayError(type.dataset.tag, 'upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.');
+                    displayError('upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
                 if (access_keys === '') {
-                    displayError(type.dataset.tag, 'upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.');
+                    displayError('upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
                 if (assigned_staff === '') {
-                    displayError(type.dataset.tag, 'upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.');
+                    displayError('upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
                 if (who_assigned === '') {
-                    displayError(type.dataset.tag, 'upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.');
+                    displayError('upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
                 if (recovery_steps === '') {
-                    displayError(type.dataset.tag, 'upd-recovery-steps-feedback-' + type.dataset.tag, 'Please describe the recovery steps taken.');
+                    displayError('upd-recovery-steps-feedback-' + type.dataset.tag, 'Please describe the recovery steps taken.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
                 if (precautions === '') {
-                    displayError(type.dataset.tag, 'upd-precautions-feedback-' + type.dataset.tag, 'Please describe the precautions in place.');
+                    displayError('upd-precautions-feedback-' + type.dataset.tag, 'Please describe the precautions in place.');
                     valid_forms = false;
                 }
 
@@ -1103,14 +1103,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 // REQUIRED
                 const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
                 if (reported === '') {
-                    displayError(type.dataset.tag, 'upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.');
+                    displayError('upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
                 if (explain === '') {
-                    displayError(type.dataset.tag, 'upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.');
+                    displayError('upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.');
                     valid_forms = false;
                 }
 
@@ -1124,14 +1124,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 // REQUIRED
                 const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
                 if (describe_asset === '') {
-                    displayError(type.dataset.tag, 'upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.');
+                    displayError('upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.');
                     valid_forms = false;
                 }
 
                 // REQUIRED
                 const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
                 if (encrypted === '') {
-                    displayError(type.dataset.tag, 'lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.');
+                    displayError('lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.');
                     valid_forms = false;
                 }
 
@@ -1139,7 +1139,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     // REQUIRED
                     const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
                     if (encrypted_data === '') {
-                        displayError(type.dataset.tag, 'lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.');
+                        displayError('lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.');
                         valid_forms = false;
                     }
                 }
@@ -1147,7 +1147,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 // REQUIRED
                 const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
                 if (confidential === '') {
-                    displayError(type.dataset.tag, 'lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.');
+                    displayError('lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.');
                     valid_forms = false;
                 }
 
@@ -1155,7 +1155,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     // REQUIRED
                     const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
                     if (confidential_data === '') {
-                        displayError(type.dataset.tag, 'lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.');
+                        displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.');
                         valid_forms = false;
                     }
                 }
