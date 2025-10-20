@@ -302,6 +302,7 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Reason for Disposal</label>
                                     <input type="text" id="psr-reason-<?= $row['Tag Number'] ?>" placeholder="Enter reason...">
+                                    <label id='psr-reason-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <?php if (!in_array((int)$audit_id, [4, 5, 6])) { ?>
@@ -312,12 +313,14 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Myself">Myself</option>
                                             <option value="someone-else">Someone Else</option>
                                         </select>
+                                    <label id='lsd-who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-fill-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
                                         <label>Borrower Email</label>
                                         <input type="text" id="lsd-fill-for-<?= $row['Tag Number'] ?>" placeholder="Enter email...">
+                                        <label id='lsd-fill-for-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -337,6 +340,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Stolen">Stolen</option>
                                             <option value="Destroyed">Destroyed</option>
                                         </select>
+                                    <label id='lsd-condition-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -344,6 +348,7 @@ $audit_id = $_SESSION['info'][5];
                                         <label>Detailed Narrative</label>
                                         <textarea id="lsd-narrative-<?= $row['Tag Number'] ?>" placeholder="Provide detailed description..."></textarea>
                                     </div>
+                                    <label id='lsd-narrative-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
@@ -352,6 +357,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="No">No</option>
                                             <option value="Yes">Yes</option>
                                         </select>
+                                        <label id='upd-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                     </div>
                                 </td>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -363,6 +369,7 @@ $audit_id = $_SESSION['info'][5];
                                             <option value="Instructional Equipment">Instructional Equipment</option>
                                             <option value="Other">Other</option>
                                         </select>
+                                    <label id='item-type-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                     </div>
                                 </td>
                         </tr>
@@ -372,6 +379,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Describe the item lost</label>
                                     <input type="text" 
                                         id="upd-describe-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-describe-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -381,6 +389,7 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
+                                    <label id='lsd-it-equip-confidential-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-confidential-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -388,6 +397,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Describe as completely as possible the nature of the confideial data that was stored on this equipment</label>
                                     <input type="text" placeholder="i.e. Names, Social Security Number's, Date of Bird, Driver License #'s, Credit Card #'s, etc"
                                         id="lsd-it-equip-confidential-input-<?= $row['Tag Number'] ?>">
+                                    <label id='lsd-it-equip-confidential-input-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -397,12 +407,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
+                                    <label id='lsd-it-equip-encrypted-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-it-equip-encrypted-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Please describe how the data was protected</label>
                                     <input type="text" id="lsd-it-equip-encrypted-input-<?= $row['Tag Number'] ?>">
+                                    <label id='lsd-it-equip-encrypted-input-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                         </tr>
@@ -412,6 +424,7 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Date Reported</label>
                                     <input type="date" id="upd-date-reported-<?= $row['Tag Number'] ?>">
                                 </div>
+                                    <label id='upd-date-reported-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
@@ -423,24 +436,28 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Date Last Seen</label>
                                     <input type="date" id="upd-date-last-seen-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-date-last-seen-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Time Last Seen</label>
                                     <input type="time" id="upd-time-last-seen-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-time-last-seen-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>By Whom?</label>
                                     <input type="text" id="upd-by-whom-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-by-whom-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Location</label>
                                     <input type="text" id="upd-location-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-location-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                         </tr>
@@ -452,12 +469,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value='No'>No</option>
                                         <option value='Yes'>Yes</option>
                                     </select>
+                                    <label id='upd-secured-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-access-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Who has access keys?</label>
                                     <input type="text" id="upd-access-keys-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-access-keys-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -467,24 +486,28 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
+                                    <label id='upd-assigned-staff-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-yes-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Who?</label>
                                     <input type="text" id="upd-who-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>What steps were taken to recover the asset?</label>
                                     <input type="text" id="upd-recovery-steps-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-recovery-steps-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>What precautions are in effect to prevent loss or theft?</label>
                                     <input type="text" id="upd-precautions-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-precautions-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                         </tr>
@@ -508,12 +531,14 @@ $audit_id = $_SESSION['info'][5];
                                         <option value="No">No</option>
                                         <option value="Yes">Yes</option>
                                     </select>
+                                    <label id='upd-reported-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                             <td class="lsd-upd-explain-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Explain</label>
                                     <input type="text" id="upd-explain-<?= $row['Tag Number'] ?>">
+                                    <label id='upd-explain-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                                 </div>
                             </td>
                         </tr>
@@ -565,12 +590,14 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Myself">Myself</option>
                                     <option value="someone-else">Someone Else</option>
                                 </select>
+                                    <label id='who-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
                             <div class="form-field-group someone-else-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <label>Borrower Name</label>
                                 <input type="text" name="full-name" id="someone-else-<?=$row['Tag Number']?>" placeholder="Full name of borrower">
+                                    <label id='someone-else-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -582,6 +609,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Used">Used</option>
                                     <option value="Damaged">Damaged</option>
                                 </select>
+                                    <label id='check-condition-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                             </div>
                         </td>
                         <td class="check-out-<?= $row['Tag Number'] ?> check-in-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -598,6 +626,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="Desktop">Desktop</option>
                                     <option value="Tablet">Tablet</option>
                                 </select>
+                                    <label id='check-item-type-feedback-<?= $row['Tag Number'] ?>' style='display:none;'></label>
                             </div>
                         </td>
                         </tr>
@@ -641,6 +670,15 @@ function hideAll(tag) {
     hideUI('lsd-upd-insurance', tag);
     hideUI('lsd-fill-', tag);
     return;
+}
+function displayError(tag, type, reason) {
+    document.getElementById(type + tag).style.display = 'block';
+    document.getElementById(type + tag).value =  reason;
+    return false;
+}
+function hideError(tag, type) {
+    document.getElementById(type + tag).style.display = 'none';
+    document.getElementById(type + tag).value =  '';
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -824,7 +862,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
     });
-
+    let valid_forms = true;
     const btn = document.getElementById("submit").addEventListener("click", async () => {
     let bulk_t_tags = [],
         t_tags = [],
@@ -837,10 +875,300 @@ document.addEventListener("DOMContentLoaded", function() {
     const dept_id = <?= json_encode($_SESSION['info'][2]) ?>;
     const audit_id = <?= json_encode($_SESSION['info'][5]) ?>;
 
-    const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
-    method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
+    forms_needed.forEach(async (type) => {
+    const val = type.value;
+    if (val == 'psr') {
+        const reason = document.getElementById('psr-reason-' + type.dataset.tag).value;
+        const code = document.getElementById('psr-code-' + type.dataset.tag).value;
+        if (reason === '') {
+            displayError(tag, 'psr-reason-feedback-', 'Reason cannot be empty');
+            valid_forms = false;
+            // document.getElementById('psr-reason-feedback-'+type.dataset.tag).style.display = 'block';
+            // document.getElementById('psr-reason-feedback-'+type.dataset.tag).textContent = 'Reason cannot be empty';
+        }
+        if (code === '') {
+            valid_forms = false;
+            displayError(tag, 'psr-code-feedback-', 'Code cannot be empty');
+            // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
+            // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Code cannot be empty';
+        } else {
+        }
+    } else if (val == 'check-out') {
+        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
+        if (check_type === '') {
+            valid_forms = false;
+            displayError(tag, 'who-feedback-', 'Submitter type cannot be empty');
+            // document.getElementById('psr-code-feedback-'+type.dataset.tag).style.display = 'block';
+            // document.getElementById('psr-code-feedback-'+type.dataset.tag).textContent = 'Type cannot be empty';
+            
+        }
+        let borrower = '';
+        if (check_type === 'someone-else') {
+            let borrower = '';
+            borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
+            if (borrower === '') {
+                displayError(tag, 'someone-else-feedback-', 'Borrower cannot be empty');
+                valid_forms = false;
+            }
+            const split_name = borrower.split(' ');
+            const email_regex = /(@)/;
+
+            if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
+                displayError(tag, 'someone-else-feedback-', 'Invalid Borrower');
+                valid_forms = false;
+                //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+                exit;
+            }
+        } 
+        const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
+        if (condition === '' ) {
+            displayError(tag, 'check-condition-feedback-', 'Condition cannot be empty');
+            valid_forms = false;
+        }
+        const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
+        const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
+        if (item_type === '' ) {
+            displayError(tag, 'check-item-type-feedback-', 'Item Type cannot be empty');
+            valid_forms = false;
+        }
+
+    } else if (val == 'check-in') {
+        const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
+        let borrower = '';
+        borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
+        if (borrower === '') {
+            displayError(tag, 'someone-else-feedback-', 'Borrower cannot be empty');
+            valid_forms = false;
+        }
+        const split_name = borrower.split(' ');
+        const email_regex = /(@)/;
+
+        if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
+            displayError(tag, 'someone-else-feedback-', 'Invalid Borrower');
+            valid_forms = false;
+            //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
+            exit;
+        }
+    } 
+    const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
+    if (condition === '' ) {
+        displayError(tag, 'check-condition-feedback-', 'Condition cannot be empty');
+        valid_forms = false;
+    }
+    const notes = document.getElementById('check-notes-' + type.dataset.tag)?.value;
+    const item_type = document.getElementById('check-item-type-' + type.dataset.tag)?.value;
+    if (item_type === '' ) {
+        displayError(tag, 'check-item-type-feedback-', 'Item Type cannot be empty');
+        valid_forms = false;
+    }
+
+
+    } else if (val === 'lsd') {
+        if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
+            // REQUIRED
+            const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
+            let borrower = '';
+            borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
+            if (borrower === '') {
+                displayError(tag, 'lsd-fill-for-feedback-', 'Borrower cannot be empty');
+                valid_forms = false;
+            }
+            const split_name = borrower.split(' ');
+            const email_regex = /(@)/;
+
+            if (who === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
+                displayError(tag, 'lsd-fill-for-feedback-', 'Invalid Borrower');
+                valid_forms = false;
+            }
+            // REQUIRED
+            const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
+            if (position === '') {
+                displayError(type.dataset.tag, 'lsd-position-feedback-' + type.dataset.tag, 'Please select the position.');
+                valid_forms = false;
+            }
+
+            // REQUIRED
+            const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
+            if (lsd === '') {
+                displayError(type.dataset.tag, 'lsd-condition-feedback-' + type.dataset.tag, 'Please specify the current condition.');
+                valid_forms = false;
+            }
+
+            // REQUIRED
+            const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
+            if (reason === '') {
+                displayError(type.dataset.tag, 'lsd-narrative-feedback-' + type.dataset.tag, 'Please provide a reason or narrative.');
+                valid_forms = false;
+            }
+
+            // REQUIRED
+            const upd = document.getElementById('upd-' + type.dataset.tag).value;
+            if (upd === '') {
+                displayError(type.dataset.tag, 'upd-feedback-' + type.dataset.tag, 'Please specify if an update is required.');
+                valid_forms = false;
+            }
+
+            // REQUIRED
+            const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
+            if (item_type === '') {
+                displayError(type.dataset.tag, 'item-type-feedback-' + type.dataset.tag, 'Please select the item type.');
+                valid_forms = false;
+            }
+
+            if (upd === 'Yes') {
+                // REQUIRED
+                const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
+                if (date_reported === '') {
+                    displayError(type.dataset.tag, 'upd-date-reported-feedback-' + type.dataset.tag, 'Please enter the date reported.');
+                    valid_forms = false;
+                }
+
+                const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag).value;
+
+                // REQUIRED
+                const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
+                if (date_last_seen === '') {
+                    displayError(type.dataset.tag, 'upd-date-last-seen-feedback-' + type.dataset.tag, 'Please enter the date the item was last seen.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
+                if (time_last_seen === '') {
+                    displayError(type.dataset.tag, 'upd-time-last-seen-feedback-' + type.dataset.tag, 'Please enter the time the item was last seen.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
+                if (by_whom === '') {
+                    displayError(type.dataset.tag, 'upd-by-whom-feedback-' + type.dataset.tag, 'Please specify who last saw or handled the item.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
+                if (upd_location === '') {
+                    displayError(type.dataset.tag, 'upd-location-feedback-' + type.dataset.tag, 'Please enter the location of the update.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
+                if (secured === '') {
+                    displayError(type.dataset.tag, 'upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
+                if (access_keys === '') {
+                    displayError(type.dataset.tag, 'upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
+                if (assigned_staff === '') {
+                    displayError(type.dataset.tag, 'upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
+                if (who_assigned === '') {
+                    displayError(type.dataset.tag, 'upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
+                if (recovery_steps === '') {
+                    displayError(type.dataset.tag, 'upd-recovery-steps-feedback-' + type.dataset.tag, 'Please describe the recovery steps taken.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
+                if (precautions === '') {
+                    displayError(type.dataset.tag, 'upd-precautions-feedback-' + type.dataset.tag, 'Please describe the precautions in place.');
+                    valid_forms = false;
+                }
+
+                const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
+                const security = document.getElementById('upd-security-' + type.dataset.tag).value;
+
+                // REQUIRED
+                const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
+                if (reported === '') {
+                    displayError(type.dataset.tag, 'upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
+                if (explain === '') {
+                    displayError(type.dataset.tag, 'upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.');
+                    valid_forms = false;
+                }
+
+                const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
+                const company = document.getElementById('upd-company-' + type.dataset.tag).value;
+                const street = document.getElementById('upd-street-' + type.dataset.tag).value;
+                const city = document.getElementById('upd-city-' + type.dataset.tag).value;
+                const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
+                const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+
+                // REQUIRED
+                const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
+                if (describe_asset === '') {
+                    displayError(type.dataset.tag, 'upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.');
+                    valid_forms = false;
+                }
+
+                // REQUIRED
+                const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+                if (encrypted === '') {
+                    displayError(type.dataset.tag, 'lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.');
+                    valid_forms = false;
+                }
+
+                if (encrypted === 'Yes') {
+                    // REQUIRED
+                    const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+                    if (encrypted_data === '') {
+                        displayError(type.dataset.tag, 'lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.');
+                        valid_forms = false;
+                    }
+                }
+
+                // REQUIRED
+                const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+                if (confidential === '') {
+                    displayError(type.dataset.tag, 'lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.');
+                    valid_forms = false;
+                }
+
+                if (confidential === 'Yes') {
+                    // REQUIRED
+                    const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
+                    if (confidential_data === '') {
+                        displayError(type.dataset.tag, 'lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.');
+                        valid_forms = false;
+                    }
+                }
+            }
+
+
+        } 
+    }
+    });
+
+    if (valid_forms) {
+        const form_submitted = await fetch('https://dataworks-7b7x.onrender.com/audit/audit-history/complete/change_db.php', {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
     },
         body: JSON.stringify({
         dept_id: dept_id,
@@ -848,20 +1176,22 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     });
 
-    if (!form_submitted.ok) {
-        const text = await form_submitted.text();
-        throw new Error(`HTTP ${form_submitted.status}: ${text}`);
-    } else {
-        const clone = form_submitted.clone();
-        try {
-            const data = await form_submitted.json();
-            console.log("Update DB response (JSON):", data);
-        } catch {
-            const text = await clone.text();
-            console.log("Update DB response (text):", text);
+        if (!form_submitted.ok) {
+            const text = await form_submitted.text();
+            throw new Error(`HTTP ${form_submitted.status}: ${text}`);
+        } else {
+            const clone = form_submitted.clone();
+            try {
+                const data = await form_submitted.json();
+                console.log("Update DB response (JSON):", data);
+            } catch {
+                const text = await clone.text();
+                console.log("Update DB response (text):", text);
+            }
         }
     }
 
+    if (valid_forms) {
     forms_needed.forEach(async (type) => {
     const val = type.value;
 
@@ -876,6 +1206,7 @@ document.addEventListener("DOMContentLoaded", function() {
             code: code
         });
     } else if (val == 'check-out') {
+        out_tags.push(type.dataset.tag);
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
         const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
         let borrower = '';
@@ -1207,6 +1538,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }
         }
+    }
     }
     });
 });
