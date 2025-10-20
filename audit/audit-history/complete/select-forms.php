@@ -804,6 +804,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             } else {
                 document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+                hideUI('lsd-upd', tag);
                 hideUI('lsd-upd-explain', tag);
                 hideUI('lsd-upd-access', tag);
                 hideUI('lsd-upd-insurance', tag);
