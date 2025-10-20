@@ -672,6 +672,7 @@ function hideAll(tag) {
     return;
 }
 function displayError(tag, type, reason) {
+    console.log(type+ tag, reason);
     document.getElementById(type + tag).style.display = 'block';
     document.getElementById(type + tag).value =  reason;
     return false;
@@ -917,8 +918,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
                 displayError(tag, 'someone-else-feedback-', 'Invalid Borrower');
                 valid_forms = false;
-                //document.getElementById('check-in-borrower-msg-' + type.dataset.tag).textContent = 'Incorrect Name Format';
-                exit;
             }
         } 
         const condition = document.getElementById('check-condition-' + type.dataset.tag)?.value;
