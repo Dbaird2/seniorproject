@@ -55,9 +55,9 @@
   box-shadow: 0 2px 4px rgba(255, 199, 44, 0.3);
 }
 
-/* Updated background to CSUB cream and white gradient theme */
+/* Updated background to CSUB blue gradient */
 .page-wrapper {
-  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
+  background: linear-gradient(135deg, #003594 0%, #001a70 50%, #003594 100%);
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
@@ -73,18 +73,10 @@
   margin: 0 auto;
 }
 
-/* Modern action buttons styling */
-.action-buttons {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
+/* Updated button styling with gold accents */
 .btn {
   padding: 12px 24px;
-  border: none;
+  border: 2px solid #ffc72c;
   border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
@@ -94,16 +86,16 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(255, 199, 44, 0.2);
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(255, 199, 44, 0.4);
 }
 
 .btn-excel {
-  background: linear-gradient(135deg, #003594, #001a70);
+  background: linear-gradient(135deg, #003594, #ffc72c);
   color: white;
 }
 
@@ -132,10 +124,11 @@
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
+  box-shadow: 0 8px 32px rgba(255, 199, 44, 0.2);
   overflow-x: auto;
   max-height: 80vh;
   overflow-y: auto;
+  border: 2px solid #ffc72c;
 }
 
 .modern-table {
@@ -145,9 +138,9 @@
   font-size: 14px;
 }
 
-/* Updated table header to CSUB primary blue gradient */
+/* Updated table header to blue and gold gradient */
 .modern-table thead {
-  background: linear-gradient(135deg, #003594, #001a70);
+  background: linear-gradient(135deg, #003594, #ffc72c);
   color: white;
   position: sticky;
   top: 0;
@@ -174,9 +167,9 @@
   transition: all 0.2s ease;
 }
 
-/* Updated hover effect to CSUB primary blue */
+/* Updated hover effect with gold */
 .modern-table tbody tr:hover {
-  background: rgba(0, 53, 148, 0.08);
+  background: rgba(255, 199, 44, 0.15);
   transform: scale(1.001);
 }
 
@@ -184,9 +177,9 @@
   background: rgba(245, 230, 189, 0.3);
 }
 
-/* Updated asset tag to CSUB primary blue gradient */
+/* Updated asset tag to blue and gold gradient */
 .asset-tag {
-  background: linear-gradient(135deg, #003594, #001a70);
+  background: linear-gradient(135deg, #003594, #ffc72c);
   color: white;
   padding: 4px 8px;
   border-radius: 6px;
@@ -194,7 +187,7 @@
   font-size: 12px;
 }
 
-/* Updated textarea border to CSUB primary blue */
+/* Updated textarea border to gold on focus */
 .asset-note {
   width: 100%;
   min-width: 150px;
@@ -211,9 +204,9 @@
 
 .asset-note:focus {
   outline: none;
-  border-color: #003594;
+  border-color: #ffc72c;
   background: white;
-  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
 .asset-note::placeholder {
@@ -246,7 +239,7 @@
   margin: 0;
 }
 
-/* Enhanced input field styling with modern design */
+/* Updated input field styling with gold focus */
 .is-manager input[type="search"] {
   padding: 12px 16px;
   border: 2px solid rgba(0, 53, 148, 0.2);
@@ -262,15 +255,15 @@
 
 .is-manager input[type="search"]:focus {
   outline: none;
-  border-color: #003594;
+  border-color: #ffc72c;
   background: white;
-  box-shadow: 0 0 0 4px rgba(0, 53, 148, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 199, 44, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 
 .is-manager input[type="search"]:hover {
-  border-color: #003594;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  border-color: #ffc72c;
+  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.2);
 }
 
 .is-manager input[type="search"]::placeholder {
@@ -291,15 +284,16 @@
   margin-right: 8px;
 }
 
-/* Enhanced nav-ui2 styling for centered search section */
+/* Updated nav-ui2 styling with gold border */
 #nav-ui2 {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   padding: 20px 30px;
-  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.15);
+  box-shadow: 0 4px 16px rgba(255, 199, 44, 0.2);
   margin: 20px auto;
   max-width: 600px;
+  border: 2px solid #ffc72c;
 }
 
 #nav-ui2 .nav-ui {

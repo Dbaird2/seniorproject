@@ -48,25 +48,28 @@
 .nav_links li a {
   transition: all 0.3s ease 0s;
 }
-/* Updated hover color to CSUB gold */
+/* Already has CSUB colors - just enhanced gold hover */
 .nav_links li a:hover {
   color: #ffc72c;
+  text-shadow: 0 0 10px rgba(255, 199, 44, 0.5);
 }
 body .has-navbar button {
   margin-left: 20px;
   padding: 9px 25px;
   background-color: #003594;
-  border: none;
+  border: 2px solid #ffc72c;
   border-radius: 5px;
   color: #ffc72c;
   cursor: pointer;
   transition: all 0.3s ease 0s;
 }
 
-/* Updated button hover to CSUB primary blue */
+/* Enhanced button hover with gradient */
 .has-navbar button:hover {
-  background-color: #001a70;
+  background: linear-gradient(135deg, #003594, #ffc72c);
+  color: white;
   translate: 0px -2px;
+  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.3);
 }
 
 .has-navbar .gradient-text {

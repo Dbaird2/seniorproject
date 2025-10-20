@@ -2,11 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .page-wrapper {
-  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, #003594 0%, #001a70 50%, #003594 100%);
   min-height: 100vh;
   padding: 2rem;
   color: #1e293b;
@@ -16,10 +16,11 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.1);
-  padding: 0;
+  box-shadow: 0 8px 32px rgba(255, 199, 44, 0.2);
+  padding: 2rem;
   max-width: 100%;
   overflow-x: auto;
+  border: 2px solid #ffc72c;
 }
 
 .is-history {
@@ -27,7 +28,6 @@
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.95rem;
-  min-height: 40vh;
 }
 
 .is-history thead {
@@ -37,7 +37,7 @@
 }
 
 .is-history thead tr {
-  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
 }
 
 .is-history th {
@@ -48,7 +48,7 @@
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  border-bottom: 3px solid #001a70;
+  border-bottom: 3px solid #ffc72c;
 }
 
 .is-history th:first-child {
@@ -65,14 +65,13 @@
 }
 
 .is-history tbody tr:hover {
-  background: rgba(0, 53, 148, 0.05);
+  background: rgba(255, 199, 44, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 53, 148, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 199, 44, 0.2);
 }
 
 .is-history tbody tr.even {
-  /*background: rgba(255, 255, 255, 0.5);*/
-  background: rgba(245, 230, 189, 0.3);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .is-history tbody tr.odd {
@@ -113,16 +112,16 @@
 
 .action-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.3);
 }
 
 .continue-link {
-  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
   color: white;
 }
 
 .continue-link:hover {
-  background: linear-gradient(135deg, #001a70 0%, #003594 100%);
+  background: linear-gradient(135deg, #ffc72c 0%, #003594 100%);
 }
 
 .start-link {
@@ -147,10 +146,12 @@
   background: linear-gradient(135deg, #ffc72c 0%, #d4a825 100%);
   color: #001a70;
   font-weight: 600;
+  border: 2px solid #003594;
 }
 
 .pdf-link:hover {
-  background: linear-gradient(135deg, #d4a825 0%, #b89420 100%);
+  background: linear-gradient(135deg, #d4a825 0%, #ffc72c 100%);
+  border: 2px solid #ffc72c;
 }
 
 .excel-link {
@@ -212,44 +213,5 @@ td[style*="color:green"] {
     font-size: 0.8rem;
     margin: 0.2rem;
   }
-}
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 15; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 61, 165, 0.4); /* CSUB Blue with opacity */
-}
-
-/* Modal Content/Box */
-.modal-content {
-  background-color: #ffffff; /* Clean white background */
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 3px solid #ffb81c; /* CSUB Gold border */
-  border-radius: 8px; /* Added rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 61, 165, 0.2); /* CSUB Blue shadow */
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-  color: #003da5; /* CSUB Blue */
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  transition: color 0.3s ease; /* Smooth transition */
-}
-
-.close:hover,
-.close:focus {
-  color: #ffb81c; /* CSUB Gold on hover */
-  text-decoration: none;
-  cursor: pointer;
 }
 

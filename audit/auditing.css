@@ -1,4 +1,3 @@
-/* AUDITING CSS */
 * {
   margin: 0;
 }
@@ -7,7 +6,7 @@
 .page-wrapper {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue",
     sans-serif;
-  background: linear-gradient(135deg, #f5e6bd 0%, #ffffff 50%, #f5e6bd 100%);
+  background: linear-gradient(135deg, #003594 0%, #001a70 50%, #003594 100%);
   min-height: 100vh;
   display: block;
   flex-direction: normal;
@@ -25,7 +24,7 @@
   display: none;
 }
 
-/* Updated input styling with CSUB primary blue */
+/* Updated input styling with gold focus border */
 #insert-tags-div input {
   padding: 14px 16px;
   border: 2px solid #003594;
@@ -39,8 +38,8 @@
 
 #insert-tags-div input:focus {
   outline: none;
-  border-color: #001a70;
-  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
 #dynamicForm {
@@ -59,7 +58,7 @@
   margin-bottom: 20px;
 }
 
-/* Updated status dropdown with CSUB primary blue */
+/* Updated status dropdown with gold focus border */
 #my-status {
   width: 10%;
   padding: 14px 16px;
@@ -77,11 +76,11 @@
 
 #my-status:focus {
   outline: none;
-  border-color: #001a70;
-  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
-/* Updated input with CSUB primary blue */
+/* Updated input with gold focus border */
 #my-input {
   width: 25%;
   padding: 14px 16px;
@@ -99,11 +98,11 @@
 
 #my-input:focus {
   outline: none;
-  border-color: #001a70;
-  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
-/* Updated table inputs with CSUB primary blue */
+/* Updated table inputs with gold focus border */
 .table input {
   padding: 14px 16px;
   border: 2px solid #003594;
@@ -118,8 +117,8 @@
 
 .table input:focus {
   outline: none;
-  border-color: #001a70;
-  box-shadow: 0 0 0 3px rgba(0, 53, 148, 0.1);
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
 .div-table {
@@ -131,6 +130,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  border: 2px solid #ffc72c;
 }
 
 .table {
@@ -144,7 +144,6 @@
 .table td {
   min-height: 100px;
   height: 25px;
-  font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -233,12 +232,12 @@
   overflow-y: auto;
 }
 
-/* Updated button styling with CSUB primary blue and gold gradient */
+/* Updated button styling with gold gradient */
 .page-wrapper button {
   padding: 12px 24px;
-  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
   color: white;
-  border: none;
+  border: 2px solid #ffc72c;
   border-radius: 8px;
   font-size: 11px;
   font-weight: 600;
@@ -246,14 +245,14 @@
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.2);
+  box-shadow: 0 2px 4px rgba(255, 199, 44, 0.3);
 }
 
 .page-wrapper button:hover {
-  background: linear-gradient(135deg, #001a70 0%, #003594 100%);
+  background: linear-gradient(135deg, #ffc72c 0%, #003594 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.3);
-  border: 1px solid #ffc72c;
+  box-shadow: 0 4px 8px rgba(255, 199, 44, 0.5);
+  border: 2px solid #003594;
 }
 
 .page-wrapper button:active {
@@ -371,10 +370,10 @@ td {
   border-bottom: 1px solid #f5e6bd;
 }
 
-/* Updated table header with CSUB primary blue gradient */
+/* Updated table header with blue and gold gradient */
 thead th {
   color: white;
-  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
   padding: 15px;
   font-weight: 600;
   text-transform: uppercase;
@@ -383,7 +382,7 @@ thead th {
 }
 
 tbody tr:hover {
-  background-color: rgba(0, 53, 148, 0.1);
+  background-color: rgba(255, 199, 44, 0.1);
 }
 
 tbody td {
@@ -394,12 +393,12 @@ tbody td:hover:before {
   background-color: rgba(0, 53, 148, 0.05);
 }
 
-/* Updated snackbar with CSUB primary blue gradient */
+/* Updated snackbar with blue and gold gradient */
 #snackbar {
   visibility: hidden;
   min-width: 250px;
   margin-left: -125px;
-  background: linear-gradient(135deg, #003594 0%, #001a70 100%);
+  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
   color: #fff;
   text-align: center;
   border-radius: 8px;
@@ -409,7 +408,7 @@ tbody td:hover:before {
   left: 50%;
   bottom: 30px;
   font-size: 17px;
-  box-shadow: 0 4px 12px rgba(0, 53, 148, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 199, 44, 0.4);
 }
 
 #snackbar.show {
@@ -461,30 +460,4 @@ tbody td:hover:before {
     opacity: 0;
   }
 }
-/* Updated button styling with CSUB blue and gold */
-button {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #003da5 0%, #002870 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  box-shadow: 0 2px 4px rgba(0, 61, 165, 0.2);
-}
 
-button:hover {
-  background: linear-gradient(135deg, #ffb81c 0%, #e5a319 100%);
-  color: #003da5;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(255, 184, 28, 0.4);
-  border: 1px solid #003da5;
-}
-
-button:active {
-  transform: translateY(0);
-}
