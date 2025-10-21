@@ -786,6 +786,9 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (form_type.value === 'lsd' && (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6)) {
+        hideUI('check-in', tag);
+        hideUI('bulk-transfer', tag);
+        hideUI('psr', tag);
         const upd = document.getElementById('upd-' + tag);
         upd.addEventListener('change', () => {
             //console.log(upd.value);
@@ -889,8 +892,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
     });
-    let valid_forms = true;
     const btn = document.getElementById("submit").addEventListener("click", async () => {
+    let valid_forms = true;
     let bulk_t_tags = [],
         t_tags = [],
         b_psr_tags = [],
@@ -1120,7 +1123,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (valid_forms) {
     forms_needed.forEach(async (type) => {
     const val = type.value;
-    const tag = form_type.dataset.tag;
+    const tag = type.dataset.tag;
 
     if (val == 'bulk-transfer') {
         bulk_t_tags.push(type.dataset.tag);
