@@ -691,11 +691,7 @@ function displayError(type, reason, check, form_status) {
         document.getElementById(type).textContent =  '';
     }
 
-    if (!form_status) {
-        return false;
-    } else {
-        return true;
-    }
+    return form_status;
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -923,7 +919,7 @@ document.addEventListener("DOMContentLoaded", function() {
             borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             valid_forms = displayError('someone-else-feedback-' + tag, 'Borrower cannot be empty', borrower, valid_forms);
             const split_name = borrower.split(' ');
-            const email_regex = /(@)/;
+            const email_regex = /(@csub.edu)/;
 
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
                 valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
@@ -944,7 +940,7 @@ document.addEventListener("DOMContentLoaded", function() {
             borrower = document.getElementById('someone-else-' + type.dataset.tag)?.value;
             valid_forms = displayError('someone-else-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
             const split_name = borrower.split(' ');
-            const email_regex = /(@)/;
+            const email_regex = /(@csub.edu)/;
 
             if (check_type === 'someone-else' && split_name.length < 2 && !email_regex.test(borrower)) {
                 valid_forms = displayError('someone-else-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
@@ -968,7 +964,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
                 valid_forms = displayError('lsd-fill-for-feedback-'+tag, 'Borrower cannot be empty', borrower, valid_forms);
                 const split_name = borrower.split(' ');
-                const email_regex = /(@)/;
+                const email_regex = /(@csub.edu)/;
 
                 if (split_name.length < 2 && !email_regex.test(borrower)) {
                     valid_forms = displayError('lsd-fill-for-feedback-' + tag, 'Invalid Borrower', '', valid_forms);
@@ -1244,48 +1240,40 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (val === 'lsd') {
         if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
             const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
-            let borrower = '';
-            if (who === 'someone-else') {
-                borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
-            } 
-            const position = document.getElementById('lsd-position-' + type.dataset.tag).value;
-            const lsd = document.getElementById('lsd-condition-' + type.dataset.tag).value;
-            const reason = document.getElementById('lsd-narrative-' + type.dataset.tag).value;
-            const upd = document.getElementById('upd-' + type.dataset.tag).value;
-            const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
-            if (upd === 'Yes') {
-                const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
-                const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag).value;
-                const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag).value;
-                const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag).value;
-                const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag).value;
-                const upd_location = document.getElementById('upd-location-' + type.dataset.tag).value;
-                const secured = document.getElementById('upd-secured-' + type.dataset.tag).value;
-                const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
-                const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
-                const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
-                const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
-                const precautions = document.getElementById('upd-precautions-' + type.dataset.tag).value;
-                const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
-                const security = document.getElementById('upd-security-' + type.dataset.tag).value;
-                const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
-                const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
-                const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
-                const company = document.getElementById('upd-company-' + type.dataset.tag).value;
-                const street = document.getElementById('upd-street-' + type.dataset.tag).value;
-                const city = document.getElementById('upd-city-' + type.dataset.tag).value;
-                const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
-                const state = document.getElementById('upd-state-' + type.dataset.tag).value;
-                const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
-                const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
-                if (encrypted === 'Yes') {
-                    const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
-                }
-                const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-                if (confidential === 'Yes') {
-                    const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
-                }
-            }
+            const = borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
+            const position = document.getElementById('lsd-position-' + type.dataset.tag)?.value;
+            const lsd = document.getElementById('lsd-condition-' + type.dataset.tag)?.value;
+            const reason = document.getElementById('lsd-narrative-' + type.dataset.tag)?.value;
+            const upd = document.getElementById('upd-' + type.dataset.tag)?.value;
+            const item_type = document.getElementById('item-type-' + type.dataset.tag)?.value;
+            const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag)?.value;
+            console.log(date_reported);
+            const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag)?.value;
+            const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag)?.value;
+            const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag)?.value;
+            const by_whom = document.getElementById('upd-by-whom-' + type.dataset.tag)?.value;
+            const upd_location = document.getElementById('upd-location-' + type.dataset.tag)?.value;
+            const secured = document.getElementById('upd-secured-' + type.dataset.tag)?.value;
+            const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag)?.value;
+            const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag)?.value;
+            const who_assigned = document.getElementById('upd-who-' + type.dataset.tag)?.value;
+            const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag)?.value;
+            const precautions = document.getElementById('upd-precautions-' + type.dataset.tag)?.value;
+            const authorized = document.getElementById('upd-authorized-' + type.dataset.tag).value;
+            const security = document.getElementById('upd-security-' + type.dataset.tag).value;
+            const reported = document.getElementById('upd-reported-' + type.dataset.tag).value;
+            const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
+            const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
+            const company = document.getElementById('upd-company-' + type.dataset.tag).value;
+            const street = document.getElementById('upd-street-' + type.dataset.tag).value;
+            const city = document.getElementById('upd-city-' + type.dataset.tag).value;
+            const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
+            const state = document.getElementById('upd-state-' + type.dataset.tag).value;
+            const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
+            const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+            const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+            const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+            const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
 
             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
             const lsd_res = await fetch(url, {
@@ -1294,7 +1282,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 'Content-Type': 'application/json'
             },
                 body: JSON.stringify({
-                    tag: type.dataset.tag,
+                tag: type.dataset.tag,
                     who: who,
                     borrower: borrower,
                     position: position,
