@@ -297,6 +297,7 @@ try {
                     $documentSetId = $dept_info['data']['HN8JcizYYj']['documentSetId'];
                     $dept_kuali_id = $dept_info['data']['HN8JcizYYj']['id'];
                 }
+                /*
                 if (isset($edge['node']['data']['XhBe3DNaU4'])) {
                     // NEW CUSTODIAN
                     $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
@@ -326,6 +327,7 @@ try {
                     }
                     addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
                 }
+                 
 
                 if (isset($edge['node']['data']['04PgxWqAbE'])) {
                     // MANAGER/DEAN SIGNATURE
@@ -356,6 +358,7 @@ try {
                     }
                     addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
                 }
+                 */
                 if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                     // MANAGER/DEAN INFORMATION
                     $m2_display_name = $m2_full_name = trim($edge['node']['data']['jTxoK_Wsh7']['displayName']);
@@ -378,13 +381,14 @@ try {
                     $m3_signature = trim($m3_display_name);
                     addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
                 }
-                addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m4_full_name), trim($dept_id), trim($dept_name));
+                addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m2_full_name), trim($dept_id), trim($dept_name));
             }
         } else {
             $dept_id = $edge['node']['data']['XeTTtfl6XW']['data']['IOw4-l7NsM'];
             $dept_name = $edge['node']['data']['XeTTtfl6XW']['data']['AkMeIWWhoj'];
             $documentSetId = $edge['node']['data']['XeTTtfl6XW']['documentSetId'];
             $dept_kuali_id = $edge['node']['data']['XeTTtfl6XW']['id'];
+            /*
             if (isset($edge['node']['data']['XhBe3DNaU4'])) {
                 // NEW CUSTODIAN
                 $c_display_name = $edge['node']['data']['XhBe3DNaU4']['displayName'];
@@ -444,6 +448,7 @@ try {
                 }
                 addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
             }
+             */
             if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                 // MANAGER/DEAN INFORMATION
                 $m2_display_name = $m2_full_name = $edge['node']['data']['jTxoK_Wsh7']['displayName'];
@@ -466,7 +471,7 @@ try {
                 $m3_signature = $m3_display_name;
                 addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
             }
-            addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m4_full_name), trim($dept_id), trim($dept_name));
+            addDepartment(trim($documentSetId), trim($dept_kuali_id), trim($c_full_name), trim($m2_full_name), trim($dept_id), trim($dept_name));
         }
     }
 } catch (PDOException $e) {

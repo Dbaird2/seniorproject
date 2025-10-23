@@ -108,7 +108,8 @@ function getSubmitterSig() {
         'signedName' => $sub['signature'] ?? $sub['f_name'].' '.$sub['l_name'],
         'userId'  => $sub['form_id'],
         'apikey' => $sub['kuali_key'],
-        'fullName' => $sub['f_name'] . ' ' . $sub['l_name']
+        'fullName' => $sub['f_name'] . ' ' . $sub['l_name'],
+        'schoolId' => $sub['schoolId']
     ];
     return $signature;
 }

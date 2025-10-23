@@ -200,21 +200,13 @@ if ($who !== 'Myself') {
     /*---------------------------------*/
     /* SIGNATURE */
     $submitter_info = getSubmitterSig();
-
-    $submitter_sig = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-    $submitter_id = $submitter_info['school_id'];
-    $submitter_username = $submitter_info['username'];
-    $submitter_form_id = $submitter_info['form_id'];
-    $submitter_first = $submitter_info['f_name'];
-    $submitter_last = $submitter_info['l_name'];
-
     $check_type_date = $date->format('m/d/Y');
     $variables['data']['JXLJ_AOov-']['actionId'] = $action_id;
     $variables['data']['JXLJ_AOov-']['date'] = $now;
-    $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_first . ' ' . $submitter_last . ' ('. $_SESSION['email'] . ')';
+    $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_info['displayName'];
     $variables['data']['JXLJ_AOov-']['signatureType'] = 'type';
-    $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_first . ' ' .$submitter_last;
-    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_form_id;
+    $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_info['signature'];
+    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_into['userId'];
     /*---------------------------------*/
 }
 $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";

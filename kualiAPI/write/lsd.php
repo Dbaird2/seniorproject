@@ -40,6 +40,11 @@ foreach($_SESSION['data'] as $session) {
         $variables['data']['dyaoRcFcOD'] = $data['reason']; // GOOD
         // UPD YES -------------------------------------------------------------
         if (strtolower($data['upd']) === 'yes') {
+            // DATE DISCOVERED MISSING
+            $date = new DateTime($data['date_missing']);
+            $new_date = $date->format('m/d/Y');
+            $variables['data']["fy16ygj_ST"] = $new_date;
+
             $variables['data']['ox__1hiShH']['label'] = $data['insurance'];
             // DATE REPORTED
             $date = new DateTime($data['date_reported']);
@@ -257,6 +262,14 @@ if (!$action_id || !$document_id) {
 }
 
 $manager_info = getNameInfo($manager, $audit_dept);
+$variables['data']['0Qm43mG2vV']['displayName'] = $manager_info['displayName'];
+$variables['data']['0Qm43mG2vV']['email'] = $manager_info['email'];
+$variables['data']['0Qm43mG2vV']['firstName'] = $manager_info['firstName'];
+$variables['data']['0Qm43mG2vV']['id'] = $manager_info['id'];
+$variables['data']['0Qm43mG2vV']['lastName'] = $manager_info['lastName'];
+$variables['data']['0Qm43mG2vV']['schoolId'] = $manager_info['schoolId'];
+$variables['data']['0Qm43mG2vV']['username'] = $manager_info['username'];
+
 $submitter_sig = getEmailInfo($email, $_SESSION['deptid']);
 
 if (!empty($data['borrower'])) {
@@ -301,7 +314,6 @@ $lsd_who_id = match ($who) {
     'Someone Else' => 'SDqr0xnNfnM'
 };
 $variables['documentId'] = $document_id;
-$variables['data']['0Qm43mG2vV'] = $manager_info;
 $variables['data']['Sg2RTLnC5r']['id'] = $lsd_who_id;
 $variables['data']['Sg2RTLnC5r']['label'] = $who;
 $variables['data']["9eJvzLeMS0"]['id'] = "9JrVQuqdIQS";
@@ -329,7 +341,7 @@ $variables['data']["dyaoRcFcOD"] = $data['reason'];
 // DESCR
 $variables['data']["pNvpNnuav8"] = $data['Descr'];
 // TAG
-$variables['data']["y7nFCmsLEg"] = $data['Tag Number'];
+$variables['data']["y7nFCmsLEg"] = $data['tag'];
 // MODEL
 $variables['data']["y9obJL9NAo"] = $data['Model'] ?? 'N/A';
 // DATE MISSING
@@ -338,10 +350,6 @@ $current_date = $date->format('m/d/Y');
 $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
 $variables['data']["vedcAP4N1t"] = $current_date;
-// DATE DISCOVERED MISSING
-$date = new DateTime($data['date_missing']);
-$new_date = $date->format('m/d/Y');
-$variables['data']["fy16ygj_ST"] = $new_date;
 // DATE MISSING
 $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
@@ -362,7 +370,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-$tag = $data['Tag Number'];
+$tag = $data['tag'];
 $input_array =  $document_id . ',lsd,in-progress, ' . $tag;
 
 
