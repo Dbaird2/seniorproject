@@ -13,7 +13,7 @@ if (isset($_POST)) {
     $select_count = "SELECT COUNT(*) FROM room_table WHERE bldg_id IS NOT NULL";
     $select_stmt = $dbh->query($select_count);
     $row_count = $select_stmt->fetchColumn();
-    $select = "SELECT * FROM room_table";
+    $select = "SELECT * FROM room_table WHERE bldg_id IS NOT NULL";
     $select_stmt = $dbh->query($select);
     $data = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["data" =>$data, 'count'=>$row_count]);

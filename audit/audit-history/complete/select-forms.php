@@ -1240,7 +1240,7 @@ document.addEventListener("DOMContentLoaded", function() {
     } else if (val === 'lsd') {
         if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
             const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
-            const = borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
+            const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
             const position = document.getElementById('lsd-position-' + type.dataset.tag)?.value;
             const lsd = document.getElementById('lsd-condition-' + type.dataset.tag)?.value;
             const reason = document.getElementById('lsd-narrative-' + type.dataset.tag)?.value;
