@@ -13,7 +13,7 @@ if (isset($_POST)) {
     $select_count = "SELECT COUNT(*) FROM user_table";
     $select_stmt = $dbh->query($select_count);
     $row_count = $select_stmt->fetchColumn();
-    $select = "SELECT CONCAT(f_name ,' ', l_name) as custodian, STRING_AGG(c, ',') as dept_id FROM user_table, unnest(dept_id) as c group by custodian;";
+    $select = "SELECT DISTINCT(CONCAT(f_name ,' ', l_name)) as custodian, STRING_AGG(c, ',') as dept_id FROM user_table, unnest(dept_id) as c group by custodian;";
     $select_stmt = $dbh->query($select);
     $data = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["data" =>$data, 'count'=>$row_count]);

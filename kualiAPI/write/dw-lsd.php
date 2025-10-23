@@ -134,7 +134,7 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 $custodian = $dept_info['cust'];
-$custodian_info = getInfoName($custodian, $audit_dept_id);
+$custodian_info = getNameInfo($custodian, $audit_dept_id);
 
 
 // CUSTODIAN
@@ -146,7 +146,7 @@ $variables['data']['NpD2RP-waL']['username'] = $custodian_info['username'];
 $variables['data']['NpD2RP-waL']['firstName'] = $custodian_info['firstName'];
 $variables['data']['NpD2RP-waL']['lastName'] = $custodian_info['lastName'];
 
-$manager_info = getInfoName($manager, $audit_dept_id);
+$manager_info = getNameInfo($manager, $audit_dept_id);
 // MANAGER
 $variables['data']['5mMKjTfnND']['displayName'] = $manager_info['displayName'];
 $variables['data']['5mMKjTfnND']['schoolId'] = $manager_info['schoolId'];
@@ -157,7 +157,7 @@ $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
 $echo('Custodian', $manager);
 $array_echo($manager_info);
-$submitter_sig = getSigEmail($_SESSION['email'], $_SESSION['deptid']);
+$submitter_sig = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
 
 // DATE
 $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));

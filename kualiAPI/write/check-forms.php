@@ -174,7 +174,7 @@ $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
 if ($who !== 'Myself') {
     $borrower = trim($data['borrower']);
-    $borrowers_info = getInfoName($borrower, $audit_dept);
+    $borrowers_info = getNameInfo($borrower, $audit_dept);
     echo "<pre>";
     var_dump($borrowers_info);
     echo "</pre>";
@@ -224,7 +224,7 @@ $custodian_stmt = $dbh->prepare($custodian);
 $custodian_name = $custodian_stmt->fetchColumn();
 echo $custodian_name . '<br>';
 
-$custodian_info = getInfoName($custodian_name, $audit_dept);
+$custodian_info = getNameInfo($custodian_name, $audit_dept);
 echo json_encode([$custodian_info]);
     $check_type_date = $date->format('m/d/Y');
 if ($form_type === 'Returning Equipment') {

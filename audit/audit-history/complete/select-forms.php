@@ -1019,16 +1019,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 valid_forms = displayError('upd-secured-feedback-' + type.dataset.tag, 'Please indicate if the item is secured.', secured, valid_forms);
 
                 // REQUIRED
-                const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
-                valid_forms = displayError('upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.', access_keys, valid_forms);
+                if (secured === 'Yes') {
+                    const access_keys = document.getElementById('upd-access-keys-' + type.dataset.tag).value;
+                    valid_forms = displayError('upd-access-keys-feedback-' + type.dataset.tag, 'Please specify who has access keys.', access_keys, valid_forms);
+                }
 
                 // REQUIRED
                 const assigned_staff = document.getElementById('upd-assigned-staff-' + type.dataset.tag).value;
                 valid_forms = displayError('upd-assigned-staff-feedback-' + type.dataset.tag, 'Please specify the assigned staff member.', assigned_staff, valid_forms);
 
                 // REQUIRED
-                const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
-                valid_forms = displayError('upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.', who_assigned, valid_forms);
+                if (assigned_staff === 'Yes') {
+                    const who_assigned = document.getElementById('upd-who-' + type.dataset.tag).value;
+                    valid_forms = displayError('upd-who-feedback-' + type.dataset.tag, 'Please indicate who assigned the task.', who_assigned, valid_forms);
+                }
 
                 // REQUIRED
                 const recovery_steps = document.getElementById('upd-recovery-steps-' + type.dataset.tag).value;
@@ -1046,8 +1050,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 valid_forms = displayError('upd-reported-feedback-' + type.dataset.tag, 'Please indicate if this has been reported.', reported, valid_forms);
 
                 // REQUIRED
-                const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
-                valid_forms = displayError('upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.', explain, valid_forms);
+                if (reported === 'Yes') {
+                    const explain = document.getElementById('upd-explain-' + type.dataset.tag).value;
+                    valid_forms = displayError('upd-explain-feedback-' + type.dataset.tag, 'Please provide an explanation.', explain, valid_forms);
+                }
 
                 const insurance = document.getElementById('upd-insurance-' + type.dataset.tag).value;
                 const company = document.getElementById('upd-company-' + type.dataset.tag).value;
@@ -1056,28 +1062,30 @@ document.addEventListener("DOMContentLoaded", function() {
                 const zip = document.getElementById('upd-zip-' + type.dataset.tag).value;
                 const state = document.getElementById('upd-state-' + type.dataset.tag).value;
 
-                // REQUIRED
-                const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
-                valid_forms = displayError('upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.', describe_asset, valid_forms);
-
-                // REQUIRED
-                const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
-                valid_forms = displayError('lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.', encrypted, valid_forms);
-
-                if (encrypted === 'Yes') {
+                if (item_type === 'IT Equipment') {
                     // REQUIRED
-                    const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
-                    valid_forms = displayError('lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.', encrypted_data, valid_forms);
-                }
+                    const describe_asset = document.getElementById('upd-describe-' + type.dataset.tag).value;
+                    valid_forms = displayError('upd-describe-feedback-' + type.dataset.tag, 'Please describe the asset in detail.', describe_asset, valid_forms);
 
-                // REQUIRED
-                const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
-                valid_forms = displayError('lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.', confidential, valid_forms);
-
-                if (confidential === 'Yes') {
                     // REQUIRED
-                    const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
-                    valid_forms = displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.', confidential_data, valid_forms);
+                    const encrypted = document.getElementById('lsd-it-equip-encrypted-' + type.dataset.tag).value;
+                    valid_forms = displayError('lsd-it-equip-encrypted-feedback-' + type.dataset.tag, 'Please indicate if the device is encrypted.', encrypted, valid_forms);
+
+                    if (encrypted === 'Yes') {
+                        // REQUIRED
+                        const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
+                        valid_forms = displayError('lsd-it-equip-encrypted-input-feedback-' + type.dataset.tag, 'Please specify what data is encrypted.', encrypted_data, valid_forms);
+                    }
+
+                    // REQUIRED
+                    const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
+                    valid_forms = displayError('lsd-it-equip-confidential-feedback-' + type.dataset.tag, 'Please indicate if the device contains confidential data.', confidential, valid_forms);
+
+                    if (confidential === 'Yes') {
+                        // REQUIRED
+                        const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
+                        valid_forms = displayError('lsd-it-equip-confidential-input-feedback-' + type.dataset.tag, 'Please specify what confidential data is stored.', confidential_data, valid_forms);
+                    }
                 }
             }
 

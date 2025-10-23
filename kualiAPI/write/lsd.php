@@ -88,9 +88,9 @@ foreach($_SESSION['data'] as $session) {
 
                 if (preg_match('/@/i', $data['access_keys'])) {
                     $email = explode('@', $data['access_keys']);
-                    $access_key = getInfoEmail($email[0], $audit_dept);
+                    $access_key = getEmailInfo($email[0], $audit_dept);
                 } else {
-                    $access_key = getInfoName($data['access_keys'], $audit_dept);
+                    $access_key = getNameInfo($data['access_keys'], $audit_dept);
                 }
                 $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
                 $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
@@ -104,7 +104,7 @@ foreach($_SESSION['data'] as $session) {
                 $variables['data']['g06BrWDC42']['id'] = 'no';
             }
 
-            $by_whom = getInfoEmail($data['by_whom'], $audit_dept);
+            $by_whom = getEmailInfo($data['by_whom'], $audit_dept);
             $variables['data']['KMAw0Ejpx6']['displayName'] = $by_whom['displayName'];
             $variables['data']['KMAw0Ejpx6']['email'] = $by_whom['email'];
             $variables['data']['KMAw0Ejpx6']['firstName'] = $by_whom['firstName'];
@@ -256,16 +256,16 @@ if (!$action_id || !$document_id) {
     die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
 }
 
-$manager_info = getInfoName($manager, $audit_dept);
-$submitter_sig = getSigEmail($email, $_SESSION['deptid']);
+$manager_info = getNameInfo($manager, $audit_dept);
+$submitter_sig = getEmailInfo($email, $_SESSION['deptid']);
 
 if (!empty($data['borrower'])) {
     // GET BORROWER INFO FROM getSignature();
     if (preg_match('/@/i', $data['borrower'])) {
         $email = explode('@', $data['borrower']);
-        $borrower_signature = getInfoEmail($email[0], $audit_dept);
+        $borrower_signature = getEmailInfo($email[0], $audit_dept);
     } else {
-        $borrower_signature = getInfoName($data['borrower'], $audit_dept);
+        $borrower_signature = getNameInfo($data['borrower'], $audit_dept);
     }
     $variables['data']["N00EmVKFnd"]['displayName'] = $borrower_signature['displayName'];
     $variables['data']["N00EmVKFnd"]['email'] = $borrower_signature['email'];
