@@ -29,7 +29,7 @@ foreach ($result as $row) {
             preg_match($CMP, $row['tag']) || preg_match($FDN, $row['tag']) ||
             preg_match($SPA, $row['tag'])
         ) {
-            if (!empty($row['note']) {
+            if (!empty($row['note'])) {
                 $stmt = $dbh->prepare($insert_note);
                 $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note']]);
                 echo "Insert/Update ON Tag " . $row['tag'];
