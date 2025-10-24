@@ -25,9 +25,9 @@ $SPA = "/^SP\d+$/";
 foreach ($result as $row) {
     if ($row['status'] === 'Found' || $row['status'] === 'Extra') {
         if (
-            preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
-            preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||
-            preg_match($SPA, $tag_num)
+            preg_match($ASI, $row['tag']) || preg_match($STU, $row['tag']) ||
+            preg_match($CMP, $row['tag']) || preg_match($FDN, $row['tag']) ||
+            preg_match($SPA, $row['tag'])
         ) {
             if (!empty($row['note']) {
                 $stmt = $dbh->prepare($insert_note);
