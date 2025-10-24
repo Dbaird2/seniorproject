@@ -274,7 +274,7 @@ $audit_id = $_SESSION['info'][5];
                             <td style="font-weight: 600;background-color: #e5F3Fd;">
                                 <select name="form-type" id="form-<?= $row['Tag Number'] ?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                                     <option value="">No Form Needed</option>
-                                    <?php if (in_array($_SESSION['role'], ['admin', 'management'])) { ?>
+                                    <?php if ($row['Tag Status'] === 'Extra') { ?>
                                         <option value="bulk-transfer">Bulk Transfer</option>
                                     <?php } ?>
                                     <option value="psr">Property Survey Report</option>
@@ -636,6 +636,18 @@ $audit_id = $_SESSION['info'][5];
                             </div>
                         </td>
                         </tr>
+                        <?php $spa_regex = '/^SP\d+/';
+                        if (preg_match($spa_regex, $row['Tag Number'])) { ?>
+                        <tr>
+                        <td class="transfer-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Private Investigator (PI) For This Asset</label>
+                                <input type="text" name="full-name" id="pi-<?=$row['Tag Number']?>" placeholder="Full name of PI">
+                                <label class="error-label" id='transfer-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        </tr>
+                    <?php } ?>
                     <?php } ?>
                 </tbody>
             </table>
@@ -649,7 +661,7 @@ $audit_id = $_SESSION['info'][5];
 const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
 function hideUI(type, tag) {
-    //console.log(type, tag);
+    console.log(type, tag);
     const form = document.querySelectorAll('.' + type + '-' + tag);
     form.forEach(el => {
     el.style.display = 'none';
@@ -892,7 +904,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let valid_forms = true;
     let bulk_t_tags = [],
         t_tags = [],
-        b_psr_tags = [],
         psr_tags = [],
         out_tags = [],
         in_tags = [],
@@ -1416,11 +1427,13 @@ document.addEventListener("DOMContentLoaded", function() {
             } catch {
                 const text = await clone.text();
                 console.log("PSR response (text):", text);
+                /*
                 psr_tags.forEach(async (value) => {
                     hideUI('row', value);
                     type.value = '';
                     hideAll(value);
                 });
+                 */
             }
         }
     }
