@@ -14,13 +14,35 @@ $array_dump = function($array) {
     echo '</pre>';
 };
 $array_dump($result);
+$insert_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note) VALUES (:audit, :dept, :tag, :note) ON CONFLICT (asset_tag, dept_id, audit_id) DO UPDATE set note = EXCLUDED.note';
+$insert_no_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note) VALUES (:audit, :dept, :tag, :note) ON CONFLICT (asset_tag, dept_id, audit_id) DO NOTHING';
+
+$ASI = "/^A[SI]?\d+$/";
+$STU = "/^S[RC]?[TU]?\d+$/";
+$CMP = "/^\d+/";
+$FDN = "/^F[DN]?\d+$/";
+$SPA = "/^SP\d+$/";
 foreach ($result as $row) {
-    echo $row['tag'] . '<br>';
-    echo $row['note'] . '<br>';
-    echo $row['time'] . '<br>';
-    echo $row['status'] . '<br>';
-    echo $row['description'] . '<br>';
-    echo $row['dept_id'] . '<br>';
-    echo $row['audit_id'] . '<br>';
+    if ($row['status'] === 'Found' || $row['status'] === 'Extra') {
+        if (
+            preg_match($ASI, $tag_num) || preg_match($STU, $tag_num) ||
+            preg_match($CMP, $tag_num) || preg_match($FDN, $tag_num) ||
+            preg_match($SPA, $tag_num)
+        ) {
+            if (!empty($row['note']) {
+                $stmt = $dbh->prepare($insert_note);
+                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note']]);
+                echo "Insert/Update ON Tag " . $row['tag'];
+            } else {
+                $stmt = $dbh->prepare($insert_no_note);
+                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note']]);
+                echo "Insert ON Tag " . $row['tag'];
+            }
+        } else {
+            echo 'Tag is not a real tag <br>';
+        }
+    } else {
+        echo 'Tag not found in audit <br>';
+    }
 }
 ?>
