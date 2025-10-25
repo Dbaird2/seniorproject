@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $audited_asset = 'SELECT * FROM audited_asset WHERE audit_id = :id';
     $stmt = $dbh->prepare($audited_asset);
     $stmt->execute([':id'=>$audit_id]);
-    $audited_assets = $stmt->fetchAll();
-    $echo($audited_assets);
+    $audited_assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //$echo($audited_assets);
 
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 }
                 foreach ($audited_assets as $idx2 => $entry) {
                     $echo($entry);
-                    if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['status'])) {
+                    if ($entry['asset_tag'] === $row['asset_tag'] && !empty($entry['status'])) {
                         echo 'Found';
                         $echo($entry);
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
         }
         $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
-        //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+       // header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     }
 
@@ -207,23 +207,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                            }
-                            foreach ($audited_assets as $idx2 => $entry) {
-                                if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['status'])) {
-                                    echo 'Tag Already Scanned ';
+                                $found = false;
+                                foreach ($audited_assets as $idx2 => $entry) {
                                     $echo($entry);
-                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['room_tag'];
-                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
-                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['note'];
-                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                    if ($entry['asset_tag'] === $r_row && !empty($entry['Tag Status'])) {
+                                        $found = true;
+                                        echo 'Found';
+                                        $echo($entry);
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                    }
+                                }
+                                if (!$found) {
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                                 }
                             }
                         }
@@ -260,25 +265,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                            }
-                        }
-                        foreach ($audited_assets as $idx2 => $entry) {
-                                $echo($entry);
-                            if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['Tag Status'])) {
-                                echo 'Found';
-                                $echo($entry);
-                                $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
-                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
-                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
-                                $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
-                                $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                $found = false;
+                                foreach ($audited_assets as $idx2 => $entry) {
+                                    $echo($entry);
+                                    if ($entry['asset_tag'] === $r_row && !empty($entry['Tag Status'])) {
+                                        $found = true;
+                                        echo 'Found';
+                                        $echo($entry);
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                    }
+                                }
+                                if (!$found) {
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                }
                             }
                         }
 
