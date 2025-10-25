@@ -18,7 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $select_audit_freq = "SELECT * FROM audit_freq";
     $stmt = $dbh->query($select_audit_freq);
     $audit_ids = $stmt->fetchAll();
-
+    $echo = function($array) {
+        echo "<pre>";
+        var_dump($array);
+        echo "</pre>";
+    };
+    $echo($audit_ids); 
+    $echo($_POST);
     $audit_id = match ($_POST['audit-type']) {
         "cust"  => $audit_ids['curr_self_id'],
         "ocust" => 4,
