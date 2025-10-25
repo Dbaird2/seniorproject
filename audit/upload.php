@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "</pre>";
     };
     //$echo($audit_ids); 
-    //$echo($_POST);
+    $echo($_POST);
     $audit_id = match ($_POST['audit-type']) {
         "cust"  => $audit_ids['curr_self_id'],
         "ocust" => 4,
@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         "SPA"   => $audit_ids['curr_spa_id'],
         "oSPA"  => 9
     };
+    echo $audit_id . '<br>';
     $audited_asset = 'SELECT * FROM audited_asset WHERE audit_id = :id';
     $stmt = $dbh->prepare($audited_asset);
     $stmt->execute([':id'=>$audit_id]);
