@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $stmt = $dbh->query($select_audit_freq);
     $audit_ids = $stmt->fetchAll();
 
-    $audit_id = match ($name) {
+    $audit_id = match ($_POST['audit-type']) {
         "cust"  => $audit_ids['curr_self_id'],
         "ocust" => 4,
         "mgmt"  => $audit_ids['curr_mgmt_id'],
