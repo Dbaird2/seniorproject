@@ -3,9 +3,15 @@ require_once __DIR__ .  "/../config.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
-$select = "SELECT jsonb_array_elements(audit_data)->>'Tag Number' AS tag, jsonb_array_elements(audit_data)->>'Found Note' AS note, jsonb_array_elements(audit_data)->>'Found Timestamp' AS time, jsonb_array_elements(audit_data)->>'Tag Status' AS status, jsonb_array_elements(audit_data)->>'Descr' AS description, audit_id, dept_id
-FROM audit_history
-ORDER BY jsonb_array_elements(audit_data)->>'Tag Number' DESC";
+$select = "SELECT 
+    jsonb_array_elements(audit_data)->>'Tag Number' AS tag, 
+    jsonb_array_elements(audit_data)->>'Found Note' AS note, 
+    jsonb_array_elements(audit_data)->>'Found Timestamp' AS time, 
+    jsonb_array_elements(audit_data)->>'Tag Status' AS status, 
+    jsonb_array_elements(audit_data)->>'Found Room Tag' as room_tag,
+    jsonb_array_elements(audit_data)->>'Descr' AS description, audit_id, dept_id
+    FROM audit_history
+    ORDER BY jsonb_array_elements(audit_data)->>'Tag Number' DESC";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 $array_dump = function($array) {
@@ -14,8 +20,8 @@ $array_dump = function($array) {
     echo '</pre>';
 };
 $array_dump($result);
-$insert_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note) VALUES (:audit, :dept, :tag, :note) ON CONFLICT (asset_tag, dept_id, audit_id) DO UPDATE set note = EXCLUDED.note';
-$insert_no_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note) VALUES (:audit, :dept, :tag, :note) ON CONFLICT (asset_tag, dept_id, audit_id) DO NOTHING';
+$insert_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note, room_tag) VALUES (:audit, :dept, :tag, :note, :room_tag) ON CONFLICT (asset_tag, dept_id, audit_id) DO UPDATE SET note = EXCLUDED.note, room_tag = EXCLUDED.room_tag';
+$insert_no_note = 'INSERT INTO audited_asset (audit_id, dept_id, asset_tag, note, room_tag) VALUES (:audit, :dept, :tag, :note, :room_tag) ON CONFLICT (asset_tag, dept_id, audit_id) DO NOTHING';
 
 $ASI = "/^A[SI]?\d+$/";
 $STU = "/^S[RC]?[TU]?\d+$/";
@@ -31,11 +37,11 @@ foreach ($result as $row) {
         ) {
             if (!empty($row['note'])) {
                 $stmt = $dbh->prepare($insert_note);
-                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note']]);
+                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note'], ':room_tag'=>$row['room_tag']]);
                 echo "Insert/Update ON Tag " . $row['tag'];
             } else {
                 $stmt = $dbh->prepare($insert_no_note);
-                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note']]);
+                $stmt->execute([':audit'=>$row['audit_id'], ':dept'=>$row['dept_id'], ':tag'=>$row['tag'], ':note'=>$row['note'], ':room_tag'=>$row['room_tag']]);
                 echo "Insert ON Tag " . $row['tag'];
             }
         } else {

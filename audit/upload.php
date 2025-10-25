@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $stmt = $dbh->prepare($audited_asset);
     $stmt->execute([':id'=>$audit_id]);
     $audited_assets = $stmt->fetchAll();
+    $echo($audited_asset);
 
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
@@ -105,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 }
                 foreach ($audited_assets as $idx2 => $entry) {
-                    if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['Tag Status'])) {
+                    if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['status'])) {
+                        echo $entry
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$index]['Found Room Tag'] = $entry['Found Room Tag'];
                         $_SESSION['data'][$index]['Found Room Number'] = $entry['Found Room Number'] ?? '';
@@ -210,12 +212,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             }
                             foreach ($audited_assets as $idx2 => $entry) {
-                                if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['Tag Status'])) {
+                                if ($entry['asset_tag'] === $tag['asset_tag'] && !empty($entry['status'])) {
+                                    echo 'Tag Already Scanned ';
+                                    $echo($entry);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['room_tag'];
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
                                     $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['note'];
                                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
                                 }
                             }
