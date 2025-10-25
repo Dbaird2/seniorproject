@@ -17,7 +17,7 @@ check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $select_audit_freq = "SELECT * FROM audit_freq";
     $stmt = $dbh->query($select_audit_freq);
-    $audit_ids = fetchAll($stmt);
+    $audit_ids = $stmt->fetchAll();
 
     $audit_id = match ($name) {
         "cust"  => $audit_ids['curr_self_id'],
