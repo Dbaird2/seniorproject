@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         "omgmt" => 6,
         "SPA"   => $audit_ids['curr_spa_id'],
         "oSPA"  => 9
-    }
+    };
     $audited_asset = 'SELECT * FROM audited_asset WHERE audit_id = :id';
     $stmt = $dbh->prepare($audited_asset);
     $stmt->execute([':id'=>$audit_id]);
