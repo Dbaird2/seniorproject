@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $stmt = $dbh->prepare($audited_asset);
     $stmt->execute([':id'=>$audit_id]);
     $audited_assets = $stmt->fetchAll();
-    $echo($audited_asset);
+    $echo($audited_assets);
 
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
         }
         $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
-        header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+        //header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     }
 
@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 if (!in_array("Tag Number", $keys)) {
                     $blank_msg = "Headers cannot be found";
                 } else {
-                    header('Location: auditing.php');
+                    //header('Location: auditing.php');
                     exit();
                 }
             } else {
