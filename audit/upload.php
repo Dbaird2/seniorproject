@@ -15,8 +15,26 @@ $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $blank_msg = '';
 check_auth();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+    $select_audit_freq = "SELECT * FROM audit_freq";
+    $stmt = query($select_audit_freq);
+    $audit_ids = fetchAll($stmt);
+
+    $audit_id = match ($name) {
+        "cust"  => $audit_ids['curr_self_id'],
+        "ocust" => 4,
+        "mgmt"  => $audit_ids['curr_mgmt_id'],
+        "omgmt" => 6,
+        "SPA"   => $audit_ids['curr_spa_id'],
+        "oSPA"  => 9
+    }
+    $audited_asset = 'SELECT * FROM audited_asset WHERE audit_id = :id';
+    $stmt = $dbh->prepare($audited_asset);
+    $stmt->execute([':id'=>$audit_id]);
+    $audited_assets = $stmt->fetchAll();
+
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
         $name = $_POST['list-type'];
+            
         if ($name === 'SPA Audit') {
             $name = 'BKSPA';
             $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
@@ -34,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                 LEFT JOIN department d ON a.dept_id = d.dept_id
                 WHERE dept_name = :name ORDER BY a.asset_tag";
+
         }
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":name"=>$name]);
@@ -79,6 +98,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Note'] = '';
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 }
+                foreach ($audited_assets as $idx2 => $entry) {
+                    if ($entry['asset_tag'] === $tag['asset_tag']) {
+                        if (empty($entry['status'])) {
+                            continue;
+                        } else {
+                            $_SESSION['data'][$index]['Tag Status'] = 'Found';
+                            $_SESSION['data'][$index]['Found Room Tag'] = $entry['Found Room Tag'];
+                            $_SESSION['data'][$index]['Found Room Number'] = $entry['Found Room Number'] ?? '';
+                            $_SESSION['data'][$index]['Found Building Name'] = $entry['Found Building Name'] ?? '';
+                            $_SESSION['data'][$index]['Found Note'] = $entry['Found Note'];
+                            $_SESSION['data'][$index]['Found Timestamp'] = $entry['Found Timestamp'];
+                        }
+                    }
+                }
+                    
                 $highest_row++;
             }
         }
@@ -173,6 +207,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             }
+                        foreach ($audited_assets as $idx2 => $entry) {
+                            if ($entry['asset_tag'] === $tag['asset_tag']) {
+                                if (empty($entry['status'])) {
+                                    continue;
+                                } else {
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                }
+                            }
                         }
                         $_SESSION['data'][$index - $skipped][$data[1][$r_index]] = $r_row;
                     }
@@ -212,6 +259,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                            }
+                        }
+                        foreach ($audited_assets as $idx2 => $entry) {
+                            if ($entry['asset_tag'] === $tag['asset_tag']) {
+                                if (empty($entry['status'])) {
+                                    continue;
+                                } else {
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $entry['Found Room Tag'];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = $entry['Found Room Number'] ?? '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = $entry['Found Building Name'] ?? '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $entry['Found Note'];
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = $entry['Found Timestamp'];
+                                }
                             }
                         }
 
