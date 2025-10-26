@@ -281,6 +281,7 @@ $audit_id = $_SESSION['info'][5];
                                     <option value="lsd">Equipment Loss/Stolen/Destroyed</option>
                                     <option value="check-out">Check Out</option>
                                     <option value="check-in">Check In</option>
+                                    <option value="transfer">Transfer</option>
                                 </select>
                             </td>
                         </tr>
@@ -356,6 +357,15 @@ $audit_id = $_SESSION['info'][5];
                                     </div>
                                     <label class="error-label" id='lsd-narrative-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </td>
+                            <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
+                                <div class="form-field-group">
+                                    <label>Date Discovered Missing</label>
+                                    <input type="date" id="lsd-date-discovered-<?= $row['Tag Number'] ?>">
+                                </div>
+                                    <label class="error-label" id='lsd-date-discovered-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </td>
+                        </tr>
+                        <tr>
                                 <td class="lsd-<?= $row['Tag Number'] ?>" style="display:none;">
                                     <div class="form-field-group">
                                         <label>Reported to UPD?</label>
@@ -1002,6 +1012,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const item_type = document.getElementById('item-type-' + type.dataset.tag).value;
             valid_forms = displayError('item-type-feedback-' + type.dataset.tag, 'Please select the item type.', item_type, valid_forms);
 
+            // REQUIRED
+            const date_discovered = document.getElementById('lsd-date-discovered-' + type.dataset.tag).value;
+            valid_forms = displayError( 'lsd-date-discovered-feedback-' + type.dataset.tag, 'Please select a date.', position, valid_forms);
+
             if (upd === 'Yes') {
                 // REQUIRED
                 const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag).value;
@@ -1293,6 +1307,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const encrypted_data = document.getElementById('lsd-it-equip-encrypted-input-' + type.dataset.tag).value;
             const confidential = document.getElementById('lsd-it-equip-confidential-' + type.dataset.tag).value;
             const confidential_data = document.getElementById('lsd-it-equip-confidential-input-' + type.dataset.tag).value;
+            const date_discovered = document.getElementById('lsd-date-discovered-' + type.dataset.tag).value;
 
             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd.php";
             const lsd_res = await fetch(url, {
@@ -1304,6 +1319,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 tag: type.dataset.tag,
                     who: who,
                     borrower: borrower,
+                    date_discovered: date_discovered,
                     position: position,
                     lsd: lsd,
                     reason: reason,

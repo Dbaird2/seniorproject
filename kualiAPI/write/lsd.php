@@ -40,10 +40,6 @@ foreach($_SESSION['data'] as $session) {
         $variables['data']['dyaoRcFcOD'] = $data['reason']; // GOOD
         // UPD YES -------------------------------------------------------------
         if (strtolower($data['upd']) === 'yes') {
-            // DATE DISCOVERED MISSING
-            $date = new DateTime($data['date_missing']);
-            $new_date = $date->format('m/d/Y');
-            $variables['data']["fy16ygj_ST"] = $new_date;
 
             $variables['data']['ox__1hiShH']['label'] = $data['insurance'];
             // DATE REPORTED
@@ -313,8 +309,12 @@ $lsd_who_id = match ($who) {
     'Myself' => 'w-25nbYAp',
     'Someone Else' => 'SDqr0xnNfnM'
 };
+$date = new DateTime($data['date_discovered']);
+$date_discovered = $date->format('m/d/Y');
+
 $variables['documentId'] = $document_id;
 $variables['data']['Sg2RTLnC5r']['id'] = $lsd_who_id;
+$variables['data']['fy16ygj_ST'] = $date_discovered;
 $variables['data']['Sg2RTLnC5r']['label'] = $who;
 $variables['data']["9eJvzLeMS0"]['id'] = "9JrVQuqdIQS";
 $variables['data']["9eJvzLeMS0"]["label"] = "Staff / Faculty";
