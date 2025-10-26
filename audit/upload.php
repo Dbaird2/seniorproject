@@ -207,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             } else {
                                 $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
+                                $stmt->execute([":tag"=>$r_row, ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetch();
                                 if ($tag_info) {
                                     //$echo($tag_info);
@@ -262,7 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             } else {
                                 $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
+                                $stmt->execute([":tag"=>$r_row, ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetch();
                                 if ($tag_info) {
                                     //$echo($tag_info);
