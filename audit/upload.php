@@ -96,11 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Note'] = $info[1];
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 } else {
-                    $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
+                    $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
                     $stmt = $dbh->prepare($audited_tag);
-                    $stmt->execute([":tag"=>$row['asset_tag']]);
+                    $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                     $tag_info = $stmt->fetchAll();
                     if ($tag_info) {
+                                    $echo($tag_info);
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$index]['Found Room Tag'] = '';
                         $_SESSION['data'][$index]['Found Room Number'] = '';
@@ -204,11 +205,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
+                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetchAll();
                                 if ($tag_info) {
+                                    $echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
@@ -258,11 +260,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
+                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetchAll();
                                 if ($tag_info) {
+                                    $echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
