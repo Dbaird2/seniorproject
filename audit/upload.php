@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 } else {
                     $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
                     $stmt = $dbh->prepare($audited_tag);
-                    $tag_info = $stmt->execute([":tag"=>$row['asset_tag']]);
+                    $stmt->execute([":tag"=>$row['asset_tag']]);
+                    $tag_info = $stmt->fetchAll();
                     if ($tag_info) {
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$index]['Found Room Tag'] = '';
@@ -205,7 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             } else {
                                 $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $tag_info = $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $tag_info = $stmt->fetchAll();
                                 if ($tag_info) {
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
@@ -258,7 +260,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             } else {
                                 $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag";
                                 $stmt = $dbh->prepare($audited_tag);
-                                $tag_info = $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $stmt->execute([":tag"=>$row['asset_tag']]);
+                                $tag_info = $stmt->fetchAll();
                                 if ($tag_info) {
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
