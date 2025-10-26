@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 $highest_row++;
             }
         }
-        $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
+        $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name];
         header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     }
