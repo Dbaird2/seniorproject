@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         echo "</pre>";
     };
     //$echo($audit_ids); 
-    $echo($_POST);
+    //$echo($_POST);
     $audit_id = match ($_POST['audit-type']) {
         "cust"  => $audit_ids['curr_self_id'],
         "ocust" => 4,
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         "SPA"   => $audit_ids['curr_spa_id'],
         "oSPA"  => 9
     };
-    echo $audit_id . '<br>';
+    //echo $audit_id . '<br>';
     //$echo($audited_assets);
 
     if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                     $tag_info = $stmt->fetch();
                     if ($tag_info) {
-                                    $echo($tag_info);
+                        //$echo($tag_info);
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
                         $_SESSION['data'][$index]['Found Room Tag'] = '';
                         $_SESSION['data'][$index]['Found Room Number'] = '';
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
         }
         $_SESSION['info'] = [$highest_row, NULL, $name, 'cust', $name];
-       // header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+        header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
         exit;
     }
 
@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetch();
                                 if ($tag_info) {
-                                    $echo($tag_info);
+                                    //$echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
                                 $tag_info = $stmt->fetch();
                                 if ($tag_info) {
-                                    $echo($tag_info);
+                                    //$echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
@@ -311,7 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 if (!in_array("Tag Number", $keys)) {
                     $blank_msg = "Headers cannot be found";
                 } else {
-                    //header('Location: auditing.php');
+                    header('Location: auditing.php');
                     exit();
                 }
             } else {
