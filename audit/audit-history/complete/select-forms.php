@@ -686,7 +686,6 @@ function showUI(type, tag) {
     });
 }
 function hideAll(tag) {
-    document.querySelector('.lsd-fill-' + tag).style.display = 'none';
     hideUI('lsd-it-equip-encrypted', tag);
     hideUI('lsd-it-equip-confidential', tag);
     hideUI('lsd-it-equip', tag);
@@ -702,6 +701,7 @@ function hideAll(tag) {
     hideUI('lsd-upd-yes', tag);
     hideUI('lsd-upd-insurance', tag);
     hideUI('lsd-fill-', tag);
+    hideUI('transfer-', tag);
     return;
 }
 function displayError(type, reason, check, form_status) {
@@ -768,12 +768,12 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
-            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
-                hideUI('lsd-it-equip-encrypted', tag);
-                hideUI('lsd-it-equip-confidential', tag);
-                hideUI('lsd-upd-explain', tag);
-                hideUI('lsd-upd-access', tag);
-            hideUI('lsd-it-equip', tag);
+        hideUI('transfer-', tag);
+        hideUI('lsd-it-equip-encrypted', tag);
+        hideUI('lsd-it-equip-confidential', tag);
+        hideUI('lsd-upd-explain', tag);
+        hideUI('lsd-upd-access', tag);
+        hideUI('lsd-it-equip', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('psr', tag);
@@ -786,12 +786,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (form_type.value === 'psr') {
-            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
-                hideUI('lsd-it-equip-encrypted', tag);
-                hideUI('lsd-it-equip-confidential', tag);
-                hideUI('lsd-upd-explain', tag);
-                hideUI('lsd-upd-access', tag);
-            hideUI('lsd-it-equip', tag);
+        hideUI('transfer-', tag);
+        hideUI('lsd-it-equip-encrypted', tag);
+        hideUI('lsd-it-equip-confidential', tag);
+        hideUI('lsd-upd-explain', tag);
+        hideUI('lsd-upd-access', tag);
+        hideUI('lsd-it-equip', tag);
         hideUI('check-out', tag);
         hideUI('lsd', tag);
         hideUI('check-in', tag);
@@ -807,6 +807,10 @@ document.addEventListener("DOMContentLoaded", function() {
         hideUI('check-in', tag);
         hideUI('bulk-transfer', tag);
         hideUI('psr', tag);
+        const tag_regex = /^SP\d+/g;
+        if (tag_regex.test(tag)) {
+            showUI('transfer-', tag);
+        }
         const upd = document.getElementById('upd-' + tag);
         upd.addEventListener('change', () => {
             //console.log(upd.value);
@@ -903,6 +907,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (form_type.value === 'bulk-transfer') {
         hideAll(tag);
+        const tag_regex = /^SP\d+/g;
+        if (tag_regex.test(tag)) {
+            showUI('transfer-', tag);
+        }
     }
 
     form_class.forEach(el => {
