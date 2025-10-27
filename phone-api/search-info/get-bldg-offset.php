@@ -13,10 +13,10 @@ $limit = $data['limit'];
 $search = $data['search'];
 
 if (isset($_POST)) {
-    $select = "SELECT * FROM department WHERE 1=1 ";
+    $select = "SELECT b.bldg_id, b.bldg_name, r.room_tag, r.room_loc FROM bldg_table b left join room_table r on r.bldg_id = b.bldg_id WHERE 1=1 ";
     $params = [];
     if (!empty($search)) {
-        $select .= " AND (bldg_name = :bldg OR bldg_name = :bldg ";
+        $select .= " AND (b.bldg_name = :bldg OR b.bldg_id = :bldg OR r.room_tag = :bldg) ";
         $params[':bldg'] = $search;
     }
     $select .= " ORDER BY bldg_name LIMIT :limit OFFSET :offset";
