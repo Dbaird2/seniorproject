@@ -39,7 +39,7 @@ if (isset($_POST)) {
     $stmt = $dbh->prepare($select);
     $stmt->execute($params);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(["data" =>$data, 'count'=>$row_count]);
+    echo json_encode(["data" =>$data]);
     exit;
 }
 
