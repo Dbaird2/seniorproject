@@ -33,6 +33,12 @@ try {
         'SPA'  => 7,
         'oSPA'  => 9
     };
+    foreach ($audit_data as $index=>$tag) {
+        $insert_q = "INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT DO UPDATE SET note = EXCLUDED.note";
+        $stmt = $dbh->prepare($insert_q);
+        $stmt->execute([$dept,$audit_id, $tag['Tag Number'], $tag['Found Note']]);
+    }
+
 
     $audited_asset_json = json_encode($audit_data);
     $auditor = $_SESSION['email'];
@@ -77,6 +83,7 @@ try {
                 $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, audited_with) VALUES (?, ?, ?, ?, ?)";
                 $insert_stmt = $dbh->prepare($insert_q);
                 $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $audited_with]);
+
 
                 echo json_encode(['status' => 'success', 'message' => 'Insert audit id ' . $audit_id]);
             } catch (PDOException $e) {

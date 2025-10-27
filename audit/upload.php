@@ -14,10 +14,44 @@ $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $blank_msg = '';
 check_auth();
+
+function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
+    global $dbh
+    $old = false;
+    if ($type === 'ocust') {
+        $old = true;
+        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
+    } else if ($type === 'omgmt') {
+        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
+    } else if ($type === 'oSPA') {
+        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
+    }
+    if ($old) {
+        $stmt = $dbh->prepare($audited_tag);
+        $stmt->execute([":tag"=>$tag, ':prev'=>$audit_id]);
+        $tag_info = $stmt->fetch();
+    } else {
+        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
+        $stmt = $dbh->prepare($audited_tag);
+        $stmt->execute([":tag"=>$tag, ':id'=>$auditing_id]);
+        $tag_info = $stmt->fetch();
+    }
+    return $tag_info ?: null;
+}
+
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $select_audit_freq = "SELECT * FROM audit_freq";
     $stmt = $dbh->query($select_audit_freq);
     $audit_ids = $stmt->fetch();
+    if ($_POST['audit_type'] === 'ocust') { 
+        $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
+    } else if ($_POST['audit_type'] === 'ocmgmt') { 
+        $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
+    } else if ($_POST['audit_type'] === 'oSPA') { 
+        $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
+    }
     $echo = function($array) {
         echo "<pre>";
         var_dump($array);
@@ -96,10 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Note'] = $info[1];
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 } else {
-                    $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-                    $stmt = $dbh->prepare($audited_tag);
-                    $stmt->execute([":tag"=>$row['asset_tag'], ':id'=>$audit_id]);
-                    $tag_info = $stmt->fetch();
+                    $tag_info = getAuditedInfo($_POST['audit-type'], $tag, $prev_id, $audit_id);
                     if ($tag_info) {
                         //$echo($tag_info);
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
@@ -205,10 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-                                $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$r_row, ':id'=>$audit_id]);
-                                $tag_info = $stmt->fetch();
+                                $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                 if ($tag_info) {
                                     //$echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
@@ -260,10 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                                 $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                 $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                             } else {
-                                $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-                                $stmt = $dbh->prepare($audited_tag);
-                                $stmt->execute([":tag"=>$r_row, ':id'=>$audit_id]);
-                                $tag_info = $stmt->fetch();
+                                $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                 if ($tag_info) {
                                     //$echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
