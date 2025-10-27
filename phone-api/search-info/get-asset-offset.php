@@ -15,7 +15,7 @@ $echo = function($array) {
     echo '<pre>';
     var_dump($array);
     echo '</pre>';
-}
+};
 
 if (isset($_POST)) {
     $dept_regex = "/^D\d+/i";
