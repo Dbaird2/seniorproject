@@ -22,7 +22,8 @@ if (isset($_POST)) {
     $select .= " ORDER BY bldg_name LIMIT :limit OFFSET :offset";
     $params[":limit"] = $limit;
     $params[':offset'] = $offset;
-    $stmt = $dbh->query($select);
+    $stmt = $dbh->prepare($select);
+    $stmt->execute($params);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode(["data" =>$data]);
     exit;
