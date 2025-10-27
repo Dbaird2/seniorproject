@@ -16,14 +16,16 @@ $blank_msg = '';
 check_auth();
 
 function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
-    global $dbh
+    global $dbh;
     $old = false;
     if ($type === 'ocust') {
         $old = true;
         $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
     } else if ($type === 'omgmt') {
+        $old = true;
         $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
     } else if ($type === 'oSPA') {
+        $old = true;
         $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
     }
     if ($old) {
