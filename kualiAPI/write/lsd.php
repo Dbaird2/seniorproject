@@ -382,4 +382,3 @@ curl_close($curl);
 
 echo json_encode(['form'=>$submit_form, 'resp data'=>$resp_data]);
 exit;
-
