@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $stmt = $dbh->query($select_audit_freq);
     $audit_ids = $stmt->fetch();
     $prev_id = '';
-    if ($_POST['audit_type'] === 'ocust') { 
+    if ($_POST['audit-type'] === 'ocust') { 
         $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
-    } else if ($_POST['audit_type'] === 'ocmgmt') { 
+    } else if ($_POST['audit-type'] === 'ocmgmt') { 
         $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
-    } else if ($_POST['audit_type'] === 'oSPA') { 
+    } else if ($_POST['audit-type'] === 'oSPA') { 
         $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
     }
     $echo = function($array) {
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     $_SESSION['data'][$index]['Found Note'] = $info[1];
                     $_SESSION['data'][$index]['Found Timestamp'] = '';
                 } else {
-                    $tag_info = getAuditedInfo($_POST['audit-type'], $tag, $prev_id, $audit_id);
+                    $tag_info = getAuditedInfo($_POST['audit-type'], $row['asset_tag'], $prev_id, $audit_id);
                     if ($tag_info) {
                         //$echo($tag_info);
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
