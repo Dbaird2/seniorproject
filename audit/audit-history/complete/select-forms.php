@@ -658,6 +658,77 @@ $audit_id = $_SESSION['info'][5];
                         </td>
                         </tr>
                     <?php } ?>
+                        <tr>
+                        <td class="transfer-form-type-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Is This a</label>
+                                <select id="transfer-form-type-<?= $row['Tag Number'] ?>">
+                                    <option value=""></option>
+                                    <option value="location-change">Business/Room/Location change (Business Unit stays the same)</option>
+                                    <option value="dept-change">From one department to another department</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="transfer-form-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Is this equipment kept inside a building?</label>
+                                <select id="transfer-loc-<?= $row['Tag Number'] ?>">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="transfer-bldg-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Where is your equipment stored, parked, or housed?</label>
+                                <input type="text" name="transfer-bldg-text" id="transfer-bldg-text-<?=$row['Tag Number']?>" placeholder="Full name of PI">
+                                <label class="error-label" id='transfer-bldg-text-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        <td class="transfer-form-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Notes</label>
+                                <input type="text" name="transfer-notes" id="transfer-notes-<?=$row['Tag Number']?>" placeholder="Full name of PI">
+                            </div>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td class="transfer-dept-change-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>Why?</label>
+                                <input type="text" name="transfer-notes" id="transfer-why-<?=$row['Tag Number']?>" placeholder="Why?">
+                                <label class="error-label" id='transfer-why-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        <td class="transfer-dept-change-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>New Custodian Name/Email</label>
+                                <input type="text" name="transfer-notes" id="transfer-new-cust-<?=$row['Tag Number']?>" placeholder="New Custodian">
+                                <label class="error-label" id='transfer-new-cust-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        <td class="transfer-dept-change-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>New Department</label>
+                                <input type="text" name="transfer-notes" id="transfer-dept-location-<?=$row['Tag Number']?>" placeholder="New Department">
+                                <label class="error-label" id='transfer-dept-location-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        <td class="transfer-bldg-change-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>New Building</label>
+                                <input type="text" name="transfer-notes" id="transfer-bldg-location-<?=$row['Tag Number']?>" placeholder="New Building">
+                                <label class="error-label" id='transfer-bldg-location-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        <td class="transfer-bldg-change-<?= $row['Tag Number'] ?>" style="display:none;">
+                            <div class="form-field-group">
+                                <label>New Room</label>
+                                <input type="text" name="transfer-notes" id="transfer-room-location-<?=$row['Tag Number']?>" placeholder="New Room">
+                                <label class="error-label" id='transfer-room-location-feedback-<?= $row['Tag Number'] ?>'></label>
+                            </div>
+                        </td>
+                        </tr>
                     <?php } ?>
                 </tbody>
             </table>
@@ -686,6 +757,10 @@ function showUI(type, tag) {
     });
 }
 function hideAll(tag) {
+    hideUI('transfer-bldg-change',tag);
+    hideUI('transfer-dept-change',tag);
+    hideUI('transfer-form', tag);
+    hideUI('transfer-form-type',tag);
     hideUI('lsd-it-equip-encrypted', tag);
     hideUI('lsd-it-equip-confidential', tag);
     hideUI('lsd-it-equip', tag);
@@ -721,6 +796,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const audit_id = <?= json_encode($_SESSION['info'][3], true) ?>;
     const forms_needed = document.querySelectorAll('.forms-needed');
 
+    let transfer_count = 0;
+    const form_length = forms_needed.length;
+
     forms_needed.forEach(form_type => {
     form_type.addEventListener('change', () => {
     //console.log('Changed input', form_type, form_type.value);
@@ -732,6 +810,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     const form_class = document.querySelectorAll('.' + form_type.value + '-' + form_type.dataset.tag);
     if (form_type.value === 'check-out') {
+        hideAll(tag);
         someone_else = document.querySelector('.who-' + tag);
         someone_else.addEventListener('change', () => {
         //console.log(someone_else.value);
@@ -741,24 +820,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
-        hideUI('transfer-', tag);
-                hideUI('lsd-it-equip-encrypted', tag);
-                hideUI('lsd-it-equip-confidential', tag);
-                hideUI('lsd-upd-explain', tag);
-                hideUI('lsd-upd-access', tag);
-            hideUI('lsd-it-equip', tag);
-        hideUI('check-in', tag);
-        hideUI('lsd', tag);
-        hideUI('psr', tag);
-        hideUI('bulk-transfer', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd-insurance', tag);
-        hideUI('lsd-fill-', tag);
     }
 
     if (form_type.value === 'check-in') {
+        hideAll(tag);
         const someone_else = document.querySelector('.who-' + tag);
         someone_else.addEventListener('change', () => {
         //console.log(someone_else.value);
@@ -768,24 +833,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
-        hideUI('transfer-', tag);
-        hideUI('lsd-it-equip-encrypted', tag);
-        hideUI('lsd-it-equip-confidential', tag);
-        hideUI('lsd-upd-explain', tag);
-        hideUI('lsd-upd-access', tag);
-        hideUI('lsd-it-equip', tag);
-        hideUI('check-out', tag);
-        hideUI('lsd', tag);
-        hideUI('psr', tag);
-        hideUI('bulk-transfer', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd', tag);
-        hideUI('lsd-upd-yes', tag);
-        hideUI('lsd-upd-insurance', tag);
-        hideUI('lsd-fill-', tag);
     }
 
     if (form_type.value === 'psr') {
+        hideAll(tag);
         hideUI('transfer-', tag);
         hideUI('lsd-it-equip-encrypted', tag);
         hideUI('lsd-it-equip-confidential', tag);
@@ -804,9 +855,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (form_type.value === 'lsd' && (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6)) {
-        hideUI('check-in', tag);
-        hideUI('bulk-transfer', tag);
-        hideUI('psr', tag);
+        hideAll(tag);
         const tag_regex = /^SP\d+/g;
         if (tag_regex.test(tag)) {
             showUI('transfer-', tag);
@@ -849,12 +898,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
             } else {
-                document.querySelector('.lsd-fill-' + tag).style.display = 'none';
-                hideUI('lsd-upd', tag);
-                hideUI('lsd-upd-explain', tag);
-                hideUI('lsd-upd-access', tag);
-                hideUI('lsd-upd-insurance', tag);
-                hideUI('lsd-upd-yes', tag);
             }
         });
         const someone_else = document.getElementById('lsd-who-' + tag);
@@ -901,6 +944,41 @@ document.addEventListener("DOMContentLoaded", function() {
             hideUI('lsd-it-equip-confidential', tag);
         }
         });
+    } 
+    if (form_type.value === 'transfer') {
+        transfer_count++;
+        hideAll(tag);
+        showUI('transfer-form', tag);
+        showUI('transfer-form-type',tag);
+        const in_bldg = document.getElementById('transfer-loc-' + tag);
+        in_bldg.addEventListener('change', () => {
+            if (in_bldg.value === 'No') {
+                showUI('transfer-bldg-text-' + tag);
+            } else {
+                hideUI('transfer-bldg-text-' + tag);
+            }
+        });
+        const transfer_type = document.getelementById('transfer-form-type-' + type.dataset.tag).value;
+        if (transfer_type === 'dept-change') {
+            showUI('transfer-dept-change', tag);
+            showUI('transfer-bldg-change' , tag);
+            showUI('receiving-custodian', tag);
+            showUI('transfer-why', tag);
+        } else {
+            hideUI('transfer-dept-change', tag);
+            hideUI('transfer-bldg-change' , tag);
+            hideUI('receiving-custodian', tag);
+            hideUI('transfer-why', tag);
+        }
+        if (transfer_type === 'location-change') {
+            showUI('transfer-dept-change', tag);
+            showUI('transfer-bldg-change' , tag);
+        } else {
+            hideUI('transfer-dept-change', tag);
+            hideUI('transfer-bldg-change' , tag);
+        }
+        
+            
     }
 
 
@@ -918,6 +996,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     });
     });
+    transfer_count = 0;
     const btn = document.getElementById("submit").addEventListener("click", async () => {
     let valid_forms = true;
     let bulk_t_tags = [],
@@ -1124,6 +1203,48 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         } 
+    } else if (val === 'transfer') {
+        const transfer_type = document.getelementById('transfer-form-type-' + type.dataset.tag);
+        if (transfer_type.value === '') {
+            valid_forms = displayError('transfer-form-type-feedback-' + type.dataset.tag, 'Transfer Type Cannot Be Null.', transfer_type.value, valid_forms);
+        } else if (transfer_type.value === 'location-change') {
+            // FINISH CHECKING IF NEW ROOM AND BLDG ARE NOT EMPTY
+            const bldg_change = document.getElementById('transfer-bldg-location-' + type.dataset.tag).value;
+            if (bldg_change === '') {
+                valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Building cannot be empty.', bldg_change, valid_forms);
+            }
+            const room_change = document.getElementById('transfer-room-location-' + type.dataset.tag).value;
+            if (bldg_change === '') {
+                valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
+            }
+            transfer_location_array.push(['tag'=>type.dataset.tag,'bldg'=>bldg_change, 'room'=>room_change]);
+                
+        } else if (transfer_type.value === 'dept-change') {
+            // FINISH CHECKING IF NEW DEPT IS NOT EMPTY
+            const bldg_change = document.getElementById('transfer-bldg-location-' + tag).value;
+            const room_change = document.getElementById('transfer-room-location-' + tag).value;
+            if (bldg_change === '' && room_change !== '') {
+                valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Building cannot be empty.', bldg_change, valid_forms);
+            } else if (bldg_change !== '' && room_change === '') {
+                valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
+            }
+
+            const dept_change = document.getElementById('transfer-dept-location-' + tag).value;
+            const tag_regex = /^SP\d+/g;
+            if (dept_change === '' && !tag_regex.test(dept_change)) {
+                valid_forms = displayError('transfer-dept-location-feedback-' + type.dataset.tag, 'New Department cannot be empty.', dept_change, valid_forms);
+            }
+            const why = document.getElementById('transfer-why-' + type.dataset.tag).value;
+            if (why === '') {
+                valid_forms = displayError('transfer-why-feedback-' + type.dataset.tag, 'Reason Why cannot be empty.', why, valid_forms);
+            }
+            const new_cust = document.getElementById('transfer-new-cust-' + type.dataset.tag).value;
+            if (new_cust === '') {
+                valid_forms = displayError('transfer-new-cust-feedback-' + type.dataset.tag, 'New custodian cannot be empty.', new_cust, valid_forms);
+            }
+            transfer_dept_array.push(['tag'=>type.dataset.tag,'bldg'=>bldg_change, 'room'=>room_change,'why'=>why,'new_cust'=>new_cust]);
+    
+
     }
     });
 
@@ -1417,6 +1538,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         }
+    } else if (val === 'transfer') {
     }
     });
 
@@ -1461,6 +1583,82 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     }
+    if (transfer_location_array.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/transfer.php";
+        const transfer_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+                transfer_locaton_array,
+                dept_id: dept_id,
+                audit_id: audit_id
+        })
+        });
+
+        if (!transfer_res.ok) {
+            const text = await transfer_res.text();
+            throw new Error(`HTTP ${transfer_res.status}: ${text}`);
+        } else {
+            const clone = transfer_res.clone();
+            try {
+                const data = await transfer_res.json();
+                console.log("transfer dept response (JSON):", data);
+                transfer_location_array.forEach(async (value) => {
+                    hideUI('row', value.tag);
+                    hideAll(value.tag);
+                    type.value = '';
+                });
+            } catch {
+                const text = await clone.text();
+                console.log("transfer dept response (text):", text);
+                transfer_location_array.forEach(async (value) => {
+                    hideUI('row', value.tag);
+                    hideAll(value.tag);
+                    type.value = '';
+                });
+            }
+        }
+    }
+    if (transfer_dept_array.length !== 0) {
+        url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/transfer.php";
+        const transfer_res = await fetch(url, {
+        method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+                transfer_dept_array,
+                dept_id: dept_id,
+                audit_id: audit_id
+        })
+        });
+
+        if (!transfer_res.ok) {
+            const text = await transfer_res.text();
+            throw new Error(`HTTP ${transfer_res.status}: ${text}`);
+        } else {
+            const clone = transfer_res.clone();
+            try {
+                const data = await transfer_res.json();
+                console.log("transfer dept response (JSON):", data);
+                transfer_dept_array.forEach(async (value) => {
+                    hideUI('row', value.tag);
+                    hideAll(value.tag);
+                    type.value = '';
+                });
+            } catch {
+                const text = await clone.text();
+                console.log("transfer dept response (text):", text);
+                transfer_dept_array.forEach(async (value) => {
+                    hideUI('row', value.tag);
+                    hideAll(value.tag);
+                    type.value = '';
+                });
+            }
+        }
+    }
 
     if (bulk_t_tags.length !== 0) {
         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
@@ -1490,13 +1688,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     type.value = '';
                 });
             } catch {
-                const text = await clone.text();
-                console.log("bulk-transfer response (text):", text);
-                psr_tags.forEach(async (value) => {
-                    hideUI('row', value);
-                    hideAll(value);
-                    type.value = '';
-                });
             }
         }
     }
