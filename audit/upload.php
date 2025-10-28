@@ -14,7 +14,6 @@ $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $blank_msg = '';
 check_auth();
-
 function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
     global $dbh;
     $old = false;
@@ -41,12 +40,11 @@ function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
     return $tag_info ?: null;
 }
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $select_audit_freq = "SELECT * FROM audit_freq";
     $stmt = $dbh->query($select_audit_freq);
     $audit_ids = $stmt->fetch();
+    $prev_id = '';
     if ($_POST['audit_type'] === 'ocust') { 
         $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
     } else if ($_POST['audit_type'] === 'ocmgmt') { 
