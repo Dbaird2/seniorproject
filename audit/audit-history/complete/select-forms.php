@@ -741,7 +741,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('.someone-else-' + tag).style.display = 'none';
         }
         });
-            document.querySelector('.lsd-fill-' + tag).style.display = 'none';
+        hideUI('transfer-', tag);
                 hideUI('lsd-it-equip-encrypted', tag);
                 hideUI('lsd-it-equip-confidential', tag);
                 hideUI('lsd-upd-explain', tag);
