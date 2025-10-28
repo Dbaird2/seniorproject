@@ -401,7 +401,7 @@ foreach ($data_slice as $index => $row) {
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
     $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
 
-    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "X" : "";
+    $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "Found" : "";
     $found_room = isset($row["Found Room Tag"]) ? $row["Found Room Tag"] : "";
     $found_note = isset($row["Found Note"]) ? $row["Found Note"] : "";
     $serial = htmlspecialchars($row["Serial ID"] ?? "");
@@ -414,7 +414,7 @@ foreach ($data_slice as $index => $row) {
         <td><button onclick='deleteAsset({$encoded_tag});' name='delete'  class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</button></td>
         <td class='{$match}'> {$j}. </td>
         <td class='{$match}'> {$tag}</td>
-        <td class='{$match}'>{$found_tag}</td>
+        <td class='{$match}'>{$match}</td>
         <td class='{$match}'>{$descr}</td>
         <td>{$serial}</td>
         <td>{$location}</td>
