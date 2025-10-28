@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $prev_id = '';
     if ($_POST['audit-type'] === 'ocust') { 
         $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
-    } else if ($_POST['audit-type'] === 'ocmgmt') { 
+    } else if ($_POST['audit-type'] === 'omgmt') { 
         $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
     } else if ($_POST['audit-type'] === 'oSPA') { 
         $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
