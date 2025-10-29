@@ -1607,7 +1607,7 @@ $audit_id = $_SESSION['info'][5];
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                transfer_locaton_array,
+                                transfer_location_array,
                                 dept_id: dept_id,
                                 audit_id: audit_id
                             })
