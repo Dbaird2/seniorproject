@@ -960,17 +960,17 @@ $audit_id = $_SESSION['info'][5];
                                 hideUI('transfer-bldg-text', tag);
                             }
                         });
-                        const transfer_type = document.getElementById('transfer-form-type-' + tag).value;
+                        const transfer_type = document.getElementById('transfer-form-type-' + tag);
                         console.log(transfer_type);
                         transfer_type.addEventListener('change', () => {
-                            if (transfer_type === 'dept-change') {
+                            if (transfer_type.value === 'dept-change') {
                                 showUI('transfer-dept-change', tag);
                                 showUI('transfer-bldg-change', tag);
                                 /*
                                     showUI('receiving-custodian', tag);
                                 showUI('transfer-why', tag);
                                  */
-                            } else if (transfer_type === 'location-change') {
+                            } else if (transfer_type.value === 'location-change') {
                                 showUI('transfer-bldg-change', tag);
                             } else {
                                 hideUI('transfer-dept-change', tag);
