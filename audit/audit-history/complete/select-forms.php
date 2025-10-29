@@ -955,12 +955,12 @@ $audit_id = $_SESSION['info'][5];
                         const in_bldg = document.getElementById('transfer-loc-' + tag);
                         in_bldg.addEventListener('change', () => {
                             if (in_bldg.value === 'No') {
-                                showUI('transfer-bldg-text-' + tag);
+                                showUI('transfer-bldg-text', tag);
                             } else {
-                                hideUI('transfer-bldg-text-' + tag);
+                                hideUI('transfer-bldg-text', tag);
                             }
                         });
-                        const transfer_type = document.getelementById('transfer-form-type-' + type.dataset.tag).value;
+                        const transfer_type = document.getelementById('transfer-form-type-' + tag).value;
                         if (transfer_type === 'dept-change') {
                             showUI('transfer-dept-change', tag);
                             showUI('transfer-bldg-change', tag);
