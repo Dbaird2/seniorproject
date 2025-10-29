@@ -6,6 +6,10 @@ $stmt = $dbh->prepare($select_dept);
 $stmt->execute([":id" => $_SESSION['info'][2]]);
 $dept_name = $stmt->fetchColumn();
 $audit_id = $_SESSION['info'][5];
+
+$select_bldgs = "SELECT bldg_name, bldg_id FROM bldg_table ORDER BY bldg_name";
+$stmt = $dbh->query($select_bldgs);
+$bldgs_info = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -248,6 +252,11 @@ $audit_id = $_SESSION['info'][5];
 </head>
 
 <body>
+    <datalist id="bldg-list">
+    <?php foreach ($bldgs_info as $bldg) { ?>
+        <option value='<?= $bldg['bldg_name'] ?>'>
+    <?php } ?>
+    </datalist>
     <div class="container">
         <div class="header">
             <h1>Form Submissions - <?= $_SESSION['info'][2] . ' ' . $_SESSION['info'][3] ?></h1>
@@ -718,7 +727,7 @@ $audit_id = $_SESSION['info'][5];
                             <td class="transfer-bldg-change-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>New Building</label>
-                                    <input type="text" name="transfer-notes" id="transfer-bldg-location-<?= $row['Tag Number'] ?>" placeholder="New Building">
+                                    <input type="search" name="transfer-notes" list="bldg-list" id="transfer-bldg-location-<?= $row['Tag Number'] ?>" placeholder="New Building">
                                     <label class="error-label" id='transfer-bldg-location-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
@@ -740,6 +749,22 @@ $audit_id = $_SESSION['info'][5];
         </div>
     </div>
     <script>
+    function binarySearch(arr, target) {
+        let left = 0;
+        let right = arr.length - 1;
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            if (arr[mid].bldg_name === target) {
+                return true;
+            } else if (arr[mid].bldg_name < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return false;
+    }
+        const bldgs = <?= json_encode($bldgs_info); ?>;
         const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
         function hideUI(type, tag) {
@@ -1216,6 +1241,7 @@ $audit_id = $_SESSION['info'][5];
                             // FINISH CHECKING IF NEW ROOM AND BLDG ARE NOT EMPTY
                             const bldg_change = document.getElementById('transfer-bldg-location-' + type.dataset.tag).value;
                             if (bldg_change === '') {
+                                if 
                                 valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Building cannot be empty.', bldg_change, valid_forms);
                             }
                             const room_change = document.getElementById('transfer-room-location-' + type.dataset.tag).value;
@@ -1236,6 +1262,9 @@ $audit_id = $_SESSION['info'][5];
                                 valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Building cannot be empty.', bldg_change, valid_forms);
                             } else if (bldg_change !== '' && room_change === '') {
                                 valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
+                            }
+                            if (bldg_change !== '' && binarySearch(bldgs, bldg_change)) {
+                                valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Buiding does not exist in database.', bldg_change, valid_forms);
                             }
 
                             const dept_change = document.getElementById('transfer-dept-location-' + tag).value;
