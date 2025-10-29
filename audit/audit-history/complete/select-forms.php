@@ -674,22 +674,22 @@ $audit_id = $_SESSION['info'][5];
                                 <div class="form-field-group">
                                     <label>Is this equipment kept inside a building?</label>
                                     <select id="transfer-loc-<?= $row['Tag Number'] ?>">
-                                        <option value="No">No</option>
                                         <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
                                     </select>
                                 </div>
                             </td>
                             <td class="transfer-bldg-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Where is your equipment stored, parked, or housed?</label>
-                                    <input type="text" name="transfer-bldg-text" id="transfer-bldg-text-<?= $row['Tag Number'] ?>" placeholder="Full name of PI">
+                                    <input type="text" name="transfer-bldg-text" id="transfer-bldg-text-<?= $row['Tag Number'] ?>" placeholder="">
                                     <label class="error-label" id='transfer-bldg-text-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
                             <td class="transfer-form-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>Notes</label>
-                                    <input type="text" name="transfer-notes" id="transfer-notes-<?= $row['Tag Number'] ?>" placeholder="Full name of PI">
+                                    <input type="text" name="transfer-notes" id="transfer-notes-<?= $row['Tag Number'] ?>" placeholder="Notes">
                                 </div>
                             </td>
                         </tr>
@@ -960,7 +960,7 @@ $audit_id = $_SESSION['info'][5];
                                 hideUI('transfer-bldg-text', tag);
                             }
                         });
-                        const transfer_type = document.getelementById('transfer-form-type-' + tag).value;
+                        const transfer_type = document.getElementById('transfer-form-type-' + tag).value;
                         if (transfer_type === 'dept-change') {
                             showUI('transfer-dept-change', tag);
                             showUI('transfer-bldg-change', tag);
@@ -1207,7 +1207,7 @@ $audit_id = $_SESSION['info'][5];
                             }
                         }
                     } else if (val === 'transfer') {
-                        const transfer_type = document.getelementById('transfer-form-type-' + type.dataset.tag);
+                        const transfer_type = document.getElementById('transfer-form-type-' + type.dataset.tag);
                         if (transfer_type.value === '') {
                             valid_forms = displayError('transfer-form-type-feedback-' + type.dataset.tag, 'Transfer Type Cannot Be Null.', transfer_type.value, valid_forms);
                         } else if (transfer_type.value === 'location-change') {
