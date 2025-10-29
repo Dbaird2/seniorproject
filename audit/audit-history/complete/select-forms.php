@@ -1004,6 +1004,8 @@ document.addEventListener("DOMContentLoaded", function() {
         psr_tags = [],
         out_tags = [],
         in_tags = [],
+        transfer_dept_array = [],
+        transfer_location_array = [],
         lsd_tags = [];
     const forms_needed = document.querySelectorAll('.forms-needed');
     const dept_id = <?= json_encode($_SESSION['info'][2]) ?>;
@@ -1217,7 +1219,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (bldg_change === '') {
                 valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
             }
-            transfer_location_array.push(['tag': type.dataset.tag,'bldg': bldg_change, 'room': room_change]);
+            transfer_location_array.push({'tag': type.dataset.tag,'bldg': bldg_change, 'room': room_change});
                 
         } else if (transfer_type.value === 'dept-change') {
             // FINISH CHECKING IF NEW DEPT IS NOT EMPTY
@@ -1242,7 +1244,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (new_cust === '') {
                 valid_forms = displayError('transfer-new-cust-feedback-' + type.dataset.tag, 'New custodian cannot be empty.', new_cust, valid_forms);
             }
-            transfer_dept_array.push(['tag': type.dataset.tag,'bldg': bldg_change, 'room': room_change,'why': why,'new_cust': new_cust]);
+            transfer_dept_array.push({'tag': type.dataset.tag,'bldg': bldg_change, 'room': room_change,'why': why,'new_cust': new_cust});
     
 
     }
