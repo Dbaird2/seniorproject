@@ -29,14 +29,19 @@ if (empty($apikey)) {
 }
 
 // IS THIS IT RELATED?
-$it_select = "SELECT type2, serial_id, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
-$it_stmt = $dbh->prepare($it_select);
-$it_stmt->execute([":tag"=>$data['asset_tag']]);
-$it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
-if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
-    $variables['data']['xPQtXjuWnk']['id'] = 'yes';
-    $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
-} else {
+$it = false;
+foreach ($data as $index => $asset) {
+    $it_select = "SELECT type2, serial_id, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
+    $it_stmt = $dbh->prepare($it_select);
+    $it_stmt->execute([":tag"=>$data['tag']]);
+    $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
+    if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
+        $variables['data']['xPQtXjuWnk']['id'] = 'yes';
+        $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
+        $it = true;
+    } 
+}
+if (!$it) {
     $variables['data']['xPQtXjuWnk']['id'] = 'no';
     $variables['data']['xPQtXjuWnk']['label'] = 'No';
 }
@@ -114,16 +119,7 @@ if ($data['form_type'] === 'dept') {
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
     $manager_info = getIfnoName($manager, $dept_info['dept_id']);
-        $info = [
-            'displayName' => $person_name,
-            'email'     => $person_info['email'],
-            'firstName'    => $person_info['f_name'],
-            'id'   => $person_info['form_id'],
-            'label'     => $person_info['f_name'].' '.$person_info['l_name'],
-            'lastName'    => $person_info['l_name'],
-            'schoolId' => $person_info['school_id'],
-            'username'  => $person_info['username'],
-        ];
+
     $variables['data']['SZ24nXDBVk']['displayName'] = $manager_info['displayName'];
     $variables['data']['SZ24nXDBVk']['email'] = $manager_info['email'];
     $variables['data']['SZ24nXDBVk']['firstName'] = $manager_info['firstName'];

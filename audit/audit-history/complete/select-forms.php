@@ -665,8 +665,8 @@ $audit_id = $_SESSION['info'][5];
                                     <label>Is This a</label>
                                     <select id="transfer-form-type-<?= $row['Tag Number'] ?>">
                                         <option value=""></option>
-                                        <option value="location-change">Business/Room/Location change (Business Unit stays the same)</option>
-                                        <option value="dept-change">From one department to another department</option>
+                                        <option value="location">Business/Room/Location change (Business Unit stays the same)</option>
+                                        <option value="dept">From one department to another department</option>
                                     </select>
                                 </div>
                             </td>
@@ -955,22 +955,22 @@ $audit_id = $_SESSION['info'][5];
                         const in_bldg = document.getElementById('transfer-loc-' + tag);
                         in_bldg.addEventListener('change', () => {
                             if (in_bldg.value === 'No') {
-                                showUI('transfer-bldg-text', tag);
+                                showUI('transfer-bldg', tag);
                             } else {
-                                hideUI('transfer-bldg-text', tag);
+                                hideUI('transfer-bldg', tag);
                             }
                         });
                         const transfer_type = document.getElementById('transfer-form-type-' + tag);
                         console.log(transfer_type);
                         transfer_type.addEventListener('change', () => {
-                            if (transfer_type.value === 'dept-change') {
+                            if (transfer_type.value === 'dept') {
                                 showUI('transfer-dept-change', tag);
                                 showUI('transfer-bldg-change', tag);
                                 /*
                                     showUI('receiving-custodian', tag);
                                 showUI('transfer-why', tag);
                                  */
-                            } else if (transfer_type.value === 'location-change') {
+                            } else if (transfer_type.value === 'location') {
                                 showUI('transfer-bldg-change', tag);
                             } else {
                                 hideUI('transfer-dept-change', tag);
@@ -1212,7 +1212,7 @@ $audit_id = $_SESSION['info'][5];
                         const transfer_type = document.getElementById('transfer-form-type-' + type.dataset.tag);
                         if (transfer_type.value === '') {
                             valid_forms = displayError('transfer-form-type-feedback-' + type.dataset.tag, 'Transfer Type Cannot Be Null.', transfer_type.value, valid_forms);
-                        } else if (transfer_type.value === 'location-change') {
+                        } else if (transfer_type.value === 'location') {
                             // FINISH CHECKING IF NEW ROOM AND BLDG ARE NOT EMPTY
                             const bldg_change = document.getElementById('transfer-bldg-location-' + type.dataset.tag).value;
                             if (bldg_change === '') {
@@ -1228,7 +1228,7 @@ $audit_id = $_SESSION['info'][5];
                                 'room': room_change
                             });
 
-                        } else if (transfer_type.value === 'dept-change') {
+                        } else if (transfer_type.value === 'dept') {
                             // FINISH CHECKING IF NEW DEPT IS NOT EMPTY
                             const bldg_change = document.getElementById('transfer-bldg-location-' + tag).value;
                             const room_change = document.getElementById('transfer-room-location-' + tag).value;
@@ -1256,7 +1256,8 @@ $audit_id = $_SESSION['info'][5];
                                 'bldg': bldg_change,
                                 'room': room_change,
                                 'why': why,
-                                'new_cust': new_cust
+                                'new_cust': new_cust,
+                                'new_dept': dept_change
                             });
 
 
