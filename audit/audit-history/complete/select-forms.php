@@ -962,23 +962,25 @@ $audit_id = $_SESSION['info'][5];
                         });
                         const transfer_type = document.getElementById('transfer-form-type-' + tag).value;
                         console.log(transfer_type);
-                        if (transfer_type === 'dept-change') {
-                            showUI('transfer-dept-change', tag);
-                            showUI('transfer-bldg-change', tag);
-                            /*
-                                showUI('receiving-custodian', tag);
-                            showUI('transfer-why', tag);
-                             */
-                        } else if (transfer_type === 'location-change') {
-                            showUI('transfer-bldg-change', tag);
-                        } else {
-                            hideUI('transfer-dept-change', tag);
-                            hideUI('transfer-bldg-change', tag);
-                            /*
-                            hideUI('receiving-custodian', tag);
-                            hideUI('transfer-why', tag);
-                             */
-                        }
+                        transfer_type.addEventListener('change', () => {
+                            if (transfer_type === 'dept-change') {
+                                showUI('transfer-dept-change', tag);
+                                showUI('transfer-bldg-change', tag);
+                                /*
+                                    showUI('receiving-custodian', tag);
+                                showUI('transfer-why', tag);
+                                 */
+                            } else if (transfer_type === 'location-change') {
+                                showUI('transfer-bldg-change', tag);
+                            } else {
+                                hideUI('transfer-dept-change', tag);
+                                hideUI('transfer-bldg-change', tag);
+                                /*
+                                hideUI('receiving-custodian', tag);
+                                hideUI('transfer-why', tag);
+                                 */
+                            }
+                        });
 
 
                     }
