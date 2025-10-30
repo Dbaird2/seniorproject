@@ -31,16 +31,16 @@ if (empty($apikey)) {
 // IS THIS IT RELATED?
 $it = false;
 foreach ($data['tags'] as $index => $asset) {
-    $it_select = "SELECT type2, serial_id, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
+    $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
     $it_stmt = $dbh->prepare($it_select);
-    $it_stmt->execute([":tag"=>$data['tag']]);
+    $it_stmt->execute([":tag"=>$asset['tag']]);
     $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
     if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
         $variables['data']['xPQtXjuWnk']['id'] = 'yes';
         $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
         $it = true;
     } 
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $asset['tag'];
+    $variables['data']['t7mH-1FlaO']['data'][$index]['data']["XZlIFEDX6Y"] = $asset['tag'];
     if ($asset['in_bldg'] === 'Yes') {
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['id'] = 'yes';
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
