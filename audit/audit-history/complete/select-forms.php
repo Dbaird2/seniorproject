@@ -729,7 +729,7 @@ $depts_info = $stmt->fetchAll();
                             <td class="transfer-dept-change-<?= $row['Tag Number'] ?>" style="display:none;">
                                 <div class="form-field-group">
                                     <label>New Department</label>
-                                    <input type="text" name="transfer-notes" id="transfer-dept-location-<?= $row['Tag Number'] ?>" placeholder="New Department">
+                                    <input type="search" list="dept-list" name="transfer-notes" id="transfer-dept-location-<?= $row['Tag Number'] ?>" placeholder="New Department">
                                     <label class="error-label" id='transfer-dept-location-feedback-<?= $row['Tag Number'] ?>'></label>
                                 </div>
                             </td>
@@ -1403,13 +1403,13 @@ $depts_info = $stmt->fetchAll();
                                     const data = await out_res.json();
                                     console.log("Check out response (JSON):", data);
                                     hideUI('row', type.dataset.tag);
-                                    type.value = '';
+                                    
                                     hideAll(type.dataset.tag);
                                 } catch {
                                     const text = await clone.text();
                                     console.log("Check out response (text):", text);
                                     hideUI('row', type.dataset.tag);
-                                    type.value = '';
+                                    
                                     hideAll(type.dataset.tag);
                                 }
                             }
@@ -1456,13 +1456,11 @@ $depts_info = $stmt->fetchAll();
                                     const data = await in_res.json();
                                     console.log("Check in response (JSON):", data);
                                     hideUI('row', type.dataset.tag);
-                                    type.value = '';
                                     hideAll(type.dataset.tag);
                                 } catch {
                                     const text = await clone.text();
                                     console.log("Check in response (text):", text);
                                     hideUI('row', type.dataset.tag);
-                                    type.value = '';
                                     hideAll(type.dataset.tag);
                                 }
                             }
@@ -1561,13 +1559,11 @@ $depts_info = $stmt->fetchAll();
                                         const data = await lsd_res.json();
                                         console.log("Lsd response (JSON):", data);
                                         hideUI('row', type.dataset.tag);
-                                        type.value = '';
                                         hideAll(type.dataset.tag);
                                     } catch {
                                         const text = await clone.text();
                                         console.log("Lsd response (text):", text);
                                         hideUI('row', type.dataset.tag);
-                                        type.value = '';
                                         hideAll(type.dataset.tag);
                                     }
                                 }
@@ -1594,13 +1590,11 @@ $depts_info = $stmt->fetchAll();
                                         const data = await lsd_res.json();
                                         console.log("Lsd response (JSON):", data);
                                         hideUI('row', type.dataset.tag);
-                                        type.value = '';
                                         hideAll(type.dataset.tag);
                                     } catch {
                                         const text = await clone.text();
                                         console.log("Lsd response (text):", text);
                                         hideUI('row', type.dataset.tag);
-                                        type.value = '';
                                         hideAll(type.dataset.tag);
                                     }
                                 }
@@ -1633,7 +1627,6 @@ $depts_info = $stmt->fetchAll();
                                 console.log("PSR response (JSON):", data);
                                 psr_tags.forEach(async (value) => {
                                     hideUI('row', value);
-                                    type.value = '';
                                     hideAll(value);
                                 });
                             } catch {
@@ -1641,7 +1634,6 @@ $depts_info = $stmt->fetchAll();
                                 console.log("PSR response (text):", text);
                                 psr_tags.forEach(async (value) => {
                                     hideUI('row', value);
-                                    type.value = '';
                                     hideAll(value);
                                 });
                             }
@@ -1673,7 +1665,6 @@ $depts_info = $stmt->fetchAll();
                                 transfer_location_array.forEach(async (value) => {
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
-                                    type.value = '';
                                 });
                             } catch {
                                 const text = await clone.text();
@@ -1681,7 +1672,6 @@ $depts_info = $stmt->fetchAll();
                                 transfer_location_array.forEach(async (value) => {
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
-                                    type.value = '';
                                 });
                             }
                         }
@@ -1712,7 +1702,6 @@ $depts_info = $stmt->fetchAll();
                                 transfer_dept_array.forEach(async (value) => {
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
-                                    type.value = '';
                                 });
                             } catch {
                                 const text = await clone.text();
@@ -1721,7 +1710,6 @@ $depts_info = $stmt->fetchAll();
                                     console.log(value);
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
-                                    type.value = '';
                                 });
                             }
                         }
@@ -1752,7 +1740,6 @@ $depts_info = $stmt->fetchAll();
                                 bulk_t_tags.forEach(async (value) => {
                                     hideUI('row', value);
                                     hideAll(value);
-                                    type.value = '';
                                 });
                             } catch {}
                         }
