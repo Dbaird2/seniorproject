@@ -620,14 +620,16 @@ function assetAddition () {
                 $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
                 $s_stmt = $dbh->prepare($select_q);
                 $s_stmt->execute([":tag" => $tag_num]);
+                $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)\b/i';
+                $it_status = (preg_match($it_regex, $name)) ? true : false;
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$tag_taken) {
-                    $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po) VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?)";
+                    $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po, is_IT) VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     $insert_stmt = $dbh->prepare($insert_q);
                     $ms_date = $edge['node']['meta']['workflowCompletedAt'] / 1000;
                     $date = date('m-d-y', $ms_date);
-                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po]);
+                    $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po, $it_status]);
                     $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
                     $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
                     $update_stmt = $dbh->prepare($insert_into_kuali_table);

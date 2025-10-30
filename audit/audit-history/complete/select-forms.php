@@ -1245,6 +1245,7 @@ $depts_info = $stmt->fetchAll();
                         }
                     } else if (val === 'transfer') {
                         const in_bldg = document.getElementById('transfer-loc-' + tag).value;
+                        const notes = document.getElementById('transfer-notes-' + tag).value;
                         const where = document.getElementById('transfer-bldg-text-' + tag).value;
                         const transfer_type = document.getElementById('transfer-form-type-' + type.dataset.tag);
                         if (transfer_type.value === '') {
@@ -1264,8 +1265,9 @@ $depts_info = $stmt->fetchAll();
                             }
                             transfer_location_array.push({
                                 'in_bldg': in_bldg,
+                                'notes': notes,
                                 'where': where,
-                                'tag': type.dataset.tag,
+                                'tag': tag,
                                 'bldg': bldg_change,
                                 'room': room_change
                             });
@@ -1307,6 +1309,7 @@ $depts_info = $stmt->fetchAll();
                                 'room': room_change,
                                 'why': why,
                                 'new_cust': new_cust,
+                                'notes': notes,
                                 'dept_name': dept_change
                             });
                         }
