@@ -153,7 +153,7 @@ if (preg_match($email_regex, $
         );
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         $form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-        "appId": "68d09e41d599f1028a9b9457"
+        "appId": "68d09e38d599f1028a08969a"
     }}';
 
         curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
@@ -318,7 +318,7 @@ if (preg_match($email_regex, $
     );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     $form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-    "appId": "68d09e41d599f1028a9b9457"
+    "appId": "68d09e38d599f1028a08969a"
 }}';
 
     curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
@@ -395,7 +395,7 @@ if (preg_match($email_regex, $
         }
         $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
         $update_stmt = $dbh->prepare($update);
-        $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
+        $update_stmt->execute([':array'=>$input_array, ":dept"=>$data['dept_id'], ":id"=>$data['audit_id']]);
     }
     curl_close($curl);
 }
