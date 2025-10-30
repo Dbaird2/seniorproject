@@ -26,7 +26,7 @@ if (isset($_POST)) {
     $params = [];
     if (!empty($search)) {
         if (preg_match($dept_regex, $search)) {
-            $select .= " AND dept_id = :dept ";
+            $select .= " AND a.dept_id ILIKE :dept ";
             $params[':dept'] = '%'.$search.'%';
         } else {
             $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag OR serial_num ILIKE :tag OR CAST(a.room_tag AS TEXT) ILIKE :tag) ";

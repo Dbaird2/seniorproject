@@ -16,7 +16,7 @@ if (isset($_POST)) {
     $select = "SELECT * FROM department WHERE 1=1 ";
     $params = [];
     if (!empty($search)) {
-        $select .= " AND (dept_id = :dept OR dept_name = :dept) ";
+        $select .= " AND (dept_id ILIKE :dept OR dept_name ILIKE :dept) ";
         $params[':dept'] = '%' . $search . '%';
     }
     $select .= " ORDER BY dept_id LIMIT :limit OFFSET :offset";

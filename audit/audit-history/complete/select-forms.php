@@ -1234,6 +1234,8 @@ $bldgs_info = $stmt->fetchAll();
                             }
                         }
                     } else if (val === 'transfer') {
+                        const in_bldg = document.getElementById('transfer-loc-' + tag).value;
+                        const where = document.getElementById('transfer-bldg-text-' + tag).value;
                         const transfer_type = document.getElementById('transfer-form-type-' + type.dataset.tag);
                         if (transfer_type.value === '') {
                             valid_forms = displayError('transfer-form-type-feedback-' + type.dataset.tag, 'Transfer Type Cannot Be Null.', transfer_type.value, valid_forms);
@@ -1251,6 +1253,8 @@ $bldgs_info = $stmt->fetchAll();
                                 valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
                             }
                             transfer_location_array.push({
+                                'in_bldg': in_bldg,
+                                'where': where,
                                 'tag': type.dataset.tag,
                                 'bldg': bldg_change,
                                 'room': room_change
@@ -1283,7 +1287,9 @@ $bldgs_info = $stmt->fetchAll();
                                 valid_forms = displayError('transfer-new-cust-feedback-' + type.dataset.tag, 'New custodian cannot be empty.', new_cust, valid_forms);
                             }
                             transfer_dept_array.push({
-                                'tag': type.dataset.tag,
+                                'in_bldg': in_bldg,
+                                'where': where,
+                                'tag': tag,
                                 'bldg': bldg_change,
                                 'room': room_change,
                                 'why': why,
@@ -1638,6 +1644,7 @@ $bldgs_info = $stmt->fetchAll();
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
+                                form_type: 'location',
                                 tags: transfer_location_array,
                                 dept_id: dept_id,
                                 audit_id: audit_id
@@ -1676,6 +1683,7 @@ $bldgs_info = $stmt->fetchAll();
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
+                                form_type: 'dept',
                                 tags: transfer_dept_array,
                                 dept_id: dept_id,
                                 audit_id: audit_id

@@ -40,6 +40,8 @@ foreach ($data['tags'] as $index => $asset) {
         $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
         $it = true;
     } 
+    $variables['data'][''];
+
 }
 if (!$it) {
     $variables['data']['xPQtXjuWnk']['id'] = 'no';
@@ -92,8 +94,7 @@ $bus_id = function ($type) {
 if ($data['bldg'] === 'Yes') {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['bldg'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['Ppr7oMwHAA'] = $data['old_where_stored'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['new_where_stored'];
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['new_where'];
 } else {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'no';
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['bldg'];
