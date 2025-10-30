@@ -1285,7 +1285,7 @@ $depts_info = $stmt->fetchAll();
 
                             const dept_change = document.getElementById('transfer-dept-location-' + tag).value;
                             const tag_regex = /^SP\d+/g;
-                            if (dept_change === '' && !tag_regex.test(dept_change)) {
+                            if (dept_change === '') {
                                 valid_forms = displayError('transfer-dept-location-feedback-' + type.dataset.tag, 'New Department cannot be empty.', dept_change, valid_forms);
                             }
                             if (binarySearch(depts, dept_change)) {

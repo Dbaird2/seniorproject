@@ -636,6 +636,7 @@ function addNewInput() {
     newInput.autocomplete = "off";
     newInput.placeholder = 'Enter tag';
     newInput.setAttribute("accesskey", "s");
+    newInput.style.textTransform = 'uppercase';
     newInput.classList.add('dynamicId');
 
 
