@@ -132,7 +132,7 @@ if ($data['form_type'] === 'dept') {
     $dept_stmt->execute([':dept'=>$data[0]['dept_name']]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
-    $manager_info = getInfoName($manager, $dept_info['dept_id']);
+    $manager_info = getNameInfo($manager, $dept_info['dept_id']);
 
     $variables['data']['SZ24nXDBVk']['displayName'] = $manager_info['displayName'];
     $variables['data']['SZ24nXDBVk']['email'] = $manager_info['email'];
