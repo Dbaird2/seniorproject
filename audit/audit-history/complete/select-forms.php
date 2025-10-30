@@ -1638,7 +1638,7 @@ $bldgs_info = $stmt->fetchAll();
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                transfer_location_array,
+                                tags: transfer_location_array,
                                 dept_id: dept_id,
                                 audit_id: audit_id
                             })
@@ -1676,7 +1676,7 @@ $bldgs_info = $stmt->fetchAll();
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                transfer_dept_array,
+                                tags: transfer_dept_array,
                                 dept_id: dept_id,
                                 audit_id: audit_id
                             })
@@ -1699,6 +1699,7 @@ $bldgs_info = $stmt->fetchAll();
                                 const text = await clone.text();
                                 console.log("transfer dept response (text):", text);
                                 transfer_dept_array.forEach(async (value) => {
+                                    console.log(value);
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
                                     type.value = '';

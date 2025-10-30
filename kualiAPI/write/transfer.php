@@ -30,7 +30,7 @@ if (empty($apikey)) {
 
 // IS THIS IT RELATED?
 $it = false;
-foreach ($data as $index => $asset) {
+foreach ($data['tags'] as $index => $asset) {
     $it_select = "SELECT type2, serial_id, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
     $it_stmt = $dbh->prepare($it_select);
     $it_stmt->execute([":tag"=>$data['tag']]);
