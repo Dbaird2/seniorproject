@@ -79,7 +79,7 @@ $form_type_id = match($data['form_type']) {
     'dept' => '9A_6UOlDb',
     'location' => 'LfK1qG_G6'
 };
-$form_type = match($data['form_type'])) {
+$form_type = match($data['form_type']) {
     'bus' => 'Business Unit change (for example from BKSPA to BKCMP)',
     'dept' => 'From one department to another department ',
     'location' => 'Building/Room/Location change (Business Unit stays the same)'
@@ -147,6 +147,8 @@ if ($data['form_type'] === 'dept') {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['id'] = $bus_id($data['new_bus']);
 }
 $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
+
+echo json_encode(['variables'=>$variables]);
 
 
 $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
