@@ -11,6 +11,9 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
+if (empty($data)) {
+    die("No data");
+}
 echo json_encode(['tags'=>$data]);
 $variables = [[]];
 $email = $_SESSION['email'];
