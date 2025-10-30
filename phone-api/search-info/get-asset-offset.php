@@ -29,7 +29,7 @@ if (isset($_POST)) {
             $select .= " AND dept_id = :dept ";
             $params[':dept'] = '%'.$search.'%';
         } else {
-            $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag OR serial_num ILIKE :tag OR CAST(room_tag AS TEXT) ILIKE :tag) ";
+            $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag OR serial_num ILIKE :tag OR CAST(a.room_tag AS TEXT) ILIKE :tag) ";
             $params[':tag'] = '%'.$search.'%';
         } 
     }
