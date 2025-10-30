@@ -17,7 +17,7 @@ if (isset($_POST)) {
     $params = [];
     if (!empty($search)) {
         $select .= " AND (dept_id = :dept OR dept_name = :dept) ";
-        $params[':dept'] = $search;
+        $params[':dept'] = '%' . $search . '%';
     }
     $select .= " ORDER BY dept_id LIMIT :limit OFFSET :offset";
     $params[":limit"] = $limit;

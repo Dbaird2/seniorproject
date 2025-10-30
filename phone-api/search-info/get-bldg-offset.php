@@ -17,7 +17,7 @@ if (isset($_POST)) {
     $params = [];
     if (!empty($search)) {
         $select .= " AND (b.bldg_name = :bldg OR CAST(b.bldg_id AS TEXT) = :bldg OR CAST(r.room_tag AS TEXT) = :bldg) ";
-        $params[':bldg'] = $search;
+        $params[':bldg'] = '%' . $search . '%';
     }
     $select .= " ORDER BY bldg_name LIMIT :limit OFFSET :offset";
     $params[":limit"] = $limit;

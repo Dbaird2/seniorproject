@@ -27,10 +27,10 @@ if (isset($_POST)) {
     if (!empty($search)) {
         if (preg_match($dept_regex, $search)) {
             $select .= " AND dept_id = :dept ";
-            $params[':dept'] = $search;
+            $params[':dept'] = '%'.$search.'%';
         } else {
-            $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag) ";
-            $params[':tag'] = $search;
+            $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag OR serial_num ILIKE :tag OR CAST(room_tag AS TEXT) ILIKE :tag) ";
+            $params[':tag'] = '%'.$search.'%';
         } 
     }
     $params[':limit'] = $limit;
