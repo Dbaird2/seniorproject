@@ -10,6 +10,10 @@ $audit_id = $_SESSION['info'][5];
 $select_bldgs = "SELECT bldg_name, bldg_id FROM bldg_table ORDER BY bldg_name";
 $stmt = $dbh->query($select_bldgs);
 $bldgs_info = $stmt->fetchAll();
+
+$select_depts = "SELECT dept_name, dept_id FROM department ORDER BY dept_name";
+$stmt = $dbh->query($select_depts);
+$depts_info = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html>
@@ -255,6 +259,11 @@ $bldgs_info = $stmt->fetchAll();
     <datalist id="bldg-list">
     <?php foreach ($bldgs_info as $bldg) { ?>
         <option value='<?= $bldg['bldg_name'] ?>'>
+    <?php } ?>
+    </datalist>
+    <datalist id="dept-list">
+    <?php foreach ($depts_info as $dept) { ?>
+        <option value='<?= $dept['dept_name'] ?>'>
     <?php } ?>
     </datalist>
     <div class="container">
@@ -765,6 +774,7 @@ $bldgs_info = $stmt->fetchAll();
         return false;
     }
         const bldgs = <?= json_encode($bldgs_info); ?>;
+        const depts = <?= json_encode($depts_info); ?>;
         const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
         function hideUI(type, tag) {
@@ -1278,6 +1288,9 @@ $bldgs_info = $stmt->fetchAll();
                             if (dept_change === '' && !tag_regex.test(dept_change)) {
                                 valid_forms = displayError('transfer-dept-location-feedback-' + type.dataset.tag, 'New Department cannot be empty.', dept_change, valid_forms);
                             }
+                            if (binarySearch(depts, dept_change)) {
+                                valid_forms = displayError('transfer-dept-location-feedback-' + type.dataset.tag, 'Department is not in database.', dept_change, valid_forms);
+                            }
                             const why = document.getElementById('transfer-why-' + type.dataset.tag).value;
                             if (why === '') {
                                 valid_forms = displayError('transfer-why-feedback-' + type.dataset.tag, 'Reason Why cannot be empty.', why, valid_forms);
@@ -1294,10 +1307,8 @@ $bldgs_info = $stmt->fetchAll();
                                 'room': room_change,
                                 'why': why,
                                 'new_cust': new_cust,
-                                'new_dept': dept_change
+                                'dept_name': dept_change
                             });
-
-
                         }
                     }
                 });

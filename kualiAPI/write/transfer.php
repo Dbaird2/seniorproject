@@ -40,7 +40,33 @@ foreach ($data['tags'] as $index => $asset) {
         $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
         $it = true;
     } 
-    $variables['data'][''];
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $asset['tag'];
+    if ($asset['in_bldg'] === 'Yes') {
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['id'] = 'yes';
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']['qtAPPojYXt'] = $asset['where'];
+    } else {
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['id'] = 'no';
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
+    }
+    if ($data['form_type'] === 'dept' || $data['form_type'] === 'location') {
+        if (!empty($asset['room']) && !empty($asset['bldg'])) {
+            $variables['data']['t7mH-1FlaO']['data'][$index]['data']['Ppr7oMwHAA'] = $asset['bldg'];
+            $variables['data']['t7mH-1FlaO']['data'][$index]['data']['zZztPX8Pcw'] = $asset['room'];
+        }
+    }
+    if ($data['form_type'] === 'dept') {
+        // WHY
+        $variables['data']['K3p03X2Jvx'] = $asset['why'];
+        $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
+        $dept_stmt = $dbh->prepare($get_dept_info);
+        $dept_stmt->execute([':dept'=>$asset['dept_name']]);
+        $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['label'] = $asset['dept_name'];
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $asset['dept_name'];
+        $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
+    } else if ($data['form_type'] === 'location') {
+    }
 
 }
 if (!$it) {
@@ -91,32 +117,16 @@ $bus_id = function ($type) {
     };
     return $id;
 };
-if ($data['bldg'] === 'Yes') {
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['bldg'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['new_where'];
-} else {
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'no';
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['bldg'];
-}
 if (!empty($data['notes'])) {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['notes'];
 }
 
-if ($data['form_type'] === 'dept' || $data['form_type'] === 'location') {
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['Ppr7oMwHAA'] = $data['new_bldg'];
-    if (!empty($data['new_room'])) {
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']['zZztPX8Pcw'] = $data['new_room'];
-    }
-}
 if ($data['form_type'] === 'dept') {
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']['U73d7kPH5b'] = $data['new_dept'];
-    // WHY
-    $variables['data']['K3p03X2Jvx'] = $data['why'];
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']['U73d7kPH5b'] = $data['dept_name'];
     // MANAGER
     $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
     $dept_stmt = $dbh->prepare($get_dept_info);
-    $dept_stmt->execute([':dept'=>$data['dept_name']]);
+    $dept_stmt->execute([':dept'=>$data[0]['dept_name']]);
     $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
     $manager = trim($dept_info['dept_manager']);
     $manager_info = getIfnoName($manager, $dept_info['dept_id']);
@@ -129,9 +139,6 @@ if ($data['form_type'] === 'dept') {
     $variables['data']['SZ24nXDBVk']['lastName'] = $manager_info['lastName'];
     $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
     $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['label'] = $data['dept_name'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $data['dept_name'];
-    $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
 } else if ($data['form_type'] === 'bus') {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['label'] = $it_related['bus_unit'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['id'] = $bus_id($it_related['bus_unit']);
@@ -139,7 +146,6 @@ if ($data['form_type'] === 'dept') {
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['label'] = $data['new_bus'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["dIvxPBYxpw"]['id'] = $bus_id($data['new_bus']);
 }
-$variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
 $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
 
 
