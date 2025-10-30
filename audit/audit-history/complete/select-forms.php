@@ -1241,11 +1241,13 @@ $bldgs_info = $stmt->fetchAll();
                             // FINISH CHECKING IF NEW ROOM AND BLDG ARE NOT EMPTY
                             const bldg_change = document.getElementById('transfer-bldg-location-' + type.dataset.tag).value;
                             if (bldg_change === '') {
-                                if 
                                 valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Building cannot be empty.', bldg_change, valid_forms);
                             }
+                            if (bldg_change !== '' && binarySearch(bldgs, bldg_change)) {
+                                valid_forms = displayError('transfer-bldg-location-feedback-' + type.dataset.tag, 'New Buiding does not exist in database.', bldg_change, valid_forms);
+                            }
                             const room_change = document.getElementById('transfer-room-location-' + type.dataset.tag).value;
-                            if (bldg_change === '') {
+                            if (room_change === '') {
                                 valid_forms = displayError('transfer-room-location-feedback-' + type.dataset.tag, 'New Room cannot be empty.', room_change, valid_forms);
                             }
                             transfer_location_array.push({
