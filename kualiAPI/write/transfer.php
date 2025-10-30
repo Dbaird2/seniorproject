@@ -74,7 +74,7 @@ if (!$it) {
     $variables['data']['xPQtXjuWnk']['label'] = 'No';
 }
 // IS THIS A (form type)
-$form_type_id = match($data['form_type'])) {
+$form_type_id = match($data['form_type']) {
     'bus' => 'BhQ_qXc6Tji',
     'dept' => '9A_6UOlDb',
     'location' => 'LfK1qG_G6'
@@ -229,6 +229,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
+echo $resp;
 if ($data['audit'] === 'true') {
     $id = $resp_data['data']['app']['documentConnection']['edges'][0]['node']['id'];
     $tag = $lsd_data['Tag Number'];
