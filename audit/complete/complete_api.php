@@ -34,7 +34,7 @@ try {
         'oSPA'  => 9
     };
     foreach ($audit_data as $index=>$tag) {
-        $insert_q = "INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT DO UPDATE SET note = EXCLUDED.note";
+        $insert_q = "INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET note = EXCLUDED.note";
         $stmt = $dbh->prepare($insert_q);
         $stmt->execute([$dept,$audit_id, $tag['Tag Number'], $tag['Found Note']]);
     }
