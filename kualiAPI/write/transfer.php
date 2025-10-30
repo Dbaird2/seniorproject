@@ -132,14 +132,14 @@ $email_regex = '/\b(@)\b/i';
 if (preg_match($email_regex, $
  */
         $current_manager_info = getNameInfo($current_manager, $audit_dept);
-        $variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
-        $variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
-        $variables['data']['u7YkM8hmb']['firstName'] = $current_manager_info['firstName'];
-        $variables['data']['u7YkM8hmb']['id'] = $current_manager_info['id'];
-        $variables['data']['u7YkM8hmb']['label'] = $current_manager_info['label'];
-        $variables['data']['u7YkM8hmb']['lastName'] = $current_manager_info['lastName'];
-        $variables['data']['u7YkM8hmb']['schoolId'] = $current_manager_info['schoolId'];
-        $variables['data']['u7YkM8hmb']['username'] = $current_manager_info['username'];
+        $variables['data']['u7YkM8hmb-']['displayName'] = $current_manager_info['displayName'];
+        $variables['data']['u7YkM8hmb-']['email'] = $current_manager_info['email'];
+        $variables['data']['u7YkM8hmb-']['firstName'] = $current_manager_info['firstName'];
+        $variables['data']['u7YkM8hmb-']['id'] = $current_manager_info['id'];
+        $variables['data']['u7YkM8hmb-']['label'] = $current_manager_info['label'];
+        $variables['data']['u7YkM8hmb-']['lastName'] = $current_manager_info['lastName'];
+        $variables['data']['u7YkM8hmb-']['schoolId'] = $current_manager_info['schoolId'];
+        $variables['data']['u7YkM8hmb-']['username'] = $current_manager_info['username'];
 
 
         // MANAGER
