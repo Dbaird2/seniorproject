@@ -102,6 +102,7 @@ if ($data['form_type'] === 'dept') {
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['label'] = $asset['dept_name'];
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $asset['dept_name'];
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
+                $variables['data']['t7mH-1FlaO']['data'][$index]['id'] = $index.'';
             }
         }
 
@@ -236,6 +237,7 @@ if (preg_match($email_regex, $
     }
 } else if ($data['form_type'] === 'location') {
     foreach ($data['tags'] as $index=>$asset) {
+        $variables['data']['t7mH-1FlaO']['data'][$index]['id'] = $index.'';
         $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
         $it_stmt = $dbh->prepare($it_select);
         $it_stmt->execute([":tag"=>$asset['tag']]);
