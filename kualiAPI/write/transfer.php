@@ -56,6 +56,18 @@ $bus_id = function ($type) {
 return $id;
 };
 
+$it = false;
+
+// SUBMITTER NAME
+$select_sub = "SELECT f_name, l_name FROM user_table WHERE email = :email";
+$stmt = $dbh->prepare($select_sub);
+$stmt->execute([':email'=>$_SESSION['email']]);
+$submitter_name = $stmt->fetch();
+$variables['data']['VFp8qQLrUk'] = trim($submitter_name['f_name']) . ' ' . trim($submitter_name['l_name']); 
+
+$now = new DateTime();
+$variables['data']['R-jIGrtlfO'] = $now->format('m/d/Y');
+
 $email_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE email = :email";
 $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) = :name";
 $dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
@@ -80,6 +92,7 @@ if ($data['form_type'] === 'dept') {
                 if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
                     $variables['data']['xPQtXjuWnk']['id'] = 'yes';
                     $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
+                    $it = true;
                 } 
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["XZlIFEDX6Y"] = $asset['tag'];
                 if ($asset['in_bldg'] === 'Yes') {
@@ -104,6 +117,10 @@ if ($data['form_type'] === 'dept') {
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
                 $variables['data']['t7mH-1FlaO']['data'][$index]['id'] = $index.'';
             }
+        }
+        if (!$it) {
+            $variables['data']['xPQtXjuWnk']['id'] = 'no';
+            $variables['data']['xPQtXjuWnk']['label'] = 'No';
         }
 
         // GET CURRENT MANAGER INFO
@@ -202,7 +219,12 @@ if (preg_match($email_regex, $
         }
 
         $submitter_sig = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
-        $variables['data']['ne3KPx1Wy3'] = $submitter_sig;
+        $variables['data']['ne3KPx1Wy3']['actionId'] = $action_id;
+        $variables['data']['ne3KPx1Wy3']['date'] = $submitter_sig['date'];
+        $variables['data']['ne3KPx1Wy3']['displayName'] = $submitter_sig['displayName'];
+        $variables['data']['ne3KPx1Wy3']['signatureType'] = 'type';
+        $variables['data']['ne3KPx1Wy3']['signedName'] = $submitter_sig['signedName'];
+        $variables['data']['ne3KPx1Wy3']['userId'] = $submitter_sig['userId'];
 
         $variables['documentId'] = $document_id;
         $variables['actionId'] = $action_id;
@@ -249,6 +271,7 @@ if (preg_match($email_regex, $
         if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
             $variables['data']['xPQtXjuWnk']['id'] = 'yes';
             $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
+            $it = true;
         } 
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']["XZlIFEDX6Y"] = $asset['tag'];
         if ($asset['in_bldg'] === 'Yes') {
@@ -271,6 +294,10 @@ if (preg_match($email_regex, $
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['label'] = $asset['dept_name'];
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $asset['dept_name'];
         $variables['data']['t7mH-1FlaO']['data'][$index]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
+    }
+    if (!$it) {
+        $variables['data']['xPQtXjuWnk']['id'] = 'no';
+        $variables['data']['xPQtXjuWnk']['label'] = 'No';
     }
     // GET CURRENT MANAGER INFO
     $stmt = $dbh->prepare($dept_select);
