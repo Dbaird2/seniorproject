@@ -98,7 +98,10 @@ $dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
 $stmt = $dbh->prepare($dept_select);
 $stmt->execute([':id'=>$_SESSION['deptid']]);
 $current_manager = $stmt->fetchColumn();
-
+/*
+$email_regex = '/\b(@)\b/i';
+if (preg_match($email_regex, $
+ */
 $current_manager_info = getNameInfo($current_manager, $audit_dept);
 $variables['data']['u7YkM8hmb']['displayName'] = $current_manager_info['displayName'];
 $variables['data']['u7YkM8hmb']['email'] = $current_manager_info['email'];
