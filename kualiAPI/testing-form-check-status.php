@@ -7,8 +7,8 @@ function checkFormStatus() {
     $stmt = $dbh->prepare($get_key_select);
     $stmt->execute([':email'=>$_SESSION['email']]);
     $apikey = $stmt->fetchColumn();
-    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
     $subdomain = "csub";
+    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
     $select = "select unnest(check_forms) AS form_id, dept_id, audit_id from audit_history where check_forms is not null and CAST(check_forms AS TEXT) ILIKE '%in-progress%'";
     $stmt = $dbh->query($select);
