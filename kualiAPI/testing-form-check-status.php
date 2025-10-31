@@ -102,9 +102,12 @@ function checkFormStatus() {
             $status = strtolower(str_replace('<br>', '', $status));
             if ($status !== 'in progress') {
                 $new_form = str_replace('in-progress', $status, $form['form_id']);
-                $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form), check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
+                $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
                 $stmt = $dbh->prepare($update);
-                $stmt->execute([':old_form' => $form['form_id'], ':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
+                $stmt->execute([':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
+                $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form) WHERE audit_id = :id AND dept_id = :dept";
+                $stmt = $dbh->prepare($update);
+                $stmt->execute([':old_form' => $form['form_id'], ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
             } else {
                 $new_form = str_replace('in-progress', 'in-progress', $form['form_id']);
             }
