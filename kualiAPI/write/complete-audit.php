@@ -31,9 +31,11 @@ if (isset($_GET['dept_id'])) {
                 $id = $single_array;
                 continue;
             }
+            if ($single_form === 'denied' || $single_form === 'withdrawn' ) {
+                break;
+            }
 
             if ($single_array === 'transfer') {
-                if ($single_form[$index+1] !== 'denied' || $single_form[$index+1] !== 'withdrawn') {
                     $transfer = true;
                     $app_id = '68c73600df46a3027d2bd386';
                     continue;
@@ -42,32 +44,19 @@ if (isset($_GET['dept_id'])) {
                 }
             }
             if ($single_array === 'rtransfer') {
-                if ($single_form[$index+1] !== 'denied' || $single_form[$index+1] !== 'withdrawn') {
-                    $transfer = true;
-                    $app_id = '68d09e38d599f1028a08969a';
-                    continue;
-                } else {
-                    break;
-                }
+                $transfer = true;
+                $app_id = '68d09e38d599f1028a08969a';
+                continue;
             }
             if ($single_array === 'lsd') {
-                if ($single_form[$index+1] !== 'denied') {
-                    $lsd = true;
-                    $app_id = '68d09e41d599f1028a9b9457';
-                    continue;
-                } else {
-                    break;
-                }
+                $lsd = true;
+                $app_id = '68d09e41d599f1028a9b9457';
+                continue;
             }
             if ($single_array === 'rlsd') {
-                if ($single_form[$index+1] !== 'denied') {
-                    $lsd = true;
-                    $app_id = '68e94e8a58fd2e028d5ec88f';
-
-                    continue;
-                } else {
-                    break;
-                }
+                $lsd = true;
+                $app_id = '68e94e8a58fd2e028d5ec88f';
+                continue;
             }
             if ($single_array === 'in-progress') {
                 $in_progress = true;
@@ -91,8 +80,9 @@ if (isset($_GET['dept_id'])) {
                 }
             }
         }
-        $transfer = $lsd = false;
-    }
+    $in_progress = false;
+    $transfer = $lsd = false;
+}
     if (!$submit_audit) {
         die('Forms are not done');
     }
@@ -183,14 +173,14 @@ if (isset($_GET['dept_id'])) {
     $variables['data']['55-0zfJWML']['schoolId'] = $mana_info['school_id'];
     $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
-    if (isset($variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'])) {
+    if (isset($variables['data']['HgIvQwEnwb']['data'][0]['data']['xVdCwxjKl-'])) {
         $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
         $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
     } else {
         $variables['data']['R0rMnJsvtQ']['id'] = 'no';
         $variables['data']['R0rMnJsvtQ']['label'] = 'No';
     }
-    if (isset($variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'])) {
+    if (isset($variables['data']['g3eXi7dYR2']['data'][0]['data']['vJyySSnsqZ'])) {
         $variables['data']['3WfG7CrNND']['id'] = 'yes';
         $variables['data']['3WfG7CrNND']['label'] = 'Yes';
     } else {
