@@ -442,7 +442,7 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 $input_array = $document_id . ',transfer,in-progress'; 
 foreach ($transfer_data as $tag_info) {
-    $input_array .= ',' . $tag_info['Tag Number'];
+    $input_array .= ',' . trim($tag_info['Tag Number']);
 }
 
 echo json_encode(['data'=>$tag_data]);

@@ -248,7 +248,7 @@ if (preg_match($email_regex, $
         if (!empty($data['audit_id'])) {
             $audit_id = $data['audit_id'];
             $dept = $data['dept_id'];
-            $input_array = $document_id . ',transfer,in-progress'; 
+            $input_array = $document_id . ',rtransfer,in-progress'; 
             foreach ($data['tags'] as $tag_info) {
                 $input_array .= ',' . $tag_info['tag'];
             }
@@ -419,9 +419,9 @@ if (preg_match($email_regex, $
     if (!empty($data['audit_id'])) {
         $audit_id = $data['audit_id'];
         $dept = $data['dept_id'];
-        $input_array = $document_id . ',transfer,in-progress'; 
+        $input_array = $document_id . ',rtransfer,in-progress'; 
         foreach ($data['tags'] as $tag_info) {
-            $input_array .= ',' . $tag_info['tag'];
+            $input_array .= ',' . trim($tag_info['tag']);
         }
         $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
         $update_stmt = $dbh->prepare($update);

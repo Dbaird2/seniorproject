@@ -169,12 +169,13 @@ $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 
 // SUBMITTER SIG
+$sbmitter_info = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
 $variables['data']['Tscy6BxbSj']['actionId'] = $action_id;
-$variables['data']['Tscy6BxbSj']['date'] = $current_date;
-$variables['data']['Tscy6BxbSj']['displayName'] = $submitter_info['f_name'] . ' ' .$submitter_info['l_name'] . ' ('. $_SESSION['email']. ')';
+$variables['data']['Tscy6BxbSj']['date'] = $submitter_info['date'];
+$variables['data']['Tscy6BxbSj']['displayName'] = $submitter_info['displayName'];
 $variables['data']['Tscy6BxbSj']['signatureType'] = 'type';
-$variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['signature'] ?? $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-$variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['form_id'];
+$variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['lastName'];
+$variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['userId'];
 
 $echo('Custodian', $custodian);
 $array_echo($custodian_info);
@@ -194,7 +195,7 @@ $resp_data = json_decode($resp, true);
 $array_echo($resp_data);
 
 $tag = $data['tag'];
-$input_array =  $document_id . ',lsd,in-progress, ' . $tag;
+$input_array =  $document_id . ',rlsd,in-progress,' . trim($tag);
 
 $audit_id = $data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";

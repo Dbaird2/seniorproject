@@ -371,7 +371,7 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 $tag = $data['tag'];
-$input_array =  $document_id . ',lsd,in-progress, ' . $tag;
+$input_array =  $document_id . ',lsd,in-progress,' . trim($tag);
 
 
 $audit_id = $data['audit_id'];
