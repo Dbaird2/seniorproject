@@ -159,7 +159,7 @@ if (isset($_GET['dept_id'])) {
     $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['school_id'];
     $variables['data']['lHuAQy0tZd']['username'] = $cust_info['username'];
 
-    $manager_name = $custodians['dept_manager'][0];
+    $manager_name = $custodians[0]['dept_manager'];
     try {
         $get_mana_stmt = $dbh->prepare($get_cust_info);
         $get_mana_stmt->execute([":full_name"=>$manager_name]);
@@ -184,17 +184,17 @@ if (isset($_GET['dept_id'])) {
     $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
     if (isset($variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'])) {
-        $variables['data']['R0rMnJsvtQ'] = 'yes';
+        $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
         $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
     } else {
-        $variables['data']['R0rMnJsvtQ'] = 'no';
+        $variables['data']['R0rMnJsvtQ']['id'] = 'no';
         $variables['data']['R0rMnJsvtQ']['label'] = 'No';
     }
     if (isset($variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'])) {
-        $variables['data']['3WfG7CrNND'] = 'yes';
+        $variables['data']['3WfG7CrNND']['id'] = 'yes';
         $variables['data']['3WfG7CrNND']['label'] = 'Yes';
     } else {
-        $variables['data']['3WfG7CrNND'] = 'no';
+        $variables['data']['3WfG7CrNND']['id'] = 'no';
         $variables['data']['3WfG7CrNND']['label'] = 'No';
     }
     if (!$apikey) {
