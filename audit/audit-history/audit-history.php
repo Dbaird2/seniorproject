@@ -270,7 +270,7 @@ include_once("../../config.php");
             echo "<a class='action-link start-link' href='complete/start-bulk-transfer.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&complete=true'>Start Forms</a>  ";
         }
         if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
-            echo "<a class='action-link complete-link' href='https://dataworks-7b7x.onrender.com/kauliAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Complete</a>";
+            echo "<a class='action-link complete-link' href='https://dataworks-7b7x.onrender.com/kualiAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Complete</a>";
         }
         echo "</td>";
     }
