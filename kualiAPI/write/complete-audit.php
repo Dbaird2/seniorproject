@@ -24,8 +24,8 @@ if (isset($_GET['dept_id'])) {
     // GET TAGS
     $submit_audit = true;
     $transfer = $lsd = $in_progress = $done = false;
-    foreach ($audit_info['check_forms'] as $index1=>$form) {
-        $single_form = explode(',', $form);
+    foreach ($audit_info as $index1=>$form) {
+        $single_form = explode(',', $form['check_forms']);
         foreach ($single_form as $index=>$single_array) {
             if ($index === 0) {
                 $id = $single_array;
@@ -83,11 +83,11 @@ if (isset($_GET['dept_id'])) {
 
             if ($index >= 3) {
                 if ($transfer) {
-                    $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = $single_array;
+                    $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($single_array);
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $index1;
                 } else {
-                    $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = $single_array;
+                    $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($single_array);
                 }
             }
         }
@@ -184,18 +184,18 @@ if (isset($_GET['dept_id'])) {
     $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
     if (isset($variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'])) {
-        $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
-        $variables['data']['R0rMnJsvtQ']['Label'] = 'Yes';
+        $variables['data']['R0rMnJsvtQ'] = 'yes';
+        $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
     } else {
-        $variables['data']['R0rMnJsvtQ']['id'] = 'no';
-        $variables['data']['R0rMnJsvtQ']['Label'] = 'No';
+        $variables['data']['R0rMnJsvtQ'] = 'no';
+        $variables['data']['R0rMnJsvtQ']['label'] = 'No';
     }
     if (isset($variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'])) {
-        $variables['data']['3WfG7CrNND']['id'] = 'yes';
-        $variables['data']['3WfG7CrNND']['Label'] = 'Yes';
+        $variables['data']['3WfG7CrNND'] = 'yes';
+        $variables['data']['3WfG7CrNND']['label'] = 'Yes';
     } else {
-        $variables['data']['3WfG7CrNND']['id'] = 'no';
-        $variables['data']['3WfG7CrNND']['Label'] = 'No';
+        $variables['data']['3WfG7CrNND'] = 'no';
+        $variables['data']['3WfG7CrNND']['label'] = 'No';
     }
     if (!$apikey) {
         die("No API key found for user.");
