@@ -3,7 +3,7 @@ include_once __DIR__ . '/../config.php';
 checkFormStatus();
 function checkFormStatus() {
     global $dbh;
-    $get_key_select = 'SELECT apikey FROM user_table WHERE email = :email';
+    $get_key_select = 'SELECT kuali_key FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($get_key_select);
     $stmt->execute([':email'=>$_SESSION['email']]);
     $apikey = $stmt->fetchColumn();
