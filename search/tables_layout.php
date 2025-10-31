@@ -188,49 +188,11 @@ foreach ($all_bus as $bus) {
                                     <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>" onchange="showFormType(this)">
                                            <option value=""></option>
                                            <option value="psr">Property Survey Report</option>
-                                           <option value="lsd">Equipment Lost/Stolen/Destroyed</option>
                                            <option value="check-out">Check Out</option>
                                            <option value="check-in">Check In</option>
                                            <option value="transfer">Transfer</option>
                                     </select>   
 <br>
-<!-- EQUIP LOSS STOLEN -->
-<div class="lsd-<?= $safe_tag?>" style="display: none;">
-    <select id="lsd-who-<?=$safe_tag?>">
-        <option value="Myself">Myself</option>
-        <option value="someone-else">I am initiating this submission on behalf of</option>
-    </select>
-<br>
-    <input type="text" id="lsd-fill-for-<?=$safe_tag?>" placeholder="Email of Borrower" style="display:none;">
-<br>
-    <select id="lsd-<?=$safe_tag?>">
-        <option value="Lost">Lost</option>
-        <option value="Stolen">Stolen</option>
-        <option value="Destroyed">Destroyed</option>
-    </select>
-<br>
-    <textarea id="lsd-narrative-<?=$safe_tag?>" placeholder="Detail Narrative..."></textarea>
-<br>
-    <label>Reported to UPD?</label>
-    <select id="upd-<?=$safe_tag?>">
-        <option value="No">No</option>
-        <option value="Yes">Yes</option>
-    </select>
-<br>
-    <select id="item-type-<?=$safe_tag?>">
-        <option value="Instructional Equipment">Instructional Equipment</option>
-        <option value="IT Equipment">IT Equipment</option>
-        <option value="Other">Other</option>
-    </select>
-    
-    <div class='it-equipment-<?=$safe_tag?>' style='display:none;'>
-        <select id=''></select>
-    </div>
-</div>
-        
-<br>
-</div>
-<!-- -->
 
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
@@ -253,9 +215,9 @@ foreach ($all_bus as $bus) {
 <div class="transfer-<?= $safe_tag?>" style="display: none;">
 <!-- HAVE NOT STARTED SOLO TRANSFER -->
     <select id="transfer-form-type-<?= $safe_tag ?>">
-        <option value='bus-change'>Business Unit Change</option>
-        <option value='bldg-room-change'>Building/Room/Location change</option>
-        <option value='dept-change'>Department Change</option>
+        <option value='bus'>Business Unit Change</option>
+        <option value='location'>Building/Room/Location change</option>
+        <option value='dept'>Department Change</option>
     </select>
     <select id="transfer-in-bldg-<?=$safe_tag?>">
         <option value='Yes'>Yes</option>
@@ -737,77 +699,17 @@ async function sendForm(type)
 {
     const tag = type.dataset.tag;
     const form_type = document.getElementById('form-select-'+tag).value;
-    if (form_type == 'lsd') {
-        // GET FORM INFO
-        // SEND FORM THROUGH PROMISE
-        // DISPLAY MSG THROUGH TOAST
-        const who = document.getElementById("lsd-who-"+tag).value;
-        const borrower = document.getElementById("lsd-fill-for-"+tag).value;
-        const position = document.getElementById("lsd-position-"+tag).value;
-        const lsd = document.getElementById("lsd-"+tag).value;
-        const reason = document.getElementById("lsd-narrative-"+tag).value;
-        const upd = document.getElementById("upd-"+tag).value;
-        const item_type = document.getElementById("item-type-"+tag).value;
-
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/lsd-search-page.php';
-        const lsd_res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: tag, who: who, borrower: borrower, position: position,
-                lsd: lsd, reason: reason, from_page: 'search', upd: upd, item_type: item_type })
-        });
-        if (!lsd_res.ok) {
-            const text = await lsd_res.text();
-            throw new Error(`HTTPS ${lsd_res.status}: ${text}`);
-        } else {
-            const clone = lsd_res.clone();
-            try {
-                const data = await lsd_res.json();
-                console.log('LSD data reponse: ', data);
-            } catch {
-                const text = await clone.text();
-                console.log('LSD text response: ', text);
-            }
-        }
-    } else if (form_type === 'psr') {
-
-        const code = document.getElementById("psr-code-"+tag).value;
-        const reason = document.getElementById("psr-reason-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/psr-search-page.php';
-        const psr_res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: tag, 
-                code: code,
-                reason: reason,
-                from_page: 'search'
-            })
-        });
-        if (!psr_res.ok) {
-            const text = await psr_res.text();
-            throw new Error(`HTTPS ${psr_res.status}: ${text}`);
-        } else {
-            const clone = psr_res.clone();
-            try {
-                const data = await psr_res.json();
-                console.log('PSR data reponse: ', data);
-            } catch {
-                const text = await clone.text();
-                console.log('PSR text response: ', text);
-            }
-        }
-
-    } else if (form_type === 'check-out') {
+    if (form_type === 'check-out') {
         const check_type = document.getElementById("who-"+tag).value;
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kuali-search.php';
         const out_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
-            form_type: 'check-out',
+            form: 'check-out',
             borrower: borrower,
             condition: condition,
             notes: notes,
@@ -833,17 +735,16 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kauli-search.php';
         const in_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
-            form_type: check_type,
+            who: check_type,
             borrower: borrower,
             condition: condition,
             notes: notes,
-            check_type: 'check-in',
-            from_page : 'search'
+            form: 'check-in'
         })
         });
         if (!in_res.ok) {
@@ -868,6 +769,33 @@ async function sendForm(type)
         const room = document.getElementById("transfer-room-"+tag).value;
         const why = document.getElementById("transfer-why-"+tag).value;
         const notes = document.getElementById("transfer-notes-"+tag).value;
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kauli-search.php';
+        const trans_res = await fetch(url, {
+        method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: tag, 
+            dept_name: dept,
+            in_bldg: in_building,
+            room: room,
+            why: why,
+            form: 'transfer',
+            notes: notes,
+            form_type: transfer_form_type
+        })
+        });
+        if (!trans_res.ok) {
+            const text = await trans_res.text();
+            throw new Error(`HTTPS ${trans_res.status}: ${text}`);
+        } else {
+            const clone = trans_res.clone();
+            try {
+                const data = await trans_res.json();
+                console.log('Transfer data reponse: ', data);
+            } catch {
+                const text = await clone.text();
+                console.log('Transfer text response: ', text);
+            }
+        }
 
     }
 }
