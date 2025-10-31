@@ -665,7 +665,7 @@ $depts_info = $stmt->fetchAll();
                             </div>
                         </td>
                         </tr>
-                        <?php $spa_regex = '/^SP\d+/';
+                        <?php $spa_regex = '/^SPP\d+/';
                         if (preg_match($spa_regex, $row['Tag Number'])) { ?>
                             <tr>
                                 <td class="transfer-<?= $row['Tag Number'] ?>" style="display:none;">
@@ -896,7 +896,7 @@ $depts_info = $stmt->fetchAll();
                         hideAll(tag);
                         const tag_regex = /^SP\d+/g;
                         if (tag_regex.test(tag)) {
-                            showUI('transfer-', tag);
+                            //showUI('transfer-', tag);
                         }
                         const upd = document.getElementById('upd-' + tag);
                         upd.addEventListener('change', () => {
@@ -1026,7 +1026,7 @@ $depts_info = $stmt->fetchAll();
                         hideAll(tag);
                         const tag_regex = /^SP\d+/g;
                         if (tag_regex.test(tag)) {
-                            showUI('transfer-', tag);
+                            //showUI('transfer-', tag);
                         }
                     }
 
