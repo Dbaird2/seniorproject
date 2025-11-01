@@ -666,19 +666,18 @@ function showFormType(form)
         });
         transfer_form_type_sel.addEventListener('change', () => {
             const transfer_form_type = transfer_form_type_sel.value;
-            if (transfer_form_type === 'bus-change') {
-                document.querySelector("bus-change-"+tag).style.display = 'inline';
+            console.log(transfer_form_type);
+            if (transfer_form_type === '') {
                 document.querySelector("dept-change-"+tag).style.display = 'none';
                 document.querySelector("room-dept-change-"+tag).style.display = 'none';
 
-            } else if (transfer_form_type === 'bldg-room-change') {
+            } else if (transfer_form_type === 'location') {
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
                 document.querySelector("bus-change-"+tag).style.display = 'none';
 
-            } else if (transfer_form_type === 'dept-change') {
+            } else if (transfer_form_type === 'dept') {
                 document.querySelector("dept-change-"+tag).style.display = 'inline';
                 document.querySelector("room-dept-change-"+tag).style.display = 'inline';
-                document.querySelector("bus-change-"+tag).style.display = 'none';
             }
         });
     }
