@@ -100,7 +100,7 @@ if ($search === NULL) {
         <input class="search-input" type="hidden" name="offset" id="offset" value="<?= $offset ?>">
         <div class="section">
             <label class='search-label' id='search-label'></label>
-            <input class="search-input" type="text" name="search" id="search" value="<?= $search ?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <input class="search-input" type="text" name="search" id="search" value="<?= $search ?>" placeholder="Search for an asset..." style="padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
             <select class="filter-select" name="categories" id="categories">
                 <option value="assets">Assets</option>
                 <option value="buildings">Buildings</option>
@@ -149,7 +149,7 @@ if ($search === NULL) {
 
 
     </div>
-    <div class="asset-search" style="float:right; margin-top:-220px; margin-right:20px;">
+    <div style="float:right; margin-top:-220px; margin-right:20px;">
 
         <div class='checkbox-wrapper-13'>
 

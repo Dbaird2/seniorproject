@@ -169,8 +169,7 @@ textarea:hover {
     text-align: center;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr ;
-    gap: 1rem;
-    width: 10rem;
+    width: fit-content;
     align-self: center;
     align-items: center;
     align-content: center;

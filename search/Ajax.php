@@ -276,9 +276,10 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             }
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
             if (count($result) === 0) {
-                $query = $query_start . $column_array . ' ' .$query_asset_from . $location_from . " WHERE :search ILIKE ANY(custodian) AND asset_status = 'In Service' ORDER BY a.asset_tag " . $query_end;
+                $query = $query_start . $column_array . ' ' .$query_asset_from . $location_from . " LEFT JOIN department d on d.dept_id = a.dept_id WHERE :search ILIKE ANY(d.custodian) AND asset_status = 'In Service' ORDER BY a.asset_tag " . $query_end;
+                echo $query . '<br>';
                 $stmt = $dbh->prepare($query);
-                $stmt->execute([':offset'=>$query_offset, ':search'=>'%'.$search.'%']);
+                $stmt->execute([':offset'=>$query_offset, ':search'=>'%'.$tag.'%']);
                 $result = $stmt->fetchAll();
                 $query = "SELECT COUNT(*) AS Rows " . $query_asset_from . $location_from . " WHERE :search ILIKE ANY(custodian) AND asset_status = 'In Service ORDER BY a.asset_tag";
                 $stmt = $dbh->prepare($query);

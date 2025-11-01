@@ -660,9 +660,9 @@ function showFormType(form)
         const in_building = document.getElementById("transfer-in-bldg-"+tag);
         in_building.addEventListener('change', () => {
             if (in_building.value === 'No') {
-                document.querySelect('.transfer-bldg-text-'+tag).style.display = 'inline';
+                document.querySelector('.transfer-bldg-text-'+tag).style.display = 'inline';
             } else {
-                document.querySelect('.transfer-bldg-text-'+tag).style.display = 'none';
+                document.querySelector('.transfer-bldg-text-'+tag).style.display = 'none';
             }
         });
         transfer_form_type_sel.addEventListener('change', () => {
@@ -674,7 +674,7 @@ function showFormType(form)
 
             } else if (transfer_form_type === 'location') {
                 document.querySelector(".room-dept-change-"+tag).style.display = 'inline';
-                document.querySelector(".bus-change-"+tag).style.display = 'none';
+                document.querySelector(".dept-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'dept') {
                 document.querySelector(".dept-change-"+tag).style.display = 'inline';
