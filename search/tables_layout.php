@@ -186,8 +186,8 @@ foreach ($all_bus as $bus) {
                                     </select>
                                     <br>
                                     <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>" onchange="showFormType(this)">
+                                           <label>Kuali Form</label>
                                            <option value=""></option>
-                                           <option value="psr">Property Survey Report</option>
                                            <option value="check-out">Check Out</option>
                                            <option value="check-in">Check In</option>
                                            <option value="transfer">Transfer</option>
@@ -766,7 +766,7 @@ async function sendForm(type)
             body: JSON.stringify({ tag: tag, 
             dept_name: dept,
             in_bldg: in_bldg,
-            in_bldg_why: bldg_text
+            in_bldg_why: bldg_text,
             room: room,
             why: why,
             form: 'transfer',

@@ -114,7 +114,7 @@ select,
 input[type="text"],
 input[type="search"],
 textarea {
-    width: 100%;
+    width: auto;
     padding: 0.625rem 0.875rem;
     border: 2px solid #e3f2fd;
     border-radius: 6px;

@@ -98,6 +98,7 @@ if ($search === NULL) {
 <!-- Search box. -->
 <div class="asset-search">
 <input class = "search-input" type="hidden" name="offset" id="offset" value="<?=$offset?>">
+            <label>Asset(Tag, Serial, Name, Room Tag), Building(Name, Room Number), Department(Name, ID)</label>
 <input class="search-input" type="text" name="search" id="search" value="<?=$search?>" placeholder="Search for an asset..." style="width: 60%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
  <select class="filter-select"  name="categories" id="categories">
                 <option value="assets">Assets</option>
@@ -106,14 +107,16 @@ if ($search === NULL) {
                 <option value="users">Users</option>
             </select>
             <br>
+            <label class="filter-bldg">Building ID</label>
             <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" value="<?=$bldg_id_search?>"/>
 
+            <label class="filter-assets">Status</label>
             <select class="filter-assets" name="status-filter" id="status-filter">
                     <option value="all">All Status</option>
                     <option value="In Service">In Service</option>
                     <option value="Disposed">Disposed</option>
                 </select>
-
+            <label class="filter-assets">Price Type</label>
             <select class="filter-assets" name="price-operator" id="price-filter">
                 <option value=">">&gt;</option>
                 <option value="<">&lt;</option>
@@ -121,7 +124,9 @@ if ($search === NULL) {
                 <option value=">=">&ge;</option>
                 <option value="<=">&le;</option>
             </select>
+            <label class="filter-assets">Price Amount</label>
             <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
+            <label class="filter-assets">Department ID</label>
             <input type="text" class="filter-assets" id="dept-id-search" name="dept-id-search" placeholder="Enter Department ID" />
             <button class="search-button" id="search-btn">Search</button>
             <!-- <button class="filter-assets search-button" id="audit-btn" name="audit">Audit</button> -->
