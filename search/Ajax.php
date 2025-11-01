@@ -218,8 +218,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SHOW CHECKBOXES & INPUT FOR ASSET FILTER
         echo "<script>addCheckboxes('.filter-assets');
-        const search_label = document.getElementById('search-label');
-        search_label.textContent = 'Assets(Tag, Name, Custodian, Serial)';
+        document.getElementById('search-label') = 'Assets(Tag, Name, Custodian, Serial)';
         </script>";
 
 
