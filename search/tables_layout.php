@@ -200,12 +200,20 @@ foreach ($all_bus as $bus) {
         <option value="Myself">Myself</option>
         <option value="someone-else">Someone Else</option>
     </select>
+    <br>
     <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
+    <br>
     <select id="check-condition-<?=$safe_tag?>">
         <option value="New">New</option>
         <option value="Good">Good</option>
         <option value="Used">Used</option>
         <option value="Damanged">Damaged</option>
+    </select>
+    <br>
+    <select id="check-item-type-<?=$safe_tag?>">
+        <option value='Laptop'>Laptop</option>
+        <option value='Desktop'>Desktop</option>
+        <option value='Tablet'>Tablet</option>
     </select>
     <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
@@ -214,55 +222,50 @@ foreach ($all_bus as $bus) {
 <!-- TRANSFER -->
 <div class="transfer-<?= $safe_tag?>" style="display: none;">
 <!-- HAVE NOT STARTED SOLO TRANSFER -->
-    <select id="transfer-form-type-<?= $safe_tag ?>">
-        <option value='bus'>Business Unit Change</option>
-        <option value='location'>Building/Room/Location change</option>
-        <option value='dept'>Department Change</option>
-    </select>
-    <select id="transfer-in-bldg-<?=$safe_tag?>">
-        <option value='Yes'>Yes</option>
-        <option value='No'>No</option>
-    </select>
+    <div class="form-field-group">
+        <label>Is This a</label>
+        <select id="transfer-form-type-<?= $safe_tag ?>">
+            <option value=''></option>
+            <option value='location'>Building/Room/Location change</option>
+            <option value='dept'>Department Change</option>
+        </select>
+    </div>
+    <div class="form-field-group">
+        <label>Is this equipment kept inside a building?</label>
+        <select id="transfer-in-bldg-<?=$safe_tag?>">
+            <option value='Yes'>Yes</option>
+            <option value='No'>No</option>
+        </select>
+    </div>
+    <div class="form-field-group transfer-bldg-text-<?=$safe_tag?>" style='display:none;'>
+        <label>Where is your equipment stored, parked, or housed?</label>
+        <input type="text" id="transfer-bldg-text-<?=$safe_tag?>">
+        <label></label>
+    </div>
+        
+    <div class="form-field-group dept-change-<?=$safe_tag?>" style='display:none;'>
+        <label>Why?</label>
+        <input type="text" id="transfer-why-<?=$safe_tag?>">
+        <label class="error-label" id='transfer-why-feedback-<?=$safe_tag?>'>
+    </div>
+    <div class="form-field-group">
     <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
 </div>
-    <div class="dept-change-<?=$safe_tag?>" style="display:none;">
+    <div class="form-field-group dept-change-<?=$safe_tag?>" style="display:none;">
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
     </div>
 
-    <div class="room-dept-change-<?=$safe_tag?>" style="display:none;">
+    <div class="form-field-group room-dept-change-<?=$safe_tag?>" style="display:none;">
+        <label>New Building</label>
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
-        <input type="search" list="room-names" id="transfer-room-<?=$safe_tag?>">
+        <label>New Room</label>
+        <input type="text" id="transfer-room-<?=$safe_tag?>">
     </div>
-    <div class="bus-change-<?=$safe_tag?>" style="display:none;">
-        <input type="text" id="transfer-why-<?=$safe_tag?>">
-        <select id='new-bus-<?=$safe_tag?>'>
-            <?php foreach ($extra_bus as $bus) { ?>
-                <option value="<?=$bus?>"><?=$bus?></option>
-            <?php } ?>
-        </select>
-
-    </div>
+</div>
 
 
 <!-- -->
 
-<!-- PSR -->
-<div class="psr-<?= $safe_tag?>" style="display: none;">
-    <select id="psr-code-<?= $safe_tag ?>">
-        <option value="UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)">UNIVERSAL WASTE — SALVAGE DEALER, RECYCLER (E-WASTE)</option>
-        <option value="VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)">VALUELESS UNABLE TO BE RECYCLED (TO BE LEGALLY/SAFELY DISPOSED OF)</option>
-        <option value="SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10">SHIPPED TO SCRAP / SALVAGE DEALER (TO BE RECYCLED) NOTE: FOR E-WASTE USE # 10</option>
-        <option value="LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)">LOST, STOLEN OR DESTROYED (REFER TO SAM SECTION 8643 FOR INSTRUCTIONS)</option>
-        <option value="TO BE CANABALIZED (SALVAGED FOR PARTS)">TO BE CANABALIZED (SALVAGED FOR PARTS)</option>
-        <option value="SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)">SHIP TO PROPERTY REUSE PROGRAM (NO POOR OR JUNK MATERIAL)</option>
-        <option value="DONATION OF COMPUTERS FOR SCHOOLS PROGRAM">DONATION OF COMPUTERS FOR SCHOOLS PROGRAM</option>
-        <option value="SALE (SEE SAM SECTION 3520)">SALE (SEE SAM SECTION 3520)</option>
-        <option value="TRADE-IN (SHOW TRADE-IN PRICE OFFERED)">TRADE-IN (SHOW TRADE-IN PRICE OFFERED)</option>
-    </select>
-    <br>
-    <input type="text" id="psr-reason-<?=$safe_tag?>" placeholder="Reason for form...">
-    <br>
-</div>
                                 <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
                                 <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
                             </div>
@@ -649,32 +652,18 @@ function showFormType(form)
         hideUI('transfer', tag);
         hideUI('psr', tag);
     }
-    if (type_value === 'psr') {
-        document.querySelector('.psr-'+tag).style.display = 'inline';
-        hideUI('check', tag);
-        hideUI('lsd', tag);
-        hideUI('transfer', tag);
-    }
-    if (type_value === 'lsd') {
-        document.querySelector('.lsd-'+tag).style.display = 'inline';
-        hideUI('check', tag);
-        hideUI('psr', tag);
-        hideUI('transfer', tag);
-        const someone_else = document.getElementById('lsd-who-'+tag);
-        someone_else.addEventListener('change', () => {
-        if (someone_else.value === 'someone-else') {
-            document.getElementById('lsd-fill-for-'+tag).style.display = 'inline';
-        } else {
-            document.getElementById('lsd-fill-for-'+tag).style.display = 'none';
-        }
-        });
-    }
     if (type_value === 'transfer') {
         document.querySelector('.transfer-'+tag).style.display = 'inline';
         const transfer_form_type_sel = document.getElementById("transfer-form-type-"+tag);
         hideUI('check', tag);
-        hideUI('lsd', tag);
-        hideUI('psr', tag);
+        const in_building = document.getElementById("transfer-in-bldg-"+tag);
+        in_building.addEventListener('change', () => {
+            if (in_building.value === 'No') {
+                document.querySelect('.transfer-bldg-text-'+tag).style.display = 'inline';
+            } else {
+                document.querySelect('.transfer-bldg-text-'+tag).style.display = 'none';
+            }
+        });
         transfer_form_type_sel.addEventListener('change', () => {
             const transfer_form_type = transfer_form_type_sel.value;
             if (transfer_form_type === 'bus-change') {
@@ -764,6 +753,8 @@ async function sendForm(type)
     } else if (form_type === 'transfer') {
         const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
         const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
+        const bldg_text = document.querySelector('transfer-bldg-text-'+tag).value;
+        
         const dept = document.getElementById("transfer-dept-"+tag).value;
         const bldg = document.getElementById("transfer-bldg-"+tag).value;
         const room = document.getElementById("transfer-room-"+tag).value;
@@ -775,7 +766,8 @@ async function sendForm(type)
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tag: tag, 
             dept_name: dept,
-            in_bldg: in_building,
+            in_bldg: in_bldg,
+            in_bldg_why: bldg_text
             room: room,
             why: why,
             form: 'transfer',
