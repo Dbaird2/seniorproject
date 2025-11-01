@@ -11,7 +11,7 @@ $select = "select dept_name, dept_id FROM department";
 $select_stmt = $dbh->query($select);
 $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-        <datalist name="dept-names">
+        <datalist id="dept-names">
              <?php foreach ($dept_info as $dept) { ?>
                  <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
             <?php } ?>
@@ -21,7 +21,7 @@ $select = "select bldg_name, bldg_id FROM bldg_table";
 $select_stmt = $dbh->query($select);
 $bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-        <datalist name="bldg-names">
+        <datalist id="bldg-names">
              <?php foreach ($bldg_info as $bldg) { ?>
                  <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
             <?php } ?>
@@ -197,26 +197,38 @@ foreach ($all_bus as $bus) {
 
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
-    <select id="who-<?=$safe_tag?>">
-        <option value="Myself">Myself</option>
-        <option value="someone-else">Someone Else</option>
-    </select>
-    <br>
-    <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
-    <br>
-    <select id="check-condition-<?=$safe_tag?>">
-        <option value="New">New</option>
-        <option value="Good">Good</option>
-        <option value="Used">Used</option>
-        <option value="Damanged">Damaged</option>
-    </select>
-    <br>
-    <select id="check-item-type-<?=$safe_tag?>">
-        <option value='Laptop'>Laptop</option>
-        <option value='Desktop'>Desktop</option>
-        <option value='Tablet'>Tablet</option>
-    </select>
-    <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
+    <div class="form-field-group ">
+        <label>Filling out for</label>
+        <select id="who-<?=$safe_tag?>">
+            <option value="Myself">Myself</option>
+            <option value="someone-else">Someone Else</option>
+        </select>
+    </div>
+    <div class="form-field-group ">
+        <label>Borrower</label>
+        <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
+    </div>
+    <div class="form-field-group ">
+        <label>Condition</label>
+        <select id="check-condition-<?=$safe_tag?>">
+            <option value="New">New</option>
+            <option value="Good">Good</option>
+            <option value="Used">Used</option>
+            <option value="Damanged">Damaged</option>
+        </select>
+    </div>
+    <div class="form-field-group ">
+        <label>Equipment Type</label>
+        <select id="check-item-type-<?=$safe_tag?>">
+            <option value='Laptop'>Laptop</option>
+            <option value='Desktop'>Desktop</option>
+            <option value='Tablet'>Tablet</option>
+        </select>
+    </div>
+    <div class="form-field-group ">
+        <label>Notes</label>
+        <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
+    </div>
 </div>
 <!-- -->
 
@@ -250,9 +262,13 @@ foreach ($all_bus as $bus) {
         <label class="error-label" id='transfer-why-feedback-<?=$safe_tag?>'>
     </div>
     <div class="form-field-group">
-    <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
+    <div class="form-field-group ">
+        <label>Notes</label>
+        <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
+    </div>
 </div>
     <div class="form-field-group dept-change-<?=$safe_tag?>" style="display:none;">
+        <label>New Department</label>
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
     </div>
 

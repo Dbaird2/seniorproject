@@ -305,8 +305,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         $and = $bldg_id_where = $where = '';
         //      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
         echo "<script>addCheckboxes('.filter-bldg');
-        const search_label = document.getElementById('search-label');
-        search_label.textContent = 'Buildings & Rooms(ID, Building Name, Room Number)';
+        document.getElementById('search-label').textContent = 'Buildings & Rooms(ID, Building Name, Room Number)';
         removeCheckbox('.filter-assets');</script>";
 
         $params_bldg = [":offset"=>$query_offset];
@@ -380,8 +379,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');
         removeCheckbox('.filter-bldg');
         removeCheckbox('.filter-room');
-        const search_label = document.getElementById('search-label');
-        search_label.textContent = 'Departments(ID, Name)';</script>";
+        document.getElementById('search-label') = 'Departments(ID, Name)';</script>";
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department ORDER BY dept_id LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -410,8 +408,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');
         removeCheckbox('.filter-bldg');
         removeCheckbox('.filter-room');
-        const search_label = document.getElementById('search-label');
-        search_label.textContent = 'Users(Email, Department ID)';</script>";
+        document.getElementById('search-label') = 'Users(Email, Department ID)';</script>";
         if ($tag === 'ALL') {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);
