@@ -218,6 +218,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SHOW CHECKBOXES & INPUT FOR ASSET FILTER
         echo "<script>addCheckboxes('.filter-assets');</script>";
+        const search_label = document.getElementById('search-label');
+        search_label.textContent = 'Assets(Tag, Name, Custodian, Serial)';
 
 //-------------------------------------------------------------------------
 //      HIDE CHECKBOXES FOR BLDG & INPUT FOR BLDG FILTER
@@ -262,6 +264,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
             $exec_query->execute($q_all_params);
             $result = $exec_query->fetchAll(PDO::FETCH_ASSOC);
 
+
+
             $exec_count = $dbh->prepare($query_count);
             if (isset($q_c_params)) {
                 $exec_count->execute($q_c_params);
@@ -269,6 +273,16 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
                 $exec_count->execute();
             }
             $total_rows = $exec_count->fetch(PDO::FETCH_ASSOC);
+            if (count($result) === 0) {
+                $query = $query_start . $column_array . ' ' .$query_asset_from . $location_from . " WHERE :search ILIKE ANY(custodian) AND asset_status = 'In Service' ORDER BY a.asset_tag " . $query_end;
+                $stmt = $dbh->prepare($query);
+                $stmt->execute([':offset'=>$query_offset, ':search'=>'%'.$search.'%']);
+                $result = $stmt->fetchAll();
+                $query = "SELECT COUNT(*) AS Rows " . $query_asset_from . $location_from . " WHERE :search ILIKE ANY(custodian) AND asset_status = 'In Service ORDER BY a.asset_tag";
+                $stmt = $dbh->prepare($query);
+                $stmt->execute([':offset'=>$query_offset, ':search'=>'%'.$search.'%']);
+                $total_rows = $stmt->fetch();
+            }
         } else {
             $exec_query = $dbh->prepare($query);
             $params['offset'] = $query_offset;
@@ -286,8 +300,10 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         }
     } else if ($category === 'buildings') {
         $and = $bldg_id_where = $where = '';
-//      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
+        //      SHOW CHECKBOXES & INPUT FOR BLDG FILTER
         echo "<script>addCheckboxes('.filter-bldg');</script>";
+        const search_label = document.getElementById('search-label');
+        search_label.textContent = 'Buildings & Rooms(ID, Building Name, Room Number)';
 
 //      HIDE CHECKBOXES & INPUT FOR ASSET FILTER
         echo "<script>removeCheckbox('.filter-assets');</script>";
@@ -363,6 +379,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
         echo "<script>removeCheckbox('.filter-room');</script>";
+        const search_label = document.getElementById('search-label');
+        search_label.textContent = 'Departments(ID, Name)';
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department ORDER BY dept_id LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -391,6 +409,8 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');</script>";
         echo "<script>removeCheckbox('.filter-bldg');</script>";
         echo "<script>removeCheckbox('.filter-room');</script>";
+    const search_label = document.getElementById('search-label');
+        search_label.textContent = 'Users(Email, Department ID)';
         if ($tag === 'ALL') {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);

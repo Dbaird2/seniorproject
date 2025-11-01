@@ -271,6 +271,7 @@ function removeItemsFromLocalStorage() {
 function addCheckboxes(jasset_class) {   
     $(jasset_class).show();
 }
+
 function keepCheckboxValues(asset_name, jasset_id) {
     const asset = localStorage.getItem(asset_name);
     if (asset === 'true') {

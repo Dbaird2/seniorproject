@@ -185,6 +185,7 @@ foreach ($all_bus as $bus) {
                                         <option value="disposed">Disposed</option>
                                     </select>
                                     <br>
+                                    <label>Kuali Form</label>
                                     <select class="forms-needed" data-tag="<?=$safe_tag?>" name="form-select-<?= $safe_tag ?>" id="form-select-<?=$safe_tag?>" onchange="showFormType(this)">
                                            <label>Kuali Form</label>
                                            <option value=""></option>
