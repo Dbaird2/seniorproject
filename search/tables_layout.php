@@ -260,16 +260,12 @@ foreach ($all_bus as $bus) {
         <label>Why?</label>
         <input type="text" id="transfer-why-<?=$safe_tag?>">
         <label class="error-label" id='transfer-why-feedback-<?=$safe_tag?>'>
-    </div>
-    <div class="form-field-group">
-    <div class="form-field-group ">
-        <label>Notes</label>
-        <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
-    </div>
-</div>
-    <div class="form-field-group dept-change-<?=$safe_tag?>" style="display:none;">
         <label>New Department</label>
         <input type="search" list="dept-names" id="transfer-dept-<?=$safe_tag?>">
+    </div>
+    <div class="form-field-group">
+        <label>Notes</label>
+        <textarea id="transfer-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
     </div>
 
     <div class="form-field-group room-dept-change-<?=$safe_tag?>" style="display:none;">
