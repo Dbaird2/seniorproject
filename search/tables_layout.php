@@ -668,16 +668,16 @@ function showFormType(form)
             const transfer_form_type = transfer_form_type_sel.value;
             console.log(transfer_form_type);
             if (transfer_form_type === '') {
-                document.querySelector("dept-change-"+tag).style.display = 'none';
-                document.querySelector("room-dept-change-"+tag).style.display = 'none';
+                document.querySelector(".dept-change-"+tag).style.display = 'none';
+                document.querySelector(".room-dept-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'location') {
-                document.querySelector("room-dept-change-"+tag).style.display = 'inline';
-                document.querySelector("bus-change-"+tag).style.display = 'none';
+                document.querySelector(".room-dept-change-"+tag).style.display = 'inline';
+                document.querySelector(".bus-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'dept') {
-                document.querySelector("dept-change-"+tag).style.display = 'inline';
-                document.querySelector("room-dept-change-"+tag).style.display = 'inline';
+                document.querySelector(".dept-change-"+tag).style.display = 'inline';
+                document.querySelector(".room-dept-change-"+tag).style.display = 'inline';
             }
         });
     }
