@@ -13,7 +13,7 @@ $dept_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist id="dept-names">
              <?php foreach ($dept_info as $dept) { ?>
-                 <option value="<?=$dept['dept_name'] . '-' . $dept['dept_id']?>"><?= $dept['dept_name'] ?></option>
+                 <option value="<?=$dept['dept_name']?>"><?= $dept['dept_name'] . '-' . $dept['dept_id'] ?></option>
             <?php } ?>
         </datalist>
 <?php 
@@ -23,7 +23,7 @@ $bldg_info = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
         <datalist id="bldg-names">
              <?php foreach ($bldg_info as $bldg) { ?>
-                 <option value="<?=$bldg['bldg_name'] . '-' . $bldg['bldg_id']?>"><?= $bldg['bldg_name'] ?></option>
+                 <option value="<?=$bldg['bldg_name'] ?>"><?= $bldg['bldg_name']. '-' . $bldg['bldg_id'] ?></option>
             <?php } ?>
         </datalist>
 <?php 
@@ -197,18 +197,18 @@ foreach ($all_bus as $bus) {
 
 <!-- CHECK OUT/IN -->
 <div class="check-<?= $safe_tag?>" style="display: none;">
-    <div class="form-field-group ">
+    <div class="form-field-group">
         <label>Filling out for</label>
         <select id="who-<?=$safe_tag?>">
             <option value="Myself">Myself</option>
             <option value="someone-else">Someone Else</option>
         </select>
     </div>
-    <div class="form-field-group ">
+    <div class="form-field-group">
         <label>Borrower</label>
         <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
     </div>
-    <div class="form-field-group ">
+    <div class="form-field-group">
         <label>Condition</label>
         <select id="check-condition-<?=$safe_tag?>">
             <option value="New">New</option>
@@ -217,7 +217,7 @@ foreach ($all_bus as $bus) {
             <option value="Damanged">Damaged</option>
         </select>
     </div>
-    <div class="form-field-group ">
+    <div class="form-field-group">
         <label>Equipment Type</label>
         <select id="check-item-type-<?=$safe_tag?>">
             <option value='Laptop'>Laptop</option>
@@ -225,7 +225,7 @@ foreach ($all_bus as $bus) {
             <option value='Tablet'>Tablet</option>
         </select>
     </div>
-    <div class="form-field-group ">
+    <div class="form-field-group">
         <label>Notes</label>
         <textarea id="check-notes-<?=$safe_tag?>" placeholder="Notes..."></textarea>
     </div>
@@ -698,6 +698,7 @@ function showFormType(form)
 }
 async function sendForm(type) 
 {
+    console.log('sendForm called', type);
     const tag = type.dataset.tag;
     const form_type = document.getElementById('form-select-'+tag).value;
     if (form_type === 'check-out') {
