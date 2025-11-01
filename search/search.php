@@ -108,11 +108,11 @@ if ($search === NULL) {
                 <option value="users">Users</option>
             </select>
         </div>
-        <div class="section">
+        <div class="section filter-bldg">
             <label class="filter-bldg">Building ID</label>
             <input type="number" class="filter-bldg" id="bldg-id-search" name="bldg-id-search" placeholder="Enter Building ID" value="<?= $bldg_id_search ?>" />
         </div>
-        <div class="section">
+        <div class="section filter-assets">
             <label class="filter-assets">Status</label>
             <select class="filter-assets" name="status-filter" id="status-filter">
                 <option value="all">All Status</option>
@@ -120,7 +120,7 @@ if ($search === NULL) {
                 <option value="Disposed">Disposed</option>
             </select>
         </div>
-        <div class="section">
+        <div class="section filter-assets">
             <label class="filter-assets">Price Type</label>
             <select class="filter-assets" name="price-operator" id="price-filter">
                 <option value=">">&gt;</option>
@@ -131,12 +131,12 @@ if ($search === NULL) {
             </select>
         </div>
 
-        <div class="section">
+        <div class="section filter-assets">
 
             <label class="filter-assets">Price Amount</label>
             <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
         </div>
-        <div class="section">
+        <div class="section filter-assets">
 
             <label class="filter-assets">Department ID</label>
             <input type="text" class="filter-assets" id="dept-id-search" name="dept-id-search" placeholder="Enter Department ID" />
