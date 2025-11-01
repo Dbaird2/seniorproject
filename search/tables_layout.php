@@ -735,7 +735,7 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kauli-search.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kuali-search.php';
         const in_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -769,7 +769,7 @@ async function sendForm(type)
         const room = document.getElementById("transfer-room-"+tag).value;
         const why = document.getElementById("transfer-why-"+tag).value;
         const notes = document.getElementById("transfer-notes-"+tag).value;
-        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kauli-search.php';
+        url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kuali-search.php';
         const trans_res = await fetch(url, {
         method: 'POST',
             headers: { 'Content-Type': 'application/json' },
