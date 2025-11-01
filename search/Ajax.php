@@ -218,7 +218,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
 //-------------------------------------------------------------------------
 //      SHOW CHECKBOXES & INPUT FOR ASSET FILTER
         echo "<script>addCheckboxes('.filter-assets');
-        document.getElementById('search-label') = 'Assets(Tag, Name, Custodian, Serial)';
+        document.getElementById('search-label').textContent = 'Assets(Tag, Name, Custodian, Serial)';
         </script>";
 
 
@@ -378,7 +378,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');
         removeCheckbox('.filter-bldg');
         removeCheckbox('.filter-room');
-        document.getElementById('search-label') = 'Departments(ID, Name)';</script>";
+        document.getElementById('search-label').textContent = 'Departments(ID, Name)';</script>";
         if ($tag === 'ALL') {
             $dept_query = "SELECT * FROM department ORDER BY dept_id LIMIT 50 OFFSET :offset";
             $dept_count_query = "SELECT COUNT(*) as Rows FROM department";
@@ -407,7 +407,7 @@ if (isset($_POST['search']) || isset($_GET['search'])) {
         echo "<script>removeCheckbox('.filter-assets');
         removeCheckbox('.filter-bldg');
         removeCheckbox('.filter-room');
-        document.getElementById('search-label') = 'Users(Email, Department ID)';</script>";
+        document.getElementById('search-label').textContent = 'Users(Email, Department ID)';</script>";
         if ($tag === 'ALL') {
             $user_count_query = "SELECT COUNT(*) as Rows FROM user_table";
             $count_stmt = $dbh->prepare($user_count_query);
