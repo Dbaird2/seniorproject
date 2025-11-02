@@ -285,7 +285,7 @@ function checkOut($data) {
 function transfer($data) {
     global $dbh;
     $email = $_SESSION['email'];
-    $audit_dept = $data['dept_id'];
+    $audit_dept = $_SESSION['deptid'];
 
     $subdomain = "csub";
     // SUBMITTER INFO
@@ -340,48 +340,49 @@ function transfer($data) {
     $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) ILIKE :name";
     $dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
 
+    if ($data['in_bldg'] === 'Yes') {
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['where'];
+    } else {
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'no';
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
+    }
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
+    if (!empty($data['room']) && !empty($data['bldg'])) {
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['hXHmCy0mek']['label'] = $data['bldg'];
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['zZztPX8Pcw'] = $data['room'];
+    }
+    $variables['data']['t7mH-1FlaO']['data'][0]['id'] = '0';
+    $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
+    $it_stmt = $dbh->prepare($it_select);
+    $it_stmt->execute([":tag"=>$data['tag']]);
+    $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
+    $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
+        $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
+    if (!empty($data['notes'])) {
+        $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['notes'];
+    }
+    if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
+        $variables['data']['xPQtXjuWnk']['id'] = 'yes';
+        $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
+        $it = true;
+    } 
     if ($data['form_type'] === 'dept') {
 
-        $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
-        $it_stmt = $dbh->prepare($it_select);
-        $it_stmt->execute([":tag"=>$asset['tag']]);
-        $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
-        if (!empty($data['notes'])) {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['notes'];
-        }
-        if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
-            $variables['data']['xPQtXjuWnk']['id'] = 'yes';
-            $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
-            $it = true;
-        } 
-
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
-        if ($data['in_bldg'] === 'Yes') {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['where'];
-        } else {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'no';
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
-        }
-        if (!empty($data['room']) && !empty($data['bldg'])) {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['bldg'];
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['zZztPX8Pcw'] = $data['room'];
-        }
         $variables['data']['K3p03X2Jvx'] = $data['why'];
-        $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
         $dept_stmt = $dbh->prepare($get_dept_info);
         $dept_stmt->execute([':dept'=>$data['dept_name']]);
         $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
         $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['label'] = $data['dept_name'];
         $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $data['dept_name'];
         $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
-        $variables['data']['t7mH-1FlaO']['data'][0]['id'] = '0';
         if (!$it) {
             $variables['data']['xPQtXjuWnk']['id'] = 'no';
             $variables['data']['xPQtXjuWnk']['label'] = 'No';
         }
+    }
 
         // GET CURRENT MANAGER INFO
         $stmt = $dbh->prepare($dept_select);
@@ -505,164 +506,6 @@ if (preg_match($email_regex, $
         $resp_data = json_decode($resp, true);
         echo json_encode(['data'=>$data]);
         curl_close($curl);
-    } else if ($data['form_type'] === 'location') {
-        $variables['data']['t7mH-1FlaO']['data'][0]['id'] = '0';
-        $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
-        $it_stmt = $dbh->prepare($it_select);
-        $it_stmt->execute([":tag"=>$data['tag']]);
-        $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
-        if (!empty($data['notes'])) {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['notes'];
-        }
-        if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
-            $variables['data']['xPQtXjuWnk']['id'] = 'yes';
-            $variables['data']['xPQtXjuWnk']['label'] = 'Yes';
-            $it = true;
-        } 
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
-        if ($data['in_bldg'] === 'Yes') {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'yes';
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['qtAPPojYXt'] = $data['where'];
-        } else {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['id'] = 'no';
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['93UQc2my9e']['label'] = $data['in_bldg'];
-        }
-        if (!empty($data['room']) && !empty($data['bldg'])) {
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['bldg'];
-            $variables['data']['t7mH-1FlaO']['data'][0]['data']['zZztPX8Pcw'] = $data['room'];
-        }
-        $variables['data']['K3p03X2Jvx'] = $data['why'];
-        $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
-        $dept_stmt = $dbh->prepare($get_dept_info);
-        $dept_stmt->execute([':dept'=>$data['dept_name']]);
-        $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['label'] = $data['dept_name'];
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['AkMeIWWhoj'] = $data['dept_name'];
-        $variables['data']['t7mH-1FlaO']['data'][0]['data']["U73d7kPH5b"]['data']['IOw4-l7NsM'] = $dept_info['dept_id'];
-        if (!$it) {
-            $variables['data']['xPQtXjuWnk']['id'] = 'no';
-            $variables['data']['xPQtXjuWnk']['label'] = 'No';
-        }
-        // GET CURRENT MANAGER INFO
-        $stmt = $dbh->prepare($dept_select);
-        $stmt->execute([':id'=>$_SESSION['deptid']]);
-        $current_manager = $stmt->fetchColumn();
-/*
-$email_regex = '/\b(@)\b/i';
-if (preg_match($email_regex, $
- */
-        $current_manager_info = getNameInfo($current_manager, $audit_dept);
-        $variables['data']['u7YkM8hmb-']['displayName'] = $current_manager_info['displayName'];
-        $variables['data']['u7YkM8hmb-']['email'] = $current_manager_info['email'];
-        $variables['data']['u7YkM8hmb-']['firstName'] = $current_manager_info['firstName'];
-        $variables['data']['u7YkM8hmb-']['id'] = $current_manager_info['id'];
-        $variables['data']['u7YkM8hmb-']['label'] = $current_manager_info['label'];
-        $variables['data']['u7YkM8hmb-']['lastName'] = $current_manager_info['lastName'];
-        $variables['data']['u7YkM8hmb-']['schoolId'] = $current_manager_info['schoolId'];
-        $variables['data']['u7YkM8hmb-']['username'] = $current_manager_info['username'];
-
-
-        // MANAGER
-        $manager = trim($dept_info['dept_manager']);
-        $manager_info = getNameInfo($manager, $dept_info['dept_id']);
-
-        $variables['data']['SZ24nXDBVk']['displayName'] = $manager_info['displayName'];
-        $variables['data']['SZ24nXDBVk']['email'] = $manager_info['email'];
-        $variables['data']['SZ24nXDBVk']['firstName'] = $manager_info['firstName'];
-        $variables['data']['SZ24nXDBVk']['id'] = $manager_info['id'];
-        $variables['data']['SZ24nXDBVk']['label'] = $manager_info['label'];
-        $variables['data']['SZ24nXDBVk']['lastName'] = $manager_info['lastName'];
-        $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
-        $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
-
-        echo json_encode(['variables'=>$variables]);
-
-
-        $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-        $headers = array(
-            "Content-Type: application/json",
-            "Authorization: Bearer {$apikey}",
-        );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        $form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-        "appId": "68d09e38d599f1028a08969a"
-    }}';
-
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
-
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-        $resp = curl_exec($curl);
-
-        $decoded_data = json_decode($resp, true);
-        $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-        curl_close($curl);
-
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-        $get_draft_id = json_encode([
-            'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-            'variables' => [
-                'actionId' => $action_id
-            ]
-        ]);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        $resp = curl_exec($curl);
-
-        $decoded_data = json_decode($resp, true);
-        $document_id = $decoded_data['data']['action']['document']['id'];
-        $action_id = $decoded_data['data']['action']['id'];
-
-        curl_close($curl);
-
-
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        if (!$action_id || !$document_id) {
-            die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-        }
-
-        $submitter_sig = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
-        $variables['data']['ne3KPx1Wy3'] = $submitter_sig;
-
-        $variables['documentId'] = $document_id;
-        $variables['actionId'] = $action_id;
-        $variables['status'] = 'completed';
-
-        $ms_time = round(microtime(true) * 1000);
-        $submit_form = json_encode([
-            'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-        { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-        'variables' => $variables,
-        ]);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
-
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-        $resp = curl_exec($curl);
-        $resp_data = json_decode($resp, true);
-        echo json_encode(['data'=>$data]);
-        curl_close($curl);
-    }
 
 
     echo json_encode(['form'=>$submit_form, 'resp data'=>$resp_data]);

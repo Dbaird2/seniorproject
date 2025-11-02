@@ -785,6 +785,7 @@ async function sendForm(type)
             dept_name: dept,
             in_bldg: in_bldg,
             where: bldg_text,
+            bldg: bldg,
             room: room,
             why: why,
             form: 'transfer',
