@@ -7,10 +7,10 @@ function getNameInfo($person_name, $dept_id) {
     $get_name_stmt = $dbh->prepare($query);
     $get_name_stmt->execute([":full_name"=>'%'.$person_name.'%']);
     $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
-    if ($person_info) {
+    if (!$person_info) {
         searchName($person_name, $apikey, $dept_id);
         $get_name_stmt = $dbh->prepare($query);
-        $get_name_stmt->execute([":full_name" => $person_name]);
+        $get_name_stmt->execute([":full_name" => '%'.$person_name.'%']);
         $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
     }
     if ((empty($person_info['form_id']) || empty($person_info['school_id']))) {

@@ -770,7 +770,7 @@ async function sendForm(type)
     } else if (form_type === 'transfer') {
         const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
         const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
-        const bldg_text = document.querySelector('transfer-bldg-text-'+tag).value;
+        const bldg_text = document.getElementById('transfer-bldg-text-'+tag).value;
         
         const dept = document.getElementById("transfer-dept-"+tag).value;
         const bldg = document.getElementById("transfer-bldg-"+tag).value;

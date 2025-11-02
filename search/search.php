@@ -122,6 +122,11 @@ if ($search === NULL) {
         </div>
         <div class="section filter-assets">
             <label class="filter-assets">Price Type</label>
+        </div>
+
+        <div class="section filter-assets">
+
+            <label class="filter-assets">Price Amount</label>
             <select class="filter-assets" name="price-operator" id="price-filter">
                 <option value=">">&gt;</option>
                 <option value="<">&lt;</option>
@@ -129,11 +134,6 @@ if ($search === NULL) {
                 <option value=">=">&ge;</option>
                 <option value="<=">&le;</option>
             </select>
-        </div>
-
-        <div class="section filter-assets">
-
-            <label class="filter-assets">Price Amount</label>
             <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
         </div>
         <div class="section filter-assets">

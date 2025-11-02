@@ -228,10 +228,10 @@ function checkOut($data) {
     $custodian_stmt = $dbh->prepare($custodian);
     $custodian_stmt->execute([':dept_id' => $audit_dept]);
     $custodian_name = $custodian_stmt->fetchColumn();
-    echo 'Custodian' . $custodian_name . '<br>';
+    echo 'Custodian ' . $custodian_name . '<br>';
 
     $custodian_info = getNameInfo($custodian_name, $audit_dept);
-    echo json_encode([$custodian_info]);
+    echo json_encode(['custodian info' => $custodian_info, 'custodian name' => $custodian_name]);
     $check_type_date = $date->format('m/d/Y');
     if ($form_type === 'Returning Equipment') {
         $variables['data']['73dNIwQS0c'] = $check_type_date;
