@@ -228,7 +228,7 @@ function checkOut($data) {
     $custodian_stmt = $dbh->prepare($custodian);
     $custodian_stmt->execute([':dept_id' => $audit_dept]);
     $custodian_name = $custodian_stmt->fetchColumn();
-    echo $custodian_name . '<br>';
+    echo 'Custodian' . $custodian_name . '<br>';
 
     $custodian_info = getNameInfo($custodian_name, $audit_dept);
     echo json_encode([$custodian_info]);

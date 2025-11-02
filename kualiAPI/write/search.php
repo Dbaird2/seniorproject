@@ -19,6 +19,15 @@ function searchName($search_name = '', $apikey = '', $dept_id = '')
 {
     include_once __DIR__ . "/../../vendor/autoload.php";
     global $dbh;
+    $select = "SELECT dept_id[1], f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([':full_name'=>$search_name]);
+    $info = $stmt->fetch();
+    if ($info) {
+        if (!empty($info['form_id']) && !empty($info['school_id'])) {
+            return;
+        }
+    }
     $name_array = explode(' ', $search_name);
     $user_f_name = $name_array[0];
     $user_l_name = $name_array[1];
