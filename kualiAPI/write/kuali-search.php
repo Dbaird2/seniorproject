@@ -195,7 +195,7 @@ function checkOut($data) {
         echo "</pre>";
         $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
         $stmt = $dbh->prepare($get_dept_name);
-        $stmt->execute([':id'=>$data['dept_id']]);
+        $stmt->execute([':id'=>$audit_dept]);
         $new_dept_name = $stmt->fetchColumn();
         if ($new_dept_name) {
             $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $new_dept_name;
