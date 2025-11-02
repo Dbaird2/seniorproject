@@ -17,11 +17,13 @@ $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 }
 function searchName($search_name = '', $apikey = '', $dept_id = '')
 {
+    $search_name = trim($search_name);
+    $dept_id = trim($dept_id);
     include_once __DIR__ . "/../../vendor/autoload.php";
     global $dbh;
-    $select = "SELECT dept_id[1], f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) = :full_name";
+    $select = "SELECT dept_id[1], f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) ILIKE :full_name";
     $stmt = $dbh->prepare($select);
-    $stmt->execute([':full_name'=>$search_name]);
+    $stmt->execute([':full_name'=>'%'.$search_name.'%']);
     $info = $stmt->fetch();
     if ($info) {
         if (!empty($info['form_id']) && !empty($info['school_id'])) {
@@ -152,6 +154,8 @@ function searchName($search_name = '', $apikey = '', $dept_id = '')
 }
 function searchEmail($email = '', $apikey = '', $dept_id = '')
 {
+    $email = trim($email);
+    $dept_id = trim($dept_id);
     include_once __DIR__ . "/../../vendor/autoload.php";
     global $dbh;
     $email_array = explode('@', $email);

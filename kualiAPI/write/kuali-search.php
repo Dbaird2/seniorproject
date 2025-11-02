@@ -29,9 +29,9 @@ function checkOut($data) {
     $note = trim($data['notes']);
     $condition = trim($data['condition']);
     if (!empty(trim($data['borrower']))) {
-        $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :borrower";
+        $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) ILIKE :borrower";
         $stmt = $dbh->prepare($select);
-        $stmt->execute([':borrower'=>$data['borrower']]);
+        $stmt->execute([':borrower'=>'%'.$data['borrower'].'%']);
         $audit_dept = $stmt->fetchColumn();
     } else {
         $audit_dept = $_SESSION['deptid'];
@@ -337,7 +337,7 @@ function transfer($data) {
     $variables['data']['R-jIGrtlfO'] = $now->format('m/d/Y');
 
     $email_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE email = :email";
-    $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) = :name";
+    $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) ILIKE :name";
     $dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
 
     if ($data['form_type'] === 'dept') {
