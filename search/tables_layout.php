@@ -706,6 +706,7 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
+        const item_type = document.getElementById('check-item-type-'+tag).value;
         url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kuali-search.php';
         const out_res = await fetch(url, {
         method: 'POST',
@@ -714,6 +715,7 @@ async function sendForm(type)
             form: 'check-out',
             borrower: borrower,
             condition: condition,
+            item_type: item_type,
             notes: notes,
             who: check_type
         })
@@ -737,6 +739,7 @@ async function sendForm(type)
         const borrower = document.getElementById("someone-else-"+tag).value;
         const condition = document.getElementById("check-condition-"+tag).value;
         const notes = document.getElementById("check-notes-"+tag).value;
+        const item_type = document.getElementById('check-item-type-'+tag).value;
         url = 'https://dataworks-7b7x.onrender.com/kualiAPI/write/kuali-search.php';
         const in_res = await fetch(url, {
         method: 'POST',
@@ -746,6 +749,7 @@ async function sendForm(type)
             borrower: borrower,
             condition: condition,
             notes: notes,
+            item_type: item_type,
             form: 'check-in'
         })
         });

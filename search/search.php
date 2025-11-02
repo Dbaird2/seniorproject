@@ -149,7 +149,7 @@ if ($search === NULL) {
 
 
     </div>
-    <div style="position: absolute;left: 50%;transform: translate(-50%,-50%);">
+    <div style="position: absolute;left: 50%;transform: translate(-50%,-50%);width:max-content;">
 
         <div class='checkbox-wrapper-13'>
 
