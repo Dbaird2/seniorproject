@@ -280,7 +280,7 @@ foreach ($all_bus as $bus) {
 <!-- -->
 
                                 <button type="submit" value="<?= $safe_tag ?>" name="delete-asset">Delete Asset</button>
-                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="submit">Send Form</button>
+                                <button onclick="sendForm(this)" data-tag="<?=$safe_tag?>" type="button">Send Form</button>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
