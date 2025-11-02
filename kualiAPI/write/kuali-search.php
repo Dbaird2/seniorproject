@@ -28,6 +28,16 @@ function checkOut($data) {
     $who = trim($data['who']);
     $note = trim($data['notes']);
     $condition = trim($data['condition']);
+    if (!empty(trim($data['borrower']))) {
+        $select = 'SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :borrower';
+        $stmt = $dbh->prepare($select);
+        $stmt->execute([':borrower'=>$data['borrower']]);
+        $audit_dept = $stmt->fetchColumn();
+    } else {
+        $audit_dept = $_SESSION['deptid'];
+    }
+
+
     $tag = $data['tag'];
     $asset_type = trim($data['item_type']);
     $now_array = new DateTime();
