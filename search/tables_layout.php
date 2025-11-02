@@ -769,7 +769,7 @@ async function sendForm(type)
 
     } else if (form_type === 'transfer') {
         const transfer_form_type = document.getElementById("transfer-form-type-"+tag).value;
-        const in_building = document.getElementById("transfer-in-bldg-"+tag).value;
+        const in_bldg = document.getElementById("transfer-in-bldg-"+tag).value;
         const bldg_text = document.getElementById('transfer-bldg-text-'+tag).value;
         
         const dept = document.getElementById("transfer-dept-"+tag).value;
@@ -784,7 +784,7 @@ async function sendForm(type)
             body: JSON.stringify({ tag: tag, 
             dept_name: dept,
             in_bldg: in_bldg,
-            in_bldg_why: bldg_text,
+            where: bldg_text,
             room: room,
             why: why,
             form: 'transfer',

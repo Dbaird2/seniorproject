@@ -120,9 +120,6 @@ if ($search === NULL) {
                 <option value="Disposed">Disposed</option>
             </select>
         </div>
-        <div class="section filter-assets">
-            <label class="filter-assets">Price Type</label>
-        </div>
 
         <div class="section filter-assets">
 
