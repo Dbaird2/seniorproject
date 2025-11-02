@@ -220,14 +220,13 @@ function checkOut($data) {
         $variables['data']['JXLJ_AOov-']['date'] = $now;
         $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_info['displayName'];
         $variables['data']['JXLJ_AOov-']['signatureType'] = 'type';
-        $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_info['signature'];
-        $variables['data']['JXLJ_AOov-']['userId'] = $submitter_into['userId'];
+        $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_info['signedName'];
+        $variables['data']['JXLJ_AOov-']['userId'] = $submitter_info['userId'];
         /*---------------------------------*/
     }
     $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
     $custodian_stmt = $dbh->prepare($custodian);
-    $custodian_stmt->execute([':dept_id' => $data['dept_id']]);
-    echo $data['dept_id'] . '<br>';
+    $custodian_stmt->execute([':dept_id' => $audit_dept]);
     $custodian_name = $custodian_stmt->fetchColumn();
     echo $custodian_name . '<br>';
 
