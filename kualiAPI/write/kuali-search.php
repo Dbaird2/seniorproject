@@ -29,7 +29,7 @@ function checkOut($data) {
     $note = trim($data['notes']);
     $condition = trim($data['condition']);
     if (!empty(trim($data['borrower']))) {
-        $select = 'SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :borrower';
+        $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :borrower";
         $stmt = $dbh->prepare($select);
         $stmt->execute([':borrower'=>$data['borrower']]);
         $audit_dept = $stmt->fetchColumn();
