@@ -31,14 +31,14 @@ $secret    = null;
 if ($row && !empty($row['totp_secret'])) {
     // User already has a TOTP secret, load it
     $totp = TOTP::create(
-        secret: $user['totp_secret'],
+        secret: $row['totp_secret'],
         period: 30,
         digits: 6
     );
     $totp->setLabel($email);
     $totp->setIssuer('Dataworks');
     if (empty($user['totp_confirmed_at'])) {
-        $secret  = $user['totp_secret'];
+        $secret  = $row['totp_secret'];
         $otpauth = $totp->getProvisioningUri();
         $builder = new Builder(
             writer: new PngWriter(),
