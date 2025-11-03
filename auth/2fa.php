@@ -7,9 +7,20 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-
+$email = '';
+if (!empty($_GET['email'])) {
+    $id = trim($_GET['id']);
+    $email = trim($_GET['email']);
+    $dept_id = trim($_GET['dept_id']);
+    $role = trim($_GET['role']);
+} else {
+    $id = trim($_POST['id']);
+    $email = trim($_POST['email']);
+    $dept_id = trim($_POST['dept_id']);
+    $role = trim($_POST['role']);
+}
 $stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
-$stmt->bindParam(':email', $_GET['email'] ?? $_POST['email']);
+$stmt->bindParam(':email', $email);
 $stmt->execute();
 $row = $stmt->fetch();
 
@@ -24,7 +35,7 @@ if ($row && !empty($row['totp_secret'])) {
         period: 30,
         digits: 6
     );
-    $totp->setLabel($_GET['email'] ?? $_POST['email']);
+    $totp->setLabel($email);
     $totp->setIssuer('Dataworks');
     if (empty($user['totp_confirmed_at'])) {
         $secret  = $user['totp_secret'];
@@ -48,12 +59,12 @@ if ($row && !empty($row['totp_secret'])) {
         period: 30,       // 30s default
         digits: 6        // 6-digit codes
     );
-    $totp->setLabel($_GET['email'] ?? $_POST['email']);
+    $totp->setLabel($email);
     $totp->setIssuer('Dataworks'); // shows as the “account provider” in apps
     $secret = $totp->getSecret();
     $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
     $stmt->bindParam(':secret', $secret);
-    $stmt->bindParam(':email', $_GET['email'] ?? $_POST['email']);
+    $stmt->bindParam(':email', $email);
     $stmt->execute();
     $otpauth = $totp->getProvisioningUri();
     $builder = new Builder(
@@ -73,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = trim($_POST['code'] ?? '');
     if ($code !== '') {
         if ($totp->verify($code)) {
-            $_SESSION['id'] = trim($_POST['id']);
-            $_SESSION['role'] = trim($_POST['role']);
-            $_SESSION['email'] = trim($_POST['email']);
-            $_SESSION['deptid'] = trim($_POST['dept_id'], '{}');
+            $_SESSION['id'] = $id;
+            $_SESSION['role'] = $role;
+            $_SESSION['email'] = $email;
+            $_SESSION['deptid'] = trim($dept_id, '{"}');
             header('Location: ../home.php');
             exit;
         } else {
@@ -110,7 +121,7 @@ $qrDataUri = $result->getDataUri(); // use in <img src="<?= htmlspecialchars($qr
         <input type="hidden" name="user_id" value="<?= (int)$userId ?>">
         <input type="hidden" name="id" value="<?= $_GET['id'] ?? $_POST['id'] ?>">
         <input type="hidden" name="role" value="<?= $_GET['role'] ?? $_POST['role'] ?>">
-        <input type="hidden" name="email" value="<?= $_GET['email'] ?? $_POST['email'] ?>">
+        <input type="hidden" name="email" value="<?= $email?>">
         <input type="hidden" name="dept_id" value="<?= $_GET['dept_id'] ?? $_POST['dept_id'] ?>">
         <button type="submit">Verify & Finish</button>
     </form>
