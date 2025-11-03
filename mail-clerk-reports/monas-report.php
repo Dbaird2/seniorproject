@@ -384,28 +384,88 @@ if (isset($_POST['submit'])) {
 <style>
     * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
     .mona-report {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+        background: linear-gradient(135deg, #003DA5 0%, #002d7a 50%, #001a47 100%);
         min-height: 100vh;
-
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
     }
 
     .form {
-        color: #333;
-        place-self: center;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 61, 165, 0.2);
+        max-width: 500px;
+        width: 100%;
+        border-left: 5px solid #FFB81C;
+    }
+
+    .form form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    label {
+        color: #003DA5;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    input[type="file"],
+    input[type="number"] {
+        padding: 12px;
+        border: 2px solid #003DA5;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+    input[type="file"]:focus,
+    input[type="number"]:focus {
+        outline: none;
+        border-color: #FFB81C;
+        box-shadow: 0 0 0 3px rgba(255, 184, 28, 0.1);
+    }
+
+    button {
+        background: linear-gradient(135deg, #003DA5 0%, #FFB81C 100%);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(135deg, #FFB81C 0%, #003DA5 100%);
+        box-shadow: 0 4px 12px rgba(0, 61, 165, 0.3);
+    }
+
+    button:active {
+        transform: scale(0.98);
     }
 </style>
 
 <body class="mona-report">
     <div class="form">
         <form action="monas-report.php" enctype="multipart/form-data" method="POST">
-            <label for="file">Upload Scanner Report</label><br>
+            <label for="file">Upload Scanner Report</label>
             <input type="file" name="file" id="file_name" accept=".xlsx, .xls" required><br>
-            <label for="ref-file">Upload Reference File</label><br>
+            <label for="ref-file">Upload Reference File</label>
             <input type="file" name="ref-file" id="ref_file_name" accept=".xlsm" required><br>
+            <label for="postage-fee">Postage Fee</label>
             <input type="number" name="postage-fee" step="0.001" required>
             <button name="submit" value="good">Submit</button>
         </form>
@@ -413,3 +473,4 @@ if (isset($_POST['submit'])) {
 </body>
 
 </html>
+
