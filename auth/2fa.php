@@ -8,7 +8,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 
-$stmt = $dbh->prepare("SELECT totp_secret FROM users WHERE email = :email");
+$stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
 $stmt->bindParam(':email', $_GET['email']);
 $stmt->execute();
 $row = $stmt->fetch();
@@ -51,7 +51,7 @@ if ($row && !empty($row['totp_secret'])) {
     $totp->setLabel($_POST['email']);
     $totp->setIssuer('Dataworks'); // shows as the “account provider” in apps
     $secret = $totp->getSecret();
-    $stmt = $dbh->prepare("UPDATE users SET totp_secret = :secret WHERE email = :email");
+    $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
     $stmt->bindParam(':secret', $secret);
     $stmt->bindParam(':email', $_POST['email']);
     $stmt->execute();
