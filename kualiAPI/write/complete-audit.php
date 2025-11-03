@@ -29,6 +29,7 @@ $transfer = $lsd = $in_progress = $done = false;
 foreach ($audit_info as $index1=>$form) {
     $single_form = explode(',', $form['check_forms']);
     foreach ($single_form as $index=>$single_array) {
+        echo '<br>' . $single_array . '<br>';
         if ($index === 0) {
             $id = $single_array;
             continue;
@@ -66,8 +67,10 @@ foreach ($audit_info as $index1=>$form) {
     }
     if ($in_progress) {
         $done = checkForm($id, $single_array, $app_id);
+        echo 'Done form status: ' . $done . '<br>';
     }
     if (!$done) {
+        echo 'not done <br>';
         $submit_audit = false;
         break;
     }
@@ -81,10 +84,12 @@ foreach ($audit_info as $index1=>$form) {
             $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($single_array);
         }
     }
+    $in_progress = false;
+    $transfer = $lsd = false;
 }
-$in_progress = false;
-$transfer = $lsd = false;
 if (!$submit_audit) {
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+    exit;
     die('Forms are not done');
 }
 
