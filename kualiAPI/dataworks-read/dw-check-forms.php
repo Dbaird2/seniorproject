@@ -81,6 +81,9 @@ function checkForm($id, $tag, $app_id, $form) {
             if ($status === 'Complete') {
                 $form_status = 'complete';
             }
+            if ($status === 'Withdrawn') {
+                $form_status = 'withdrawn';
+            }
 
             $form = trim($form, '{}"');
             if (preg_match($tag_regex, $form)) {
