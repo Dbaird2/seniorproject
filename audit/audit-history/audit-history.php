@@ -182,7 +182,7 @@ include_once("../../config.php");
         echo '<div class="modal-content">';
         echo "<span class='close' onclick='closeModal(".json_encode($dept).",".json_encode($curr_index).")'>&times;</span>";
         echo "<h3 style='color: #003DA5; border-bottom: 2px solid #FFB81C; padding-bottom: 10px; margin-top: 0;'>Audit Form Details</h3>";
-        if (empty($check_forms)&& trim($check_forms, '{"}') !== '') {
+        if (empty($check_forms) || trim($check_forms, '{"}') === '') {
             echo "<p style='color: #003DA5;'>No Loss/Stolen/Damaged Reports Submitted</p>";
             echo "<p style='color: #003DA5;'>No Transfer Reports Submitted</p>";
         } else {
@@ -193,6 +193,7 @@ include_once("../../config.php");
             $SPA = "/^SP\d+$/";
             $trim_forms = trim($check_forms, '{}');
             $form_array = explode(',', $trim_forms);
+            var_dump($form_array);
             $counter = 0;
             if ($form_array[1] === 'lsd') {
                 echo '<span style="color: #003DA5; font-weight: 600;">Loss/Stolen/Damaged Form: </span>';
