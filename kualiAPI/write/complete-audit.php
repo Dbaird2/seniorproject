@@ -110,7 +110,7 @@ if (empty($school_id) || empty($form_id)) {
     $signature = $submitter_info['signature'] ?? $full_name;
     $form_id = $submitter_info['form_id'] ?? '';
 }
-$variables['E5WDwBqoR4'] = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
+$variables['data']['E5WDwBqoR4'] = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 
 
 $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, dept_manager FROM department d WHERE dept_id = :dept_id";
