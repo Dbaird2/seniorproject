@@ -70,14 +70,15 @@ foreach ($audit_info as $index1=>$form) {
             }
         }
     }
-    if ($done) {
+    if ($done === 'complete') {
         foreach ($tags as $tag) {
             if ($transfer) {
                 $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
                 $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
-                $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++;
+                $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
             } else if ($lsd) {
                 $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
+                $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
             }
         }
     }

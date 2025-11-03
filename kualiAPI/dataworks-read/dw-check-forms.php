@@ -99,7 +99,7 @@ function checkForm($id, $tag, $app_id, $form) {
             $update = 'UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :in_progress) WHERE audit_id = :aid AND dept_id = :dept_id';
             $stmt = $dbh->prepare($update);
             $stmt->execute([':in_progress'=>$form, ':aid'=>$audit_id, ':dept_id'=>$dept_id, ]);
-            return true;
+            return $form_status;
         }
     }
     return false;
