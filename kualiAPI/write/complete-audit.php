@@ -2,6 +2,7 @@
 include_once '../../config.php';
 include_once "search.php";
 include_once "get-info.php";
+include_once "../dataworks-read/dw-check-forms.php";
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
@@ -37,6 +38,9 @@ foreach ($audit_info as $index1=>$form) {
     if ($single_form[2] === 'in-progress') {
         $progress = true;
     }
+    if ($single_form[2] === 'complete') {
+        $done = true;
+    }
 
     if ($single_form[2] === 'transfer') {
         $transfer = true;
@@ -61,19 +65,23 @@ foreach ($audit_info as $index1=>$form) {
             if (!$done) {
                 $submit_audit = false;
                 break;
+            } else {
+                break;
             }
         }
     }
-    foreach ($tags as $tag) {
-        if ($transfer) {
-            $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
-            $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
-            $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++;
-        } else if ($lsd) {
-            $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
+    if ($done) {
+        foreach ($tags as $tag) {
+            if ($transfer) {
+                $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
+                $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
+                $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++;
+            } else if ($lsd) {
+                $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
+            }
         }
     }
-    $progress = false;
+    $progress = $done = false;
     $transfer = $lsd = false;
 }
 if (!$submit_audit) {

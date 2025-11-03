@@ -1,5 +1,5 @@
 <?php
-function checkForm($id, $tag, (string)$app_id) {
+function checkForm($id, $tag, $app_id) {
     global $dept_id, $dept_name, $audit_id, $dbh, $apikey, $form_info;
     $select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
     $select_stmt = $dbh->query($select);
