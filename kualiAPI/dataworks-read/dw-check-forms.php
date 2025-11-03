@@ -1,6 +1,7 @@
 <?php
 function checkForm($id, $tag, $app_id) {
-    global $dept_id, $dept_name, $audit_id, $dbh, $apikey, $form_info;
+    global $dept_id, $dept_name, $audit_id, $dbh, $apikey, $form['check_forms'];
+    $form = $form['check_forms'];
     $select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
     $select_stmt = $dbh->query($select);
     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,6 +66,7 @@ function checkForm($id, $tag, $app_id) {
     $edges = $decode_true['data']['app']['documentConnection']['edges'];
     $tag_regex = '/\b('.$tag.')\b/i';
     $form_status = '';
+    $select = "SELECT unnest(check_forms) as form_id FROM audit_history WHERE dept_id = :dept_id AND audit_id = :id";
     foreach ($edges as $index => $edge) {
         $update_time = $edge['node']['meta']['createdAt'];
         $form_id = $edge['node']['id'];
@@ -81,13 +83,10 @@ function checkForm($id, $tag, $app_id) {
                 $form_status = 'complete';
             }
 
-            foreach ($array as $form_index => $form) {
-                $form = trim($form, '{}"');
-                if (preg_match($tag_regex, $form)) {
-                    $new_form = str_replace('in-progress', $form_status, $form);
-                    break;
-                }
-                echo "<br>" . $new_form . "<br>";
+            $form = trim($form, '{}"');
+            if (preg_match($tag_regex, $form)) {
+                $new_form = str_replace('in-progress', $form_status, $form);
+                break;
             }
             $update = 'UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
             $stmt = $dbh->prepare($update);
