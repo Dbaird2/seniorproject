@@ -195,17 +195,9 @@ include_once("../../config.php");
             $form_array = explode(',', $trim_forms);
             $counter = 0;
             if ($form_array[1] === 'lsd') {
-                if ($index > 1) {
-                    echo '<br>';
-                }
                 echo '<span style="color: #003DA5; font-weight: 600;">Loss/Stolen/Damaged Form: </span>';
-                continue;
             } else if ($form_array[1] === 'transfer') {
-                if ($index > 1) {
-                    echo '<br>';
-                }
                 echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form </span>';
-                continue;
             }
             if ($form_array[2] === 'in-progress') {
                 $color = '#FFFF00';
@@ -215,7 +207,6 @@ include_once("../../config.php");
             <span style='color: <?= $color ?> ;'>In Progress </span>
 <?php
                 echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                continue;
             } else if ($form_array[2] === 'complete') {
                 $color = '#00FF00';
                 echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
@@ -224,7 +215,6 @@ include_once("../../config.php");
             <span style='color: <?= $color ?> ;'>Complete </span>
 <?php
                 echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                continue;
             } else if ($form_array[2] === 'withdrawn') {
                 $color = '#FF2F00';
                 echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
@@ -233,7 +223,6 @@ include_once("../../config.php");
             <span style='color: <?= $color ?> ;'>Withdrawn </span>
 <?php
                 echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                continue;
             } else if ($form_array[2] === 'denied') {
                 $color = '#FF0000';
                 echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
@@ -241,7 +230,6 @@ include_once("../../config.php");
             <span style='color: <?= $color ?> ;'>Denied </span>
             <span style="font-weight:700; color: #003DA5;"> Tags </span>
 <?php
-                continue;
             }
             $tag_array = array_slice($form_array, 3);
             foreach ($tag_array as $tag) {
@@ -254,6 +242,7 @@ include_once("../../config.php");
                     echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
             }
+            echo '<br>';
         }
         echo '</div>';
         echo '</div>';
