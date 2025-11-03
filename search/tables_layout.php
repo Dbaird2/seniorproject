@@ -271,7 +271,7 @@ foreach ($all_bus as $bus) {
     <div class="form-field-group room-dept-change-<?=$safe_tag?>" style="display:none;">
         <label>New Building</label>
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
-        <input class="error-label" id="transfer-bldg-feedback-<?=$safe_tag?>">
+        <label class="error-label" id="transfer-bldg-feedback-<?=$safe_tag?>" ></label>
         <label>New Room</label>
         <input type="text" id="transfer-room-<?=$safe_tag?>">
         <input class="error-label" id="transfer-room-feedback-<?=$safe_tag?>">
