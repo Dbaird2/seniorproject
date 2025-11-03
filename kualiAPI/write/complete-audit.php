@@ -25,75 +25,60 @@ if (!$audit_info) {
 }
 // GET TAGS
 $submit_audit = true;
-$transfer = $lsd = $in_progress = $done = false;
+$transfer = $lsd = $in_progress = $done = $progress = false;
+$count = 1;
 foreach ($audit_info as $index1=>$form) {
     $single_form = explode(',', $form['check_forms']);
-    echo '<pre>';
-    var_dump($form);
-    echo '</pre>';
-    foreach ($single_form as $index=>$single_array) {
-        echo '<br>Single Array value: ' . $single_array . '<br>';
-        if ($index === 0) {
-            $id = $single_array;
-            continue;
-        }
-        if ($single_form === 'denied' || $single_form === 'withdrawn' ) {
-            break;
-        }
+    if ($single_form[2] === 'denied' || $single_form[2] === 'withdrawn' ) {
+        continue;
+    }
+    $single_form[0];
+    $single_form[1];
+    if ($single_form[2] === 'in-progress') {
+        $progress = true;
+    }
 
-        if ($single_array === 'transfer') {
-            $transfer = true;
-            $app_id = '68c73600df46a3027d2bd386';
-            continue;
-        } else {
-            break;
-        }
-        if ($single_array === 'rtransfer') {
-            $transfer = true;
-            $app_id = '68d09e38d599f1028a08969a';
-            continue;
-        }
-        if ($single_array === 'lsd') {
-            $lsd = true;
-            $app_id = '68d09e41d599f1028a9b9457';
-            continue;
-        }
-        if ($single_array === 'rlsd') {
-            $lsd = true;
-            $app_id = '68e94e8a58fd2e028d5ec88f';
-            continue;
-        }
-        if ($single_array === 'in-progress') {
-            $in_progress = true;
-            continue;
-        }
-        if ($in_progress) {
-            $done = checkForm($id, $single_array, $app_id);
-            echo 'Done form status: ' . $done . '<br>';
-        }
-        if (!$done) {
-            echo 'not done <br>';
-            $submit_audit = false;
-            break;
-        }
-
-        if ($index >= 3) {
-            if ($transfer) {
-                $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($single_array);
-                $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
-                $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $index1;
-            } else {
-                $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($single_array);
+    if ($single_form[2] === 'transfer') {
+        $transfer = true;
+        $app_id = '68c73600df46a3027d2bd386';
+    }
+    if ($single_form[2] === 'rtransfer') {
+        $transfer = true;
+        $app_id = '68d09e38d599f1028a08969a';
+    }
+    if ($single_form[2] === 'lsd') {
+        $lsd = true;
+        $app_id = '68d09e41d599f1028a9b9457';
+    }
+    if ($single_form[2] === 'rlsd') {
+        $lsd = true;
+        $app_id = '68e94e8a58fd2e028d5ec88f';
+    }
+    $tags = array_slice($single_form, 3);
+    if ($progress) {
+        foreach ($tags as $tag) {
+            $done = checkForm($single_form[0], $single_array, $app_id);
+            if (!$done) {
+                $submit_audit = false;
+                break;
             }
         }
     }
-    $in_progress = false;
+    foreach ($tags as $tag) {
+        if ($transfer) {
+            $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
+            $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
+            $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++;
+        } else if ($lsd) {
+            $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
+        }
+    }
+    $progress = false;
     $transfer = $lsd = false;
 }
 if (!$submit_audit) {
     header("Location: {$_SERVER['HTTP_REFERER']}");
     exit;
-    die('Forms are not done');
 }
 
 $subdomain = "csub";
