@@ -105,7 +105,7 @@ if ($data['form_type'] === 'dept') {
                     $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
                 }
                 if (!empty($asset['room']) && !empty($asset['bldg'])) {
-                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK'] = $asset['bldg'];
+                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK']['label'] = $asset['bldg'];
                     $variables['data']['t7mH-1FlaO']['data'][$index]['data']['zZztPX8Pcw'] = $asset['room'];
                 }
                 $variables['data']['K3p03X2Jvx'] = $asset['why'];
