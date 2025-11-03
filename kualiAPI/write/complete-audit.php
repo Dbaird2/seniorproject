@@ -61,7 +61,7 @@ foreach ($audit_info as $index1=>$form) {
     $tags = array_slice($single_form, 3);
     if ($progress) {
         foreach ($tags as $tag) {
-            $done = checkForm($single_form[0], $single_array, $app_id);
+            $done = checkForm($single_form[0], $tag, $app_id);
             if (!$done) {
                 $submit_audit = false;
                 break;
