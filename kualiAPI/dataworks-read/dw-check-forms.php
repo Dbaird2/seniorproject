@@ -89,9 +89,12 @@ function checkForm($id, $tag, $app_id) {
                 }
                 echo "<br>" . $new_form . "<br>";
             }
-            $update = 'UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :in-progress), check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
+            $update = 'UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
             $stmt = $dbh->prepare($update);
-            $stmt->execute([':in-progress'=>$form ':aid'=>$audit_id, ':dept_id'=>$dept_id, ':complete'=>$new_form]);
+            $stmt->execute([':aid'=>$audit_id, ':dept_id'=>$dept_id, ':complete'=>$new_form]);
+            $update = 'UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :in_progress) WHERE audit_id = :aid AND dept_id = :dept_id';
+            $stmt = $dbh->prepare($update);
+            $stmt->execute([':in_progress'=>$form, ':aid'=>$audit_id, ':dept_id'=>$dept_id, ]);
             return true;
         }
     }
