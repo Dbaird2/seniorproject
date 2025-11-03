@@ -6,7 +6,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $variables = [[]];
-if (isset($_GET['dept_id'])) {
+if (!isset($_GET['dept_id'])) {
     die('GET not set');
 }
 $dept_id = $_GET['dept_id'];
