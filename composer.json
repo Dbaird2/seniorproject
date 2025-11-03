@@ -8,6 +8,8 @@
         "botman/botman": "^2.8",
         "botman/driver-web": "^1.5",
         "mpdf/mpdf": "^8.2",
+        "spomky-labs/otphp": "^11.3",
+        "endroid/qr-code": "^6.0",
         "symfony/cache": "^7.3"
     }
 }
