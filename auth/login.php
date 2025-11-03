@@ -63,7 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
                 if ($stmt->execute([$user_check['email']])) {
-                    header("location: https://dataworks-7b7x.onrender.com/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role']."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
+                    header("location: https://dataworks-7b7x.onrender.com/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role'])."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
+
                 } else {
                     error_log("Error updating last_login");
                 }
