@@ -205,7 +205,7 @@ foreach ($all_bus as $bus) {
         </select>
     </div>
     <div class="form-field-group">
-        <label>Borrower</label>
+    <label id="someone-else-label-<?=$safe_tag?>">Borrower</label>
         <input id="someone-else-<?=$safe_tag?>" type="text" placeholder="Email of Borrower" style="display:none;">
     </div>
     <div class="form-field-group">
@@ -271,8 +271,10 @@ foreach ($all_bus as $bus) {
     <div class="form-field-group room-dept-change-<?=$safe_tag?>" style="display:none;">
         <label>New Building</label>
         <input type="search" list="bldg-names" id="transfer-bldg-<?=$safe_tag?>">
+        <input class="error-label" id="transfer-bldg-feedback-<?=$safe_tag?>">
         <label>New Room</label>
         <input type="text" id="transfer-room-<?=$safe_tag?>">
+        <input class="error-label" id="transfer-room-feedback-<?=$safe_tag?>">
     </div>
 </div>
 
@@ -651,14 +653,16 @@ function showFormType(form)
 
     console.log(tag, type_value);
     if (type_value === 'check-out' || type_value === 'check-in') {
-        document.querySelector('.check-'+tag).style.display = 'inline';
+        document.querySelector('.check-'+tag).style.display = 'table-caption';
         const someone_else = document.getElementById('who-'+tag);
         console.log(someone_else);
         someone_else.addEventListener('change', () => {
             if (someone_else.value === 'someone-else') {
-                document.getElementById('someone-else-'+tag).style.display = 'inline';
+                document.getElementById('someone-else-'+tag).style.display = 'table-caption';
+                document.getElementById('someone-else-label-'+tag).style.display = 'table-caption';
             } else {
                 document.getElementById('someone-else-'+tag).style.display = 'none';
+                document.getElementById('someone-else-label-'+tag).style.display = 'none';
             }
         });
         hideUI('lsd', tag);
@@ -666,13 +670,13 @@ function showFormType(form)
         hideUI('psr', tag);
     }
     if (type_value === 'transfer') {
-        document.querySelector('.transfer-'+tag).style.display = 'inline';
+        document.querySelector('.transfer-'+tag).style.display = 'table-caption';
         const transfer_form_type_sel = document.getElementById("transfer-form-type-"+tag);
         hideUI('check', tag);
         const in_building = document.getElementById("transfer-in-bldg-"+tag);
         in_building.addEventListener('change', () => {
             if (in_building.value === 'No') {
-                document.querySelector('.transfer-bldg-text-'+tag).style.display = 'inline';
+                document.querySelector('.transfer-bldg-text-'+tag).style.display = 'table-caption';
             } else {
                 document.querySelector('.transfer-bldg-text-'+tag).style.display = 'none';
             }
@@ -685,12 +689,12 @@ function showFormType(form)
                 document.querySelector(".room-dept-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'location') {
-                document.querySelector(".room-dept-change-"+tag).style.display = 'inline';
+                document.querySelector(".room-dept-change-"+tag).style.display = 'table-caption';
                 document.querySelector(".dept-change-"+tag).style.display = 'none';
 
             } else if (transfer_form_type === 'dept') {
-                document.querySelector(".dept-change-"+tag).style.display = 'inline';
-                document.querySelector(".room-dept-change-"+tag).style.display = 'inline';
+                document.querySelector(".dept-change-"+tag).style.display = 'table-caption';
+                document.querySelector(".room-dept-change-"+tag).style.display = 'table-caption';
             }
         });
     }
