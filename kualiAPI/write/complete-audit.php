@@ -38,23 +38,23 @@ foreach ($audit_info as $index1=>$form) {
     if ($single_form[2] === 'in-progress') {
         $progress = true;
     }
-    if ($single_form[2] === 'complete') {
+    if ($single_form[1] === 'complete') {
         $done = true;
     }
 
-    if ($single_form[2] === 'transfer') {
+    if ($single_form[1] === 'transfer') {
         $transfer = true;
         $app_id = '68c73600df46a3027d2bd386';
     }
-    if ($single_form[2] === 'rtransfer') {
+    if ($single_form[1] === 'rtransfer') {
         $transfer = true;
         $app_id = '68d09e38d599f1028a08969a';
     }
-    if ($single_form[2] === 'lsd') {
+    if ($single_form[1] === 'lsd') {
         $lsd = true;
         $app_id = '68d09e41d599f1028a9b9457';
     }
-    if ($single_form[2] === 'rlsd') {
+    if ($single_form[1] === 'rlsd') {
         $lsd = true;
         $app_id = '68e94e8a58fd2e028d5ec88f';
     }
