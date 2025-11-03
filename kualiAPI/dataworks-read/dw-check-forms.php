@@ -2,7 +2,7 @@
 function checkForm($id, $tag, $app_id, $form) {
     echo $id . ' ' . $tag . ' ' . $app_id . ' ';
     echo '<pre>';
-    var_dump($form);
+    echo $form . '<br>';
     echo '</pre>';
     global $dept_id, $dept_name, $audit_id, $dbh, $apikey;
     $select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
@@ -92,7 +92,6 @@ function checkForm($id, $tag, $app_id, $form) {
             $form = trim($form, '{}"');
             if (preg_match($tag_regex, $form)) {
                 $new_form = str_replace('in-progress', $form_status, $form);
-                break;
             }
             $update = 'UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :complete) WHERE audit_id = :aid AND dept_id = :dept_id';
             $stmt = $dbh->prepare($update);
