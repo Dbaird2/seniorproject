@@ -15,10 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($user_check && password_verify($pw, $user_check['pw'])) {
+                /*
                 $_SESSION['id'] = $user_check['id'];
                 $_SESSION['role'] = $user_check['u_role'];
                 $_SESSION['email'] = $user_check['email'];
                 $_SESSION['deptid'] = trim($user_check['dept_id'], '{}');
+                 */
                 $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE email = ?";
                 $stmt = $dbh->prepare($stmt);
 
@@ -61,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
                 if ($stmt->execute([$user_check['email']])) {
-                    header("location: https://dataworks-7b7x.onrender.com/home.php");
+                    header("location: https://dataworks-7b7x.onrender.com/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role']."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
                 } else {
                     error_log("Error updating last_login");
                 }
