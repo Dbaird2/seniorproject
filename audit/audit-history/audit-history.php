@@ -193,7 +193,6 @@ include_once("../../config.php");
             $SPA = "/^SP\d+$/";
             $trim_forms = trim($check_forms, '{}');
             $form_array = explode(',', $trim_forms);
-            var_dump($form_array);
             $counter = 0;
             if ($form_array[1] === 'lsd') {
                 echo '<span style="color: #003DA5; font-weight: 600;">Loss/Stolen/Damaged Form: </span>';
@@ -240,7 +239,7 @@ include_once("../../config.php");
                     preg_match($CMP, $tag) || preg_match($FDN, $tag) ||
                     preg_match($SPA, $tag)
                 ) {
-                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
+                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $tag . ' </span>';
                 }
             }
             echo '<br>';
