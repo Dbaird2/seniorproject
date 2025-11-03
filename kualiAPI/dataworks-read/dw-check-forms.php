@@ -1,7 +1,6 @@
 <?php
-function checkForm($id, $tag, $app_id) {
-    global $dept_id, $dept_name, $audit_id, $dbh, $apikey, $form['check_forms'];
-    $form = $form['check_forms'];
+function checkForm($id, $tag, $app_id, $form) {
+    global $dept_id, $dept_name, $audit_id, $dbh, $apikey;
     $select = "SELECT bulk_transfer_time, kuali_key FROM kuali_table";
     $select_stmt = $dbh->query($select);
     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
