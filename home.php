@@ -506,7 +506,7 @@ $select = 'SELECT a.custodian, a.dept_id, d.dept_name, a.audit_date FROM audit_s
 $stmt = $dbh->query($select);
 $audit_schedules = $stmt->fetchAll();
 if ($audit_schedules) {
-    foreach ($audit_schdules as $index => $audit) {
+    foreach ($audit_schedules as $index => $audit) {
 ?>        
         <article class="schedule">
           <div class="row">
