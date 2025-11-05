@@ -67,7 +67,8 @@ try {
         $date = new DateTime("@$new_date");
         $date = $date->format('m/d/Y H:i:s');
 
-        $now = microtime(true) * 1000;
+        $now = microtime(true);
+        $now = (int)$now;
         if ($now > $new_date) {
             continue;
         }
@@ -82,14 +83,12 @@ try {
         if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
             $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
             foreach ($departments as $dept) {
-                if ($now < $edge['node']['data']['ChU6eQjeRf']) {
-                    $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
-                    $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
-                    echo $dept_id . ' ' . $dept_name . '<br>';
-                    $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
-                    $stmt = $dbh->prepare($insert);
-                    $stmt->execute([$dept_id, $date, $custodian]);
-                }
+                $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
+                $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
+                echo $dept_id . ' ' . $dept_name . '<br>';
+                $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
+                $stmt = $dbh->prepare($insert);
+                $stmt->execute([$dept_id, $date, $custodian]);
                 if (!isset($manager) && !empty($manager)) {
                     addDepartment($custodian, $manager, $dept_id, $dept_name);
                 }
