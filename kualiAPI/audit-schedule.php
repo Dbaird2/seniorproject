@@ -86,7 +86,7 @@ try {
                 $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
                 $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
                 echo $dept_id . ' ' . $dept_name . '<br>';
-                $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
+                $insert = 'INSERT INTO audit_schedule (dept_id, audit_date, custodian) VALUES (?, ?, ?)';
                 $stmt = $dbh->prepare($insert);
                 $stmt->execute([$dept_id, $date, $custodian]);
                 if (!isset($manager) && !empty($manager)) {
