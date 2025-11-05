@@ -71,8 +71,10 @@ try {
         if ($now > $new_date) {
             continue;
         }
+        echo $date . '<br>';
         
         $custodian = $edge['node']['data']['ChU6eQjeRf'];
+        echo $custodian. '<br>';
 
         if (!empty($edge['node']['data']['epSRSrkGXT'])) {
             $manager = $edge['node']['data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
@@ -82,9 +84,10 @@ try {
         } else if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
             $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
             foreach ($departments as $dept) {
-                if ($now < $date) {
+                if ($now < $new_date) {
                     $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
                     $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
+                    echo $dept_id . ' ' . $dept_name . '<br>';
                     $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
                     $stmt = $dbh->prepare($insert);
                     $stmt->execute([$dept_id, $date, $custodian]);
