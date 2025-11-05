@@ -63,31 +63,32 @@ try {
 
         $time = $edge['node']['data']['tYz59qALVK'];
         $date = $edge['node']['data']['ChU6eQjeRf'];
-        $new_date = $time+$date;
-        $date = new DateTime();
-        $date->setTimestamp($new_date);
+        $new_date = $time+($date)/1000;
+        $date = new DateTime("@$new_date");
+        $date = $date->format('m/d/Y H:i:s');
 
-        $now = microtime(true);
+        $now = microtime(true) * 1000;
         if ($now > $new_date) {
             continue;
         }
         
-        $date_time = $date->format('Y-m-d H:i:s');
-        $custodian = $edge['node']['data']['Unwly2UM1p']['firstName'] . ' ' . $edge['node']['data']['Unwly2UM1p']['lastName'];
+        $custodian = $edge['node']['data']['ChU6eQjeRf'];
 
         if (!empty($edge['node']['data']['epSRSrkGXT'])) {
             $manager = $edge['node']['data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
         }
         if (!empty($edgep['node']['data']['F8sTie5FDP'])) {
             $dept_id = $edge['node']['data']['F8sTie5FDP'];
-        } else if (!empty($edge['node']['data']['dTFWWegtgK']['data'])) {
-            $departments = $edge['node']['data']['dTFWWegtgK'];
+        } else if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
+            $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
             foreach ($departments as $dept) {
-                $dept_id = $dept['node']['data']['IOw4-l7NsM'];
-                $dept_name = $dept['node']['data']['AkMeIWWhoj'];
-                $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
-                $stmt = $dbh->prepare($insert);
-                $stmt->execute([$dept_name, $date_time, $custodian]);
+                if ($now < $date) {
+                    $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
+                    $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
+                    $insert = 'INSERT INTO audit_schedule (dept_id, audit_time, custodian) VALUES (?, ?, ?)';
+                    $stmt = $dbh->prepare($insert);
+                    $stmt->execute([$dept_id, $date, $custodian]);
+                }
                 if (!isset($manager) && !empty($manager)) {
                     addDepartment($custodian, $manager, $dept_id, $dept_name);
                 }
@@ -103,41 +104,40 @@ try {
 }
 echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
 exit;
-
 function addDepartment($c_display_name, $m_full_name, $dept_id, $dept_name)
 {
-    global $dbh;
-    echo '<br>Add Department<br>';
-    echo 'DocumentId: ' . $documentSetId . ' Kuali id: ' . $dept_kuali_id . ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
-    $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
-    $dept_stmt = $dbh->prepare($select_dept);
-    $dept_stmt->execute([":dept_id" => $dept_id]);
-    $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
-    if ($dept_info) {
-        if ($dept_info['dept_manager'] !== $m_full_name) {
-            $update_dept = "UPDATE department SET dept_manager = :manager WHERE dept_id = :dept_id";
-            $stmt = $dbh->prepare($update_dept);
-            $stmt->execute([':manager' => $m_full_name, ':dept_id' => $dept_id]);
-        }
-        $select_cust = 'SELECT dept_id, form_id, document_set_id FROM department WHERE :cust = ANY(custodian)';
-        $stmt = $dbh->prepare($select_cust);
-        $stmt->execute([':cust' => $c_display_name]);
-        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $found = false;
-        foreach ($info as $row) {
-            if ($row['dept_id'] === $dept_id) {
-                $found = true;
-            }
-        }
-        if (!$found) {
-            $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust) WHERE dept_id = :id';
-            $update_stmt = $dbh->prepare($update);
-            $update_stmt->execute([':cust' => $c_display_name, ':id' => $dept_id]);
-        }
-    } else {
-        $insert = 'INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?)';
-        $insert_stmt = $dbh->prepare($insert);
-        $custodian = '{'.$c_display_name.'}';
-        $insert_stmt->execute([$dept_id, $dept_name, $custodian, $m_full_name, $documentSetId, $dept_kuali_id]);
+  global $dbh;
+  echo '<br>Add Department<br>';
+  echo ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
+  $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
+  $dept_stmt = $dbh->prepare($select_dept);
+  $dept_stmt->execute([":dept_id" => $dept_id]);
+  $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
+  if ($dept_info) {
+    if ($dept_info['dept_manager'] !== $m_full_name) {
+      $update_dept = "UPDATE department SET dept_manager = :manager WHERE dept_id = :dept_id";
+      $stmt = $dbh->prepare($update_dept);
+      $stmt->execute([':manager' => $m_full_name, ':dept_id' => $dept_id]);
     }
+    $select_cust = 'SELECT dept_id, form_id, document_set_id FROM department WHERE :cust = ANY(custodian)';
+    $stmt = $dbh->prepare($select_cust);
+    $stmt->execute([':cust' => $c_display_name]);
+    $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $found = false;
+    foreach ($info as $row) {
+      if ($row['dept_id'] === $dept_id) {
+        $found = true;
+      }
+    }
+    if (!$found) {
+      $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust) WHERE dept_id = :id';
+      $update_stmt = $dbh->prepare($update);
+      $update_stmt->execute([':cust' => $c_display_name, ':id' => $dept_id]);
+    }
+  } else {
+    $insert = 'INSERT INTO department (dept_id, dept_name, custodian, dept_manager) VALUES (?, ?, ?, ?)';
+    $insert_stmt = $dbh->prepare($insert);
+    $custodian = '{' . $c_display_name . '}';
+    $insert_stmt->execute([$dept_id, $dept_name, $custodian, $m_full_name]);
+  }
 }
