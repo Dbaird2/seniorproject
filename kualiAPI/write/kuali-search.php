@@ -29,9 +29,17 @@ function checkOut($data) {
     $note = trim($data['notes']);
     $condition = trim($data['condition']);
     if (!empty(trim($data['borrower']))) {
-        $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) ILIKE :borrower";
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':borrower'=>'%'.$data['borrower'].'%']);
+        $email_regex = '/(@csub.edu)/';
+        if (preg_match($email_regex, $data['borrower'])) {
+
+            $select = "SELECT dept_id[1] FROM user_table WHERE email = :borrower";
+            $stmt = $dbh->prepare($select);
+            $stmt->execute([':borrower'=>$data['borrower']]);
+        } else {
+            $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) ILIKE :borrower";
+            $stmt = $dbh->prepare($select);
+            $stmt->execute([':borrower'=>'%'.$data['borrower'].'%']);
+        }
         $audit_dept = $stmt->fetchColumn();
     } else {
         $audit_dept = $_SESSION['deptid'];
@@ -189,7 +197,12 @@ function checkOut($data) {
     $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
     if ($who !== 'Myself') {
         $borrower = trim($data['borrower']);
-        $borrowers_info = getNameInfo($borrower, $audit_dept);
+        $email_regex = '/(@csub.edu)/';
+        if (preg_match($email_regex, $data['borrower'])) {
+            $borrowers_info = getEmailInfo($borrower, $audit_dept);
+        } else {
+            $borrowers_info = getNameInfo($borrower, $audit_dept);
+        }
         echo "<pre>";
         var_dump($borrowers_info);
         echo "</pre>";

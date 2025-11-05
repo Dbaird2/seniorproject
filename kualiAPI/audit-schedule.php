@@ -73,18 +73,16 @@ try {
         }
         echo $date . '<br>';
         
-        $custodian = $edge['node']['data']['ChU6eQjeRf'];
+        $custodian = $edge['node']['data']['Unwly2UM1p']['displayName'];
         echo $custodian. '<br>';
 
         if (!empty($edge['node']['data']['epSRSrkGXT'])) {
-            $manager = $edge['node']['data']['epSRSrkGXT']['firstName'] . ' ' . $edge['node']['data']['epSRSrkGXT']['lastName'];
+            $manager = $edge['node']['data']['epSRSrkGXT']['displayName'];
         }
-        if (!empty($edgep['node']['data']['F8sTie5FDP'])) {
-            $dept_id = $edge['node']['data']['F8sTie5FDP'];
-        } else if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
+        if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
             $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
             foreach ($departments as $dept) {
-                if ($now < $new_date) {
+                if ($now < $edge['node']['data']['ChU6eQjeRf']) {
                     $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
                     $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
                     echo $dept_id . ' ' . $dept_name . '<br>';
