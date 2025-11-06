@@ -80,7 +80,7 @@ try {
         }
 
         echo "<br>Tag " . $tag . "<br>Time " . $update_time;
-        $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+        $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
         $select_stmt = $dbh->prepare($select_q);
         $select_stmt->execute([":tag" => $tag]);
         if ($select_stmt->rowCount() === 1) {

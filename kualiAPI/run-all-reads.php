@@ -891,7 +891,7 @@ function bulkPsr () {
                     echo "<br>Tag field empty<br>";
                     continue;
                 }
-                $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+                $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
                 $select_stmt = $dbh->prepare($select_q);
                 $select_stmt->execute([":tag" => $tag]);
                 if ($select_stmt->rowCount() === 1) {
@@ -1221,7 +1221,7 @@ function check () {
                 echo "<br>Tag field empty<br>";
                 continue;
             }
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
@@ -1331,7 +1331,7 @@ function lsd () {
             }
 
             echo "<br>Tag " . $tag . "<br>Time " . $update_time;
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
@@ -1428,7 +1428,7 @@ function psr () {
             }
 
             echo "<br>Tag " . $tag . "<br>Time " . $update_time;
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
@@ -1773,7 +1773,7 @@ function dwCheck () {
                 echo "<br>Tag field empty<br>";
                 continue;
             }
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
@@ -1880,7 +1880,7 @@ function dwLsd () {
             }
 
             echo "<br>Tag " . $tag . "<br>Time " . $update_time;
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
@@ -1974,7 +1974,7 @@ function dwPsr () {
             }
 
             echo "<br>Tag " . $tag . "<br>Time " . $update_time;
-            $select_q = "SELECT FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
             if ($select_stmt->rowCount() === 1) {
