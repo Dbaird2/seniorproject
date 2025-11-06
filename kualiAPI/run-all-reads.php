@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . '/../config.php';
-set_time_limit(300);
+set_time_limit(700);
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
@@ -20,8 +20,9 @@ dwBulkTransfer ();
 dwCheck ();
 dwLsd ();
 dwPsr ();
-checkFromStatus();
+checkFormStatus();
 function addKualiInfo () {
+    echo '<br>Add Kuali Info<br>';
     global $dbh, $result;
     $skip = (int)$result['cust_responsibility_time'] ?? 0;
 
@@ -488,6 +489,7 @@ keyBy: ID
     $update_stmt->execute([$skip]);
 }
 function assetAddition () {
+    echo '<br>Asset Adition<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['asset_addition_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -646,6 +648,7 @@ function assetAddition () {
     }
 }
 function assetReceived () {
+    echo '<br>Asset received<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['asset_received_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -805,6 +808,7 @@ function assetReceived () {
     }
 }
 function bulkPsr () {
+    echo '<br>Bulk PSR<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['bulk_psr_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -909,6 +913,7 @@ function bulkPsr () {
     }
 }
 function bulkTransfer () {
+    echo '<br>Bulk Transfer<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['bulk_transfer_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1122,6 +1127,7 @@ keyBy: ID
     }
 }
 function check () {
+    echo '<br>Check out<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['check_out_time'] ?? 1744307816063;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1246,6 +1252,7 @@ function check () {
     }
 }
 function lsd () {
+    echo '<br>LSD<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['equip_lost_stol_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1343,6 +1350,7 @@ function lsd () {
     }
 }
 function psr () {
+    echo '<br>PSR<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['psr_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1440,6 +1448,7 @@ function psr () {
 }
 
 function dwBulkTransfer () {
+    echo '<br>DW Bulk Transfer<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_bulk_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1673,6 +1682,7 @@ keyBy: ID
     }
 }
 function dwCheck () {
+    echo 'DW Check out<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_check_time'] ?? 1744307816063;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1794,6 +1804,7 @@ function dwCheck () {
     }
 }
 function dwLsd () {
+    echo '<br>DW LSD<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_lsd_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1888,6 +1899,7 @@ function dwLsd () {
     }
 }
 function dwPsr () {
+    echo '<br>DW PSR<br>';
     global $dbh, $result;
     $raw_ms = $result['dw_psr_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
@@ -1982,6 +1994,7 @@ function dwPsr () {
 }
 
 function checkFormStatus() {
+    echo '<br>Check Form Status<br>';
     global $dbh;
     $get_key_select = 'SELECT kuali_key FROM user_table WHERE email = :email';
     $stmt = $dbh->prepare($get_key_select);
