@@ -1574,7 +1574,7 @@ keyBy: ID
                 if (preg_match('/^D/', $dept_id)) {
                     echo "<br>Dept Id Format Good<br>";
                 }
-                $bldg_name = ['data']['SBu1DONXk2'];
+                $bldg_name = $data['data']['SBu1DONXk2'];
                 $bldg = explode('(', $bldg_name);
                 $bldg_name = str_replace(')', '', $bldg[1]);
                 $search_bldg = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
@@ -1990,7 +1990,7 @@ function dwPsr () {
 function checkFormStatus() {
     echo '<br>Check Form Status<br>';
     global $dbh, $result;
-    $apikey = $result['apikey'];
+    $apikey = $result['kuali_key'];
     $subdomain = "csub";
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
