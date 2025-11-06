@@ -65,7 +65,7 @@ try {
         $date = $edge['node']['data']['ChU6eQjeRf'];
         $new_date = $time+($date)/1000;
         $date = new DateTime("@$new_date");
-        $date = $date->format('m/d/Y H:i:s');
+        $date = $date->format('Y/m/d H:i:s');
 
         $now = microtime(true);
         $now = (int)$now;

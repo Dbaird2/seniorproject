@@ -502,7 +502,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
             <section class="feed" aria-live="polite">
                 <div id="date-list" class="scroll">
 <?php 
-$select = 'SELECT a.custodian, a.dept_id, d.dept_name, a.audit_date FROM audit_schedule a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.audit_date';
+$select = "SELECT a.custodian, a.dept_id, d.dept_name, a.audit_date FROM audit_schedule a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.audit_date::date DESC, array_position(ARRAY[8,9,10,11,12,1,2,3,4,5], to_char(a.audit_date, 'HH12')::int) DESC";
 $stmt = $dbh->query($select);
 $audit_schedules = $stmt->fetchAll();
 if ($audit_schedules) {
