@@ -86,7 +86,7 @@ try {
                 $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
                 echo $dept_id . ' ' . $dept_name . '<br>';
                 if (!empty($manager)) {
-                    $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT DO SET dept_manager = EXCLUDED.dept_manager";
+                    $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT (dept_id) DO SET dept_manager = EXCLUDED.dept_manager";
                     $stmt = $dbh->prepare($insert);
                     $stmt->execute([$dept_id, $manager, $dept_name, $custodian]);
                 }

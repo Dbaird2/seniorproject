@@ -373,7 +373,7 @@ td {
 /* Updated table header with blue and gold gradient */
 thead th {
   color: white;
-  background: linear-gradient(135deg, #003594 0%, #ffc72c 100%);
+  background: #003594;
   padding: 15px;
   font-weight: 600;
   text-transform: uppercase;
