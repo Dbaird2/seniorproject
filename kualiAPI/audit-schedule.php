@@ -73,7 +73,7 @@ try {
             continue;
         }
         echo $date . '<br>';
-        
+
         $custodian = $edge['node']['data']['Unwly2UM1p']['displayName'];
         echo $custodian. '<br>';
 
@@ -81,20 +81,21 @@ try {
             $manager = $edge['node']['data']['epSRSrkGXT']['displayName'];
         } else {
             $manager = '';
-        if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
-            $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
-            foreach ($departments as $dept) {
-                $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
-                $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
-                echo $dept_id . ' ' . $dept_name . '<br>';
-                if (!empty($manager)) {
-                    $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT DO SET dept_manager = EXCLUDED.dept_manager";
+            if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
+                $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
+                foreach ($departments as $dept) {
+                    $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
+                    $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
+                    echo $dept_id . ' ' . $dept_name . '<br>';
+                    if (!empty($manager)) {
+                        $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT DO SET dept_manager = EXCLUDED.dept_manager";
+                        $stmt = $dbh->prepare($insert);
+                        $stmt->execute([$dept_id, $manager, $dept_name, $custodian]);
+                    }
+                    $insert = 'INSERT INTO audit_schedule (dept_id, audit_date, custodian) VALUES (?, ?, ?)';
                     $stmt = $dbh->prepare($insert);
-                    $stmt->execute([$dept_id, $manager, $dept_name, $custodian]);
+                    $stmt->execute([$dept_id, $date, $custodian]);
                 }
-                $insert = 'INSERT INTO audit_schedule (dept_id, audit_date, custodian) VALUES (?, ?, ?)';
-                $stmt = $dbh->prepare($insert);
-                $stmt->execute([$dept_id, $date, $custodian]);
             }
         }
     }
@@ -103,6 +104,9 @@ try {
     $update_stmt->execute([":time" => $raw_ms]);
 } catch (PDOException $e) {
     echo "Error with database " . $e->getMessage();
+    exit;
+} catch (Exception $e) {
+    echo "General error " . $e->getMessage();
     exit;
 }
 echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
