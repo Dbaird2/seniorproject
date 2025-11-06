@@ -482,7 +482,7 @@ keyBy: ID
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
     $update_q = "UPDATE kuali_table SET cust_responsibility_time = ?";
     $update_stmt = $dbh->prepare($update_q);
@@ -619,7 +619,7 @@ function assetAddition () {
                 }
 
                 $serial_num = $tag['data']['TuFLyAwO61'] ?? 'Unknown';
-                $name = $tag['data']['wnpc592QUl'];
+                $name = $tag['data']['6dtRzO-_qZ'] ?? $tag['data']['wnpc592QUl'];
                 $select_q = "SELECT asset_tag FROM asset_info WHERE asset_tag = :tag";
                 $s_stmt = $dbh->prepare($select_q);
                 $s_stmt->execute([":tag" => $tag_num]);
@@ -644,7 +644,7 @@ function assetAddition () {
         }
     } catch (PDOException $e) {
         error_log("Error " . $e->getMessage());
-        exit;
+        return;
     }
 }
 function assetReceived () {
@@ -804,7 +804,7 @@ function assetReceived () {
         $update_stmt->execute([":time" => $new_time]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function bulkPsr () {
@@ -909,7 +909,7 @@ function bulkPsr () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function bulkTransfer () {
@@ -1123,7 +1123,7 @@ keyBy: ID
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function check () {
@@ -1248,7 +1248,7 @@ function check () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function lsd () {
@@ -1346,7 +1346,7 @@ function lsd () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function psr () {
@@ -1443,7 +1443,7 @@ function psr () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 
@@ -1678,7 +1678,7 @@ keyBy: ID
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function dwCheck () {
@@ -1800,7 +1800,7 @@ function dwCheck () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function dwLsd () {
@@ -1895,7 +1895,7 @@ function dwLsd () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 function dwPsr () {
@@ -1989,7 +1989,7 @@ function dwPsr () {
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     }
 }
 
