@@ -238,6 +238,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                             } else {
                                 $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                 if ($tag_info) {
+                                    $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
+                                    $stmt = $dbh->prepare($check_note);
+                                    $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
+                                    $notes = $stmt->fetchAll();
                                     //$echo($tag_info);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                     $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';

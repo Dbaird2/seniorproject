@@ -88,7 +88,7 @@ try {
                 if (!empty($manager)) {
                     $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT (dept_id) DO UPDATE SET dept_manager = EXCLUDED.dept_manager";
                     $stmt = $dbh->prepare($insert);
-                    $stmt->execute([$dept_id, $manager, $dept_name, $custodian]);
+                    $stmt->execute([$dept_id, $manager, $dept_name, '{'.$custodian.'}']);
                 }
                 echo $custodian. '<br>';
                 echo $date . '<br>';
