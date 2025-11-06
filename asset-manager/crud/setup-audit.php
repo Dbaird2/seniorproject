@@ -47,6 +47,7 @@ if (isset($_GET['profile_name'])) {
                 $_SESSION['data'][$index]['Found Note'] = '';
                 $_SESSION['data'][$index]['Found Timestamp'] = '';
             }
+            $info = '';
             $highest_row++;
         }
     }
