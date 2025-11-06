@@ -1574,19 +1574,13 @@ keyBy: ID
                 if (preg_match('/^D/', $dept_id)) {
                     echo "<br>Dept Id Format Good<br>";
                 }
-                if (!empty($data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'])) {
-                    $bldg_id = $data['data']['bYpfsUDuZx']['data']['IOw4-l7NsM'];
-                    $bldg_name = $data['data']['bYpfsUDuZx']['data']['AkMeIWWhoj'];
-                }
-                if (!empty($data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'])) {
-                    $bldg_id = $data['data']['BC0E2hOKv3']['data']['IOw4-l7NsM'];
-                    if ($bldg_id === '39A') {
-                        $bldg_id = 39;
-                    }
-
-                    $bldg_name = $data['data']['BC0E2hOKv3']['data']['AkMeIWWhoj'];
-                }
-                $bldg_id = (int)$bldg_id;
+                $bldg_name = ['data']['SBu1DONXk2'];
+                $bldg = explode('(', $bldg_name);
+                $bldg_name = str_replace(')', '', $bldg[1]);
+                $search_bldg = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
+                $stmt = $dbh->prepare($search_bldg);
+                $stmt->execute([':name'=>$bldg_name]);
+                $bldg_id = $stmt->fetchColumn();
                 // UPDATE DATABASE BASED OF KUALI
                 if (!empty($bldg_id) && !empty($bldg_name)) {
                     echo "<br>Bldg ID " . $bldg_id . "<br>";
