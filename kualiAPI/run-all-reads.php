@@ -1995,11 +1995,8 @@ function dwPsr () {
 
 function checkFormStatus() {
     echo '<br>Check Form Status<br>';
-    global $dbh;
-    $get_key_select = 'SELECT kuali_key FROM user_table WHERE email = :email';
-    $stmt = $dbh->prepare($get_key_select);
-    $stmt->execute([':email'=>$_SESSION['email']]);
-    $apikey = $stmt->fetchColumn();
+    global $dbh, $result;
+    $apikey = $result['apikey'];
     $subdomain = "csub";
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -2074,7 +2071,8 @@ function checkFormStatus() {
             curl_close($curl);
             $decoded = json_decode($resp, true);
             $found = false;
-            foreach ($decoded['data']['app']['documentConnection']['edges'] as $edge) {
+            $edges = $decoded['data']['app']['documentConnection']['edges'];
+            foreach ($edges as $edge) {
                 if (!empty($edge['node']['meta']['workflowStatus'])) {
                     $status = $edge['node']['meta']['workflowStatus'];
                     if ($id === trim($edge['node']['id'])) {
