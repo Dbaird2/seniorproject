@@ -79,15 +79,18 @@ try {
 
         if (!empty($edge['node']['data']['epSRSrkGXT'])) {
             $manager = $edge['node']['data']['epSRSrkGXT']['displayName'];
-        }
+        } else {
+            $manager = '';
         if (!empty($edge['node']['data']['G_0VlXBs4s'])) {
             $departments = $edge['node']['data']['G_0VlXBs4s']['data'];
             foreach ($departments as $dept) {
                 $dept_id = $dept['data']['dTFWWegtgK']['data']['IOw4-l7NsM'];
                 $dept_name = $dept['data']['dTFWWegtgK']['data']['AkMeIWWhoj'];
                 echo $dept_id . ' ' . $dept_name . '<br>';
-                if (!isset($manager) && !empty($manager)) {
-                    addDepartment($custodian, $manager, $dept_id, $dept_name);
+                if (!empty($manager)) {
+                    $insert = "INSERT INTO department (dept_id, dept_manager, dept_name, custodian) VALUES (?,?,?,?) ON CONFLICT DO SET dept_manager = EXCLUDED.dept_manager";
+                    $stmt = $dbh->prepare($insert);
+                    $stmt->execute([$dept_id, $manager, $dept_name, $custodian]);
                 }
                 $insert = 'INSERT INTO audit_schedule (dept_id, audit_date, custodian) VALUES (?, ?, ?)';
                 $stmt = $dbh->prepare($insert);

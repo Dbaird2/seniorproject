@@ -514,7 +514,7 @@ if ($audit_schedules) {
 
             <div class="avatar" title="<?= $audit['custodian']?>"><?= $audit['custodian']?></div>
               <div>
-              <div><?= $index['custodian'] ?></div>
+              <div><?= $audit['custodian'] ?></div>
               <div class="when" title="<?= $audit['audit_date']?>"><?= $audit['audit_date']?></div>
               </div>
             </div>
