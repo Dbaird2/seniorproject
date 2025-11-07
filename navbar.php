@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dataworks</title>
+<link rel="icon" href="https://dataworks-7b7x.onrender.com/pictures/home/favicon-32x32.png" sizes="32x32"
+        type="image/x-icon" />
   <link rel="stylesheet" href="/navbar.css">
 </head>
 <body>

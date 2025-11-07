@@ -765,14 +765,14 @@ function switchChart(type) {
                 <div class="when" title="${t.date_added}">${fmtTime(t.date_added)}</div>
               </div>
             </div>
-<?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
             <div class="badges">
+<?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
               <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'completed')">Complete</button>
               <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'delete')">Delete</button>
+<?php } ?>
               ${typeBadge(t.ticket_type || t.type)}
               ${ticketBadge(t.ticket_status)}
             </div>
-<?php } ?>
           </div>
           <div class="info">${escapeHtml(t.info || '')}</div>
         </article>`;
