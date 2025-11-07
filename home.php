@@ -516,9 +516,11 @@ if ($audit_schedules) {
               <div class="when" title="<?= $audit['audit_date']?>"><?= $audit['audit_date']?></div>
               </div>
             </div>
+<?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
             <div class="badges">
             <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick="updateTicket(<?= json_encode($audit['dept_id']) ?>, 'delete')">Delete</button>
             </div>
+<?php } ?>
           </div>
           <div class="info"><?php $audit['dept_id'] . ' ' . $audit['audit_date']?></div>
         </article>
