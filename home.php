@@ -460,7 +460,6 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
 <?php } ?>
                 </div>
             </div>
-<?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
             <div class="actions-section">
 <div class="ticket-box">
         <div class="app" aria-label="Recent tickets">
@@ -494,7 +493,6 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
         </div>
     </div>
 </div>
-<?php } ?>
             <div class="actions-section">
                 <div class="actions-header">
                     <h3>Audit Schedules</h3>
@@ -765,12 +763,14 @@ function switchChart(type) {
                 <div class="when" title="${t.date_added}">${fmtTime(t.date_added)}</div>
               </div>
             </div>
+<?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
             <div class="badges">
               <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'completed')">Complete</button>
               <button class="ticket-btn" value="${t.id}" onclick="updateTicket(${t.id}, 'delete')">Delete</button>
               ${typeBadge(t.ticket_type || t.type)}
               ${ticketBadge(t.ticket_status)}
             </div>
+<?php } ?>
           </div>
           <div class="info">${escapeHtml(t.info || '')}</div>
         </article>`;
