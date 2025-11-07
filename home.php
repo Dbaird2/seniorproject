@@ -877,11 +877,13 @@ function switchChart(type) {
         }
 
         // ===== Wire up UI =====
-        el('#refresh').addEventListener('click', loadInitial);
-        el('#search').addEventListener('input', debounce(loadInitial, 300));
-        el('#status').addEventListener('change', loadInitial);
-        el('#type').addEventListener('change', loadInitial);
-        console.log(el);
+        const refresh_btn = el('#refresh');
+        if (refresh_btn) {
+            refresh_btn.addEventListener('click', loadInitial);
+            el('#search').addEventListener('input', debounce(loadInitial, 300));
+            el('#status').addEventListener('change', loadInitial);
+            el('#type').addEventListener('change', loadInitial);
+        }
 
         function debounce(fn, ms = 250) {
             let t;
