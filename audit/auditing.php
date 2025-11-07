@@ -604,7 +604,10 @@ document.addEventListener("input", function(e) {
     if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
     const value = e.target.value.trim();
     let tab = 5;
-    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F') {
+    value[0] = value[0].toUpperCase();
+    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F' || value[0] === 'S') {
+        value[1] = value[1].toUpperCase();
+        value[2] = value[2].toUpperCase();
         tab++;
         if (value[1] === 'P' || value[1] === 'R') {
             tab++;

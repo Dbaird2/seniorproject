@@ -633,7 +633,7 @@ function assetAddition () {
                     $ms_date = $edge['node']['meta']['workflowCompletedAt'] / 1000;
                     $date = date('m-d-y', $ms_date);
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po, $it_status]);
-                    $highest_time = $update_time > $highest_time ? $update_time : $highest_time;
+                    $highest_time = $update_time > $raw_ms ? $update_time : $raw_ms;
                     $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
                     $update_stmt = $dbh->prepare($insert_into_kuali_table);
                     $update_stmt->execute([":time" => $highest_time]);
