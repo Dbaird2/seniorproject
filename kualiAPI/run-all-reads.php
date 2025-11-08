@@ -578,6 +578,7 @@ function assetAddition () {
     try {
         foreach ($edges as $index => $edge) {
             $update_time = (int)$edge['node']['meta']['createdAt'];
+            echo '<br>ASSET ADDITION TIME: '  . $update_time . '<br>';
             if (!isset($edge['node']['data']['PUcYspMrJZ'])) {
                 echo "<br> Skipping Tag Not Available <br>";
                 continue;
@@ -638,6 +639,7 @@ function assetAddition () {
                     }
                     $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
                     $update_stmt = $dbh->prepare($insert_into_kuali_table);
+                    echo '<br>NEW ASSET ADDITION TIME: ' . $new_time . '<br>';
                     $update_stmt->execute([":time" => $new_time]);
                 }
                 echo "<br>Asset Profile " . $asset_profile . "<br>Value " . $value . "<br>Tag " . $tag_num .
