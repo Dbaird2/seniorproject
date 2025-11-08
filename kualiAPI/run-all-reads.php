@@ -577,7 +577,7 @@ function assetAddition () {
     ];
     try {
         foreach ($edges as $index => $edge) {
-            $update_time = $edge['node']['meta']['createdAt'];
+            $update_time = (int)$edge['node']['meta']['createdAt'];
             if (!isset($edge['node']['data']['PUcYspMrJZ'])) {
                 echo "<br> Skipping Tag Not Available <br>";
                 continue;
