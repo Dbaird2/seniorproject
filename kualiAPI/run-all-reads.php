@@ -625,6 +625,7 @@ function assetAddition () {
                 $s_stmt = $dbh->prepare($select_q);
                 $s_stmt->execute([":tag" => $tag_num]);
                 $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)\b/i';
+                $it_status = false;
                 $it_status = (preg_match($it_regex, $name)) ? true : false;
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$tag_taken) {
@@ -633,6 +634,7 @@ function assetAddition () {
                     $insert_stmt = $dbh->prepare($insert_q);
                     $ms_date = $edge['node']['meta']['workflowCompletedAt'] / 1000;
                     $date = date('m-d-y', $ms_date);
+                    echo '<br>IT STATUS ' . $it_status . '<br>'; 
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po, $it_status]);
                     if ($update_time > $raw_ms && $update_time > $new_time) {
                         $new_time = $update_time;
