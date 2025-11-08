@@ -514,6 +514,34 @@ function assetAddition () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "67ec557474c52c027eca23d8",
+            "skip" => $raw_ms,
+            "limit" => 200,
+            "sort" => [
+                "meta.createdAt"
+            ],
+            "query" => "",
+            "fields" => [
+                "type" => "AND",
+                "operators" => [
+                    [
+                        "type" => "AND",
+                        "operators" => [
+                            [
+                                "field" => "meta.workflowStatus",
+                                "type" => "IS",
+                                "value" => "Complete"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]);
+    /*
+    $data = json_encode([
+        "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+        "variables" => [
+            "appId" => "67ec557474c52c027eca23d8",
             "skip" => 0,
             "limit" => 100,
             "sort" => [
@@ -542,7 +570,7 @@ function assetAddition () {
             ]
         ]
     ]);
-
+    */
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -577,6 +605,7 @@ function assetAddition () {
     ];
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = (int)$edge['node']['meta']['createdAt'];
             echo '<br>ASSET ADDITION TIME: '  . $update_time . '<br>';
             if (!isset($edge['node']['data']['PUcYspMrJZ'])) {
@@ -639,10 +668,6 @@ function assetAddition () {
                     if ($update_time > $raw_ms && $update_time > $new_time) {
                         $new_time = $update_time;
                     }
-                    $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
-                    $update_stmt = $dbh->prepare($insert_into_kuali_table);
-                    echo '<br>NEW ASSET ADDITION TIME: ' . $new_time . '<br>';
-                    $update_stmt->execute([":time" => $new_time]);
                 }
                 echo "<br>Asset Profile " . $asset_profile . "<br>Value " . $value . "<br>Tag " . $tag_num .
                     "<br>Dept " . $dept_id . "<br>SN " . $serial_num . "<br>Name " . $name . "<br>";
@@ -652,6 +677,9 @@ function assetAddition () {
         error_log("Error " . $e->getMessage());
         return;
     }
+    $insert_into_kuali_table = "UPDATE kuali_table SET asset_addition_time = :time";
+    $update_stmt = $dbh->prepare($insert_into_kuali_table);
+    $update_stmt->execute([":time" => $raw_ms]);
 }
 function assetReceived () {
     echo '<br>Asset received<br>';
@@ -678,6 +706,33 @@ function assetReceived () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "67b8c49871c3d6028236d586",
+            "skip" => $raw_ms,
+            "limit" => 200,
+            "sort" => [
+                "meta.createdAt"
+            ],
+            "query" => "",
+            "fields" => [
+                "type" => "AND",
+                "operators" => [
+                    [
+                        "type" => "AND",
+                        "operators" => [
+                            [
+                                "field" => "meta.workflowStatus",
+                                "type" => "IS",
+                                "value" => "Complete"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]);
+    /*
+    $data = json_encode([
+        "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+        "variables" => [
             "skip" => 0,
             "limit" => 200,
             "sort" => [
@@ -706,6 +761,7 @@ function assetReceived () {
             ]
         ]
     ]);
+     */
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -728,6 +784,7 @@ function assetReceived () {
 
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = (int)$edge['node']['meta']['createdAt'];
             $time = (int)$edge['node']['data']['wzgp7QHb7F'];
             $timestamp_sec = $time / 1000;
@@ -807,7 +864,7 @@ function assetReceived () {
         }
         $insert_into_kuali_table = "UPDATE kuali_table SET asset_received_time = :time";
         $update_stmt = $dbh->prepare($insert_into_kuali_table);
-        $update_stmt->execute([":time" => $new_time]);
+        $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
