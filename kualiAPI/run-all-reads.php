@@ -654,8 +654,7 @@ function assetAddition () {
                 $s_stmt = $dbh->prepare($select_q);
                 $s_stmt->execute([":tag" => $tag_num]);
                 $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)\b/i';
-                $it_status = false;
-                $it_status = (preg_match($it_regex, $name)) ? true : false;
+                $it_status = (preg_match($it_regex, $name)) ? 1 : 0;
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$tag_taken) {
                     $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po, is_IT) VALUES
@@ -843,8 +842,11 @@ function assetReceived () {
                 if ($s_stmt->rowCount() <= 0) {
                     $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_model, po, dept_id, lifecycle, room_tag, is_IT) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     try {
-                        $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)\b/i';
-                        $it_status = (preg_match($it_regex, $name)) ? true : false;
+                        $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)|(iPAD)\b/i';
+                        $it_status = (preg_match($it_regex, $name)) ? 1 : 0;
+                        if (preg_match($it_regex, $model)) {
+                            $it_status = 1;
+                        }
                         $insert_stmt = $dbh->prepare($insert_q);
                         $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag, $it_status]);
                         echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
