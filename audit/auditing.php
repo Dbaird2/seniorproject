@@ -119,7 +119,7 @@ if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicIn
         $skip = true;
     }
     if (!$skip) {
-        $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
+        $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
         $select_stmt = $dbh->prepare($select_tag);
         $select_stmt->execute([":tag"=>$_POST['room-tag']]);
         if ($select_stmt->rowCount() < 1) {
@@ -716,7 +716,7 @@ function filterAssetStatus() {
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[3];
-        if (td && filter === 'X') {
+        if (td && filter === 'not-found') {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
@@ -725,7 +725,7 @@ function filterAssetStatus() {
             }
         } else if (filter === 'ALL') {
             tr[i].style.display = "";
-        } else if (td && filter === 'O') {
+        } else if (td && filter === 'found') {
             var filter2 = 'X';
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter2) > -1) {
