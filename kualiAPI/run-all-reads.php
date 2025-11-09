@@ -8,6 +8,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
+deleteOverdueSchedule();
 addKualiInfo();
 assetAddition();
 assetReceived(); 
@@ -802,6 +803,7 @@ function assetReceived () {
             $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
             $lifecycle = 10;
             foreach ($tag_data as $tag) {
+                $tag_num = '';
                 if (!empty($tag['data']['1SI4ghT1Jt'])) {
                     $tag_num = $tag['data']['1SI4ghT1Jt'];
                 }
@@ -2161,4 +2163,9 @@ function checkFormStatus() {
             }
         }
     }
+}
+function deleteOverdueSchedule() {
+    global $dbh;
+    $select = 'DELETE FROM audit_schedule WHERE audit_date > CURRENT_TIMESTAMP';
+    $stmt = $dbh->query($select);
 }

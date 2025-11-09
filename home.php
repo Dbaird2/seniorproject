@@ -518,7 +518,7 @@ if ($audit_schedules) {
             </div>
 <?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
             <div class="badges">
-            <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick="updateTicket(<?= json_encode($audit['dept_id']) ?>, 'delete')">Delete</button>
+            <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick="updateSchedule(<?= json_encode($audit['dept_id']) ?>,<?= json_encode($audit['audit_date']) ?>, 'delete')">Delete</button>
             </div>
 <?php } ?>
           </div>
@@ -554,6 +554,26 @@ async function updateTicket(id, action) {
         const data = await res.json();
     } catch (err) {
         console.warn('Error updating ticket:', err);
+    }
+}
+async function updateSchedule(id, delete_date, action) {
+    const API_URL = '/api/update-schedule.php';
+    const params = new URLSearchParams();
+    if (id) params.set('id', id);
+    if (delete_date) params.set('delete_date', delete_date);
+    if (action) params.set('action', action);
+
+    console.log('params: ' + params);
+    try {
+        const res = await fetch(`${API_URL}?${params.toString()}`, {
+        headers: {
+        'Accept': 'application/json'
+    }
+    });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+    } catch (err) {
+        console.warn('Error updating schedule:', err);
     }
 }
 async function updateAudit(id, action) {
