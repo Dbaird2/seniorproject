@@ -105,8 +105,8 @@ if ($data['form_type'] === 'dept') {
                     $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
                 }
                 if (!empty($asset['room']) && !empty($asset['bldg'])) {
-                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK']['label'] = $asset['bldg'];
-                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['zZztPX8Pcw'] = $asset['room'];
+                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK']['label'] = (string)$asset['bldg'];
+                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['zZztPX8Pcw'] = (string)$asset['room'];
                 }
                 $variables['data']['K3p03X2Jvx'] = $asset['why'];
                 $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
