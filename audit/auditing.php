@@ -71,6 +71,11 @@ try {
             echo "Something went wrong trying to parse before downloading " . $e;
         }
     }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
+}
 ?>
 
 <html>
@@ -83,6 +88,7 @@ try {
     <link rel="stylesheet" href="auditing.css" media="all">
 </head>
 <?php
+try {
     $worksheet = NULL;
     $array = $time_array = $note_array = $room_array = [];
     $total_count = count($_SESSION['data']);
@@ -314,6 +320,11 @@ try {
     $select_bldgs = "SELECT * FROM bldg_table";
     $select_stmt = $dbh->query($select_bldgs);
     $bldgs = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
+}
 ?>
 
 <body>
@@ -421,11 +432,6 @@ try {
             <td><textarea class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'>$found_note</textarea></td>
             </tr>";
     }
-} catch (PDOException $e) {
-    error_log($e->getMessage());
-} catch (Exception $e) {
-    error_log($e->getMessage());
-}
 ?>
                 </tbody>
             </table>
