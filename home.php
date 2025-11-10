@@ -518,7 +518,7 @@ if ($audit_schedules) {
             </div>
 <?php if ($_SESSION['role'] === 'management' || $_SESSION['role'] === 'admin') { ?>
             <div class="badges">
-            <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick="updateSchedule(<?= json_encode($audit['dept_id']) ?>,<?= json_encode($audit['audit_date']) ?>, 'delete')">Delete</button>
+            <button class="ticket-btn" value="<?= $audit['dept_id'] ?>" onclick='updateSchedule(<?= json_encode($audit['dept_id']) ?>,<?= json_encode($audit['audit_date']) ?>, "delete")'>Delete</button>
             </div>
 <?php } ?>
           </div>
