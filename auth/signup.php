@@ -5,98 +5,97 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: https://dataworks-7b7x.onrender.com/index.php");
     exit();
 }
+try {
 
-ini_set('display_error', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+    $err = 0;
+    $user_err = $email_err = $f_name_err = $l_name_err = '';
+    $pw_err = $cpw_err = $dept_err = '';
 
-$err = 0;
-$user_err = $email_err = $f_name_err = $l_name_err = '';
-$pw_err = $cpw_err = $dept_err = '';
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $status_type = $_POST['status_type'];
+        $user_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
+        $email_err = (($email = $_POST['email'] ?? '') != '') ? "" : "Empty Email Field";
+        $f_name = $_POST['f_name'] ?? '';
+        $l_name = $_POST['l_name'] ?? '';
+        $password = $_POST['pw'] ?? '';
+        $con_password = $_POST['cpw'] ?? '';
+        $deptid = $_POST['deptid'] ?? '';
+        $dept_id_array = array_values(array_filter(explode(',', $deptid), fn($v) => trim($v) !== ''));
+        $role = $_POST['role'] ?? ''; 
+        $role = strtolower($role);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $status_type = $_POST['status_type'];
-    $user_err = (($username = $_POST['username'] ?? '') != '') ? "": "Empty Username field";
-    $email_err = (($email = $_POST['email'] ?? '') != '') ? "" : "Empty Email Field";
-    $f_name = $_POST['f_name'] ?? '';
-    $l_name = $_POST['l_name'] ?? '';
-    $password = $_POST['pw'] ?? '';
-    $con_password = $_POST['cpw'] ?? '';
-    $deptid = $_POST['deptid'] ?? '';
-    $dept_id_array = array_values(array_filter(explode(',', $deptid), fn($v) => trim($v) !== ''));
-    $role = $_POST['role'] ?? ''; 
-    $role = strtolower($role);
-
-    if (!empty($username)) {
-        $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
-        $stmt = $dbh->prepare($stmt);
-        if (!($stmt->execute([$username, $email]))) {
-            echo "<p> Error with database </p>";
-            $err = 1;
-        } else {
-            $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($user_check > 0) {
-                if ($user_check['username'] === $username) {
-                    $user_err = "Username or Email already exists";
-                    $err = 1;
+        if (!empty($username)) {
+            $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
+            $stmt = $dbh->prepare($stmt);
+            if (!($stmt->execute([$username, $email]))) {
+                echo "<p> Error with database </p>";
+                $err = 1;
+            } else {
+                $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($user_check > 0) {
+                    if ($user_check['username'] === $username) {
+                        $user_err = "Username or Email already exists";
+                        $err = 1;
+                    } 
+                    if ($user_check['email'] === $email) {
+                        $user_err = "Username or Email already exists";
+                        $err = 1;
+                    } 
                 } 
-                if ($user_check['email'] === $email) {
-                    $user_err = "Username or Email already exists";
-                    $err = 1;
-                } 
-            } 
-        }
-    } 
-
-    if (!empty($con_password)) {
-        if ($con_password === $password) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-        } else {
-            $cpw_err = "Passwords must match.";
-            $err = 1;
-        }
-    }
-
-    if (!empty($deptid)) {
-        $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
-        $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
-        $stmt = $dbh->prepare($stmt);
-        $stmt->execute($dept_id_array);
-        if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
-            $dept_err = "Department does not exist";
-            $err = 1;
-        }
-    }
-
-    if (!$err) {
-        $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, position) 
-        VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[], :status_type);";
-        $stmt = $dbh->prepare($stmt);
-        $full_name = $f_name . " " . $l_name;
-        $dept_id_array = array_map('trim', $dept_id_array);
-        $dept_pg_array = '{' . implode(',', array_map(function($val) {
-            return '"' . addslashes($val) . '"';
-        }, $dept_id_array)) . '}';
-
-        try {
-            if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
-                ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
-                ':dept'=>$dept_pg_array, ":status_type"=>$status_type])) {
-                if ($role === 'custodian') {
-                    $dept_cust = "UPDATE department SET custodian = ARRAY_APPEND(custodian, ?) WHERE dept_id IN ($placeholder)";
-                    $dept_stmt = $dbh->prepare($dept_cust);
-                    $dept_stmt->execute([$full_name, $dept_id_array]);
-                }
-                header("Location: https://dataworks-7b7x.onrender.com/index.php");
-                exit;
             }
-        } catch (PDOException $e) {
-            echo '<pre>';
-            var_dump($dept_id_array);
-            echo '</pre>';
-            error_log($e->getMessage());
+        } 
+
+        if (!empty($con_password)) {
+            if ($con_password === $password) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+            } else {
+                $cpw_err = "Passwords must match.";
+                $err = 1;
+            }
+        }
+
+        if (!empty($deptid)) {
+            $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
+            $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
+            $stmt = $dbh->prepare($stmt);
+            $stmt->execute($dept_id_array);
+            if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
+                $dept_err = "Department does not exist";
+                $err = 1;
+            }
+        }
+
+        if (!$err) {
+            $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, position) 
+                VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[], :status_type);";
+            $stmt = $dbh->prepare($stmt);
+            $full_name = $f_name . " " . $l_name;
+            $dept_id_array = array_map('trim', $dept_id_array);
+            $dept_pg_array = '{' . implode(',', array_map(function($val) {
+                return '"' . addslashes($val) . '"';
+            }, $dept_id_array)) . '}';
+
+            try {
+                if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
+                    ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
+                    ':dept'=>$dept_pg_array, ":status_type"=>$status_type])) {
+                    if ($role === 'custodian') {
+                        $dept_cust = "UPDATE department SET custodian = ARRAY_APPEND(custodian, ?) WHERE dept_id IN ($placeholder)";
+                        $dept_stmt = $dbh->prepare($dept_cust);
+                        $dept_stmt->execute([$full_name, $dept_id_array]);
+                    }
+                    header("Location: https://dataworks-7b7x.onrender.com/index.php");
+                    exit;
+                }
+            } catch (PDOException $e) {
+                error_log($e->getMessage());
+            }
         }
     }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
 }
 
 include_once("../navbar.php");

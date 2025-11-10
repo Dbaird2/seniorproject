@@ -2,78 +2,84 @@
 include_once("../config.php");
 
 $email_err = $pw_err = $err = "";
+try {
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'] ?? "";
-    $pw = $_POST['pw'] ?? "";
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = $_POST['email'] ?? "";
+        $pw = $_POST['pw'] ?? "";
 
-    if (!empty($email) && !empty($pw)) {
-        $stmt = "SELECT email, pw, id, u_role, dept_id FROM user_table WHERE email = ?";
-        $stmt = $dbh->prepare($stmt);
-        if (!($stmt->execute([$email]))) {
-            $err = "Error getting info" . $stmt->errorInfo()[2];
-        } else {
-            $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($user_check && password_verify($pw, $user_check['pw'])) {
+        if (!empty($email) && !empty($pw)) {
+            $stmt = "SELECT email, pw, id, u_role, dept_id FROM user_table WHERE email = ?";
+            $stmt = $dbh->prepare($stmt);
+            if (!($stmt->execute([$email]))) {
+                $err = "Error getting info" . $stmt->errorInfo()[2];
+            } else {
+                $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($user_check && password_verify($pw, $user_check['pw'])) {
                 /*
                 $_SESSION['id'] = $user_check['id'];
                 $_SESSION['role'] = $user_check['u_role'];
                 $_SESSION['email'] = $user_check['email'];
                 $_SESSION['deptid'] = trim($user_check['dept_id'], '{}');
                  */
-                $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE email = ?";
-                $stmt = $dbh->prepare($stmt);
+                    $stmt = "UPDATE user_table SET last_login = CURRENT_TIMESTAMP WHERE email = ?";
+                    $stmt = $dbh->prepare($stmt);
 
-                $update_audit_id_q = "select ((NOW()::DATE - spa_due)) as spa_check, (NOW()::DATE - self_due) as self_check, (NOW()::DATE - mgmt_due) as mgmt_check , curr_self_id, curr_mgmt_id, curr_spa_id from audit_freq";
-                $audit_id_stmt = $dbh->query($update_audit_id_q);
-                $audit_check = $audit_id_stmt->fetch(PDO::FETCH_ASSOC);
-                $spa_change = $self_change = $mgmt_change = false;
-                $params = $update_c = [];
-                if ($audit_check) {
-                    if ((int)$audit_check['spa_check'] >= 0) {
-                        $new_spa_id = (int)$audit_check['curr_spa_id'] === 7 ? 8 : 7;
-                        $params[':spa_id'] = $new_spa_id;
-                        $update_c[] = 'curr_spa_id = :spa_id';
+                    $update_audit_id_q = "select ((NOW()::DATE - spa_due)) as spa_check, (NOW()::DATE - self_due) as self_check, (NOW()::DATE - mgmt_due) as mgmt_check , curr_self_id, curr_mgmt_id, curr_spa_id from audit_freq";
+                    $audit_id_stmt = $dbh->query($update_audit_id_q);
+                    $audit_check = $audit_id_stmt->fetch(PDO::FETCH_ASSOC);
+                    $spa_change = $self_change = $mgmt_change = false;
+                    $params = $update_c = [];
+                    if ($audit_check) {
+                        if ((int)$audit_check['spa_check'] >= 0) {
+                            $new_spa_id = (int)$audit_check['curr_spa_id'] === 7 ? 8 : 7;
+                            $params[':spa_id'] = $new_spa_id;
+                            $update_c[] = 'curr_spa_id = :spa_id';
 
-                        $update_history_q = "UPDATE audit_history SET audit_id = 9 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                        $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_spa_id']]);
+                            $update_history_q = "UPDATE audit_history SET audit_id = 9 WHERE audit_id = :id AND audit_statis = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_spa_id']]);
+                        }
+                        if ((int)$audit_check['self_check'] >= 0) {
+                            $new_self_id = (int)$audit_check['curr_self_id'] === 1 ? 2 : 1;
+                            $params[':self_id'] = $new_self_id;
+                            $update_c[] = 'curr_self_id = :self_id';
+
+                            $update_history_q = "UPDATE audit_history SET audit_id = 3 WHERE audit_id = :id AND audit_statis = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_self_id']]);
+                        }
+                        if ((int)$audit_check['mgmt_check'] >= 0) {
+                            $new_mgmt_id = (int)$audit_check['curr_mgmt_id'] === 4 ? 5 : 4;
+                            $params[':mgmt_id'] = $new_mgmt_id;
+                            $update_c[] = 'curr_mgmt_id = :mgmt_id';
+
+                            $update_history_q = "UPDATE audit_history SET audit_id = 6 WHERE audit_id = :id AND audit_statis = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_mgmt_id']]);
+                        }
+                        if (!empty($update_c)) {
+                            $ready_columns = implode(',', $update_c);
+                            $update_id = "UPDATE audit_freq SET $ready_columns";
+                            $update_stmt = $dbh->prepare($update_id)->execute($params);
+                        }
+
                     }
-                    if ((int)$audit_check['self_check'] >= 0) {
-                        $new_self_id = (int)$audit_check['curr_self_id'] === 1 ? 2 : 1;
-                        $params[':self_id'] = $new_self_id;
-                        $update_c[] = 'curr_self_id = :self_id';
 
-                        $update_history_q = "UPDATE audit_history SET audit_id = 3 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                        $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_self_id']]);
+                    if ($stmt->execute([$user_check['email']])) {
+                        header("location: https://dataworks-7b7x.onrender.com/auth/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role'])."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
+
+                    } else {
+                        error_log("Error updating last_login");
                     }
-                    if ((int)$audit_check['mgmt_check'] >= 0) {
-                        $new_mgmt_id = (int)$audit_check['curr_mgmt_id'] === 4 ? 5 : 4;
-                        $params[':mgmt_id'] = $new_mgmt_id;
-                        $update_c[] = 'curr_mgmt_id = :mgmt_id';
-
-                        $update_history_q = "UPDATE audit_history SET audit_id = 6 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                        $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_mgmt_id']]);
-                    }
-                    if (!empty($update_c)) {
-                        $ready_columns = implode(',', $update_c);
-                        $update_id = "UPDATE audit_freq SET $ready_columns";
-                        $update_stmt = $dbh->prepare($update_id)->execute($params);
-                    }
-
-                }
-
-                if ($stmt->execute([$user_check['email']])) {
-                    header("location: https://dataworks-7b7x.onrender.com/auth/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role'])."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
-
-                } else {
-                    error_log("Error updating last_login");
                 }
             }
+            $stmt = NULL;
+        } else {
+            $err = "Invalid email or password";
         }
-        $stmt = NULL;
-    } else {
-        $err = "Invalid email or password";
     }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
 }
 include_once("../navbar.php");
 ?>

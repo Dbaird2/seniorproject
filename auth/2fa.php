@@ -7,38 +7,66 @@ use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
-$email = '';
-if (!empty($_GET['email'])) {
-    $id = trim($_GET['id']);
-    $email = trim($_GET['email']);
-    $dept_id = trim($_GET['dept_id']);
-    $role = trim($_GET['role']);
-} else {
-    $id = trim($_POST['id']);
-    $email = trim($_POST['email']);
-    $dept_id = trim($_POST['dept_id']);
-    $role = trim($_POST['role']);
-}
-$stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
-$stmt->bindParam(':email', $email);
-$stmt->execute();
-$row = $stmt->fetch();
+try {
+    $email = '';
+    if (!empty($_GET['email'])) {
+        $id = trim($_GET['id']);
+        $email = trim($_GET['email']);
+        $dept_id = trim($_GET['dept_id']);
+        $role = trim($_GET['role']);
+    } else {
+        $id = trim($_POST['id']);
+        $email = trim($_POST['email']);
+        $dept_id = trim($_POST['dept_id']);
+        $role = trim($_POST['role']);
+    }
+    $stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
+    $row = $stmt->fetch();
 
-$showQr   = false;
-$qrDataUri = null;
-$secret    = null;
+    $showQr   = false;
+    $qrDataUri = null;
+    $secret    = null;
 
-if ($row && !empty($row['totp_secret'])) {
-    // User already has a TOTP secret, load it
-    $totp = TOTP::create(
-        secret: $row['totp_secret'],
-        period: 30,
-        digits: 6
-    );
-    $totp->setLabel($email);
-    $totp->setIssuer('Dataworks');
-    if (empty($user['totp_confirmed_at'])) {
-        $secret  = $row['totp_secret'];
+    if ($row && !empty($row['totp_secret'])) {
+        // User already has a TOTP secret, load it
+        $totp = TOTP::create(
+            secret: $row['totp_secret'],
+            period: 30,
+            digits: 6
+        );
+        $totp->setLabel($email);
+        $totp->setIssuer('Dataworks');
+        if (empty($user['totp_confirmed_at'])) {
+            $secret  = $row['totp_secret'];
+            $otpauth = $totp->getProvisioningUri();
+            $builder = new Builder(
+                writer: new PngWriter(),
+                data: $otpauth,
+                encoding: new Encoding('UTF-8'),
+                size: 300,
+                margin: 10,
+                roundBlockSizeMode: RoundBlockSizeMode::Margin
+            );
+            $result    = $builder->build();
+            $qrDataUri = $result->getDataUri();
+            $showQr    = true;
+        }
+    } else {
+        // New user, store the generated secret
+        $totp = TOTP::create(
+            secret: null,     // auto-generate secure secret
+            period: 30,       // 30s default
+            digits: 6        // 6-digit codes
+        );
+        $totp->setLabel($email);
+        $totp->setIssuer('Dataworks'); // shows as the "account provider" in apps
+        $secret = $totp->getSecret();
+        $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
+        $stmt->bindParam(':secret', $secret);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
         $otpauth = $totp->getProvisioningUri();
         $builder = new Builder(
             writer: new PngWriter(),
@@ -48,54 +76,32 @@ if ($row && !empty($row['totp_secret'])) {
             margin: 10,
             roundBlockSizeMode: RoundBlockSizeMode::Margin
         );
-        $result    = $builder->build();
+
+        $result   = $builder->build();
         $qrDataUri = $result->getDataUri();
         $showQr    = true;
     }
-} else {
-    // New user, store the generated secret
-    $totp = TOTP::create(
-        secret: null,     // auto-generate secure secret
-        period: 30,       // 30s default
-        digits: 6        // 6-digit codes
-    );
-    $totp->setLabel($email);
-    $totp->setIssuer('Dataworks'); // shows as the "account provider" in apps
-    $secret = $totp->getSecret();
-    $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
-    $stmt->bindParam(':secret', $secret);
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    $otpauth = $totp->getProvisioningUri();
-    $builder = new Builder(
-        writer: new PngWriter(),
-        data: $otpauth,
-        encoding: new Encoding('UTF-8'),
-        size: 300,
-        margin: 10,
-        roundBlockSizeMode: RoundBlockSizeMode::Margin
-    );
-
-    $result   = $builder->build();
-    $qrDataUri = $result->getDataUri();
-    $showQr    = true;
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $code = trim($_POST['code'] ?? '');
-    if ($code !== '') {
-        if ($totp->verify($code)) {
-            $_SESSION['id'] = $id;
-            $_SESSION['role'] = $role;
-            $_SESSION['email'] = $email;
-            $_SESSION['deptid'] = trim($dept_id, '{"}');
-            header('Location: ../home.php');
-            exit;
-        } else {
-            echo '<p>Invalid code. Please try again.</p>';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $code = trim($_POST['code'] ?? '');
+        if ($code !== '') {
+            if ($totp->verify($code)) {
+                $_SESSION['id'] = $id;
+                $_SESSION['role'] = $role;
+                $_SESSION['email'] = $email;
+                $_SESSION['deptid'] = trim($dept_id, '{"}');
+                header('Location: ../home.php');
+                exit;
+            } else {
+                echo '<p>Invalid code. Please try again.</p>';
+            }
         }
     }
+    $qrDataUri = $result->getDataUri(); // use in <img src="<?= htmlspecialchars($qrDataUri)
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
 }
-$qrDataUri = $result->getDataUri(); // use in <img src="<?= htmlspecialchars($qrDataUri)
 ?>
 <!doctype html>
 <html>

@@ -2,8 +2,6 @@
 /* Asset Management Dashboard - Department Audit System */
 include_once "config.php";
 check_auth();
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
 /* QUERIES */
 $dept_count_q = "SELECT COUNT(DISTINCT(dept_id)) AS total_depts FROM asset_info";
 

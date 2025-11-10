@@ -1,361 +1,359 @@
 <?php
 include_once("../config.php");
 require '../vendor/autoload.php';
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
+try {
+    use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$get_depts = "SELECT dept_id, dept_name FROM department";
-$stmt = $dbh->prepare($get_depts);
-$stmt->execute();
-$depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $get_depts = "SELECT dept_id, dept_name FROM department";
+    $stmt = $dbh->prepare($get_depts);
+    $stmt->execute();
+    $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$blank_msg = '';
-check_auth();
-function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
-    global $dbh;
-    $old = false;
-    if ($type === 'ocust') {
-        $old = true;
-        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
-    } else if ($type === 'omgmt') {
-        $old = true;
-        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
-    } else if ($type === 'oSPA') {
-        $old = true;
-        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
+    $blank_msg = '';
+    check_auth();
+    function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
+        global $dbh;
+        $old = false;
+        if ($type === 'ocust') {
+            $old = true;
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
+        } else if ($type === 'omgmt') {
+            $old = true;
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
+        } else if ($type === 'oSPA') {
+            $old = true;
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
+        }
+        if ($old) {
+            $stmt = $dbh->prepare($audited_tag);
+            $stmt->execute([":tag"=>$tag, ':prev'=>$audit_id]);
+            $tag_info = $stmt->fetch();
+        } else {
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
+            $stmt = $dbh->prepare($audited_tag);
+            $stmt->execute([":tag"=>$tag, ':id'=>$auditing_id]);
+            $tag_info = $stmt->fetch();
+        }
+        return $tag_info ?: null;
     }
-    if ($old) {
-        $stmt = $dbh->prepare($audited_tag);
-        $stmt->execute([":tag"=>$tag, ':prev'=>$audit_id]);
-        $tag_info = $stmt->fetch();
-    } else {
-        $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-        $stmt = $dbh->prepare($audited_tag);
-        $stmt->execute([":tag"=>$tag, ':id'=>$auditing_id]);
-        $tag_info = $stmt->fetch();
-    }
-    return $tag_info ?: null;
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $select_audit_freq = "SELECT * FROM audit_freq";
-    $stmt = $dbh->query($select_audit_freq);
-    $audit_ids = $stmt->fetch();
-    $prev_id = '';
-    if ($_POST['audit-type'] === 'ocust') { 
-        $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
-    } else if ($_POST['audit-type'] === 'omgmt') { 
-        $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
-    } else if ($_POST['audit-type'] === 'oSPA') { 
-        $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
-    }
-    $echo = function($array) {
-        echo "<pre>";
-        var_dump($array);
-        echo "</pre>";
-    };
-    //$echo($audit_ids); 
-    //$echo($_POST);
-    $audit_id = match ($_POST['audit-type']) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+        $select_audit_freq = "SELECT * FROM audit_freq";
+        $stmt = $dbh->query($select_audit_freq);
+        $audit_ids = $stmt->fetch();
+        $prev_id = '';
+        if ($_POST['audit-type'] === 'ocust') { 
+            $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
+        } else if ($_POST['audit-type'] === 'omgmt') { 
+            $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
+        } else if ($_POST['audit-type'] === 'oSPA') { 
+            $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
+        }
+        $echo = function($array) {
+            echo "<pre>";
+            var_dump($array);
+            echo "</pre>";
+        };
+        //$echo($audit_ids); 
+        //$echo($_POST);
+        $audit_id = match ($_POST['audit-type']) {
         "cust"  => $audit_ids['curr_self_id'],
-        "ocust" => 4,
-        "mgmt"  => $audit_ids['curr_mgmt_id'],
-        "omgmt" => 6,
-        "SPA"   => $audit_ids['curr_spa_id'],
-        "oSPA"  => 9
-    };
-    //echo $audit_id . '<br>';
-    //$echo($audited_assets);
+            "ocust" => 4,
+            "mgmt"  => $audit_ids['curr_mgmt_id'],
+            "omgmt" => 6,
+            "SPA"   => $audit_ids['curr_spa_id'],
+            "oSPA"  => 9
+        };
+        //echo $audit_id . '<br>';
+        //$echo($audited_assets);
 
-    if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
-        $name = $_POST['list-type'];
-            
-        if ($name === 'SPA Audit') {
-            $name = 'BKSPA';
-            $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
-                a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
-                d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
-                FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
-                LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
-                LEFT JOIN department d ON a.dept_id = d.dept_id
-                WHERE bus_unit = :name ORDER BY a.asset_tag";
-        } else {
-            $select_q = "SELECT a.found, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
-                a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
-                d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
-                FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
-                LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
-                LEFT JOIN department d ON a.dept_id = d.dept_id
-                WHERE dept_name = :name ORDER BY a.asset_tag";
+        if (isset($_POST['list-type']) && !empty($_POST['list-type'])) {
+            $name = $_POST['list-type'];
 
-        }
-        $select_stmt = $dbh->prepare($select_q);
-        $select_stmt->execute([":name"=>$name]);
-        $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
-        unset($_SESSION['data']);
-        unset($_SESSION['info']);
-        $highest_row = 1;
-        $info = '';
-        if (!empty($result)) {
-            foreach ($result as $index => $row) {
-                if (!empty($row['asset_notes'])) {
-                    $info = explode(',', $row['asset_notes']);
-                } else {
-                    $info = '';
-                }
-                $_SESSION['data'][$index]['Unit'] = $row['bus_unit'];
-                $_SESSION['data'][$index]['Tag Number'] = $row['asset_tag'];
-                $_SESSION['data'][$index]['Descr'] = $row['asset_name'];
-                $_SESSION['data'][$index]['Serial ID'] = $row['serial_num'];
-                $_SESSION['data'][$index]['Location'] = $row['bldg_id']. '-'.$row['room_loc'];
-                $_SESSION['data'][$index]['VIN'] = '';
-                $_SESSION['data'][$index]['Custodian'] = trim(trim($row['custodian'], '{}'), '"') ?? '';
-                $_SESSION['data'][$index]['Dept'] = $row['dept_id'];
-                $_SESSION['data'][$index]['PO No.'] = $row['po'];
-                $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
-                $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
-
-                if ($row['found'] === true) {
-                    $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                    $_SESSION['data'][$index]['Found Note'] = 'Found at ' . $row['found_at']; 
-                }
-                if (!empty($info)) {
-                    $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                    $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
-                    $_SESSION['data'][$index]['Found Room Number'] = '';
-                    $_SESSION['data'][$index]['Found Building Name'] = '';
-                    $_SESSION['data'][$index]['Found Note'] = $info[1];
-                    $_SESSION['data'][$index]['Found Timestamp'] = '';
-                } else {
-                    $tag_info = getAuditedInfo($_POST['audit-type'], $row['asset_tag'], $prev_id, $audit_id);
-                    if ($tag_info) {
-                        //$echo($tag_info);
-                        $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                        $_SESSION['data'][$index]['Found Room Tag'] = '';
-                        $_SESSION['data'][$index]['Found Room Number'] = '';
-                        $_SESSION['data'][$index]['Found Building Name'] = '';
-                        $_SESSION['data'][$index]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                        $_SESSION['data'][$index]['Found Timestamp'] = '';
-                    } else {
-                        $_SESSION['data'][$index]['Tag Status'] = '';
-                        $_SESSION['data'][$index]['Found Room Tag'] = '';
-                        $_SESSION['data'][$index]['Found Room Number'] = '';
-                        $_SESSION['data'][$index]['Found Building Name'] = '';
-                        $_SESSION['data'][$index]['Found Note'] = '';
-                        $_SESSION['data'][$index]['Found Timestamp'] = '';
-                    }
-                }
-                    
-                $highest_row++;
-            }
-        }
-        $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name];
-        header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
-        exit;
-    }
-
-    $file_tmp_path = $_FILES['file']['tmp_name'];
-    $file_name = $_FILES['file']['name'];
-    $file_size = $_FILES['file']['size'];
-    $file_type = $_FILES['file']['type'];
-
-    $excel_sheet = false;
-    $csv = false;
-
-    $file_type_check = substr($file_name, strlen($file_name) - 4);
-    if ($file_type_check == 'xlsx' || $file_type_check == '.xls') {
-        $excel_sheet = true;
-    }
-    if ($file_type_check == '.csv') {
-        $csv = true;
-    }
-
-    $upload_dir = 'uploads/';
-
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0777, true);
-    }
-
-    $file_path = $upload_dir . basename($file_name);
-
-    if (move_uploaded_file($file_tmp_path, $file_path)) {
-    }
-    if ($excel_sheet) {
-        $spreadsheet = IOFactory::load($file_path);
-        $worksheet = $spreadsheet->getActiveSheet();
-        $data = $worksheet->toArray();
-        $highest_row = $worksheet->getHighestRow();
-        $highest_col = $worksheet->getHighestColumn();
-        unset($_SESSION['data']);
-        $continue = false;
-        if (!empty($data[0][11])) {
-            if ($data[0][11] === 'Tag Status') {
-                $continue = true;
-            }
-        }
-        if (count($data) >= 2) {
-            $header_index = 0;
-            if (empty($data[0][5])) {
-                $header_index = 1;
-                unset($data[0]);
-            }
-            /* SHEET HAS 2 ROW HEADERS */
-            if (!isset($data[0])) {
-                $skipped = 1;
-                foreach ($data as $index => $row) {
-
-                    if ($index === 0) {
-                        continue;
-                    }
-
-                    if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
-                        $skipped++;
-                        continue;
-                    }
-                    foreach ($row as $r_index => $r_row) {
-                        if (
-                            trim($data[1][$r_index]) === 'Fund' || trim($data[1][$r_index]) === 'Asset ID' || trim($data[1][$r_index]) === 'Asset Type' || trim($data[1][$r_index]) === 'Model' ||
-                            trim($data[1][$r_index]) === 'Manufacturer' || trim($data[1][$r_index]) === 'Project' || trim($data[1][$r_index]) === 'Class' || trim($data[1][$r_index]) === 'Profile ID'
-                        ) {
-                            continue;
-                        }
-                        if ($data[1][$r_index] === 'Tag Number') {
-                            $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                            $select_stmt = $dbh->prepare($select_q);
-                            $select_stmt->execute([":tag"=>$r_row]);
-                            $asset_notes = $select_stmt->fetchColumn();
-                            if (!empty($asset_notes)) {
-                                $info = explode(",", $asset_notes);
-                                $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
-                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
-                                $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                            } else {
-                                $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
-                                if ($tag_info) {
-                                    $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
-                                    $stmt = $dbh->prepare($check_note);
-                                    $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
-                                    $notes = $stmt->fetchAll();
-                                    //$echo($tag_info);
-                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                } else {
-                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                }
-                            }
-                        }
-                        $_SESSION['data'][$index - $skipped][$data[1][$r_index]] = $r_row;
-                    }
-                }
-                /* SHEET HAS 1 ROW HEADER */
-
-            } else if ($continue === false) {
-                $skipped = 0;
-                foreach ($data as $index => $row) {
-                    if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
-                        $skipped++;
-                        continue;
-                    }
-                    foreach ($row as $r_index => $r_row) {
-                        if (
-                            trim($data[0][$r_index]) === 'Fund' || trim($data[0][$r_index]) === 'Asset ID' || trim($data[0][$r_index]) === 'Asset Type' || trim($data[0][$r_index]) === 'Model' ||
-                            trim($data[0][$r_index]) === 'Manufacturer' || trim($data[0][$r_index]) === 'Project' || trim($data[0][$r_index]) === 'Class' || trim($data[0][$r_index]) === 'Profile ID'
-                        ) {
-                            continue;
-                        }
-                        if ($data[0][$r_index] === 'Tag Number') {
-                            $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                            $select_stmt = $dbh->prepare($select_q);
-                            $select_stmt->execute([":tag"=>$r_row]);
-                            $asset_notes = $select_stmt->fetchColumn();
-                            if (!empty($asset_notes)) {
-                                $info = explode(",", $asset_notes);
-                                $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
-                                $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
-                                $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                            } else {
-                                $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
-                                if ($tag_info) {
-                                    //$echo($tag_info);
-                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                } else {
-                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                }
-                            }
-                        }
-
-                        $_SESSION['data'][$index - $skipped][$data[0][$r_index]] = $r_row;
-                    }
-                }
-                /* CONTINUE FROM SHEET */
-            } else if ($continue === true) {
-                foreach ($data as $index => $row) {
-                    if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
-                        continue;
-                    }
-                    foreach ($row as $r_index => $r_row) {
-                        if ($data[0][$r_index] !== '' && $data[0][$r_index] !== null) {
-                            $_SESSION['data'][$index][$data[0][$r_index]] = $r_row;
-                        }
-                    }
-                }
-            }
-
-
-            $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name];
-            if (isset($_SESSION['data'][-1]) || isset($_SESSION['data'][0])) {
-                try {
-                    $keys = array_keys($_SESSION['data'][0]);
-                } catch (Exception $e) {
-                    $keys = array_keys($_SESSION['data'][1]);
-                }
-                if (!in_array("Tag Number", $keys)) {
-                    $blank_msg = "Headers cannot be found";
-                } else {
-                    header('Location: auditing.php');
-                    exit();
-                }
+            if ($name === 'SPA Audit') {
+                $name = 'BKSPA';
+                $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
+                    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
+                    d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
+                    FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
+                    LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
+                    LEFT JOIN department d ON a.dept_id = d.dept_id
+                    WHERE bus_unit = :name ORDER BY a.asset_tag";
             } else {
-                $blank_msg = "File cannot be empty 1";
-                echo "<pre>";
-                var_dump($_SESSION['data']);
-                echo "</pre>";
+                $select_q = "SELECT a.found, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
+                    a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
+                    d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
+                    FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
+                    LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
+                    LEFT JOIN department d ON a.dept_id = d.dept_id
+                    WHERE dept_name = :name ORDER BY a.asset_tag";
+
             }
-        } else {
+            $select_stmt = $dbh->prepare($select_q);
+            $select_stmt->execute([":name"=>$name]);
+            $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
             unset($_SESSION['data']);
             unset($_SESSION['info']);
-            unset($_SESSION['max_rows']);
-            $blank_msg = "File cannot be empty 2";
+            $highest_row = 1;
+            $info = '';
+            if (!empty($result)) {
+                foreach ($result as $index => $row) {
+                    if (!empty($row['asset_notes'])) {
+                        $info = explode(',', $row['asset_notes']);
+                    } else {
+                        $info = '';
+                    }
+                    $_SESSION['data'][$index]['Unit'] = $row['bus_unit'];
+                    $_SESSION['data'][$index]['Tag Number'] = $row['asset_tag'];
+                    $_SESSION['data'][$index]['Descr'] = $row['asset_name'];
+                    $_SESSION['data'][$index]['Serial ID'] = $row['serial_num'];
+                    $_SESSION['data'][$index]['Location'] = $row['bldg_id']. '-'.$row['room_loc'];
+                    $_SESSION['data'][$index]['VIN'] = '';
+                    $_SESSION['data'][$index]['Custodian'] = trim(trim($row['custodian'], '{}'), '"') ?? '';
+                    $_SESSION['data'][$index]['Dept'] = $row['dept_id'];
+                    $_SESSION['data'][$index]['PO No.'] = $row['po'];
+                    $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
+                    $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
+
+                    if ($row['found'] === true) {
+                        $_SESSION['data'][$index]['Tag Status'] = 'Found';
+                        $_SESSION['data'][$index]['Found Note'] = 'Found at ' . $row['found_at']; 
+                    }
+                    if (!empty($info)) {
+                        $_SESSION['data'][$index]['Tag Status'] = 'Found';
+                        $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
+                        $_SESSION['data'][$index]['Found Room Number'] = '';
+                        $_SESSION['data'][$index]['Found Building Name'] = '';
+                        $_SESSION['data'][$index]['Found Note'] = $info[1];
+                        $_SESSION['data'][$index]['Found Timestamp'] = '';
+                    } else {
+                        $tag_info = getAuditedInfo($_POST['audit-type'], $row['asset_tag'], $prev_id, $audit_id);
+                        if ($tag_info) {
+                            //$echo($tag_info);
+                            $_SESSION['data'][$index]['Tag Status'] = 'Found';
+                            $_SESSION['data'][$index]['Found Room Tag'] = '';
+                            $_SESSION['data'][$index]['Found Room Number'] = '';
+                            $_SESSION['data'][$index]['Found Building Name'] = '';
+                            $_SESSION['data'][$index]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
+                            $_SESSION['data'][$index]['Found Timestamp'] = '';
+                        } else {
+                            $_SESSION['data'][$index]['Tag Status'] = '';
+                            $_SESSION['data'][$index]['Found Room Tag'] = '';
+                            $_SESSION['data'][$index]['Found Room Number'] = '';
+                            $_SESSION['data'][$index]['Found Building Name'] = '';
+                            $_SESSION['data'][$index]['Found Note'] = '';
+                            $_SESSION['data'][$index]['Found Timestamp'] = '';
+                        }
+                    }
+
+                    $highest_row++;
+                }
+            }
+            $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name];
+            header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+            exit;
         }
-    }
+
+        $file_tmp_path = $_FILES['file']['tmp_name'];
+        $file_name = $_FILES['file']['name'];
+        $file_size = $_FILES['file']['size'];
+        $file_type = $_FILES['file']['type'];
+
+        $excel_sheet = false;
+        $csv = false;
+
+        $file_type_check = substr($file_name, strlen($file_name) - 4);
+        if ($file_type_check == 'xlsx' || $file_type_check == '.xls') {
+            $excel_sheet = true;
+        }
+        if ($file_type_check == '.csv') {
+            $csv = true;
+        }
+
+        $upload_dir = 'uploads/';
+
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        $file_path = $upload_dir . basename($file_name);
+
+        if (move_uploaded_file($file_tmp_path, $file_path)) {
+        }
+        if ($excel_sheet) {
+            $spreadsheet = IOFactory::load($file_path);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $data = $worksheet->toArray();
+            $highest_row = $worksheet->getHighestRow();
+            $highest_col = $worksheet->getHighestColumn();
+            unset($_SESSION['data']);
+            $continue = false;
+            if (!empty($data[0][11])) {
+                if ($data[0][11] === 'Tag Status') {
+                    $continue = true;
+                }
+            }
+            if (count($data) >= 2) {
+                $header_index = 0;
+                if (empty($data[0][5])) {
+                    $header_index = 1;
+                    unset($data[0]);
+                }
+                /* SHEET HAS 2 ROW HEADERS */
+                if (!isset($data[0])) {
+                    $skipped = 1;
+                    foreach ($data as $index => $row) {
+
+                        if ($index === 0) {
+                            continue;
+                        }
+
+                        if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
+                            $skipped++;
+                            continue;
+                        }
+                        foreach ($row as $r_index => $r_row) {
+                            if (
+                                trim($data[1][$r_index]) === 'Fund' || trim($data[1][$r_index]) === 'Asset ID' || trim($data[1][$r_index]) === 'Asset Type' || trim($data[1][$r_index]) === 'Model' ||
+                                trim($data[1][$r_index]) === 'Manufacturer' || trim($data[1][$r_index]) === 'Project' || trim($data[1][$r_index]) === 'Class' || trim($data[1][$r_index]) === 'Profile ID'
+                            ) {
+                                continue;
+                            }
+                            if ($data[1][$r_index] === 'Tag Number') {
+                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
+                                $select_stmt = $dbh->prepare($select_q);
+                                $select_stmt->execute([":tag"=>$r_row]);
+                                $asset_notes = $select_stmt->fetchColumn();
+                                if (!empty($asset_notes)) {
+                                    $info = explode(",", $asset_notes);
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                } else {
+                                    $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
+                                    if ($tag_info) {
+                                        $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
+                                        $stmt = $dbh->prepare($check_note);
+                                        $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
+                                        $notes = $stmt->fetchAll();
+                                        //$echo($tag_info);
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    } else {
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    }
+                                }
+                            }
+                            $_SESSION['data'][$index - $skipped][$data[1][$r_index]] = $r_row;
+                        }
+                    }
+                    /* SHEET HAS 1 ROW HEADER */
+
+                } else if ($continue === false) {
+                    $skipped = 0;
+                    foreach ($data as $index => $row) {
+                        if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
+                            $skipped++;
+                            continue;
+                        }
+                        foreach ($row as $r_index => $r_row) {
+                            if (
+                                trim($data[0][$r_index]) === 'Fund' || trim($data[0][$r_index]) === 'Asset ID' || trim($data[0][$r_index]) === 'Asset Type' || trim($data[0][$r_index]) === 'Model' ||
+                                trim($data[0][$r_index]) === 'Manufacturer' || trim($data[0][$r_index]) === 'Project' || trim($data[0][$r_index]) === 'Class' || trim($data[0][$r_index]) === 'Profile ID'
+                            ) {
+                                continue;
+                            }
+                            if ($data[0][$r_index] === 'Tag Number') {
+                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
+                                $select_stmt = $dbh->prepare($select_q);
+                                $select_stmt->execute([":tag"=>$r_row]);
+                                $asset_notes = $select_stmt->fetchColumn();
+                                if (!empty($asset_notes)) {
+                                    $info = explode(",", $asset_notes);
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                } else {
+                                    $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
+                                    if ($tag_info) {
+                                        //$echo($tag_info);
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    } else {
+                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    }
+                                }
+                            }
+
+                            $_SESSION['data'][$index - $skipped][$data[0][$r_index]] = $r_row;
+                        }
+                    }
+                    /* CONTINUE FROM SHEET */
+                } else if ($continue === true) {
+                    foreach ($data as $index => $row) {
+                        if (in_array('Tag Number', $row) || $row[1] === '' || $row[1] === NULL) {
+                            continue;
+                        }
+                        foreach ($row as $r_index => $r_row) {
+                            if ($data[0][$r_index] !== '' && $data[0][$r_index] !== null) {
+                                $_SESSION['data'][$index][$data[0][$r_index]] = $r_row;
+                            }
+                        }
+                    }
+                }
+
+
+                $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name];
+                if (isset($_SESSION['data'][-1]) || isset($_SESSION['data'][0])) {
+                    try {
+                        $keys = array_keys($_SESSION['data'][0]);
+                    } catch (Exception $e) {
+                        $keys = array_keys($_SESSION['data'][1]);
+                    }
+                    if (!in_array("Tag Number", $keys)) {
+                        $blank_msg = "Headers cannot be found";
+                    } else {
+                        header('Location: auditing.php');
+                        exit();
+                    }
+                } else {
+                    $blank_msg = "File cannot be empty 1";
+                    echo "<pre>";
+                    var_dump($_SESSION['data']);
+                    echo "</pre>";
+                }
+            } else {
+                unset($_SESSION['data']);
+                unset($_SESSION['info']);
+                unset($_SESSION['max_rows']);
+                $blank_msg = "File cannot be empty 2";
+            }
+        }
 /*  if ($csv) {
     if (($handle = fopen($file_name, 'r')) !== FALSE) {
       while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -369,6 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
       fclose($handle);
     }
 }*/
+    }
+} catch (PDOException $e) {
+    error_log($e->getMessage());
+} catch (Exception $e) {
+    error_log($e->getMessage());
 }
 ?>
 <!DOCTYPE html>

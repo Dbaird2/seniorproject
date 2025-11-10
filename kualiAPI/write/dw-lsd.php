@@ -36,7 +36,7 @@ foreach($_SESSION['data'] as $session) {
         $tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
         // ASSET
         $variables['data']['dpHYE3a-ml'] = $session['Descr'];
-        $variables['data']['8Rob3wGhC-'] = $session['Serial ID'];
+        $variables['data']['8Rob3wGhC-'] = $session['Serial ID'] ?? 'N/A';
         $variables['data']['2iwsFa0_2j'] = $data['tag'];
         $variables['data']['_E4bMX9gkw'] = (!empty($tag_info['make'])) ? $tag_info['make'] : 'N/A';
         $variables['data']['ZcxRfwh8uT'] = (!empty($tag_info['asset_model'])) ? $tag_info['asset_model'] : 'N/A';

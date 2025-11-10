@@ -1,9 +1,6 @@
 <?php
 include_once __DIR__ . '/../config.php';
 set_time_limit(700);
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
@@ -2166,11 +2163,13 @@ function checkFormStatus() {
 }
 function deleteOverdueSchedule() {
     global $dbh;
+    echo '<br>Delete Overdue Schedule<br>';
     $select = 'DELETE FROM audit_schedule WHERE audit_date < CURRENT_TIMESTAMP';
     $stmt = $dbh->query($select);
 }
 function getAuditSchedules() {
     global $dbh;
+    echo '<br>getAuditSchedules<br>';
     $select = "SELECT * FROM kuali_table";
     $select_stmt = $dbh->query($select);
     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
@@ -2276,7 +2275,6 @@ function getAuditSchedules() {
         echo "General error " . $e->getMessage();
         exit;
     }
-    echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
     exit;
     function addDepartment($c_display_name, $m_full_name, $dept_id, $dept_name)
     {

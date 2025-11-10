@@ -15,6 +15,24 @@ $db_pass = $_ENV['DB_PASS'] ?? NULL;
 try {
     if (session_status() === PHP_SESSION_NONE) {
         ini_set('session.gc_maxlifetime', 43200);
+        ini_set('display_errors', '0');
+        ini_set('error_logs', '1');
+        ini_set('display_startup_errors', '0');
+        ini_set('error_reporting', (string)E_ALL);
+        ini_set('error_log','/var/log/php/app-error.log');
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_samesite', 'Lax');
+        ini_set('session.cookie_secure', '1');
+        ini_set('session.use_trans_sid', '0');
+            ini_set('session.gc_probability', '1');
+        ini_set('session.gc_divisor', '1000');
+        ini_set('memory_limit', '256M');
+        ini_set('max_execution_time', '700');
+        ini_set('max_input_time', '120');
+        ini_set('upload_max_filesize', '30M');
+        ini_set('default_charset', 'UTF-8');
         session_set_cookie_params(43200);
         session_start();
         $_SESSION['app_pass'] = $_ENV['APP_PASS'] ?? NULL;
