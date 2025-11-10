@@ -2,8 +2,8 @@
 include_once("../config.php");
 require '../vendor/autoload.php';
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 try {
-    use PhpOffice\PhpSpreadsheet\IOFactory;
 
     $get_depts = "SELECT dept_id, dept_name FROM department";
     $stmt = $dbh->prepare($get_depts);
