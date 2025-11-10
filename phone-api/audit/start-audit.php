@@ -8,7 +8,7 @@ include_once "../../config.php";
 
 $decoded_data = file_get_contents('php://input');
 
-$data = json_decode($decoded_data);
+$data = json_decode($decoded_data, true);
 
 
 if (isset($data['dept_name'])) {
