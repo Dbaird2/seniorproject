@@ -237,7 +237,7 @@ try {
                                     $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                     if ($tag_info) {
                                         $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
-                                        $stmt = $dbh->prepare($check_note);
+                                        $stmt = $dbh->prepare($check_notes);
                                         $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
                                         $notes = $stmt->fetchAll();
                                         //$echo($tag_info);
