@@ -9,17 +9,17 @@ if (empty($_SESSION['info']) && empty($_SESSION['data'])) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?msg=NoRecentAudit");
     exit;
 }
+
+$filePath = $count = NULL;
+
+require '../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 try {
-
-    $filePath = $count = NULL;
-
-    require '../vendor/autoload.php';
-
-    use PhpOffice\PhpSpreadsheet\IOFactory;
-    use PhpOffice\PhpSpreadsheet\Style\Alignment;
-    use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
     $highest_row = (int)$_SESSION['info'][0];
     $key_index = -1;
     $key_found = true;
