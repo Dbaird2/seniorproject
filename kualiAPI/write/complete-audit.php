@@ -3,9 +3,10 @@ include_once '../../config.php';
 include_once "search.php";
 include_once "get-info.php";
 include_once "../dataworks-read/dw-check-forms.php";
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+include_once "../../vendor/autoload.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+ob_start();
 $variables = [[]];
 if (!isset($_GET['dept_id'])) {
     die('GET not set');
@@ -165,7 +166,7 @@ try {
         $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     }
 } catch (PDOException $e) {
-    echo $e->getMessage();
+    error_log(e->getMessage());
 }
 $variables['data']['55-0zfJWML']['displayName'] = $manager_name;
 $variables['data']['55-0zfJWML']['email'] = $mana_info['email'];
@@ -279,12 +280,38 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 
 curl_close($curl);
-echo json_encode([
-    $document_id
-    ,$action_id
-    ,$form_id
-    ,$resp_data
-]);
+
+    try {
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'dasonbaird25@gmail.com';
+        $mail->Password   = $_SESSION['app_pass']; 
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+        $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8';
+        $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
+        $mail->addAddress('distribution@csub.edu', 'Recipient');
+        $mail->Subject = 'Audit PDF ' . $dept_id;
+        $pdfUrl = "https://dataworks-7b7x.onrender.com/audit/audit_history/audit_email_pdf.php?dept_id=$dept_id&audit_id=$audit_id";
+        $pdfData = file_get_contents($pdfUrl);
+        if ($pdfData === false) {
+            throw new Exception("Unable to download PDF from $pdfUrl");
+        }
+
+        $mail->addStringAttachment($pdfData, "audit_{$dept_id}_{$audit_id}.pdf", 'base64', 'application/pdf');
+        $mail->Body    = '<h4>Attached link to completed audit PDF...</h4><br>
+            <a href="https://dataworks-7b7x.onrender.com/auth/reset-password.php?token=' . $token . '&email='.$email.'">Reset Password</a>';
+
+        $mail->send();
+        
+    } catch (Exception $e) {
+        $message = "Invalid Email Address: ". $email;
+        $success = false;
+    }
+
 
 header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
 exit;
