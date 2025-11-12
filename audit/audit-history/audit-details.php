@@ -4,9 +4,6 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 /* THIS IS FOR PDF DOWNLOAD */
 
 check_auth();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 $auditor = $_GET['auditor'] ?? '';
 $dept_id = $_GET['dept_id'] ?? '';

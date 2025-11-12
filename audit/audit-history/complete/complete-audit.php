@@ -1,11 +1,12 @@
 <?php
 include_once "../../../config.php";
+include_once "../../../vendor/autoload.php";
 include_once "../../../kualiAPI/write/search.php";
 include_once "../../../kualiAPI/dataworks-read/dw-check-forms.php";
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 $variables = [[]];
+ob_start();
 if (isset($_GET['dept_id'])) {
     $dept_id = $_GET['dept_id'];
     $audit_id = (int)$_GET['audit_id'];
@@ -282,6 +283,39 @@ if (isset($_GET['dept_id'])) {
         ,$form_id
         ,$resp_data
     ]);
+    ob_get_clean();
+    try {
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'dasonbaird25@gmail.com';
+        $mail->Password   = $_SESSION['app_pass']; 
+        $mail->SMTPSecure = 'tls';
+        $mail->Port       = 587;
+        $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8';
+        $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
+        $mail->addAddress('distribution@csub.edu', 'Recipient');
+        $mail->Subject = 'Audit PDF ' . $dept_id;
+        $pdfUrl = "https://dataworks-7b7x.onrender.com/audit/audit_history/audit_email_pdf.php?dept_id=$dept_id&audit_id=$audit_id";
+        $pdfData = file_get_contents($pdfUrl);
+        if ($pdfData === false) {
+            throw new Exception("Unable to download PDF from $pdfUrl");
+        }
+
+        $mail->addStringAttachment($pdfData, "audit_{$dept_id}_{$audit_id}.pdf", 'base64', 'application/pdf');
+        $mail->Body    = '<h4>Attached link to completed audit PDF...</h4><br>
+            <a href="https://dataworks-7b7x.onrender.com/auth/reset-password.php?token=' . $token . '&email='.$email.'">Reset Password</a>';
+
+        $mail->send();
+        
+    } catch (Exception $e) {
+        $message = "Invalid Email Address: ". $email;
+        $success = false;
+    }
+
+
     exit;
 
 }

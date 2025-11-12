@@ -195,9 +195,13 @@ include_once("../../config.php");
             $form_array = explode(',', $trim_forms);
             $counter = 0;
             if ($form_array[1] === 'lsd') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Loss/Stolen/Damaged Form: </span>';
+                echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
             } else if ($form_array[1] === 'transfer') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form </span>';
+                echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
+            } else if ($form_array[1] === 'rlsd') {
+                echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
+            } else if ($form_array[1] === 'rtransfer') {
+                echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
             }
             if ($form_array[2] === 'in-progress') {
                 $color = '#FFFF00';
