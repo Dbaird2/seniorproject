@@ -282,7 +282,7 @@ $resp_data = json_decode($resp, true);
 curl_close($curl);
 
     try {
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
@@ -308,8 +308,7 @@ curl_close($curl);
         $mail->send();
         
     } catch (Exception $e) {
-        $message = "Invalid Email Address: ". $email;
-        $success = false;
+        error_log($e->getMessage());
     }
 
 
