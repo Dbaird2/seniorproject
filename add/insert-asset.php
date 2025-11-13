@@ -33,13 +33,13 @@ if (isset($_POST['add'])) {
     $params[] = $po;
 
     if ($model !== '') {
-        $column[] = "model";
+        $column[] = "asset_model";
         $params[] = $model;
         $question_marks[] = '?';
     }
     if ($make !== '') {
         $column[] = "make";
-        $params[] = $model;
+        $params[] = $make;
         $question_marks[] = '?';
     }
     if ($sn !== '') {
