@@ -295,7 +295,7 @@ curl_close($curl);
         $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
         $mail->addAddress('distribution@csub.edu', 'Recipient');
         $mail->Subject = 'Audit PDF ' . $dept_id;
-        $pdfUrl = "https://dataworks-7b7x.onrender.com/audit/audit_history/audit_email_pdf.php?dept_id=$dept_id&audit_id=$audit_id";
+        $pdfUrl = "https://dataworks-7b7x.onrender.com/api/audit-email-pdf.php?dept_id=$dept_id&audit_id=$audit_id";
         $pdfData = file_get_contents($pdfUrl);
         if ($pdfData === false) {
             throw new Exception("Unable to download PDF from $pdfUrl");
