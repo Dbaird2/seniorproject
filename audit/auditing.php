@@ -754,7 +754,7 @@ document.getElementById('dynamicForm').addEventListener('submit', function(e) {
     let input = document.getElementById('bldg-name').value;
     let option = [...document.querySelectorAll('#bldg-names option')].map(o => o.value);
     if (!option.includes(input)) {
-        alert("Invalid Building Name");
+        alert("Invalid Building Name or Building is not in database");
     } else {
         e.target.submit();
     }
