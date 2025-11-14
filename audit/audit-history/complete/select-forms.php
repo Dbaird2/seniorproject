@@ -22,43 +22,60 @@ $depts_info = $stmt->fetchAll();
     <title>Form Submissions <?= $_SESSION['info'][2] . ' ' . $dept_name ?></title>
     <?php include_once "../../../navbar.php"; ?>
     <style>
-        * {
+* {
             box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #001a4d 0%, #003da5 50%, #ffffff 100%);
             margin: 0;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 61, 165, 0.2);
             overflow: hidden;
             margin-top: 2rem;
+            margin-bottom: 2rem;
+            border: 3px solid #FFB81C;
         }
 
         .header {
-            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            background: linear-gradient(135deg, #003DA5 0%, #001a4d 100%);
             color: white;
-            padding: 2rem;
+            padding: 2.5rem;
             text-align: center;
+            border-bottom: 4px solid #FFB81C;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFB81C 0%, #003DA5 50%, #FFB81C 100%);
         }
 
         .header h1 {
             margin: 0;
-            font-size: 1.75rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .table-wrapper {
             margin-top: 0;
             overflow-x: auto;
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .table {
@@ -69,42 +86,43 @@ $depts_info = $stmt->fetchAll();
         }
 
         .table thead tr {
-            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            background: linear-gradient(90deg, #003DA5 0%, #FFB81C 100%);
             color: white;
         }
 
         .table thead th {
-            padding: 1rem;
+            padding: 1.25rem 1rem;
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             font-size: 0.75rem;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             white-space: nowrap;
         }
 
         .table thead th:first-child {
-            border-top-left-radius: 8px;
+            border-top-left-radius: 12px;
         }
 
         .table thead th:last-child {
-            border-top-right-radius: 8px;
+            border-top-right-radius: 12px;
         }
 
         .table tbody tr {
             background: white;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-bottom: 1px solid #e2e8f0;
         }
 
         .table tbody tr:hover {
-            background: #f0f9ff;
-            transform: scale(1.01);
-            box-shadow: 0 4px 12px rgba(66, 165, 245, 0.1);
+            background: linear-gradient(90deg, #f0f9ff 0%, #fffbf0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 61, 165, 0.15);
+            border-left: 4px solid #FFB81C;
         }
 
         .table tbody td {
-            padding: 1rem;
+            padding: 1.25rem 1rem;
             vertical-align: middle;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -126,16 +144,17 @@ $depts_info = $stmt->fetchAll();
             }
         }
 
+        /* Updated form inputs to use CSUB colors */
         select,
         input[type="text"],
         textarea {
             width: 100%;
-            padding: 0.625rem 0.875rem;
-            border: 2px solid #e3f2fd;
-            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #FFB81C;
+            border-radius: 8px;
             font-size: 0.875rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
+            background: #f9f9f9;
             font-family: inherit;
         }
 
@@ -143,78 +162,84 @@ $depts_info = $stmt->fetchAll();
         input[type="text"]:focus,
         textarea:focus {
             outline: none;
-            border-color: #42a5f5;
-            box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.15);
+            border-color: #003DA5;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 61, 165, 0.1);
         }
 
         select:hover,
         input[type="text"]:hover,
         textarea:hover {
-            border-color: #90caf9;
+            border-color: #003DA5;
+            background: white;
         }
 
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 100px;
             font-family: inherit;
         }
 
+        /* Updated forms dropdown to use CSUB colors */
         .forms-needed {
-            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            background: linear-gradient(135deg, #003DA5 0%, #001a4d 100%);
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
+            border-color: #FFB81C;
         }
 
         .forms-needed option {
             background: white;
-            color: #2d3748;
+            color: #003DA5;
         }
 
         label {
             display: block;
             font-size: 0.75rem;
-            font-weight: 600;
-            color: #1565c0;
-            margin-bottom: 0.375rem;
+            font-weight: 700;
+            color: #003DA5;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .error-label {
-            color: red;
+            color: #d32f2f;
             font-size: x-small;
         }
 
+        /* Updated submit button to use CSUB colors */
         #submit {
-            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #FFB81C 0%, #FFA500 100%);
+            color: #003DA5;
+            border: 2px solid #003DA5;
             padding: 1rem 3rem;
             font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
+            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
             margin: 2rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(66, 165, 245, 0.4);
+            box-shadow: 0 8px 24px rgba(255, 184, 28, 0.3);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
         #submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(66, 165, 245, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 61, 165, 0.3);
+            background: linear-gradient(135deg, #FFA500 0%, #FFB81C 100%);
         }
 
         #submit:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
         }
 
         .form-field-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
             transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -231,16 +256,23 @@ $depts_info = $stmt->fetchAll();
 
         .status-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
+            background: linear-gradient(135deg, #003DA5 0%, #001a4d 100%);
+            color: #FFB81C;
+            letter-spacing: 0.5px;
         }
 
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
             }
 
             .table {
@@ -250,6 +282,11 @@ $depts_info = $stmt->fetchAll();
             .table thead th,
             .table tbody td {
                 padding: 0.75rem 0.5rem;
+            }
+
+            #submit {
+                padding: 0.875rem 2rem;
+                margin: 1.5rem;
             }
         }
     </style>

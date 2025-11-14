@@ -29,7 +29,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background-color: #001a70;
+  background: linear-gradient(360deg, #001A70 97%, #ffc72c 49%);
   height: 64px;
   display: flex;
   justify-content: space-between;
