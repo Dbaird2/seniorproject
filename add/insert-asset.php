@@ -88,4 +88,6 @@ if (isset($_POST['add'])) {
 } else {
     exit;
 }
+header('location: https://dataworks-7b7x.onrender.com/add/add-asset.php');
+exit;
 

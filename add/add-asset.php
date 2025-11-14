@@ -175,7 +175,7 @@ $dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                         <div class="input-container">
                                                 <label for="sn">Serial Number</label>
-                                                <input type="text" name="sn" class="input" placeholder="Ex: 7BXS36">
+                                                <input type="text" name="sn" class="input" placeholder="Ex: 7BXS36" required>
 
                                         </div>
                                         <div class="input-container">
@@ -215,7 +215,7 @@ $dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                         <div class="input-container">
                                                 <label for="profile">Profile ID</label>
-                                                <input type="text" name="profile" class="input" placeholder="Profile ID" required>
+                                                <input type="text" name="profile" class="input" placeholder="Profile ID">
 
                                         </div>
                                         <div class="input-container">
