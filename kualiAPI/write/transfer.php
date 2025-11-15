@@ -18,6 +18,9 @@ echo json_encode(['tags'=>$data]);
 $variables = [[]];
 $email = $_SESSION['email'];
 $audit_dept = $data['dept_id'];
+if (!empty($data['audit_id'])) {
+    $audit_id = $data['audit_id'];
+}
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -245,16 +248,14 @@ if (preg_match($email_regex, $
         $resp = curl_exec($curl);
         $resp_data = json_decode($resp, true);
         echo json_encode(['data'=>$data]);
-        if (!empty($data['audit_id'])) {
-            $audit_id = $data['audit_id'];
-            $dept = $data['dept_id'];
+        if (isset($audit_id)) {
             $input_array = $document_id . ',rtransfer,in-progress'; 
             foreach ($data['tags'] as $tag_info) {
                 $input_array .= ',' . $tag_info['tag'];
             }
             $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
             $update_stmt = $dbh->prepare($update);
-            $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
+            $update_stmt->execute([':array'=>$input_array, ":dept"=>$audit_dept, ":id"=>$audit_id]);
         }
         curl_close($curl);
     }
