@@ -192,61 +192,72 @@ include_once("../../config.php");
             $FDN = "/^F[DN]?\d+$/";
             $SPA = "/^SP\d+$/";
             $trim_forms = trim($check_forms, '{}');
+            $replace_forms = str_replace('"', '', $trim_forms);
             $form_array = explode(',', $trim_forms);
             $counter = 0;
-            echo '<pre>';
-            var_dump($audits[$curr_index]['check_forms']);
-            echo '</pre>';
-            if ($form_array[1] === 'lsd') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
-            } else if ($form_array[1] === 'transfer') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
-            } else if ($form_array[1] === 'rlsd') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
-            } else if ($form_array[1] === 'rtransfer') {
-                echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
-            }
-            if ($form_array[2] === 'in-progress') {
-                $color = '#FFFF00';
-                echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+            foreach ($form_array as $index2 => $form) {
+                $count = count($form);
+                if ($count == 24) {
+                    echo '<br>'. $form. ' ';
+                    continue;
+                }
+
+                if ($form === 'lsd') {
+                    echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
+                    continue;
+                } else if ($form === 'transfer') {
+                    echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
+                    continue;
+                } else if ($form === 'rlsd') {
+                    echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
+                    continue;
+                } else if ($form === 'rtransfer') {
+                    echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
+                    continue;
+                }
+                if ($form === 'in-progress') {
+                    $color = '#FFFF00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>In Progress </span>
 <?php
-                echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-            } else if ($form_array[2] === 'complete') {
-                $color = '#00FF00';
-                echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'complete') {
+                    $color = '#00FF00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>Complete </span>
 <?php
-                echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-            } else if ($form_array[2] === 'withdrawn') {
-                $color = '#FF2F00';
-                echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'withdrawn') {
+                    $color = '#FF2F00';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>Withdrawn </span>
 <?php
-                echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-            } else if ($form_array[2] === 'denied') {
-                $color = '#FF0000';
-                echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'denied') {
+                    $color = '#FF0000';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 ?>
             <span style='color: <?= $color ?> ;'>Denied </span>
             <span style="font-weight:700; color: #003DA5;"> Tags </span>
 <?php
-            }
-            $tag_array = array_slice($form_array, 3);
-            foreach ($tag_array as $tag) {
+                    continue;
+                }
 
                 if (
-                    preg_match($ASI, $tag) || preg_match($STU, $tag) ||
-                    preg_match($CMP, $tag) || preg_match($FDN, $tag) ||
-                    preg_match($SPA, $tag)
+                    preg_match($ASI, $form) || preg_match($STU, $form) ||
+                    preg_match($CMP, $form) || preg_match($FDN, $form) ||
+                    preg_match($SPA, $form)
                 ) {
-                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $tag . ' </span>';
+                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
             }
             echo '<br>';
