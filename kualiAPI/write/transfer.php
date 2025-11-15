@@ -87,7 +87,7 @@ if ($data['form_type'] === 'dept') {
                 $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
                 $variables['data']['t7mH-1FlaO']['data'][$index]['data']["pwkDQndmwN"] = $it_related['asset_name'];
                 if (!empty($asset['notes'])) {
-                    $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $asset['notes'];
+                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK'] = $asset['notes'];
                 }
                 if (in_array($it_related['type2'], ['Laptop', 'Tablet', 'Desktop'])) {
                     $variables['data']['xPQtXjuWnk']['id'] = 'yes';
@@ -105,7 +105,7 @@ if ($data['form_type'] === 'dept') {
                     $variables['data']['t7mH-1FlaO']['data'][$index]['data']['93UQc2my9e']['label'] = $asset['in_bldg'];
                 }
                 if (!empty($asset['room']) && !empty($asset['bldg'])) {
-                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['WzqON1QbTK']['label'] = (string)$asset['bldg'];
+                    $variables['data']['t7mH-1FlaO']['data'][$index]['data']['hXHmCy0mek']['label'] = (string)$asset['bldg'];
                     $variables['data']['t7mH-1FlaO']['data'][$index]['data']['zZztPX8Pcw'] = (string)$asset['room'];
                 }
                 $variables['data']['K3p03X2Jvx'] = $asset['why'];

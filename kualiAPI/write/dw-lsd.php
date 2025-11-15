@@ -3,9 +3,6 @@ include_once "../../config.php";
 include_once "../../vendor/autoload.php";
 include_once 'search.php';
 include_once 'get-info.php';
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 if (!isset($_POST)) {
     die("Not submitted yet.");
 }
@@ -46,7 +43,10 @@ foreach($_SESSION['data'] as $session) {
         break;
     }
 }
-
+if (empty($variables['data']['2iwsFa0_2j'])) {
+    echo json_encode(['error'=>'No Tag was found']);
+    die('No Tag was found');
+}
 
 $dept_id = $_SESSION['info'][2];
 $audit_dept_id = $data['dept_id'];
