@@ -194,6 +194,9 @@ include_once("../../config.php");
             $trim_forms = trim($check_forms, '{}');
             $form_array = explode(',', $trim_forms);
             $counter = 0;
+            echo '<pre>';
+            var_dump($audits[$curr_index]['check_forms']);
+            echo '</pre>';
             if ($form_array[1] === 'lsd') {
                 echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
             } else if ($form_array[1] === 'transfer') {
