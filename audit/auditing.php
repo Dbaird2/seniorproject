@@ -715,7 +715,7 @@ function filterTable() {
                     if (txt_value.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
-                        td = tr[i].getElementsByTagName("td")[4];
+                        td = tr[i].getElementsByTagName("td")[5];
                         if (td) {
                             txt_value = td.textContent || td.innerText;
                             if (txt_value.toUpperCase().indexOf(filter) > -1) {
