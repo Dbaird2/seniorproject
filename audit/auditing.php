@@ -709,7 +709,23 @@ function filterTable() {
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {
-                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txt_value = td.textContent || td.innerText;
+                    if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        td = tr[i].getElementsByTagName("td")[4];
+                        if (td) {
+                            txt_value = td.textContent || td.innerText;
+                            if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -732,7 +748,7 @@ function filterAssetStatus() {
             }
         } else if (filter === 'ALL') {
             tr[i].style.display = "";
-        } else if (td && filter === 'found') {
+        } else if (td && (filter === 'found' || filter === 'extra')) {
             var filter2 = 'X';
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter2) > -1) {
