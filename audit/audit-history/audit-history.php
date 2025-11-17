@@ -196,7 +196,7 @@ include_once("../../config.php");
             $form_array = explode(',', $trim_forms);
             $counter = 0;
             foreach ($form_array as $index2 => $form) {
-                $count = count($form);
+                $count = strlen($form);
                 if ($count == 24) {
                     echo '<br>'. $form. ' ';
                     continue;
