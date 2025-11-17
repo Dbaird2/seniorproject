@@ -22,9 +22,6 @@ $select_audit = "SELECT unnest(check_forms) as check_forms FROM audit_history WH
 $stmt = $dbh->prepare($select_audit);
 $stmt->execute([':dept'=>$dept_id, ':aid'=>$audit_id]);
 $audit_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
-if (!$audit_info) {
-    die('Empty Audit');
-}
 // GET TAGS
 $submit_audit = true;
 $transfer = $lsd = $in_progress = $done = $progress = false;
@@ -92,7 +89,6 @@ if (!$submit_audit) {
     header("Location: {$_SERVER['HTTP_REFERER']}");
     exit;
 }
-exit;
 
 $subdomain = "csub";
 // SUBMITTER INFO
