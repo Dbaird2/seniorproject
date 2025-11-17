@@ -64,9 +64,11 @@ foreach ($audit_info as $index1=>$form) {
         foreach ($tags as $tag) {
             $done = checkForm($single_form[0], $tag, $app_id, $form['check_forms']);
             if (!$done) {
+                echo '<br>Not Done ' . $single_form[2];
                 $submit_audit = false;
                 break;
             } else {
+                echo '<br>Done ' . $single_form[2];
                 break;
             }
         }
@@ -90,6 +92,7 @@ if (!$submit_audit) {
     header("Location: {$_SERVER['HTTP_REFERER']}");
     exit;
 }
+exit;
 
 $subdomain = "csub";
 // SUBMITTER INFO
