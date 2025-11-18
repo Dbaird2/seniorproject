@@ -25,6 +25,7 @@ $audit_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // GET TAGS
 $submit_audit = true;
 $transfer = $lsd = $in_progress = $done = $progress = false;
+$transfer_status = $lsd_status = false;
 $count = 1;
 if ($audit_info) {
     foreach ($audit_info as $index1=>$form) {
@@ -76,9 +77,11 @@ if ($audit_info) {
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
+                    $transfer_status = true;
                 } else if ($lsd) {
                     $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
+                    $lsd_status = true;
                 }
             }
         }
@@ -160,14 +163,14 @@ $variables['data']['55-0zfJWML']['lastName'] = $mana_info['lastName'];
 $variables['data']['55-0zfJWML']['schoolId'] = $mana_info['schoolId'];
 $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
-if (isset($variables['data']['HgIvQwEnwb']['data'][0]['data']['xVdCwxjKl-'][0])) {
+if (isset($transfer_status) {
     $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
     $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
 } else {
     $variables['data']['R0rMnJsvtQ']['id'] = 'no';
     $variables['data']['R0rMnJsvtQ']['label'] = 'No';
 }
-if (isset($variables['data']['g3eXi7dYR2']['data'][0]['data']['vJyySSnsqZ'][0])) {
+if (isset($lsd_status) {
     $variables['data']['3WfG7CrNND']['id'] = 'yes';
     $variables['data']['3WfG7CrNND']['label'] = 'Yes';
 } else {
@@ -293,8 +296,7 @@ curl_close($curl);
     } catch (Exception $e) {
         error_log($e->getMessage());
     }
- */
-
+*/
 //header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
 exit;
 
