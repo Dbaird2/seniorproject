@@ -13,6 +13,16 @@ if (!isset($_GET['dept_id'])) {
 }
 $dept_id = $_GET['dept_id'];
 $audit_id = (int)$_GET['audit_id'];
+
+$get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :dept_id";
+$stmt = $dbh->prepare($dept_id);
+$stmt->execute([":dept_id"=>$dept_id]);
+$dept_name = $stmt->fetchColumn();
+if (empty($dept_name)) {
+    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=dept-not-in-db");
+    exit;
+}
+
 $get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
 $curr_stmt = $dbh->query($get_curr_ids);
 $curr_stmt->execute();
@@ -123,6 +133,9 @@ if (empty($school_id) || empty($form_id)) {
     $form_id = $submitter_info['form_id'] ?? '';
 }
 $variables['data']['E5WDwBqoR4'] = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
+$variables['data']['Stimf2f9oY'] = $dept_name;
+$variables['data']['Stimf2f9oY']['data']['AkMeIWWhoj'] = $dept_name;
+$variables['data']['Stimf2f9oY']['data']['IOw4-l7NsM'] = $dept_id;
 
 
 $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, dept_manager FROM department d WHERE dept_id = :dept_id";

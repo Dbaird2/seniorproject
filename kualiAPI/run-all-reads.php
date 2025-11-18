@@ -19,6 +19,8 @@ dwCheck ();
 dwLsd ();
 dwPsr ();
 checkFormStatus();
+completeAudit();
+dwCompleteAudit();
 function addKualiInfo () {
     echo '<br>Add Kuali Info<br>';
     global $dbh, $result;
@@ -2313,4 +2315,276 @@ function getAuditSchedules() {
             $insert_stmt->execute([$dept_id, $dept_name, $custodian, $m_full_name]);
         }
     }
+}
+function completeAudit()
+{
+  global $dbh, $result;
+  $subdomain = "csub";
+
+  $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
+  $apikey = $result['kauli_key'];
+  $skip = $result['complete_schedule'];
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+  $headers = array(
+    "Content-Type: application/json",
+    "Authorization: Bearer {$apikey}",
+  );
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+  $data = json_encode([
+    "query" => 'query (
+        $appId: ID!
+        $skip: Int!
+        $limit: Int!
+        $sort: [String!]
+        $query: String
+        $fields: Operator
+) {
+    app(id: $appId) {
+    id name documentConnection(
+        args: {
+        skip: $skip
+            limit: $limit
+            sort: $sort
+            query: $query
+            fields: $fields
+            }
+            keyBy: ID
+            ) {
+                totalCount edges {
+                node { id data meta } }
+                    pageInfo { hasNextPage hasPreviousPage skip limit }
+                }
+            }
+        }',
+    "variables" => [
+      //
+      "appId" => "67e450e3cc3194027d15a8e2",
+      "skip" => $skip,
+      "limit" => 0,
+      "sort" => ["meta.createdAt"],
+      "query" => "",
+      "fields" => [
+        "type" => "AND",
+        "operators" => [
+          [
+            "field" => "meta.workflowStatus",
+            "type" => "IS",
+            "value" => "Complete"
+          ]
+
+        ]
+
+      ]
+    ]
+  ]);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+  $resp = curl_exec($curl);
+  curl_close($curl);
+
+  $decode_true = json_decode($resp, true);
+
+  $edges = $decode_true['data']['app']['documentConnection']['edges'];
+  foreach ($edges as $edge) {
+    if (!isset($edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'])) {
+      echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
+      continue;
+    } else {
+      $dept_id = $edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'];
+      $dept_name = $edge['node']['data']['4Oqb_ktloM']['data']['AkMeIWWhoj'];
+      $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
+      $stmt = $dbh->prepare($select);
+      $stmt->bindParam(':dept_id', $dept_id);
+      $stmt->execute();
+      $result = $stmt->fetchColumn();
+      if ($result) {
+        $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
+        $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
+        $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
+        $stmt = $dbh->prepare($update);
+        $stmt->bindParam(':dept_name', $dept_name);
+        $stmt->bindParam(':dept_id', $dept_id);
+        $stmt->bindParam(':manager', $manager);
+        $stmt->bindParam(':cust', '{' . $custodian . '}');
+        $stmt->bindParam(':cust2', $custodian);
+        $stmt->execute();
+
+        $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+        $stmt = $dbh->prepare($select);
+        $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
+        $stmt->execute();
+        $audit_ids = $stmt->fetch();
+
+        $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
+        $stmt = $dbh->query($select);
+        $audit_freq = $stmt->fetch();
+        if ($audit_ids == 6) {
+          $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
+        } else if ($audit_ids == 9) {
+          $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_spa);
+        } else if ($audit_ids == 3) {
+          $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_self);
+        } else {
+          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
+          $stmt = $dbh->prepare($update);
+          $stmt->bindParam(':dept_id', $dept_id);
+          $stmt->bindParam(':audit_id', $audit_ids);
+          $stmt->execute();
+        }
+      }
+      echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
+    }
+  }
+}
+function dwCompleteAudit()
+{
+  global $dbh, $result;
+  $subdomain = "csub";
+
+  $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
+  $apikey = $result['kauli_key'];
+  $skip = $result['dw_complete_schedule'];
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+  $headers = array(
+    "Content-Type: application/json",
+    "Authorization: Bearer {$apikey}",
+  );
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+  $data = json_encode([
+    "query" => 'query (
+        $appId: ID!
+        $skip: Int!
+        $limit: Int!
+        $sort: [String!]
+        $query: String
+        $fields: Operator
+) {
+    app(id: $appId) {
+    id name documentConnection(
+        args: {
+        skip: $skip
+            limit: $limit
+            sort: $sort
+            query: $query
+            fields: $fields
+            }
+            keyBy: ID
+            ) {
+                totalCount edges {
+                node { id data meta } }
+                    pageInfo { hasNextPage hasPreviousPage skip limit }
+                }
+            }
+        }',
+    "variables" => [
+      //
+      "appId" => "68e5ccf75911b5028c9e9d3e",
+      "skip" => $skip,
+      "limit" => 0,
+      "sort" => ["meta.createdAt"],
+      "query" => "",
+      "fields" => [
+        "type" => "AND",
+        "operators" => [
+          [
+            "field" => "meta.workflowStatus",
+            "type" => "IS",
+            "value" => "Complete"
+          ]
+
+        ]
+
+      ]
+    ]
+  ]);
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+  $resp = curl_exec($curl);
+  curl_close($curl);
+
+  $decode_true = json_decode($resp, true);
+
+  $edges = $decode_true['data']['app']['documentConnection']['edges'];
+  foreach ($edges as $edge) {
+    if (!isset($edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'])) {
+      echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
+      continue;
+    } else {
+      $dept_id = $edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'];
+      $dept_name = $edge['node']['data']['Stimf2f9oY']['data']['AkMeIWWhoj'];
+      $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
+      $stmt = $dbh->prepare($select);
+      $stmt->bindParam(':dept_id', $dept_id);
+      $stmt->execute();
+      $result = $stmt->fetchColumn();
+      if ($result) {
+        $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
+        $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
+        $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
+        $stmt = $dbh->prepare($update);
+        $stmt->bindParam(':dept_name', $dept_name);
+        $stmt->bindParam(':dept_id', $dept_id);
+        $stmt->bindParam(':manager', $manager);
+        $stmt->bindParam(':cust', '{' . $custodian . '}');
+        $stmt->bindParam(':cust2', $custodian);
+        $stmt->execute();
+
+        $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+        $stmt = $dbh->prepare($select);
+        $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
+        $stmt->execute();
+        $audit_ids = $stmt->fetch();
+
+        $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
+        $stmt = $dbh->query($select);
+        $audit_freq = $stmt->fetch();
+        if ($audit_ids == 6) {
+          $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
+        } else if ($audit_ids == 9) {
+          $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_spa);
+        } else if ($audit_ids == 3) {
+          $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
+          updateOldAudit($dept_id, $audit_ids, $prev_self);
+        } else {
+          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
+          $stmt = $dbh->prepare($update);
+          $stmt->bindParam(':dept_id', $dept_id);
+          $stmt->bindParam(':audit_id', $audit_ids);
+          $stmt->execute();
+        }
+      }
+      echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
+    }
+  }
+}
+function updateOldAudit($dept_id, $audit_id, $new_audit_id)
+{
+  global $dbh;
+  $update = "UPDATE audit_history SET audit_status = 'Complete' audit_id = :new_audit_id WHERE dept_id = :dept_id AND audit_id = :audit_id";
+  $stmt = $dbh->prepare($update);
+  $stmt->bindParam(':new_audit_id', $new_audit_id);
+  $stmt->bindParam(':dept_id', $dept_id);
+  $stmt->bindParam(':audit_id', $audit_id);
+  $stmt->execute();
 }
