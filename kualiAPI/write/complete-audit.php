@@ -135,7 +135,7 @@ if (empty($school_id) || empty($form_id)) {
 }
 echo '<br>Department: ' . $dept_name . '<br>';
 $variables['data']['E5WDwBqoR4'] = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
-$variables['data']['Stimf2f9oY'] = $dept_name;
+$variables['data']['Stimf2f9oY']['label'] = $dept_name;
 $variables['data']['Stimf2f9oY']['data']['AkMeIWWhoj'] = $dept_name;
 $variables['data']['Stimf2f9oY']['data']['IOw4-l7NsM'] = $dept_id;
 
