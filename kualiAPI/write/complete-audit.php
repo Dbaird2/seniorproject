@@ -83,7 +83,7 @@ if ($audit_info) {
                     $transfer_status = true;
                 } else if ($lsd) {
                     echo 'Lsd <br>';
-                    $variables['data']['g3eXi7dYR2']['data'][$count2]['data']['vJyySSnsqZ'][] = trim($tag);
+                    $variables['data']['g3eXi7dYR2']['data'][$count2]['data']['vJyySSnsqZ'] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$count2]['id'] = (string) $count2;
                     $count2++;
                     $lsd_status = true;
