@@ -73,17 +73,21 @@ if ($audit_info) {
         }
         if ($done === 'complete') {
             foreach ($tags as $tag) {
+                echo 'For each of tags <br>';
                 if ($transfer) {
+                    echo 'Transfer <br>';
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
                     $transfer_status = true;
                 } else if ($lsd) {
+                    echo 'Lsd <br>';
                     $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
                     $lsd_status = true;
                 }
             }
+                echo '<br>End of for each of tags <br>';
         }
         $progress = $done = false;
         $transfer = $lsd = false;
@@ -93,6 +97,7 @@ if (!$submit_audit) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=in-progress");
     exit;
 }
+die('testing');
 
 $subdomain = "csub";
 // SUBMITTER INFO
