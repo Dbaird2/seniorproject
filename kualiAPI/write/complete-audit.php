@@ -87,9 +87,13 @@ if ($audit_info) {
     }
 }
 if (!$submit_audit) {
+    /*
     header("Location: {$_SERVER['HTTP_REFERER']}");
+     */
+    die('Submit_audit is false');
     exit;
 }
+    die('Yes');
 exit;
 
 $subdomain = "csub";
