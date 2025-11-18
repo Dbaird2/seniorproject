@@ -26,7 +26,7 @@ $audit_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $submit_audit = true;
 $transfer = $lsd = $in_progress = $done = $progress = false;
 $transfer_status = $lsd_status = false;
-$count = 1;
+$count = $count2 = 0;
 if ($audit_info) {
     foreach ($audit_info as $index1=>$form) {
         $single_form = explode(',', $form['check_forms']);
@@ -76,14 +76,14 @@ if ($audit_info) {
                 echo 'For each of tags <br>';
                 if ($transfer) {
                     echo 'Transfer <br>';
-                    $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['xVdCwxjKl-'][] = trim($tag);
-                    $variables['data']['HgIvQwEnwb']['data'][$index1]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
-                    $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
+                    $variables['data']['HgIvQwEnwb']['data'][$count]['data']['xVdCwxjKl-'][] = trim($tag);
+                    $variables['data']['HgIvQwEnwb']['data'][$count]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
+                    $variables['data']['HgIvQwEnwb']['data'][$count]['id'][] =(string) $count++;
                     $transfer_status = true;
                 } else if ($lsd) {
                     echo 'Lsd <br>';
-                    $variables['data']['g3eXi7dYR2']['data'][$index1]['data']['vJyySSnsqZ'][] = trim($tag);
-                    $variables['data']['HgIvQwEnwb']['data'][$index1]['id'][] = $count++ . '';
+                    $variables['data']['g3eXi7dYR2']['data'][$count2]['data']['vJyySSnsqZ'][] = trim($tag);
+                    $variables['data']['HgIvQwEnwb']['data'][$count2]['id'][] = (string) $count2++;
                     $lsd_status = true;
                 }
             }
