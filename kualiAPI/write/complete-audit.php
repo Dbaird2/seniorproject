@@ -22,6 +22,7 @@ if (empty($dept_name)) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=dept-not-in-db");
     exit;
 }
+echo 'Department: ' . $dept_name . '<br>';
 
 $get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
 $curr_stmt = $dbh->query($get_curr_ids);
@@ -132,6 +133,7 @@ if (empty($school_id) || empty($form_id)) {
     $signature = $submitter_info['signature'] ?? $full_name;
     $form_id = $submitter_info['form_id'] ?? '';
 }
+echo '<br>Department: ' . $dept_name . '<br>';
 $variables['data']['E5WDwBqoR4'] = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $variables['data']['Stimf2f9oY'] = $dept_name;
 $variables['data']['Stimf2f9oY']['data']['AkMeIWWhoj'] = $dept_name;
