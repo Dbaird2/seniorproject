@@ -15,7 +15,7 @@ $dept_id = $_GET['dept_id'];
 $audit_id = (int)$_GET['audit_id'];
 
 $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :dept_id";
-$stmt = $dbh->prepare($dept_id);
+$stmt = $dbh->prepare($get_dept_name);
 $stmt->execute([":dept_id"=>$dept_id]);
 $dept_name = $stmt->fetchColumn();
 if (empty($dept_name)) {
