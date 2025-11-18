@@ -124,34 +124,15 @@ $dept_name = $custodians[0]['dept_name'];
 
 $cust_count = count($custodians);
 $get_cust_info = "select email, form_id, school_id, username, f_name, l_name from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-$cust_name_split = explode(" ", $custodians[0]['cust']);
-try {
-    $get_cust_stmt = $dbh->prepare($get_cust_info);
-    $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']]);
-    $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-    if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
-        // SEARCH CUST IN KUALI
-        searchName($custodians[0]['cust'], $apikey, $dept_id);
-        $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
-        $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-    }
-} catch (PDOException $e) {
-    // CUST DID NOT MATCH
-    searchName($custodians[0]['cust'], $apikey, $dept_id);
-    $get_cust_stmt = $dbh->prepare($get_cust_info);
-    $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
-    $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
-    // SEARCH CUST IN KUALI
-}
+$cust_info = getNameInfo($custodian[0]['cust'], $dept_id);
 echo $custodians[0]['cust'] . ' ' . $cust_info['form_id'] . ' ' .  $cust_info['email'] . '<br>';
 $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
 $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
-$variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['f_name'];
-$variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['form_id'];
+$variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['firstName'];
+$variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['id'];
 $variables['data']['lHuAQy0tZd']['label'] = $custodians[0]['cust'];
-$variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['l_name'];
-$variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['school_id'];
+$variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['lastName'];
+$variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['schoolId'];
 $variables['data']['lHuAQy0tZd']['username'] = $cust_info['username'];
 
 $manager_name = $custodians[0]['dept_manager'];
@@ -169,13 +150,14 @@ try {
 } catch (PDOException $e) {
     error_log(e->getMessage());
 }
+$mana_info = getNameInfo($manager_name, $dept_id);
 $variables['data']['55-0zfJWML']['displayName'] = $manager_name;
 $variables['data']['55-0zfJWML']['email'] = $mana_info['email'];
-$variables['data']['55-0zfJWML']['firstName'] = $mana_info['f_name'];
-$variables['data']['55-0zfJWML']['id'] = $mana_info['form_id'];
+$variables['data']['55-0zfJWML']['firstName'] = $mana_info['firstName'];
+$variables['data']['55-0zfJWML']['id'] = $mana_info['id'];
 $variables['data']['55-0zfJWML']['label'] = $manager_name;
-$variables['data']['55-0zfJWML']['lastName'] = $mana_info['l_name'];
-$variables['data']['55-0zfJWML']['schoolId'] = $mana_info['school_id'];
+$variables['data']['55-0zfJWML']['lastName'] = $mana_info['lastName'];
+$variables['data']['55-0zfJWML']['schoolId'] = $mana_info['schoolId'];
 $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
 if (isset($variables['data']['HgIvQwEnwb']['data'][0]['data']['xVdCwxjKl-'][0])) {
