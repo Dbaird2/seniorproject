@@ -275,6 +275,9 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
+echo "<pre>";
+var_dump($resp);
+echo "</pre>";
 
 curl_close($curl);
 /*
