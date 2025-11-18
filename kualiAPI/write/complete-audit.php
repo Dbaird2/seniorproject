@@ -84,7 +84,7 @@ if ($audit_info) {
                 } else if ($lsd) {
                     echo 'Lsd <br>';
                     $variables['data']['g3eXi7dYR2']['data'][$count2]['data']['vJyySSnsqZ'] = trim($tag);
-                    $variables['data']['HgIvQwEnwb']['data'][$count2]['id'] = (string) $count2;
+                    $variables['data']['g3eXi7dYR2']['data'][$count2]['id'] = (string) $count2;
                     $count2++;
                     $lsd_status = true;
                 }
@@ -302,8 +302,8 @@ curl_close($curl);
     } catch (Exception $e) {
         error_log($e->getMessage());
     }
-*/
-//header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
+header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
+ */
 exit;
 
 ?>
