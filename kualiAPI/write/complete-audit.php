@@ -32,7 +32,7 @@ if ($audit_info) {
         if ($single_form[2] === 'denied' || $single_form[2] === 'withdrawn' ) {
             continue;
         }
-        echo $single_form[0] . ' ' . $single_form[1] . ' ' $single_form[2] . ' ' . $single_form[3] . '<br>';
+        echo $single_form[0] . ' ' . $single_form[1] . ' ' . $single_form[2] . ' ' . $single_form[3] . '<br>';
         if ($single_form[2] === 'in-progress') {
             $progress = true;
         }
