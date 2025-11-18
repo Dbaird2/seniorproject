@@ -87,7 +87,7 @@ if ($audit_info) {
     }
 }
 if (!$submit_audit) {
-    header("Location: https://dataworks-7b7x.onrender.com/audit/search-history.php?status=failed&reason=in-progress");
+    header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=in-progress");
     exit;
 }
 
@@ -277,7 +277,7 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 
 curl_close($curl);
-
+/*
     try {
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -307,9 +307,9 @@ curl_close($curl);
     } catch (Exception $e) {
         error_log($e->getMessage());
     }
+ */
 
-
-header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
+//header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php");
 exit;
 
 ?>
