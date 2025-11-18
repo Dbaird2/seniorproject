@@ -144,10 +144,11 @@ try {
     $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
     // SEARCH CUST IN KUALI
 }
+echo $custodians[0]['cust'] . ' ' . $cust_info['form_id'] . ' ' .  $cust_info['email'] . '<br>';
 $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
 $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
 $variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['f_name'];
-$variables['data']['lHuAQy0tZd']['id'] = $cust_info['form_id'];
+$variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['form_id'];
 $variables['data']['lHuAQy0tZd']['label'] = $custodians[0]['cust'];
 $variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['l_name'];
 $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['school_id'];
