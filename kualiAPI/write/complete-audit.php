@@ -78,14 +78,12 @@ if ($audit_info) {
                     echo 'Transfer <br>';
                     $variables['data']['HgIvQwEnwb']['data'][$count]['data']['xVdCwxjKl-'][] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$count]['data']['2KqtRaCah1'][] = 'Transfer update after auditing';
-                    $variables['data']['HgIvQwEnwb']['data'][$count]['id'][] =(string) $count;
-                    $count++;
+                    $variables['data']['HgIvQwEnwb']['data'][$count]['id'] =(string) $count;
                     $transfer_status = true;
                 } else if ($lsd) {
                     echo 'Lsd <br>';
                     $variables['data']['g3eXi7dYR2']['data'][$count2]['data']['vJyySSnsqZ'][] = trim($tag);
-                    $variables['data']['HgIvQwEnwb']['data'][$count2]['id'][] = (string) $count2;
-                    $count2++;
+                    $variables['data']['HgIvQwEnwb']['data'][$count2]['id'] = (string) $count2;
                     $lsd_status = true;
                 }
             }
