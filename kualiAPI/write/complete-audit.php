@@ -97,7 +97,6 @@ if (!$submit_audit) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=in-progress");
     exit;
 }
-die('testing');
 
 $subdomain = "csub";
 // SUBMITTER INFO
