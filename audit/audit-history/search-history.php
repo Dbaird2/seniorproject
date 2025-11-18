@@ -124,6 +124,10 @@ include_once("../../navbar.php");
 <!-- Search box. -->
 <div class="asset-search">
     <div class="container">
+<?php if (isset($_GET['reason'])) { 
+$reason = ($_GET['reason'] === 'in-progress') ? 'Forms are still in progress' : 'Audit form complete'; ?>
+<h4> <?= $reason ?> </h4>
+<?php } ?>
         <h2>Audit History</h2>
     </div>
     <div class="input-seciton">

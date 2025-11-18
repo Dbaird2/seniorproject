@@ -87,14 +87,9 @@ if ($audit_info) {
     }
 }
 if (!$submit_audit) {
-    /*
-    header("Location: {$_SERVER['HTTP_REFERER']}");
-     */
-    die('Submit_audit is false');
+    header("Location: https://dataworks-7b7x.onrender.com/audit/search-history.php?status=failed&reason=in-progress");
     exit;
 }
-    die('Yes');
-exit;
 
 $subdomain = "csub";
 // SUBMITTER INFO
@@ -182,22 +177,19 @@ $variables['data']['55-0zfJWML']['lastName'] = $mana_info['l_name'];
 $variables['data']['55-0zfJWML']['schoolId'] = $mana_info['school_id'];
 $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
-if (isset($variables['data']['HgIvQwEnwb']['data'][0]['data']['xVdCwxjKl-'])) {
+if (isset($variables['data']['HgIvQwEnwb']['data'][0]['data']['xVdCwxjKl-'][0])) {
     $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
     $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
 } else {
     $variables['data']['R0rMnJsvtQ']['id'] = 'no';
     $variables['data']['R0rMnJsvtQ']['label'] = 'No';
 }
-if (isset($variables['data']['g3eXi7dYR2']['data'][0]['data']['vJyySSnsqZ'])) {
+if (isset($variables['data']['g3eXi7dYR2']['data'][0]['data']['vJyySSnsqZ'][0])) {
     $variables['data']['3WfG7CrNND']['id'] = 'yes';
     $variables['data']['3WfG7CrNND']['label'] = 'Yes';
 } else {
     $variables['data']['3WfG7CrNND']['id'] = 'no';
     $variables['data']['3WfG7CrNND']['label'] = 'No';
-}
-if (!$apikey) {
-    die("No API key found for user.");
 }
 
 $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
