@@ -169,14 +169,14 @@ $variables['data']['55-0zfJWML']['lastName'] = $mana_info['lastName'];
 $variables['data']['55-0zfJWML']['schoolId'] = $mana_info['schoolId'];
 $variables['data']['55-0zfJWML']['username'] = $mana_info['username'];
 
-if ($transfer_status) {
+if ($lsd_status) {
     $variables['data']['R0rMnJsvtQ']['id'] = 'yes';
     $variables['data']['R0rMnJsvtQ']['label'] = 'Yes';
 } else {
     $variables['data']['R0rMnJsvtQ']['id'] = 'no';
     $variables['data']['R0rMnJsvtQ']['label'] = 'No';
 }
-if ($lsd_status) {
+if ($transfer_status) {
     $variables['data']['3WfG7CrNND']['id'] = 'yes';
     $variables['data']['3WfG7CrNND']['label'] = 'Yes';
 } else {
