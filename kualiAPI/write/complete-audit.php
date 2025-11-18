@@ -71,7 +71,7 @@ if ($audit_info) {
                 }
             }
         }
-        if ($done === 'complete') {
+        if ($done) {
             foreach ($tags as $tag) {
                 echo 'For each of tags <br>';
                 if ($transfer) {
