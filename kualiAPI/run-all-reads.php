@@ -22,6 +22,8 @@ checkFormStatus();
 getAuditSchedules();
 completeAudit();
 dwCompleteAudit();
+propertyTransfer();
+//busChange();
 function addKualiInfo () {
     echo '<br>Add Kuali Info<br>';
     global $dbh, $result;
@@ -1181,7 +1183,7 @@ keyBy: ID
 function check () {
     echo '<br>Check out<br>';
     global $dbh, $result;
-    $raw_ms = (int)$result['check_out_time'] ?? 1744307816063;
+    $raw_ms = (int)$result['check_out_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
@@ -1464,6 +1466,338 @@ function psr () {
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
+    }
+}
+
+function propertyTransfer() {
+    echo '<br>Property Transfer<br>';
+    global $dbh, $result;
+    $raw_ms = (int)$result['transfer_time'] ?? 0;
+
+    $apikey = $result['kuali_key'];
+    $url = "https://csub.kualibuild.com/app/api/v0/graphql";
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer {$apikey}",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode([
+        "query" => 'query ( 
+            $appId: ID! 
+            $skip: Int! 
+            $limit: Int! 
+            $sort: [String!] 
+            $query: String 
+            $fields: Operator
+    ) { 
+        app(id: $appId) { 
+        id name documentConnection( 
+            args: { 
+            skip: $skip 
+                limit: $limit 
+                sort: $sort 
+                query: $query 
+                fields: $fields 
+} 
+keyBy: ID 
+) { 
+    totalCount edges { 
+    node { id data meta } } 
+        pageInfo { hasNextPage hasPreviousPage skip limit } 
+} 
+}
+}',
+    "variables" => [
+        "appId" => "67e451d2cc3194027dfce429",
+        "skip" => $raw_ms,
+        "limit" => 100,
+        "sort" => ["meta.createdAt"],
+        "query" => "",
+        "fields" => [
+            "type" => "AND",
+            "operators" => [
+                [
+                    "field" => "meta.workflowStatus",
+                    "type" => "IS",
+                    "value" => "Complete"
+                ]
+            ]
+        ]
+    ]
+    ]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    $resp2 = json_decode($resp);
+
+    $decode_true = json_decode($resp, true);
+    $edges = $decode_true['data']['app']['documentConnection']['edges'];
+
+
+    $count = 1;
+    foreach ($edges as $index => $edge) {
+        $raw_ms++;
+        $update_time = $edge['node']['meta']['createdAt'];
+        if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'From one department to another department') {
+            echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
+            deptChange();
+        } else if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'Building/Room/Location change (Business Unit stays the same)') {
+            echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
+            bldgChange();
+        }
+    }
+
+    echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
+    exit;
+    function checkBldg($bldg_name, $room_loc, $tag) {
+        global $dbh;
+        $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = :name';
+        $stmt = $dbh->prepare($select);
+        $stmt->execute([':name'=>$bldg_name]);
+        $bldg_id = $stmt->fetchColumn();
+        if ($bldg_id) {
+            $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
+            $stmt = $dbh->prepare($select);
+            $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
+            $room_tag = $stmt->fetchColumn();
+            if (!$room_tag) {
+                $update_room = 'INSERT INTO room_table (room_loc, bldg_id) VALUES (?,?)';
+                $stmt = $dbh->prepare($update_room);
+                $stmt->execute([$room_loc, $bldg_id]);
+
+                $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
+                $room_tag = $stmt->fetchColumn();
+            } 
+            $update = 'UPDATE asset_info SET room_tag = :room WHERE asset_tag = :tag';
+            $stmt = $dbh->prepare($update);
+            $stmt->execute([':room'=>$room_tag, ':tag'=>$tag]);
+            return true;
+        }
+    }
+    function checkTag($tag) {
+        global $dbh;
+        $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = :tag';
+        $stmt = $dbh->prepare($select);
+        $stmt->execute([':tag'=>$tag]);
+        $confirm_tag = $stmt->fetchColumn();
+        return $confirm_tag !== false;
+    }
+    function deptChange() {
+        global $dbh, $edge, $raw_ms;
+        $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
+        foreach ($tags as $index => $data) {
+            $tag = $data['data']['XZlIFEDX6Y'];
+            checkTag($tag);
+            if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
+                echo "<br>Tag field empty<br>";
+                continue;
+            }
+            if (isset($data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'])) {
+                $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
+                $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
+            } else if (isset($data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'])) {
+                $dept_id = $data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'];
+                $dept_name = $data['data']['qvczWxUOzQ']['data']['AkMeIWWhoj'];
+            }
+            if (isset($data['data']['zZztPX8Pcw'])) {
+                $room_loc = $data['data']['zZztPX8Pcw'];
+            } else if (isset($data['data']['CeMwzz3mnp'])) {
+                $room_loc = $data['data']['CeMwzz3mnp'];
+            } else if (isset($data['data']['6JHs3W0-CL'])) {
+                $room_loc = $data['data']['6JHs3W0-CL'];
+            }
+            if (isset($data['data']['hXHmCy0mek']['label'])) {
+                $bldg_name = $data['data']['hXHmCy0mek']['label'];
+            } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
+                $bldg_name = $data['data']['YtHlHUNY_q']['label'];
+            }
+
+            echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
+
+            if (!empty($bldg_name) && !empty($room_loc)) {
+                checkBldg($bldg_name, $room_loc, $tag);
+            }
+
+            $dept_id = substr($dept_id, 0, 6);
+            echo $dept_id . "<br>";
+            if (preg_match('/^D/', $dept_id)) {
+                echo "<br>Dept Id Format Good<br>";
+            } else {
+                continue;
+            }
+            $update_q = "UPDATE asset_info SET dept_id = :dept_id WHERE asset_tag = :tag";
+            $update_stmt = $dbh->prepare($update_q);
+            $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
+
+            try {
+                $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
+                $update_stmt = $dbh->prepare($update_kuali_time);
+                $update_stmt->execute([":time"=>$raw_ms]);
+            } catch (PDOException $e) {
+                echo "error updating kuali_table " . $e->getMessage();
+            }
+            echo "<br>Time " . $raw_ms . "<br>";
+            echo "<br>--------------------------------------<br>";
+        }
+    }
+    function bldgChange() {
+        global $dbh, $edge, $raw_ms;
+        $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
+        foreach ($tags as $index => $data) {
+            $tag = $data['data']['XZlIFEDX6Y'];
+            checkTag($tag);
+            if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
+                echo "<br>Tag field empty<br>";
+                continue;
+            }
+            if (isset($data['data']['zZztPX8Pcw'])) {
+                $room_loc = $data['data']['zZztPX8Pcw'];
+            } else if (isset($data['data']['CeMwzz3mnp'])) {
+                $room_loc = $data['data']['CeMwzz3mnp'];
+            } else if (isset($data['data']['6JHs3W0-CL'])) {
+                $room_loc = $data['data']['6JHs3W0-CL'];
+            }
+            if (isset($data['data']['hXHmCy0mek']['label'])) {
+                $bldg_name = $data['data']['hXHmCy0mek']['label'];
+            } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
+                $bldg_name = $data['data']['YtHlHUNY_q']['label'];
+            }
+            echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
+
+            if (!empty($bldg_name) && !empty($room_loc)) {
+                checkBldg($bldg_name, $room_loc, $tag);
+            }
+
+            try {
+                $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
+                $update_stmt = $dbh->prepare($update_kuali_time);
+                $update_stmt->execute([":time"=>$raw_ms]);
+            } catch (PDOException $e) {
+                echo "error updating kuali_table " . $e->getMessage();
+            }
+            echo "<br>Time " . $raw_ms . "<br>";
+            echo "<br>--------------------------------------<br>";
+        }
+    }
+}
+
+
+function busChange() {
+    echo '<br>Bus Change<br>';
+    global $dbh, $result;
+    $raw_ms = (int)$result['bus_change_time'] ?? 0;
+
+    $apikey = $result['kuali_key'];
+    $url = "https://csub.kualibuild.com/app/api/v0/graphql";
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer {$apikey}",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode([
+        "query" => 'query ( 
+            $appId: ID! 
+            $skip: Int! 
+            $limit: Int! 
+            $sort: [String!] 
+            $query: String 
+            $fields: Operator
+    ) { 
+        app(id: $appId) { 
+        id name documentConnection( 
+            args: { 
+            skip: $skip 
+                limit: $limit 
+                sort: $sort 
+                query: $query 
+                fields: $fields 
+} 
+keyBy: ID 
+) { 
+    totalCount edges { 
+    node { id data meta } } 
+        pageInfo { hasNextPage hasPreviousPage skip limit } 
+} 
+}
+}',
+    "variables" => [
+        "appId" => "691df89db23137028e39230a",
+        "skip" => $raw_ms,
+        "limit" => 100,
+        "sort" => ["meta.createdAt"],
+        "query" => "",
+        "fields" => [
+            "type" => "AND",
+            "operators" => [
+                [
+                    "field" => "meta.workflowStatus",
+                    "type" => "IS",
+                    "value" => "Complete"
+                ]
+            ]
+        ]
+    ]
+    ]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    $resp2 = json_decode($resp);
+
+    $decode_true = json_decode($resp, true);
+    $edges = $decode_true['data']['app']['documentConnection']['edges'];
+
+
+    $count = 1;
+    foreach ($edges as $index => $edge) {
+        $raw_ms++;
+
+        $tag_array = $edge['node']['data']['z64jO_p-uG']['data'];
+        foreach ($tag_array as $index => $tag_details) {
+            $tag = $tag_details['data']['ep7IXpogXq'];
+
+            $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = :tag';
+            $stmt = $dbh->prepare($select);
+            $stmt->execute([':tag'=>$tag]);
+            $tag_check = $stmt->fetchColumn();
+
+            $new_tag = '';
+            $new_name = '';
+
+            if ($tag_check) {
+                $update = 'UPDATE asset_info SET asset_tag = :new_tag WHERE asset_tag = :old_tag';
+                $stmt = $dbh->prepare($update);
+                $stmt->execute([':new_tag'=>$new_tag, ':old_tag'=>$old_tag]);
+            } else {
+                $insert = 'INSERT INTO asset_info (asset_tag, asset_name, serial_num) VALUES (?, ?, ?)';
+                $stmt = $dbh->prepare($insert);
+                $stmt->execute([$new_tag, $new_name, 'N/A']);
+        }
+
+        $update = 'UPDATE kuali_table SET bus_change_time = :skip';
+        $stmt = $dbh->prepare($update);
+        $stmt->execute([':skip'=>$raw_ms]);
     }
 }
 
@@ -2272,283 +2606,283 @@ function getAuditSchedules() {
 }
 function completeAudit()
 {
-  global $dbh, $result;
-  echo '<br>DW Complete Audit<br>';
-  $subdomain = "csub";
+    global $dbh, $result;
+    echo '<br>DW Complete Audit<br>';
+    $subdomain = "csub";
 
-  $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-  $apikey = $result['kuali_key'];
-  $skip = $result['complete_schedule'];
+    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
+    $apikey = $result['kuali_key'];
+    $skip = $result['complete_schedule'];
 
-  $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_POST, true);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-  $headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-  );
-  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = json_encode([
-    "query" => 'query (
-        $appId: ID!
-        $skip: Int!
-        $limit: Int!
-        $sort: [String!]
-        $query: String
-        $fields: Operator
+    $headers = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer {$apikey}",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode([
+        "query" => 'query (
+            $appId: ID!
+            $skip: Int!
+            $limit: Int!
+            $sort: [String!]
+            $query: String
+            $fields: Operator
+    ) {
+        app(id: $appId) {
+        id name documentConnection(
+            args: {
+            skip: $skip
+                limit: $limit
+                sort: $sort
+                query: $query
+                fields: $fields
+}
+keyBy: ID
 ) {
-    app(id: $appId) {
-    id name documentConnection(
-        args: {
-        skip: $skip
-            limit: $limit
-            sort: $sort
-            query: $query
-            fields: $fields
-            }
-            keyBy: ID
-            ) {
-                totalCount edges {
-                node { id data meta } }
-                    pageInfo { hasNextPage hasPreviousPage skip limit }
-                }
-            }
-        }',
+    totalCount edges {
+    node { id data meta } }
+        pageInfo { hasNextPage hasPreviousPage skip limit }
+}
+}
+}',
     "variables" => [
-      //
-      "appId" => "67e450e3cc3194027d15a8e2",
-      "skip" => $skip,
-      "limit" => 0,
-      "sort" => ["meta.createdAt"],
-      "query" => "",
-      "fields" => [
-        "type" => "AND",
-        "operators" => [
-          [
-            "field" => "meta.workflowStatus",
-            "type" => "IS",
-            "value" => "Complete"
-          ]
+        //
+        "appId" => "67e450e3cc3194027d15a8e2",
+        "skip" => $skip,
+        "limit" => 0,
+        "sort" => ["meta.createdAt"],
+        "query" => "",
+        "fields" => [
+            "type" => "AND",
+            "operators" => [
+                [
+                    "field" => "meta.workflowStatus",
+                    "type" => "IS",
+                    "value" => "Complete"
+                ]
+
+            ]
 
         ]
-
-      ]
     ]
-  ]);
-  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    ]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
-  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-  $resp = curl_exec($curl);
-  curl_close($curl);
+    $resp = curl_exec($curl);
+    curl_close($curl);
 
-  $decode_true = json_decode($resp, true);
+    $decode_true = json_decode($resp, true);
 
-  $edges = $decode_true['data']['app']['documentConnection']['edges'];
-  foreach ($edges as $edge) {
-    if (!isset($edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'])) {
-      echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
-      continue;
-    } else {
-      $dept_id = $edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'];
-      $dept_name = $edge['node']['data']['4Oqb_ktloM']['data']['AkMeIWWhoj'];
-      $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
-      $stmt = $dbh->prepare($select);
-      $stmt->bindParam(':dept_id', $dept_id);
-      $stmt->execute();
-      $result = $stmt->fetchColumn();
-      if ($result) {
-        $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
-        $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
-        $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
-        $stmt = $dbh->prepare($update);
-        $stmt->bindParam(':dept_name', $dept_name);
-        $stmt->bindParam(':dept_id', $dept_id);
-        $stmt->bindParam(':manager', $manager);
-        $stmt->bindParam(':cust', '{' . $custodian . '}');
-        $stmt->bindParam(':cust2', $custodian);
-        $stmt->execute();
-
-        $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
-        $stmt = $dbh->prepare($select);
-        $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
-        $stmt->execute();
-        $audit_ids = $stmt->fetch();
-
-        $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
-        $stmt = $dbh->query($select);
-        $audit_freq = $stmt->fetch();
-        if ($audit_ids == 6) {
-          $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
-        } else if ($audit_ids == 9) {
-          $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_spa);
-        } else if ($audit_ids == 3) {
-          $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_self);
+    $edges = $decode_true['data']['app']['documentConnection']['edges'];
+    foreach ($edges as $edge) {
+        if (!isset($edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'])) {
+            echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
+            continue;
         } else {
-          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
-          $stmt = $dbh->prepare($update);
-          $stmt->bindParam(':dept_id', $dept_id);
-          $stmt->bindParam(':audit_id', $audit_ids);
-          $stmt->execute();
+            $dept_id = $edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'];
+            $dept_name = $edge['node']['data']['4Oqb_ktloM']['data']['AkMeIWWhoj'];
+            $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
+            $stmt = $dbh->prepare($select);
+            $stmt->bindParam(':dept_id', $dept_id);
+            $stmt->execute();
+            $result = $stmt->fetchColumn();
+            if ($result) {
+                $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
+                $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
+                $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
+                $stmt = $dbh->prepare($update);
+                $stmt->bindParam(':dept_name', $dept_name);
+                $stmt->bindParam(':dept_id', $dept_id);
+                $stmt->bindParam(':manager', $manager);
+                $stmt->bindParam(':cust', '{' . $custodian . '}');
+                $stmt->bindParam(':cust2', $custodian);
+                $stmt->execute();
+
+                $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+                $stmt = $dbh->prepare($select);
+                $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
+                $stmt->execute();
+                $audit_ids = $stmt->fetch();
+
+                $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
+                $stmt = $dbh->query($select);
+                $audit_freq = $stmt->fetch();
+                if ($audit_ids == 6) {
+                    $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
+                } else if ($audit_ids == 9) {
+                    $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_spa);
+                } else if ($audit_ids == 3) {
+                    $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_self);
+                } else {
+                    $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->bindParam(':dept_id', $dept_id);
+                    $stmt->bindParam(':audit_id', $audit_ids);
+                    $stmt->execute();
+                }
+            }
+            $skip++;
+            $update = 'UPDATE kuali_table SET complete_schedule = :skip';
+            $stmt = $dbh->prepare($update);
+            $stmt->execute([':skip'->$skip]);
+            echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
         }
-      }
-      $skip++;
-      $update = 'UPDATE kuali_table SET complete_schedule = :skip';
-      $stmt = $dbh->prepare($update);
-      $stmt->execute([':skip'->$skip]);
-      echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
     }
-  }
 }
 function dwCompleteAudit()
 {
-  global $dbh, $result;
-  echo '<br>DW Complete Audit<br>';
-  $subdomain = "csub";
+    global $dbh, $result;
+    echo '<br>DW Complete Audit<br>';
+    $subdomain = "csub";
 
-  $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-  $apikey = $result['kuali_key'];
-  $skip = (int)$result['dw_complete_schedule'];
+    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
+    $apikey = $result['kuali_key'];
+    $skip = (int)$result['dw_complete_schedule'];
 
-  $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_POST, true);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-  $headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-  );
-  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = json_encode([
-    "query" => 'query (
-        $appId: ID!
-        $skip: Int!
-        $limit: Int!
-        $sort: [String!]
-        $query: String
-        $fields: Operator
+    $headers = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer {$apikey}",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode([
+        "query" => 'query (
+            $appId: ID!
+            $skip: Int!
+            $limit: Int!
+            $sort: [String!]
+            $query: String
+            $fields: Operator
+    ) {
+        app(id: $appId) {
+        id name documentConnection(
+            args: {
+            skip: $skip
+                limit: $limit
+                sort: $sort
+                query: $query
+                fields: $fields
+}
+keyBy: ID
 ) {
-    app(id: $appId) {
-    id name documentConnection(
-        args: {
-        skip: $skip
-            limit: $limit
-            sort: $sort
-            query: $query
-            fields: $fields
-            }
-            keyBy: ID
-            ) {
-                totalCount edges {
-                node { id data meta } }
-                    pageInfo { hasNextPage hasPreviousPage skip limit }
-                }
-            }
-        }',
+    totalCount edges {
+    node { id data meta } }
+        pageInfo { hasNextPage hasPreviousPage skip limit }
+}
+}
+}',
     "variables" => [
-      //
-      "appId" => "68e5ccf75911b5028c9e9d3e",
-      "skip" => $skip,
-      "limit" => 0,
-      "sort" => ["meta.createdAt"],
-      "query" => "",
-      "fields" => [
-        "type" => "AND",
-        "operators" => [
-          [
-            "field" => "meta.workflowStatus",
-            "type" => "IS",
-            "value" => "Complete"
-          ]
+        //
+        "appId" => "68e5ccf75911b5028c9e9d3e",
+        "skip" => $skip,
+        "limit" => 0,
+        "sort" => ["meta.createdAt"],
+        "query" => "",
+        "fields" => [
+            "type" => "AND",
+            "operators" => [
+                [
+                    "field" => "meta.workflowStatus",
+                    "type" => "IS",
+                    "value" => "Complete"
+                ]
+
+            ]
 
         ]
-
-      ]
     ]
-  ]);
-  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    ]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
-  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-  $resp = curl_exec($curl);
-  curl_close($curl);
+    $resp = curl_exec($curl);
+    curl_close($curl);
 
-  $decode_true = json_decode($resp, true);
+    $decode_true = json_decode($resp, true);
 
-  $edges = $decode_true['data']['app']['documentConnection']['edges'];
-  foreach ($edges as $edge) {
-    if (!isset($edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'])) {
-      echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
-      continue;
-    } else {
-      $dept_id = $edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'];
-      $dept_name = $edge['node']['data']['Stimf2f9oY']['data']['AkMeIWWhoj'];
-      $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
-      $stmt = $dbh->prepare($select);
-      $stmt->bindParam(':dept_id', $dept_id);
-      $stmt->execute();
-      $result = $stmt->fetchColumn();
-      if ($result) {
-        $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
-        $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
-        $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
-        $stmt = $dbh->prepare($update);
-        $stmt->bindParam(':dept_name', $dept_name);
-        $stmt->bindParam(':dept_id', $dept_id);
-        $stmt->bindParam(':manager', $manager);
-        $stmt->bindParam(':cust', '{' . $custodian . '}');
-        $stmt->bindParam(':cust2', $custodian);
-        $stmt->execute();
-
-        //$select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
-        $select = 'SELECT dept_id, audit_id FROM audit_history WHERE complete_form_id = :form_id';
-        $stmt = $dbh->prepare($select);
-        $stmt->bindParam(':form_id', $edge['node']['id']);
-        $stmt->execute();
-        $audit_ids = $stmt->fetch();
-
-        $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
-        $stmt = $dbh->query($select);
-        $audit_freq = $stmt->fetch();
-        if ($audit_ids == 6) {
-          $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
-        } else if ($audit_ids == 9) {
-          $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_spa);
-        } else if ($audit_ids == 3) {
-          $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
-          updateOldAudit($dept_id, $audit_ids, $prev_self);
+    $edges = $decode_true['data']['app']['documentConnection']['edges'];
+    foreach ($edges as $edge) {
+        if (!isset($edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'])) {
+            echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
+            continue;
         } else {
-          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE complete_form_id = :form_id';
-          $stmt = $dbh->prepare($update);
-          $stmt->bindParam(':form_id', $edge['node']['id']);
-          $stmt->execute();
+            $dept_id = $edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'];
+            $dept_name = $edge['node']['data']['Stimf2f9oY']['data']['AkMeIWWhoj'];
+            $select = 'SELECT dept_id FROM department WHERE dept_id = :dept_id';
+            $stmt = $dbh->prepare($select);
+            $stmt->bindParam(':dept_id', $dept_id);
+            $stmt->execute();
+            $result = $stmt->fetchColumn();
+            if ($result) {
+                $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
+                $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
+                $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
+                $stmt = $dbh->prepare($update);
+                $stmt->bindParam(':dept_name', $dept_name);
+                $stmt->bindParam(':dept_id', $dept_id);
+                $stmt->bindParam(':manager', $manager);
+                $stmt->bindParam(':cust', '{' . $custodian . '}');
+                $stmt->bindParam(':cust2', $custodian);
+                $stmt->execute();
+
+                //$select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+                $select = 'SELECT dept_id, audit_id FROM audit_history WHERE complete_form_id = :form_id';
+                $stmt = $dbh->prepare($select);
+                $stmt->bindParam(':form_id', $edge['node']['id']);
+                $stmt->execute();
+                $audit_ids = $stmt->fetch();
+
+                $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
+                $stmt = $dbh->query($select);
+                $audit_freq = $stmt->fetch();
+                if ($audit_ids == 6) {
+                    $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
+                } else if ($audit_ids == 9) {
+                    $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_spa);
+                } else if ($audit_ids == 3) {
+                    $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
+                    updateOldAudit($dept_id, $audit_ids, $prev_self);
+                } else {
+                    $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE complete_form_id = :form_id';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->bindParam(':form_id', $edge['node']['id']);
+                    $stmt->execute();
+                }
+            }
+            $skip++;
+            $update = 'UPDATE kuali_table SET dw_complete_schedule = :skip';
+            $stmt = $dbh->prepare($update);
+            $stmt->execute([':skip'->$skip]);
+            echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
         }
-      }
-      $skip++;
-      $update = 'UPDATE kuali_table SET dw_complete_schedule = :skip';
-      $stmt = $dbh->prepare($update);
-      $stmt->execute([':skip'->$skip]);
-      echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
     }
-  }
 }
 function updateOldAudit($dept_id, $audit_id, $new_audit_id)
 {
-  global $dbh;
-  $update = "UPDATE audit_history SET audit_status = 'Complete' audit_id = :new_audit_id WHERE dept_id = :dept_id AND audit_id = :audit_id";
-  $stmt = $dbh->prepare($update);
-  $stmt->bindParam(':new_audit_id', $new_audit_id);
-  $stmt->bindParam(':dept_id', $dept_id);
-  $stmt->bindParam(':audit_id', $audit_id);
-  $stmt->execute();
+    global $dbh;
+    $update = "UPDATE audit_history SET audit_status = 'Complete' audit_id = :new_audit_id WHERE dept_id = :dept_id AND audit_id = :audit_id";
+    $stmt = $dbh->prepare($update);
+    $stmt->bindParam(':new_audit_id', $new_audit_id);
+    $stmt->bindParam(':dept_id', $dept_id);
+    $stmt->bindParam(':audit_id', $audit_id);
+    $stmt->execute();
 }
