@@ -2443,6 +2443,10 @@ function completeAudit()
           $stmt->execute();
         }
       }
+      $skip++;
+      $update = 'UPDATE kuali_table SET complete_schedule = :skip';
+      $stmt = $dbh->prepare($update);
+      $stmt->execute([':skip'->$skip]);
       echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
     }
   }
@@ -2454,7 +2458,7 @@ function dwCompleteAudit()
 
   $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
   $apikey = $result['kauli_key'];
-  $skip = $result['dw_complete_schedule'];
+  $skip = (int)$result['dw_complete_schedule'];
 
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_URL, $url);
@@ -2548,9 +2552,10 @@ function dwCompleteAudit()
         $stmt->bindParam(':cust2', $custodian);
         $stmt->execute();
 
-        $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+        //$select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
+        $select = 'SELECT dept_id, audit_id FROM audit_history WHERE complete_form_id = :form_id';
         $stmt = $dbh->prepare($select);
-        $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
+        $stmt->bindParam(':form_id', $edge['node']['id']);
         $stmt->execute();
         $audit_ids = $stmt->fetch();
 
@@ -2567,13 +2572,16 @@ function dwCompleteAudit()
           $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
           updateOldAudit($dept_id, $audit_ids, $prev_self);
         } else {
-          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
+          $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE complete_form_id = :form_id';
           $stmt = $dbh->prepare($update);
-          $stmt->bindParam(':dept_id', $dept_id);
-          $stmt->bindParam(':audit_id', $audit_ids);
+          $stmt->bindParam(':form_id', $edge['node']['id']);
           $stmt->execute();
         }
       }
+      $skip++;
+      $update = 'UPDATE kuali_table SET dw_complete_schedule = :skip';
+      $stmt = $dbh->prepare($update);
+      $stmt->execute([':skip'->$skip]);
       echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
     }
   }
