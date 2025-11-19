@@ -19,6 +19,7 @@ dwCheck ();
 dwLsd ();
 dwPsr ();
 checkFormStatus();
+getAuditSchedules();
 completeAudit();
 dwCompleteAudit();
 function addKualiInfo () {
@@ -897,29 +898,17 @@ function bulkPsr () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "67c9d5af2017390283de33d5",
-            "skip" => 0,
-            "limit" => 200,
-            "sort" => [
-                "meta.createdAt"
-            ],
+            "skip" => $raw_ms,
+            "limit" => 100,
+            "sort" => ["meta.createdAt"],
             "query" => "",
             "fields" => [
                 "type" => "AND",
                 "operators" => [
                     [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
                     ]
                 ]
             ]
@@ -945,6 +934,7 @@ function bulkPsr () {
     $count = 1;
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = $edge['node']['meta']['createdAt'];
             if (!isset($edge['node']['data']['DtFI8bQn4g']['data'])) {
                 echo "<br>Skipping Tag Not Available<br>";
@@ -967,7 +957,7 @@ function bulkPsr () {
 
                     $update_kuali = "UPDATE kuali_table SET bulk_psr_time = :time";
                     $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $update_time]);
+                    $update_stmt->execute([":time" => $raw_ms]);
                     echo "<br>" . $count++;
                     echo "<br>Updating<br>Tag " . $tag . "<br>Time " . $update_time . "<br>";
                 }
@@ -1025,25 +1015,20 @@ keyBy: ID
 }',
     "variables" => [
         "appId" => "686554f17ba08e02806b14b5",
-        "skip" => 0,
-        "limit" => 100,
-        "sort" => ["meta.createdAt"],
-        "query" => "",
-        "fields" => [
-            "type" => "AND",
-            "operators" => [
-                [
-                    "field" => "meta.workflowStatus",
-                    "type" => "IS",
-                    "value" => "Complete"
-                ],
-                [
-                    "field" => "meta.createdAt",
-                    "type" => "RANGE",
-                    "min" => (string)$raw_ms
+            "skip" => $raw_ms,
+            "limit" => 100,
+            "sort" => ["meta.createdAt"],
+            "query" => "",
+            "fields" => [
+                "type" => "AND",
+                "operators" => [
+                    [
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
+                    ]
                 ]
             ]
-        ]
     ]
     ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -1062,6 +1047,7 @@ keyBy: ID
     $count = 1;
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = $edge['node']['meta']['createdAt'];
 
             if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
@@ -1179,7 +1165,7 @@ keyBy: ID
                 try {
                     $update_kuali_time = "UPDATE kuali_table SET bulk_transfer_time = :time";
                     $update_stmt = $dbh->prepare($update_kuali_time);
-                    $update_stmt->execute([":time"=>$update_time]);
+                    $update_stmt->execute([":time"=>$raw_ms]);
                 } catch (PDOException $e) {
                     echo "error updating kuali_table " . $e->getMessage();
                 }
@@ -1216,29 +1202,17 @@ function check () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "677d53d969ef4601572b80ae",
-            "skip" => 0,
-            "limit" => 300,
-            "sort" => [
-                "meta.createdAt"
-            ],
+            "skip" => $raw_ms,
+            "limit" => 100,
+            "sort" => ["meta.createdAt"],
             "query" => "",
             "fields" => [
                 "type" => "AND",
                 "operators" => [
                     [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
                     ]
                 ]
             ]
@@ -1296,17 +1270,19 @@ function check () {
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":note" => $info, ":tag" => $tag]);
 
+                    $raw_ms++;
                     $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
                     $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $update_time]);
+                    $update_stmt->execute([":time" => $raw_ms;]);
                 } else if ($check_in) {
                     $update_q = "UPDATE asset_info SET asset_notes = NULL WHERE asset_tag = :tag";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":tag" => $tag]);
 
+                    $raw_ms++;
                     $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
                     $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $update_time]);
+                    $update_stmt->execute([":time" => $raw_ms;]);
                 }
             }
             echo "<br>" . $count++;
@@ -1341,29 +1317,17 @@ function lsd () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "677c075baba4e3014ca39095",
-            "skip" => 0,
-            "limit" => 200,
-            "sort" => [
-                "meta.createdAt"
-            ],
+            "skip" => $raw_ms,
+            "limit" => 100,
+            "sort" => ["meta.createdAt"],
             "query" => "",
             "fields" => [
                 "type" => "AND",
                 "operators" => [
                     [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
                     ]
                 ]
             ]
@@ -1405,9 +1369,10 @@ function lsd () {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
 
+                $raw_ms
                 $update_kuali = "UPDATE kuali_table SET equip_lost_stol_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $update_time]);
+                $update_stmt->execute([":time" => $raw_ms]);
             }
         }
     } catch (PDOException $e) {
@@ -1439,29 +1404,17 @@ function psr () {
         "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
         "variables" => [
             "appId" => "68093820dec1b8027f980167",
-            "skip" => 0,
-            "limit" => 200,
-            "sort" => [
-                "meta.createdAt"
-            ],
+            "skip" => $raw_ms,
+            "limit" => 100,
+            "sort" => ["meta.createdAt"],
             "query" => "",
             "fields" => [
                 "type" => "AND",
                 "operators" => [
                     [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
                     ]
                 ]
             ]
@@ -1501,10 +1454,11 @@ function psr () {
                 $update_q = "UPDATE asset_info SET asset_status = 'Disposed' WHERE asset_tag = :tag";
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
+                $raw_ms++;
 
                 $update_kuali = "UPDATE kuali_table SET psr_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $update_time]);
+                $update_stmt->execute([":time" => $raw_ms]);
             }
         }
     } catch (PDOException $e) {
@@ -2319,10 +2273,11 @@ function getAuditSchedules() {
 function completeAudit()
 {
   global $dbh, $result;
+  echo '<br>DW Complete Audit<br>';
   $subdomain = "csub";
 
   $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-  $apikey = $result['kauli_key'];
+  $apikey = $result['kuali_key'];
   $skip = $result['complete_schedule'];
 
   $curl = curl_init($url);
@@ -2454,10 +2409,11 @@ function completeAudit()
 function dwCompleteAudit()
 {
   global $dbh, $result;
+  echo '<br>DW Complete Audit<br>';
   $subdomain = "csub";
 
   $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-  $apikey = $result['kauli_key'];
+  $apikey = $result['kuali_key'];
   $skip = (int)$result['dw_complete_schedule'];
 
   $curl = curl_init($url);
