@@ -282,6 +282,9 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
+$insert = 'UPDATE audit_history SET complete_form_id = :form_id WHERE audit_id = :aid AND dept_id = :dept_id';
+$stmt = $dbh->prepare($insert);
+$stmt->execute([':form_id'=>$document_id, ':aid'=>$audit_id, ':dept_id'=>$dept_id]);
 echo "<pre>";
 var_dump($resp);
 echo "</pre>";
