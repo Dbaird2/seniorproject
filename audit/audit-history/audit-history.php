@@ -216,7 +216,7 @@ include_once("../../config.php");
                     continue;
                 }
                 if ($form === 'in-progress') {
-                    $color = '#FFFF00';
+                    $color = '#F4C542';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
@@ -225,7 +225,7 @@ include_once("../../config.php");
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'complete') {
-                    $color = '#00FF00';
+                    $color = '#28A745';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
@@ -234,7 +234,7 @@ include_once("../../config.php");
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'withdrawn') {
-                    $color = '#FF2F00';
+                    $color = '#6C757D';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
@@ -243,7 +243,7 @@ include_once("../../config.php");
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'denied') {
-                    $color = '#FF0000';
+                    $color = '#DC3545';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 ?>
             <span style='color: <?= $color ?> ;'>Denied </span>
