@@ -23,6 +23,7 @@ checkFormStatus();
 getAuditSchedules();
 completeAudit();
 dwCompleteAudit();
+dwLsdV2();
 //busChange();
 function addKualiInfo () {
     echo '<br>Add Kuali Info<br>';
@@ -2189,10 +2190,10 @@ function dwLsd () {
     $FDN = "/^F[DN]?\d+$/";
     $SPA = "/^SP\d+$/";
 
-    $count = 0 + $raw_ms;
+
     try {
         foreach ($edges as $index => $edge) {
-            $count++;
+            $raw_ms++;
             if (isset($edge['node']['data']['y7nFCmsLEg'])) {
                 $tag = $edge['node']['data']['y7nFCmsLEg'];
             } else {
@@ -2210,9 +2211,98 @@ function dwLsd () {
 
             }
         }
-                $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $count]);
+        $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
+        $update_stmt = $dbh->prepare($update_kuali);
+        $update_stmt->execute([":time" => $raw_ms]);
+    } catch (PDOException $e) {
+        echo "Error with database " . $e->getMessage();
+        return;
+    }
+}
+function dwLsdV2 () {
+    echo '<br>DW LSD 2<br>';
+    global $dbh, $result;
+    $raw_ms = (int)$result['dw_lsd_time_v2'] ?? 0;
+    $highest_time = date('c', $raw_ms / 1000);
+
+    $apikey = $result['kuali_key'];
+
+    $url = "https://csub.kualibuild.com/app/api/v0/graphql";
+
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+    $headers = array(
+        "Content-Type: application/json",
+        "Authorization: Bearer {$apikey}",
+    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $data = json_encode([
+        "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+        "variables" => [
+            "appId" => "68e94e8a58fd2e028d5ec88f",
+            "skip" => $raw_ms,
+            "limit" => 200,
+            "sort" => [
+                "meta.createdAt"
+            ],
+            "query" => "",
+            "fields" => [
+                "type" => "AND",
+                "operators" => [
+                    [
+                        "type" => "AND",
+                        "operators" => [
+                            [
+                                "field" => "meta.workflowStatus",
+                                "type" => "IS",
+                                "value" => "Complete"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    $resp = curl_exec($curl);
+    curl_close($curl);
+    $resp2 = json_decode($resp);
+
+    $decode_true = json_decode($resp, true);
+    $edges = $decode_true['data']['app']['documentConnection']['edges'];
+
+    $ASI = "/^A[SI]?\d+$/";
+    $STU = "/^S[RC]?[TU]?\d+$/";
+    $CMP = "/^\d+/";
+    $FDN = "/^F[DN]?\d+$/";
+    $SPA = "/^SP\d+$/";
+
+    try {
+        foreach ($edges as $index => $edge) {
+            $raw_ms++;
+            $tag = $edge['node']['data']['2iwsFa0_2j'];
+
+            echo "<br>Tag " . $tag . "<br>";
+            $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
+            $select_stmt = $dbh->prepare($select_q);
+            $select_stmt->execute([":tag" => $tag]);
+            if ($select_stmt->rowCount() === 1) {
+                $update_q = "UPDATE asset_info SET asset_status = 'Disposed' WHERE asset_tag = :tag";
+                $update_stmt = $dbh->prepare($update_q);
+                $update_stmt->execute([":tag" => $tag]);
+
+            }
+        }
+        $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
+        $update_stmt = $dbh->prepare($update_kuali);
+        $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
