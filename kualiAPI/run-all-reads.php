@@ -2651,7 +2651,7 @@ function getAuditSchedules() {
 function completeAudit()
 {
     global $dbh, $result;
-    echo '<br>DW Complete Audit<br>';
+    echo '<br>Complete Audit<br>';
     $subdomain = "csub";
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
@@ -2727,6 +2727,7 @@ keyBy: ID
 
     $edges = $decode_true['data']['app']['documentConnection']['edges'];
     foreach ($edges as $edge) {
+        $skip++;
         if (!isset($edge['node']['data']['4Oqb_ktloM']['data']['IOw4-l7NsM'])) {
             echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
             continue;
@@ -2776,10 +2777,9 @@ keyBy: ID
                     $stmt->execute();
                 }
             }
-            $skip++;
             $update = 'UPDATE kuali_table SET complete_schedule = :skip';
             $stmt = $dbh->prepare($update);
-            $stmt->execute([':skip'->$skip]);
+            $stmt->execute([':skip'=>$skip]);
             echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
         }
     }
@@ -2917,7 +2917,7 @@ keyBy: ID
         }
             $update = 'UPDATE kuali_table SET dw_complete_schedule = :skip';
             $stmt = $dbh->prepare($update);
-            $stmt->execute([':skip'->$skip]);
+            $stmt->execute([':skip'=>$skip]);
     }
 }
 function updateOldAudit($dept_id, $audit_id, $new_audit_id)
