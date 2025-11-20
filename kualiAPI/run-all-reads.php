@@ -1550,8 +1550,7 @@ keyBy: ID
         }
     }
 
-    echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
-    exit;
+    return;
 }
 function checkBldg($bldg_name, $room_loc, $tag) {
     global $dbh;
@@ -2554,12 +2553,12 @@ function getAuditSchedules() {
         $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
-        exit;
+        return;
     } catch (Exception $e) {
         echo "General error " . $e->getMessage();
-        exit;
+        return;
     }
-    exit;
+    return;
     function addDepartment($c_display_name, $m_full_name, $dept_id, $dept_name)
     {
         global $dbh;
