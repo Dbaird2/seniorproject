@@ -1240,6 +1240,7 @@ function check () {
     $count = 1;
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = $edge['node']['meta']['createdAt'];
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
@@ -1271,22 +1272,15 @@ function check () {
                     $update_q = "UPDATE asset_info SET asset_notes = :note WHERE asset_tag = :tag";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":note" => $info, ":tag" => $tag]);
-
-                    $raw_ms++;
-                    $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $raw_ms;]);
                 } else if ($check_in) {
                     $update_q = "UPDATE asset_info SET asset_notes = NULL WHERE asset_tag = :tag";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":tag" => $tag]);
-
-                    $raw_ms++;
-                    $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $raw_ms;]);
                 }
             }
+            $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali);
+            $update_stmt->execute([":time" => $raw_ms]);
             echo "<br>" . $count++;
             echo "<br>Updating<br>Tag " . $tag . "<br>Time " . $update_time . "<br>";
         }
