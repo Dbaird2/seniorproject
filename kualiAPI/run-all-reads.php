@@ -1365,11 +1365,11 @@ function lsd () {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
 
-                $raw_ms
-                $update_kuali = "UPDATE kuali_table SET equip_lost_stol_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $raw_ms]);
             }
+            $raw_ms++;
+            $update_kuali = "UPDATE kuali_table SET equip_lost_stol_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali);
+            $update_stmt->execute([":time" => $raw_ms]);
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
@@ -1436,6 +1436,7 @@ function psr () {
 
     try {
         foreach ($edges as $index => $edge) {
+            $raw_ms++;
             $update_time = $edge['node']['meta']['createdAt'];
             $tag_data = $edge['node']['data']['W_Uw0hSpff']['data'];
             foreach ($tag_data as $data) {
@@ -1450,12 +1451,11 @@ function psr () {
                 $update_q = "UPDATE asset_info SET asset_status = 'Disposed' WHERE asset_tag = :tag";
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
-                $raw_ms++;
 
-                $update_kuali = "UPDATE kuali_table SET psr_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $raw_ms]);
             }
+            $update_kuali = "UPDATE kuali_table SET psr_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali);
+            $update_stmt->execute([":time" => $raw_ms]);
         }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
