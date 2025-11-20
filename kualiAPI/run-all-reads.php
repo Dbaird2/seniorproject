@@ -296,8 +296,6 @@ keyBy: ID
                 $array = $edge['node']['data']['HBG7HehhU8']['data'];
             }
 
-            $update_time = $edge['node']['meta']['createdAt'];
-            echo '<br>'.$update_time.'<br>';
             if (isset($array)) {
                 foreach ($array as $dept_info) {
                     if (isset($edge['node']['data']['r4XeMIe7yh']['data'][0]['data']['Gsxde2JR77']['data']['IOw4-l7NsM'])) {
@@ -609,8 +607,6 @@ function assetAddition () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = (int)$edge['node']['meta']['createdAt'];
-            echo '<br>ASSET ADDITION TIME: '  . $update_time . '<br>';
             if (!isset($edge['node']['data']['PUcYspMrJZ'])) {
                 echo "<br> Skipping Tag Not Available <br>";
                 continue;
@@ -667,9 +663,6 @@ function assetAddition () {
                     $date = date('m-d-y', $ms_date);
                     echo '<br>IT STATUS ' . $it_status . '<br>'; 
                     $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $dept_id, $asset_profile, $po, $it_status]);
-                    if ($update_time > $raw_ms && $update_time > $new_time) {
-                        $new_time = $update_time;
-                    }
                 }
                 echo "<br>Asset Profile " . $asset_profile . "<br>Value " . $value . "<br>Tag " . $tag_num .
                     "<br>Dept " . $dept_id . "<br>SN " . $serial_num . "<br>Name " . $name . "<br>";
@@ -787,7 +780,6 @@ function assetReceived () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = (int)$edge['node']['meta']['createdAt'];
             $time = (int)$edge['node']['data']['wzgp7QHb7F'];
             $timestamp_sec = $time / 1000;
             $date = date("Y-m-d", $timestamp_sec);
@@ -854,13 +846,10 @@ function assetReceived () {
                         $insert_stmt = $dbh->prepare($insert_q);
                         $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag, $it_status]);
                         echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
-                        echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Time ' . $update_time . '<br>Date '  . $date . '<br><br>';
-                        if ($update_time > $raw_ms && $update_time > $new_time) {
-                            $new_time = $update_time;
-                        }
+                        echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date '  . $date . '<br><br>';
                     } catch (PDOException $e) {
                         echo '<br>Failed to insert<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
-                        echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Time ' . $update_time . '<br>Date '  . $date . '<br><br>';
+                        echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date '  . $date . '<br><br>';
                         echo "Error inserting " . $e->getMessage();
                     }
                 } else {
@@ -937,7 +926,6 @@ function bulkPsr () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = $edge['node']['meta']['createdAt'];
             if (!isset($edge['node']['data']['DtFI8bQn4g']['data'])) {
                 echo "<br>Skipping Tag Not Available<br>";
                 continue;
@@ -957,14 +945,15 @@ function bulkPsr () {
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":tag" => $tag]);
 
-                    $update_kuali = "UPDATE kuali_table SET bulk_psr_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $raw_ms]);
                     echo "<br>" . $count++;
-                    echo "<br>Updating<br>Tag " . $tag . "<br>Time " . $update_time . "<br>";
+                    echo "<br>Updating<br>Tag " . $tag . "<br>";
                 }
             }
         }
+        echo '<br>BULK_PSR_TIME ' . $raw_ms . '<br>';
+        $update_kuali = "UPDATE kuali_table SET bulk_psr_time = :time";
+        $update_stmt = $dbh->prepare($update_kuali);
+        $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -1050,7 +1039,6 @@ keyBy: ID
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = $edge['node']['meta']['createdAt'];
 
             if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
                 echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
@@ -1171,7 +1159,6 @@ keyBy: ID
                 } catch (PDOException $e) {
                     echo "error updating kuali_table " . $e->getMessage();
                 }
-                echo "<br>Time " . $update_time . "<br>";
                 echo "<br>--------------------------------------<br>";
             }
         }
@@ -1241,7 +1228,6 @@ function check () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = $edge['node']['meta']['createdAt'];
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
             $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
@@ -1278,12 +1264,13 @@ function check () {
                     $update_stmt->execute([":tag" => $tag]);
                 }
             }
+            echo "<br>" . $count++;
+            echo "<br>Updating<br>Tag " . $tag . "<br>";
+        }
+        echo 'CHECKOUT RAW_MS COUNT: ' . $raw_ms . '<br>';
             $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
             $update_stmt = $dbh->prepare($update_kuali);
             $update_stmt->execute([":time" => $raw_ms]);
-            echo "<br>" . $count++;
-            echo "<br>Updating<br>Tag " . $tag . "<br>Time " . $update_time . "<br>";
-        }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -1349,14 +1336,13 @@ function lsd () {
 
     try {
         foreach ($edges as $index => $edge) {
-            $update_time = $edge['node']['meta']['createdAt'];
             if (isset($edge['node']['data']['y7nFCmsLEg'])) {
                 $tag = $edge['node']['data']['y7nFCmsLEg'];
             } else {
                 $tag = $edge['node']['data']['ufHf4QAJsc'];
             }
 
-            echo "<br>Tag " . $tag . "<br>Time " . $update_time;
+            echo "<br>Tag " . $tag . "<br>";
             $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
@@ -1437,13 +1423,12 @@ function psr () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
-            $update_time = $edge['node']['meta']['createdAt'];
             $tag_data = $edge['node']['data']['W_Uw0hSpff']['data'];
             foreach ($tag_data as $data) {
                 $tag = $data['data']['yks38VOkzw'];
             }
 
-            echo "<br>Tag " . $tag . "<br>Time " . $update_time;
+            echo "<br>Tag " . $tag . "<br>";
             $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
@@ -1453,10 +1438,10 @@ function psr () {
                 $update_stmt->execute([":tag" => $tag]);
 
             }
-            $update_kuali = "UPDATE kuali_table SET psr_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali);
-            $update_stmt->execute([":time" => $raw_ms]);
         }
+        $update_kuali = "UPDATE kuali_table SET psr_time = :time";
+        $update_stmt = $dbh->prepare($update_kuali);
+        $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -1540,7 +1525,6 @@ keyBy: ID
 
     $count = 1;
     foreach ($edges as $index => $edge) {
-        $update_time = $edge['node']['meta']['createdAt'];
         if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'From one department to another department') {
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
             deptChange($edge, $raw_ms);
@@ -1898,7 +1882,7 @@ keyBy: ID
     $count2 = $raw_ms + 0;
     try {
         foreach ($edges as $index => $edge) {
-            $update_time = $edge['node']['meta']['createdAt'];
+            $raw_ms++;
 
             if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
                 echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
@@ -2006,17 +1990,16 @@ keyBy: ID
                 } catch (PDOException $e) {
                     echo "error updating asset " . $e->getMessage();
                 }
-                try {
-                    $update_kuali_time = "UPDATE kuali_table SET dw_bulk_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali_time);
-                    $update_stmt->execute([":time"=>$count2]);
-                } catch (PDOException $e) {
-                    echo "error updating kuali_table " . $e->getMessage();
-                }
-                echo "<br>Time " . $update_time . "<br>";
                 echo "<br>--------------------------------------<br>";
             }
         }
+                try {
+                    $update_kuali_time = "UPDATE kuali_table SET dw_bulk_time = :time";
+                    $update_stmt = $dbh->prepare($update_kuali_time);
+                    $update_stmt->execute([":time"=>$raw_ms]);
+                } catch (PDOException $e) {
+                    echo "error updating kuali_table " . $e->getMessage();
+                }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -2025,7 +2008,7 @@ keyBy: ID
 function dwCheck () {
     echo 'DW Check out<br>';
     global $dbh, $result;
-    $raw_ms = (int)$result['dw_check_time'] ?? 1744307816063;
+    $raw_ms = (int)$result['dw_check_time'] ?? 0;
     $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
@@ -2091,7 +2074,7 @@ function dwCheck () {
     try {
         foreach ($edges as $index => $edge) {
             $count2++;
-            $update_time = $edge['node']['meta']['createdAt'];
+            $raw_ms++;
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
             $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
@@ -2123,22 +2106,19 @@ function dwCheck () {
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":note" => $info, ":tag" => $tag]);
 
-                    $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $update_time]);
                 } else if ($check_in) {
                     $update_q = "UPDATE asset_info SET asset_notes = NULL WHERE asset_tag = :tag";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":tag" => $tag]);
 
-                    $update_kuali = "UPDATE kuali_table SET dw_check_time = :time";
-                    $update_stmt = $dbh->prepare($update_kuali);
-                    $update_stmt->execute([":time" => $count2]);
                 }
             }
             echo "<br>" . $count++;
-            echo "<br>Updating<br>Tag " . $tag . "<br>Time " . $update_time . "<br>";
+            echo "<br>Updating<br>Tag " . $tag . "<br>";
         }
+                    $update_kuali = "UPDATE kuali_table SET dw_check_time = :time";
+                    $update_stmt = $dbh->prepare($update_kuali);
+                    $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -2213,14 +2193,13 @@ function dwLsd () {
     try {
         foreach ($edges as $index => $edge) {
             $count++;
-            $update_time = $edge['node']['meta']['createdAt'];
             if (isset($edge['node']['data']['y7nFCmsLEg'])) {
                 $tag = $edge['node']['data']['y7nFCmsLEg'];
             } else {
                 $tag = $edge['node']['data']['ufHf4QAJsc'];
             }
 
-            echo "<br>Tag " . $tag . "<br>Time " . $update_time;
+            echo "<br>Tag " . $tag . "<br>";
             $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
@@ -2229,11 +2208,11 @@ function dwLsd () {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
 
+            }
+        }
                 $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
                 $update_stmt = $dbh->prepare($update_kuali);
                 $update_stmt->execute([":time" => $count]);
-            }
-        }
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
@@ -2307,14 +2286,13 @@ function dwPsr () {
     $count = 0 +$raw_ms;
     try {
         foreach ($edges as $index => $edge) {
-            $count++;
-            $update_time = $edge['node']['meta']['createdAt'];
+            $raw_ms++;
             $tag_data = $edge['node']['data']['W_Uw0hSpff']['data'];
             foreach ($tag_data as $data) {
                 $tag = $data['data']['yks38VOkzw'];
             }
 
-            echo "<br>Tag " . $tag . "<br>Time " . $update_time;
+            echo "<br>Tag " . $tag . "<br>";
             $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag AND asset_status = 'In Service'";
             $select_stmt = $dbh->prepare($select_q);
             $select_stmt->execute([":tag" => $tag]);
@@ -2323,11 +2301,11 @@ function dwPsr () {
                 $update_stmt = $dbh->prepare($update_q);
                 $update_stmt->execute([":tag" => $tag]);
 
-                $update_kuali = "UPDATE kuali_table SET dw_psr_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $count]);
             }
         }
+                $update_kuali = "UPDATE kuali_table SET dw_psr_time = :time";
+                $update_stmt = $dbh->prepare($update_kuali);
+                $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
         echo "Error with database " . $e->getMessage();
         return;
