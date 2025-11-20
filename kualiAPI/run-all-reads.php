@@ -1,11 +1,12 @@
 <?php
 include_once __DIR__ . '/../config.php';
-set_time_limit(700);
+set_time_limit(900);
 
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 deleteOverdueSchedule();
+propertyTransfer();
 addKualiInfo();
 assetAddition();
 assetReceived(); 
@@ -22,7 +23,6 @@ checkFormStatus();
 getAuditSchedules();
 completeAudit();
 dwCompleteAudit();
-propertyTransfer();
 //busChange();
 function addKualiInfo () {
     echo '<br>Add Kuali Info<br>';
