@@ -2758,8 +2758,7 @@ keyBy: ID
 
                 $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
                 $stmt = $dbh->prepare($select);
-                $stmt->bindParam(':form_id', '%' . $edge['node']['id'] . '%');
-                $stmt->execute();
+                $stmt->execute([':form_id'=>'%'.$edge['node']['id'].'%']);
                 $audit_ids = $stmt->fetch();
 
                 $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
