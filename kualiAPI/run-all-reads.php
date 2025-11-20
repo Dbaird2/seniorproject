@@ -2742,14 +2742,19 @@ keyBy: ID
             if ($result) {
                 $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
-                $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
-                $stmt = $dbh->prepare($update);
-                $stmt->bindParam(':dept_name', $dept_name);
-                $stmt->bindParam(':dept_id', $dept_id);
-                $stmt->bindParam(':manager', $manager);
-                $stmt->bindParam(':cust', '{' . $custodian . '}');
-                $stmt->bindParam(':cust2', $custodian);
-                $stmt->execute();
+                $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':custodian'=>$custodian, ':dept_id'=>$dept_id]);
+                $true = $stmt->fetch();
+                if (!$true) {
+                    $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :dept';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':cust'=>$custodian,':manager'=>$manager,':dept'=>$dept_id]);
+                } else {
+                    $update = 'UPDATE department SET dept_manager = :manager WHERE dept_id = :dept';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':manager'=>$manager,':dept'=>$dept_id]);
+                }
 
                 $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
                 $stmt = $dbh->prepare($select);
@@ -2878,14 +2883,19 @@ keyBy: ID
             if ($result) {
                 $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
-                $update = 'INSERT INTO department (dept_id, dept_name, dept_manager, custodian) VALUES (:dept_id, :dept_name, :manager, :cust) ON CONFLICT dept_id DO UPDATE dept_name = :dept_name, custodian = ARRAY_APPEND(custodian, :cust2), manager = :manager';
-                $stmt = $dbh->prepare($update);
-                $stmt->bindParam(':dept_name', $dept_name);
-                $stmt->bindParam(':dept_id', $dept_id);
-                $stmt->bindParam(':manager', $manager);
-                $stmt->bindParam(':cust', '{' . $custodian . '}');
-                $stmt->bindParam(':cust2', $custodian);
-                $stmt->execute();
+                $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':custodian'=>$custodian, ':dept_id'=>$dept_id]);
+                $true = $stmt->fetch();
+                if (!$true) {
+                    $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :dept';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':cust'=>$custodian,':manager'=>$manager,':dept'=>$dept_id]);
+                } else {
+                    $update = 'UPDATE department SET dept_manager = :manager WHERE dept_id = :dept';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':manager'=>$manager,':dept'=>$dept_id]);
+                }
 
                 //$select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
                 $select = 'SELECT dept_id, audit_id FROM audit_history WHERE complete_form_id = :form_id';
