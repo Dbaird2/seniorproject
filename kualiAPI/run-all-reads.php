@@ -494,7 +494,6 @@ function assetAddition () {
     echo '<br>Asset Adition<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['asset_addition_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
 
 
@@ -681,7 +680,6 @@ function assetReceived () {
     echo '<br>Asset received<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['asset_received_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $subdomain = "subdomain";
     $apikey = $result['kuali_key'];
@@ -870,7 +868,6 @@ function bulkPsr () {
     echo '<br>Bulk PSR<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['bulk_psr_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -964,7 +961,6 @@ function bulkTransfer () {
     echo '<br>Bulk Transfer<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['bulk_transfer_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
     $url = "https://csub.kualibuild.com/app/api/v0/graphql";
@@ -1040,6 +1036,7 @@ keyBy: ID
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
+            echo '<br> RAW MS COUNTER: ' . $raw_ms . '<br>';
 
             if (trim($edge['node']['data']['_GODY1FjEy']['label']) !== 'From one department to another department') {
                 echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
@@ -1172,7 +1169,6 @@ function check () {
     echo '<br>Check out<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['check_out_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -1229,6 +1225,7 @@ function check () {
     try {
         foreach ($edges as $index => $edge) {
             $raw_ms++;
+            echo '<br> RAW MS COUNTER: ' . $raw_ms . '<br>';
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
             $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
@@ -1281,7 +1278,6 @@ function lsd () {
     echo '<br>LSD<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['equip_lost_stol_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -1367,7 +1363,6 @@ function psr () {
     echo '<br>PSR<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['psr_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -1526,6 +1521,7 @@ keyBy: ID
 
     $count = 1;
     foreach ($edges as $index => $edge) {
+        $raw_ms++;
         if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'From one department to another department') {
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
             deptChange($edge, $raw_ms);
@@ -1533,6 +1529,9 @@ keyBy: ID
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
             bldgChange($edge, $raw_ms);
         }
+        $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
+        $update_stmt = $dbh->prepare($update_kuali_time);
+        $update_stmt->execute([":time"=>$raw_ms]);
     }
 
     return;
@@ -1620,9 +1619,6 @@ function deptChange($edge, $raw_ms) {
         $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
 
         try {
-            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$raw_ms]);
         } catch (PDOException $e) {
             echo "error updating kuali_table " . $e->getMessage();
         }
@@ -1658,13 +1654,6 @@ function bldgChange($edge, $raw_ms) {
             checkBldg($bldg_name, $room_loc, $tag);
         }
 
-        try {
-            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$raw_ms]);
-        } catch (PDOException $e) {
-            echo "error updating kuali_table " . $e->getMessage();
-        }
         echo "<br>Time " . $raw_ms . "<br>";
         echo "<br>--------------------------------------<br>";
     }
@@ -1783,7 +1772,6 @@ function dwBulkTransfer () {
     echo '<br>DW Bulk Transfer<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_bulk_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
     $url = "https://csub.kualibuild.com/app/api/v0/graphql";
@@ -2010,7 +1998,6 @@ function dwCheck () {
     echo 'DW Check out<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_check_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -2129,7 +2116,6 @@ function dwLsd () {
     echo '<br>DW LSD<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_lsd_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -2223,7 +2209,6 @@ function dwLsdV2 () {
     echo '<br>DW LSD 2<br>';
     global $dbh, $result;
     $raw_ms = (int)$result['dw_lsd_time_v2'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -2312,7 +2297,6 @@ function dwPsr () {
     echo '<br>DW PSR<br>';
     global $dbh, $result;
     $raw_ms = $result['dw_psr_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
@@ -2525,7 +2509,6 @@ function getAuditSchedules() {
     $select_stmt = $dbh->query($select);
     $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
     $raw_ms = (int)$result['schedule_time'] ?? 0;
-    $highest_time = date('c', $raw_ms / 1000);
 
     $apikey = $result['kuali_key'];
 
