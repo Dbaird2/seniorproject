@@ -2285,7 +2285,7 @@ function dwLsdV2 () {
 
             }
         }
-        $update_kuali = "UPDATE kuali_table SET dw_lsd_time = :time";
+        $update_kuali = "UPDATE kuali_table SET dw_lsd_time_v2 = :time";
         $update_stmt = $dbh->prepare($update_kuali);
         $update_stmt->execute([":time" => $raw_ms]);
     } catch (PDOException $e) {
@@ -2656,7 +2656,7 @@ function completeAudit()
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
     $apikey = $result['kuali_key'];
-    $skip = $result['complete_schedule'];
+    $skip = $result['complete_schedule'] ?? 0;
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -2792,7 +2792,7 @@ function dwCompleteAudit()
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
     $apikey = $result['kuali_key'];
-    $skip = (int)$result['dw_complete_schedule'];
+    $skip = (int)$result['dw_complete_schedule'] ?? 0;
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -2863,6 +2863,7 @@ keyBy: ID
 
     $edges = $decode_true['data']['app']['documentConnection']['edges'];
     foreach ($edges as $edge) {
+        $skip++;
         if (!isset($edge['node']['data']['Stimf2f9oY']['data']['IOw4-l7NsM'])) {
             echo 'No department ID found for document ID: ' . $edge['node']['id'] . "<br>";
             continue;
@@ -2912,12 +2913,11 @@ keyBy: ID
                     $stmt->execute();
                 }
             }
-            $skip++;
+            echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
+        }
             $update = 'UPDATE kuali_table SET dw_complete_schedule = :skip';
             $stmt = $dbh->prepare($update);
             $stmt->execute([':skip'->$skip]);
-            echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
-        }
     }
 }
 function updateOldAudit($dept_id, $audit_id, $new_audit_id)
