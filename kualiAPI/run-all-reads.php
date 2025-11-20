@@ -1787,11 +1787,12 @@ keyBy: ID
                 $insert = 'INSERT INTO asset_info (asset_tag, asset_name, serial_num) VALUES (?, ?, ?)';
                 $stmt = $dbh->prepare($insert);
                 $stmt->execute([$new_tag, $new_name, 'N/A']);
-        }
+            }
 
-        $update = 'UPDATE kuali_table SET bus_change_time = :skip';
-        $stmt = $dbh->prepare($update);
-        $stmt->execute([':skip'=>$raw_ms]);
+            $update = 'UPDATE kuali_table SET bus_change_time = :skip';
+            $stmt = $dbh->prepare($update);
+            $stmt->execute([':skip'=>$raw_ms]);
+        }
     }
 }
 
