@@ -2744,7 +2744,7 @@ keyBy: ID
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
                 $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':custodian'=>$custodian, ':dept_id'=>$dept_id]);
+                $stmt->execute([':cust'=>$custodian, ':dept_id'=>$dept_id]);
                 $true = $stmt->fetch();
                 if (!$true) {
                     $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :dept';
@@ -2885,7 +2885,7 @@ keyBy: ID
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
                 $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':custodian'=>$custodian, ':dept_id'=>$dept_id]);
+                $stmt->execute([':cust'=>$custodian, ':dept_id'=>$dept_id]);
                 $true = $stmt->fetch();
                 if (!$true) {
                     $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :dept';
