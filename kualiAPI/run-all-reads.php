@@ -21,7 +21,7 @@ dwLsd ();
 dwPsr ();
 checkFormStatus();
 getAuditSchedules();
-completeAudit();
+//completeAudit();
 dwCompleteAudit();
 dwLsdV2();
 //busChange();
@@ -2648,6 +2648,7 @@ function getAuditSchedules() {
         }
     }
 }
+/*
 function completeAudit()
 {
     global $dbh, $result;
@@ -2777,6 +2778,7 @@ keyBy: ID
                     $update = "UPDATE audit_history SET audit_status = 'Complete' WHERE dept_id = :dept_id AND audit_id = :audit_id";
                     $stmt = $dbh->prepare($update);
                     $stmt->bindParam(':dept_id', $dept_id);
+                    // DOES NOT WORK Uncaught PDOException: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type integer: ""
                     $stmt->bindParam(':audit_id', $audit_ids);
                     $stmt->execute();
                 }
@@ -2788,6 +2790,7 @@ keyBy: ID
         }
     }
 }
+ */
 function dwCompleteAudit()
 {
     global $dbh, $result;
