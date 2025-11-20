@@ -1540,150 +1540,149 @@ keyBy: ID
 
     $count = 1;
     foreach ($edges as $index => $edge) {
-        $raw_ms++;
         $update_time = $edge['node']['meta']['createdAt'];
         if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'From one department to another department') {
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
-            deptChange();
+            deptChange($edge, $raw_ms);
         } else if (trim($edge['node']['data']['_GODY1FjEy']['label']) === 'Building/Room/Location change (Business Unit stays the same)') {
             echo $edge['node']['data']['_GODY1FjEy']['label'] . "<br>";
-            bldgChange();
+            bldgChange($edge, $raw_ms);
         }
     }
 
     echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
     exit;
-    function checkBldg($bldg_name, $room_loc, $tag) {
-        global $dbh;
-        $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = :name';
+}
+function checkBldg($bldg_name, $room_loc, $tag) {
+    global $dbh;
+    $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = :name';
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([':name'=>$bldg_name]);
+    $bldg_id = $stmt->fetchColumn();
+    if ($bldg_id) {
+        $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
         $stmt = $dbh->prepare($select);
-        $stmt->execute([':name'=>$bldg_name]);
-        $bldg_id = $stmt->fetchColumn();
-        if ($bldg_id) {
+        $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
+        $room_tag = $stmt->fetchColumn();
+        if (!$room_tag) {
+            $update_room = 'INSERT INTO room_table (room_loc, bldg_id) VALUES (?,?)';
+            $stmt = $dbh->prepare($update_room);
+            $stmt->execute([$room_loc, $bldg_id]);
+
             $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
             $stmt = $dbh->prepare($select);
             $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
             $room_tag = $stmt->fetchColumn();
-            if (!$room_tag) {
-                $update_room = 'INSERT INTO room_table (room_loc, bldg_id) VALUES (?,?)';
-                $stmt = $dbh->prepare($update_room);
-                $stmt->execute([$room_loc, $bldg_id]);
-
-                $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
-                $stmt = $dbh->prepare($select);
-                $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
-                $room_tag = $stmt->fetchColumn();
-            } 
-            $update = 'UPDATE asset_info SET room_tag = :room WHERE asset_tag = :tag';
-            $stmt = $dbh->prepare($update);
-            $stmt->execute([':room'=>$room_tag, ':tag'=>$tag]);
-            return true;
-        }
+        } 
+        $update = 'UPDATE asset_info SET room_tag = :room WHERE asset_tag = :tag';
+        $stmt = $dbh->prepare($update);
+        $stmt->execute([':room'=>$room_tag, ':tag'=>$tag]);
+        return true;
     }
-    function checkTag($tag) {
-        global $dbh;
-        $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = :tag';
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':tag'=>$tag]);
-        $confirm_tag = $stmt->fetchColumn();
-        return $confirm_tag !== false;
-    }
-    function deptChange() {
-        global $dbh, $edge, $raw_ms;
-        $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
-        foreach ($tags as $index => $data) {
-            $tag = $data['data']['XZlIFEDX6Y'];
-            checkTag($tag);
-            if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
-                echo "<br>Tag field empty<br>";
-                continue;
-            }
-            if (isset($data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'])) {
-                $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
-                $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
-            } else if (isset($data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'])) {
-                $dept_id = $data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'];
-                $dept_name = $data['data']['qvczWxUOzQ']['data']['AkMeIWWhoj'];
-            }
-            if (isset($data['data']['zZztPX8Pcw'])) {
-                $room_loc = $data['data']['zZztPX8Pcw'];
-            } else if (isset($data['data']['CeMwzz3mnp'])) {
-                $room_loc = $data['data']['CeMwzz3mnp'];
-            } else if (isset($data['data']['6JHs3W0-CL'])) {
-                $room_loc = $data['data']['6JHs3W0-CL'];
-            }
-            if (isset($data['data']['hXHmCy0mek']['label'])) {
-                $bldg_name = $data['data']['hXHmCy0mek']['label'];
-            } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
-                $bldg_name = $data['data']['YtHlHUNY_q']['label'];
-            }
-
-            echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
-
-            if (!empty($bldg_name) && !empty($room_loc)) {
-                checkBldg($bldg_name, $room_loc, $tag);
-            }
-
-            $dept_id = substr($dept_id, 0, 6);
-            echo $dept_id . "<br>";
-            if (preg_match('/^D/', $dept_id)) {
-                echo "<br>Dept Id Format Good<br>";
-            } else {
-                continue;
-            }
-            $update_q = "UPDATE asset_info SET dept_id = :dept_id WHERE asset_tag = :tag";
-            $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
-
-            try {
-                $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali_time);
-                $update_stmt->execute([":time"=>$raw_ms]);
-            } catch (PDOException $e) {
-                echo "error updating kuali_table " . $e->getMessage();
-            }
-            echo "<br>Time " . $raw_ms . "<br>";
-            echo "<br>--------------------------------------<br>";
+}
+function checkTag($tag) {
+    global $dbh;
+    $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = :tag';
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([':tag'=>$tag]);
+    $confirm_tag = $stmt->fetchColumn();
+    return $confirm_tag !== false;
+}
+function deptChange($edge, $raw_ms) {
+    global $dbh;
+    $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
+    foreach ($tags as $index => $data) {
+        $tag = $data['data']['XZlIFEDX6Y'];
+        checkTag($tag);
+        if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
+            echo "<br>Tag field empty<br>";
+            continue;
         }
-    }
-    function bldgChange() {
-        global $dbh, $edge, $raw_ms;
-        $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
-        foreach ($tags as $index => $data) {
-            $tag = $data['data']['XZlIFEDX6Y'];
-            checkTag($tag);
-            if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
-                echo "<br>Tag field empty<br>";
-                continue;
-            }
-            if (isset($data['data']['zZztPX8Pcw'])) {
-                $room_loc = $data['data']['zZztPX8Pcw'];
-            } else if (isset($data['data']['CeMwzz3mnp'])) {
-                $room_loc = $data['data']['CeMwzz3mnp'];
-            } else if (isset($data['data']['6JHs3W0-CL'])) {
-                $room_loc = $data['data']['6JHs3W0-CL'];
-            }
-            if (isset($data['data']['hXHmCy0mek']['label'])) {
-                $bldg_name = $data['data']['hXHmCy0mek']['label'];
-            } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
-                $bldg_name = $data['data']['YtHlHUNY_q']['label'];
-            }
-            echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
-
-            if (!empty($bldg_name) && !empty($room_loc)) {
-                checkBldg($bldg_name, $room_loc, $tag);
-            }
-
-            try {
-                $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali_time);
-                $update_stmt->execute([":time"=>$raw_ms]);
-            } catch (PDOException $e) {
-                echo "error updating kuali_table " . $e->getMessage();
-            }
-            echo "<br>Time " . $raw_ms . "<br>";
-            echo "<br>--------------------------------------<br>";
+        if (isset($data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'])) {
+            $dept_id = $data['data']['U73d7kPH5b']['data']['IOw4-l7NsM'];
+            $dept_name = $data['data']['U73d7kPH5b']['data']['AkMeIWWhoj'];
+        } else if (isset($data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'])) {
+            $dept_id = $data['data']['qvczWxUOzQ']['data']['IOw4-l7NsM'];
+            $dept_name = $data['data']['qvczWxUOzQ']['data']['AkMeIWWhoj'];
         }
+        if (isset($data['data']['zZztPX8Pcw'])) {
+            $room_loc = $data['data']['zZztPX8Pcw'];
+        } else if (isset($data['data']['CeMwzz3mnp'])) {
+            $room_loc = $data['data']['CeMwzz3mnp'];
+        } else if (isset($data['data']['6JHs3W0-CL'])) {
+            $room_loc = $data['data']['6JHs3W0-CL'];
+        }
+        if (isset($data['data']['hXHmCy0mek']['label'])) {
+            $bldg_name = $data['data']['hXHmCy0mek']['label'];
+        } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
+            $bldg_name = $data['data']['YtHlHUNY_q']['label'];
+        }
+
+        echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
+
+        if (!empty($bldg_name) && !empty($room_loc)) {
+            checkBldg($bldg_name, $room_loc, $tag);
+        }
+
+        $dept_id = substr($dept_id, 0, 6);
+        echo $dept_id . "<br>";
+        if (preg_match('/^D/', $dept_id)) {
+            echo "<br>Dept Id Format Good<br>";
+        } else {
+            continue;
+        }
+        $update_q = "UPDATE asset_info SET dept_id = :dept_id WHERE asset_tag = :tag";
+        $update_stmt = $dbh->prepare($update_q);
+        $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
+
+        try {
+            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali_time);
+            $update_stmt->execute([":time"=>$raw_ms]);
+        } catch (PDOException $e) {
+            echo "error updating kuali_table " . $e->getMessage();
+        }
+        echo "<br>Time " . $raw_ms . "<br>";
+        echo "<br>--------------------------------------<br>";
+    }
+}
+function bldgChange($edge, $raw_ms) {
+    global $dbh;
+    $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
+    foreach ($tags as $index => $data) {
+        $tag = $data['data']['XZlIFEDX6Y'];
+        checkTag($tag);
+        if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
+            echo "<br>Tag field empty<br>";
+            continue;
+        }
+        if (isset($data['data']['zZztPX8Pcw'])) {
+            $room_loc = $data['data']['zZztPX8Pcw'];
+        } else if (isset($data['data']['CeMwzz3mnp'])) {
+            $room_loc = $data['data']['CeMwzz3mnp'];
+        } else if (isset($data['data']['6JHs3W0-CL'])) {
+            $room_loc = $data['data']['6JHs3W0-CL'];
+        }
+        if (isset($data['data']['hXHmCy0mek']['label'])) {
+            $bldg_name = $data['data']['hXHmCy0mek']['label'];
+        } else if (isset($data['data']['YtHlHUNY_q']['label'])) {
+            $bldg_name = $data['data']['YtHlHUNY_q']['label'];
+        }
+        echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
+
+        if (!empty($bldg_name) && !empty($room_loc)) {
+            checkBldg($bldg_name, $room_loc, $tag);
+        }
+
+        try {
+            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
+            $update_stmt = $dbh->prepare($update_kuali_time);
+            $update_stmt->execute([":time"=>$raw_ms]);
+        } catch (PDOException $e) {
+            echo "error updating kuali_table " . $e->getMessage();
+        }
+        echo "<br>Time " . $raw_ms . "<br>";
+        echo "<br>--------------------------------------<br>";
     }
 }
 
