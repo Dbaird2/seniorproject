@@ -2774,7 +2774,7 @@ keyBy: ID
                     $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
                     updateOldAudit($dept_id, $audit_ids, $prev_self);
                 } else {
-                    $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE dept_id = :dept_id AND audit_id = :audit_id';
+                    $update = "UPDATE audit_history SET audit_status = 'Complete' WHERE dept_id = :dept_id AND audit_id = :audit_id";
                     $stmt = $dbh->prepare($update);
                     $stmt->bindParam(':dept_id', $dept_id);
                     $stmt->bindParam(':audit_id', $audit_ids);
@@ -2916,7 +2916,7 @@ keyBy: ID
                     $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
                     updateOldAudit($dept_id, $audit_ids, $prev_self);
                 } else {
-                    $update = 'UPDATE audit_history SET audit_status = "Complete" WHERE complete_form_id = :form_id';
+                    $update = "UPDATE audit_history SET audit_status = 'Complete' WHERE complete_form_id = :form_id";
                     $stmt = $dbh->prepare($update);
                     $stmt->bindParam(':form_id', $edge['node']['id']);
                     $stmt->execute();
