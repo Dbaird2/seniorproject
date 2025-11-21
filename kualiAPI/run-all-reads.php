@@ -2669,43 +2669,6 @@ function getAuditSchedules()
     return;
     
 }
-function addDepartment($c_display_name, $m_full_name, $dept_id, $dept_name)
-{
-    global $dbh;
-    echo '<br>Add Department<br>';
-    echo ' Cust full name: ' . $c_display_name . ' Manager Full Name ' . $m_full_name . ' Dept Id ' . $dept_id . ' Dept Name ' . $dept_name;
-    $select_dept = "SELECT dept_id, dept_manager FROM department WHERE dept_id = :dept_id";
-    $dept_stmt = $dbh->prepare($select_dept);
-    $dept_stmt->execute([":dept_id" => $dept_id]);
-    $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
-    if ($dept_info) {
-        if ($dept_info['dept_manager'] !== $m_full_name) {
-            $update_dept = "UPDATE department SET dept_manager = :manager WHERE dept_id = :dept_id";
-            $stmt = $dbh->prepare($update_dept);
-            $stmt->execute([':manager' => $m_full_name, ':dept_id' => $dept_id]);
-        }
-        $select_cust = 'SELECT dept_id, form_id, document_set_id FROM department WHERE :cust = ANY(custodian)';
-        $stmt = $dbh->prepare($select_cust);
-        $stmt->execute([':cust' => $c_display_name]);
-        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $found = false;
-        foreach ($info as $row) {
-            if ($row['dept_id'] === $dept_id) {
-                $found = true;
-            }
-        }
-        if (!$found) {
-            $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust) WHERE dept_id = :id';
-            $update_stmt = $dbh->prepare($update);
-            $update_stmt->execute([':cust' => $c_display_name, ':id' => $dept_id]);
-        }
-    } else {
-        $insert = 'INSERT INTO department (dept_id, dept_name, custodian, dept_manager) VALUES (?, ?, ?, ?)';
-        $insert_stmt = $dbh->prepare($insert);
-        $custodian = '{' . $c_display_name . '}';
-        $insert_stmt->execute([$dept_id, $dept_name, $custodian, $m_full_name]);
-    }
-}
 
 function completeAudit()
 {
