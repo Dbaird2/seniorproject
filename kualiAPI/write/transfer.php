@@ -164,7 +164,7 @@ if (preg_match($email_regex, $
         $stmt = $dbh->prepare($select_cust);
         $stmt->execute([':dept'=>$dept_info['dept_id']]);
         $receiving_cust = $stmt->fetch();
-        $cust_info = getNameInfo($receiving_cust, $dept_info['dept_id']);
+        $cust_info = getNameInfo($receiving_cust['cust'], $dept_info['dept_id']);
         $variables['data']['C0g5tKZQvu']['displayName'] = $cust_info['displayName'];
         $variables['data']['C0g5tKZQvu']['email'] = $cust_info['email'];
         $variables['data']['C0g5tKZQvu']['firstName'] = $cust_info['firstName'];
