@@ -46,6 +46,7 @@ $documentsetid = $dept_data['document_set_id'] ?? '';
 $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
 $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $dept_id;
 $variables['data']['isFMbCuv8e']['label'] = $dept_name;
+
 $kuali_id = $dept_data['form_id'] ?? '';
 if (!empty($kuali_id) && !empty($documentsetid)) {
     $variables['data']['isFMbCuv8e']['documentSetId'] = $documentsetid;
@@ -56,7 +57,7 @@ if (!empty($kuali_id) && !empty($documentsetid)) {
 $location = "Bakersfield";
 $variables['data']['XE0n2IZXBC'] = $location;
 
-    $street = "9001 Stockdale Hwy";
+$street = "9001 Stockdale Hwy";
 $variables['data']['Smva-ICjnV'] = $street;
 
 $condition_id = match ($condition) {
@@ -172,7 +173,22 @@ if (!$action_id) {
 /*-----------------------------------------------------------------------------*/
 $date = new DateTime();
 $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
+$select_manager = 'SELECT dept_manager FROM department WHERE dept_id = :dept';
+$stmt = $dbh->prepare($select_manager);
 if ($who !== 'Myself') {
+
+    $stmt->execute([':dept'=>$audit_dept]);
+    $manager = $stmt->fetchColumn();
+    $manager_info = getNameInfo($manager, $audit_dept);
+    $variables['data']['FOTHZUATua']['displayName'] = $manager_info['displayName'];
+    $variables['data']['FOTHZUATua']['email'] = $manager_info['email'];
+    $variables['data']['FOTHZUATua']['firstName'] = $manager_info['firstName'];
+    $variables['data']['FOTHZUATua']['id'] = $manager_info['id'];
+    $variables['data']['FOTHZUATua']['label'] = $manager_info['label'];
+    $variables['data']['FOTHZUATua']['lastName'] = $manager_info['lastName'];
+    $variables['data']['FOTHZUATua']['schoolId'] = $manager_info['schoolId'];
+    $variables['data']['FOTHZUATua']['username'] = $manager_info['username'];
+
     $borrower = trim($data['borrower']);
     $borrowers_info = getNameInfo($borrower, $audit_dept);
     echo "<pre>";
@@ -208,17 +224,28 @@ if ($who !== 'Myself') {
     $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_info['signature'];
     $variables['data']['JXLJ_AOov-']['userId'] = $submitter_into['userId'];
     /*---------------------------------*/
+    $stmt->execute([':dept'=>$dept_id]);
+    $manager = $stmt->fetchColumn();
+    $manager_info = getNameInfo($manager, $dept_id);
+    $variables['data']['FOTHZUATua']['displayName'] = $manager_info['displayName'];
+    $variables['data']['FOTHZUATua']['email'] = $manager_info['email'];
+    $variables['data']['FOTHZUATua']['firstName'] = $manager_info['firstName'];
+    $variables['data']['FOTHZUATua']['id'] = $manager_info['id'];
+    $variables['data']['FOTHZUATua']['label'] = $manager_info['label'];
+    $variables['data']['FOTHZUATua']['lastName'] = $manager_info['lastName'];
+    $variables['data']['FOTHZUATua']['schoolId'] = $manager_info['schoolId'];
+    $variables['data']['FOTHZUATua']['username'] = $manager_info['username'];
 }
 $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
 $custodian_stmt = $dbh->prepare($custodian);
-    $custodian_stmt->execute([':dept_id' => $data['dept_id']]);
-    echo $data['dept_id'] . '<br>';
+$custodian_stmt->execute([':dept_id' => $data['dept_id']]);
+echo $data['dept_id'] . '<br>';
 $custodian_name = $custodian_stmt->fetchColumn();
 echo $custodian_name . '<br>';
 
 $custodian_info = getNameInfo($custodian_name, $audit_dept);
 echo json_encode([$custodian_info]);
-    $check_type_date = $date->format('m/d/Y');
+$check_type_date = $date->format('m/d/Y');
 if ($form_type === 'Returning Equipment') {
     $variables['data']['73dNIwQS0c'] = $check_type_date;
 

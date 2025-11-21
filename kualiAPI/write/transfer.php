@@ -159,6 +159,21 @@ if (preg_match($email_regex, $
         $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
         $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
 
+        // GET CURRENT CUSTODIAN INFO
+        $select_cust = 'SELECT unnest(custodian) cust FROM department WHERE dept_id = :dept';
+        $stmt = $dbh->prepare($select_cust);
+        $stmt->execute([':dept'=>$dept_info['dept_id']]);
+        $receiving_cust = $stmt->fetch();
+        $cust_info = getNameInfo($receiving_cust, $dept_info['dept_id']);
+        $variables['data']['C0g5tKZQvu']['displayName'] = $cust_info['displayName'];
+        $variables['data']['C0g5tKZQvu']['email'] = $cust_info['email'];
+        $variables['data']['C0g5tKZQvu']['firstName'] = $cust_info['firstName'];
+        $variables['data']['C0g5tKZQvu']['id'] = $cust_info['id'];
+        $variables['data']['C0g5tKZQvu']['label'] = $cust_info['label'];
+        $variables['data']['C0g5tKZQvu']['lastName'] = $cust_info['lastName'];
+        $variables['data']['C0g5tKZQvu']['schoolId'] = $cust_info['schoolId'];
+        $variables['data']['C0g5tKZQvu']['username'] = $cust_info['username'];
+
         echo json_encode(['variables'=>$variables]);
 
 
