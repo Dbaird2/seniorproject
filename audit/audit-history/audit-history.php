@@ -171,6 +171,7 @@ include_once("../../config.php");
     } else if ($audits[$curr_index]['audit_status'] === 'Complete') {
         $color = '#003594';
     }
+    echo "<td>" . $audits[$curr_index]['finished_at'] . "</td>";
 
     echo '<tr>';
     if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && ($audits[$curr_index]['forms_submitted'] === true || !empty($audits[$curr_index]['check_forms']))) {
