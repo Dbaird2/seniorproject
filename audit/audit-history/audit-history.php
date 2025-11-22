@@ -198,7 +198,8 @@ include_once("../../config.php");
             foreach ($form_array as $index2 => $form) {
                 $count = strlen($form);
                 if ($count == 24) {
-                    echo '<br>'. $form. ' ';
+                    echo '<br>';
+                    //echo '<br>'. $form. ' ';
                     continue;
                 }
 
@@ -260,7 +261,6 @@ include_once("../../config.php");
                 ) {
                     echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
-            echo '<br>';
             }
         }
         echo '</div>';
