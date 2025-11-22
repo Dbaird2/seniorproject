@@ -14,7 +14,6 @@ $data = json_decode($encoded_data, true);
 if (empty($data)) {
     die("No data");
 }
-echo json_encode(['tags'=>$data]);
 $variables = [[]];
 $email = $_SESSION['email'];
 $audit_dept = $data['dept_id'];
@@ -155,7 +154,6 @@ if ($data['form_type'] === 'dept') {
         $variables['data']['C0g5tKZQvu']['schoolId'] = $cust_info['schoolId'];
         $variables['data']['C0g5tKZQvu']['username'] = $cust_info['username'];
 
-        echo json_encode(['variables'=>$variables]);
 
 
         $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
@@ -243,17 +241,13 @@ if ($data['form_type'] === 'dept') {
 
         $resp = curl_exec($curl);
         $resp_data = json_decode($resp, true);
-        echo json_encode(['data'=>$data]);
-        if (isset($audit_id)) {
-            $input_array = $document_id . ',rtransfer,in-progress'; 
-            foreach ($data['tags'] as $tag_info) {
-                $input_array .= ',' . $tag_info['tag'];
-            }
-            $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-            $update_stmt = $dbh->prepare($update);
-            $update_stmt->execute([':array'=>$input_array, ":dept"=>$audit_dept, ":id"=>$audit_id]);
+        $input_array = $document_id . ',rtransfer,in-progress'; 
+        foreach ($data['tags'] as $tag_info) {
+            $input_array .= ',' . $tag_info['tag'];
         }
-        curl_close($curl);
+        $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
+        $update_stmt = $dbh->prepare($update);
+        $update_stmt->execute([':array'=>$input_array, ":dept"=>$audit_dept, ":id"=>$audit_id]);
     }
 } else if ($data['form_type'] === 'location') {
     foreach ($data['tags'] as $index=>$asset) {
@@ -329,7 +323,6 @@ if (preg_match($email_regex, $
     $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
     $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
 
-    echo json_encode(['variables'=>$variables]);
 
 
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
@@ -357,7 +350,6 @@ if (preg_match($email_regex, $
 
     $decoded_data = json_decode($resp, true);
     $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-    curl_close($curl);
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -412,19 +404,16 @@ if (preg_match($email_regex, $
 
     $resp = curl_exec($curl);
     $resp_data = json_decode($resp, true);
-    echo json_encode(['data'=>$data]);
-    if (!empty($data['audit_id'])) {
-        $audit_id = $data['audit_id'];
-        $dept = $data['dept_id'];
-        $input_array = $document_id . ',rtransfer,in-progress'; 
-        foreach ($data['tags'] as $tag_info) {
-            $input_array .= ',' . trim($tag_info['tag']);
-        }
-        $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-        $update_stmt = $dbh->prepare($update);
-        $update_stmt->execute([':array'=>$input_array, ":dept"=>$data['dept_id'], ":id"=>$data['audit_id']]);
+    $audit_id = $data['audit_id'];
+    $dept = $data['dept_id'];
+    $input_array = $document_id . ',rtransfer,in-progress'; 
+    foreach ($data['tags'] as $tag_info) {
+        $input_array .= ',' . trim($tag_info['tag']);
     }
-    curl_close($curl);
+    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
+    $update_stmt = $dbh->prepare($update);
+    $update_stmt->execute([':array'=>$input_array, ":dept"=>$data['dept_id'], ":id"=>$data['audit_id']]);
+    echo json_encode(['data'=>$data]);
 }
 
 

@@ -279,7 +279,6 @@ $resp = curl_exec($curl);
 
 $decoded_data = json_decode($resp, true);
 $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-curl_close($curl);
 
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
@@ -301,8 +300,6 @@ var_dump($resp);
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
-
-curl_close($curl);
 
 
 $curl = curl_init($url);
@@ -366,7 +363,6 @@ if (!empty($cust_5)) {
         "_MkyBYDNix" => $cust_5
     ];
 }
-echo json_encode(['Custodians'=>$custs]);
 $reason = "Updating Department inventory after conducting " . $_SESSION['info'][4] . " " . $_SESSION['info'][3] . " audit.";
 $now_array = new DateTime();
 $now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
@@ -445,27 +441,15 @@ foreach ($transfer_data as $tag_info) {
     $input_array .= ',' . trim($tag_info['Tag Number']);
 }
 
-echo json_encode(['data'=>$tag_data]);
 $audit_id = $tag_data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 
-curl_close($curl);
-echo json_encode([$ms_time
-    ,$tag_data
-    ,$document_id
-    ,$full_name
-    ,$cust_1
-    ,$json_form
-    ,$reason
-    ,$action_id
-    ,$now
-    ,$form_id
-    ,$resp
-    ,$dept_id
-    ,$_SESSION['info']
-    ,$update_stmt
-]);
+if ($resp_data['submitDocument'] === 'Ok') {
+    echo json_encode(['status'=>'Ok']);
+} else {
+    echo json_encode(['status'=>'Failed', 'res'=>$resp_data]);
+}
 exit;
 

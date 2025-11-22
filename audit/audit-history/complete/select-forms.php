@@ -813,7 +813,7 @@ $depts_info = $stmt->fetchAll();
         const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
 
         function hideUI(type, tag) {
-            console.log(type, tag);
+            //console.log(type, tag);
             const form = document.querySelectorAll('.' + type + '-' + tag);
             form.forEach(el => {
                 el.style.display = 'none';
@@ -1779,7 +1779,14 @@ $depts_info = $stmt->fetchAll();
                                     hideUI('row', value);
                                     hideAll(value);
                                 });
-                            } catch {}
+                            } catch {
+                                const data = await bulk_t_res.text();
+                                console.log("bulk-transfer response (JSON):", data);
+                                bulk_t_tags.forEach(async (value) => {
+                                    hideUI('row', value);
+                                    hideAll(value);
+                                });
+                            }
                         }
                     }
                 }

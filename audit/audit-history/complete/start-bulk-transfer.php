@@ -1,6 +1,6 @@
 <?php 
 require_once "../../../config.php";
-check_auth("high");
+check_auth();
 $dept_id = $_GET['dept_id'];
 $audit_id = (int)$_GET['audit_id'];
 $audit_type = match ($audit_id) {
