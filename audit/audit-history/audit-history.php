@@ -252,6 +252,7 @@ include_once("../../config.php");
                     continue;
                 }
 
+                $form = trim($form, '"');
                 if (
                     preg_match($ASI, $form) || preg_match($STU, $form) ||
                     preg_match($CMP, $form) || preg_match($FDN, $form) ||
@@ -259,8 +260,8 @@ include_once("../../config.php");
                 ) {
                     echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
-            }
             echo '<br>';
+            }
         }
         echo '</div>';
         echo '</div>';
