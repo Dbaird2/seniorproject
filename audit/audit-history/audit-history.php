@@ -60,7 +60,7 @@ include_once("../../config.php");
             $dept_stmt->execute([":search" => $search]);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'm/d/Y HH:MI:SS PM) as finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'm/d/Y HH:MI:SS PM') as finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute([':search' => $search]);
         }
