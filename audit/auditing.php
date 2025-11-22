@@ -763,7 +763,7 @@ function toast(message) {
   var x = document.getElementById("snackbar");
   x.className = "show";
   x.textContent = message;
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
 }
 document.getElementById('dynamicForm').addEventListener('submit', function(e) {
     e.preventDefault();

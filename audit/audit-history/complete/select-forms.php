@@ -330,9 +330,7 @@ $depts_info = $stmt->fetchAll();
                             <td style="font-weight: 600;background-color: #e5F3Fd;">
                                 <select name="form-type" id="form-<?= $row['Tag Number'] ?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                                     <option value="">No Form Needed</option>
-                                    <?php if ($row['Tag Status'] === 'Extra') { ?>
-                                        <option value="bulk-transfer">Bulk Transfer</option>
-                                    <?php } ?>
+                                    <option value="bulk-transfer">Bulk Transfer</option>
                                     <option value="psr">Property Survey Report</option>
                                     <option value="lsd">Equipment Loss/Stolen/Destroyed</option>
                                     <option value="check-out">Check Out</option>
