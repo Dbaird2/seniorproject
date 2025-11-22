@@ -1372,12 +1372,11 @@ $depts_info = $stmt->fetchAll();
                     } else {
                         const clone = form_submitted.clone();
                         try {
-                            const data = await form_submitted.json();
-                            //console.log("Update DB response (JSON):", data);
+                            const data = await clone.json();
                         } catch {
                             const text = await clone.text();
-                            //console.log("Update DB response (text):", text);
                         }
+                            console.log("Update DB response (JSON):", data);
                     }
                 } else {
                     displayError('sub-label', 'Missing form information.', '', valid_forms);
@@ -1438,18 +1437,13 @@ $depts_info = $stmt->fetchAll();
                             } else {
                                 const clone = out_res.clone();
                                 try {
-                                    const data = await out_res.json();
-                                    console.log("Check out response (JSON):", data);
-                                    hideUI('row', type.dataset.tag);
-                                    
-                                    hideAll(type.dataset.tag);
+                                    const data = await clone.json();
                                 } catch {
                                     const text = await clone.text();
-                                    console.log("Check out response (text):", text);
-                                    hideUI('row', type.dataset.tag);
-                                    
-                                    hideAll(type.dataset.tag);
                                 }
+                                    console.log("Check out response (JSON):", data);
+                                    hideUI('row', type.dataset.tag);
+                                    hideAll(type.dataset.tag);
                             }
                         } else if (val == 'check-in') {
                             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
@@ -1491,16 +1485,13 @@ $depts_info = $stmt->fetchAll();
                             } else {
                                 const clone = in_res.clone();
                                 try {
-                                    const data = await in_res.json();
+                                    const data = await clone.json();
+                                } catch {
+                                    const text = await clone.text();
+                                }
                                     console.log("Check in response (JSON):", data);
                                     hideUI('row', type.dataset.tag);
                                     hideAll(type.dataset.tag);
-                                } catch {
-                                    const text = await clone.text();
-                                    console.log("Check in response (text):", text);
-                                    hideUI('row', type.dataset.tag);
-                                    hideAll(type.dataset.tag);
-                                }
                             }
                         } else if (val === 'lsd') {
                             if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
@@ -1594,16 +1585,13 @@ $depts_info = $stmt->fetchAll();
                                 } else {
                                     const clone = lsd_res.clone();
                                     try {
-                                        const data = await lsd_res.json();
+                                        const data = await clone.json();
+                                    } catch {
+                                        const text = await clone.text();
+                                    }
                                         console.log("Lsd response (JSON):", data);
                                         hideUI('row', type.dataset.tag);
                                         hideAll(type.dataset.tag);
-                                    } catch {
-                                        const text = await clone.text();
-                                        console.log("Lsd response (text):", text);
-                                        hideUI('row', type.dataset.tag);
-                                        hideAll(type.dataset.tag);
-                                    }
                                 }
                             } else {
                                 url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
@@ -1625,16 +1613,13 @@ $depts_info = $stmt->fetchAll();
                                 } else {
                                     const clone = lsd_res.clone();
                                     try {
-                                        const data = await lsd_res.json();
+                                        const data = await clone.json();
+                                    } catch {
+                                        const text = await clone.text();
+                                    }
                                         console.log("Lsd response (JSON):", data);
                                         hideUI('row', type.dataset.tag);
                                         hideAll(type.dataset.tag);
-                                    } catch {
-                                        const text = await clone.text();
-                                        console.log("Lsd response (text):", text);
-                                        hideUI('row', type.dataset.tag);
-                                        hideAll(type.dataset.tag);
-                                    }
                                 }
                             }
                         }
@@ -1661,20 +1646,15 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = psr_res.clone();
                             try {
-                                const data = await psr_res.json();
+                                const data = await clone.json();
+                            } catch {
+                                const text = await clone.text();
+                            }
                                 console.log("PSR response (JSON):", data);
                                 psr_tags.forEach(async (value) => {
                                     hideUI('row', value);
                                     hideAll(value);
                                 });
-                            } catch {
-                                const text = await clone.text();
-                                console.log("PSR response (text):", text);
-                                psr_tags.forEach(async (value) => {
-                                    hideUI('row', value);
-                                    hideAll(value);
-                                });
-                            }
                         }
                     }
                     if (transfer_location_array.length !== 0) {
@@ -1698,20 +1678,15 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = transfer_res.clone();
                             try {
-                                const data = await transfer_res.json();
-                                console.log("transfer dept response (JSON):", data);
-                                transfer_location_array.forEach(async (value) => {
-                                    hideUI('row', value.tag);
-                                    hideAll(value.tag);
-                                });
+                                const data = await clone.json();
                             } catch {
                                 const text = await clone.text();
+                            }
                                 console.log("transfer dept response (text):", text);
                                 transfer_location_array.forEach(async (value) => {
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
                                 });
-                            }
                         }
                     }
                     if (transfer_dept_array.length !== 0) {
@@ -1735,21 +1710,16 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = transfer_res.clone();
                             try {
-                                const data = await transfer_res.json();
-                                console.log("transfer dept response (JSON):", data);
-                                transfer_dept_array.forEach(async (value) => {
-                                    hideUI('row', value.tag);
-                                    hideAll(value.tag);
-                                });
+                                const data = await clone.json();
                             } catch {
                                 const text = await clone.text();
+                            }
                                 console.log("transfer dept response (text):", text);
                                 transfer_dept_array.forEach(async (value) => {
                                     console.log(value);
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
                                 });
-                            }
                         }
                     }
 
@@ -1773,20 +1743,15 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = bulk_t_res.clone();
                             try {
-                                const data = await bulk_t_res.json();
-                                console.log("bulk-transfer response (JSON):", data);
-                                bulk_t_tags.forEach(async (value) => {
-                                    hideUI('row', value);
-                                    hideAll(value);
-                                });
+                                const data = await clone.text();
                             } catch {
-                                const data = await bulk_t_res.text();
-                                console.log("bulk-transfer response (JSON):", data);
-                                bulk_t_tags.forEach(async (value) => {
-                                    hideUI('row', value);
-                                    hideAll(value);
-                                });
+                                const data = await clone.json();
                             }
+                            console.log("bulk-transfer response (JSON):", data);
+                            bulk_t_tags.forEach((value) => {
+                            hideUI('row', value);
+                            hideAll(value);
+                            });
                         }
                     }
                 }
