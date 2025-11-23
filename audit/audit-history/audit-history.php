@@ -50,7 +50,7 @@ include_once("../../config.php");
             $dept_stmt = $dbh->query($depts);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'm/d/Y HH:MI:SS PM') as finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute();
         } else {
@@ -60,7 +60,7 @@ include_once("../../config.php");
             $dept_stmt->execute([":search" => $search]);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'm/d/Y HH:MI:SS PM') as finished_at, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute([':search' => $search]);
         }
@@ -286,6 +286,9 @@ include_once("../../config.php");
     }
     echo "<td><a class='action-link pdf-link' href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>PDF</a>  ";
     echo "<a class='action-link excel-link' href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Excel</a></td>";
+    if ($audits[$curr_index]['mobile_audit'] === true) {
+        echo "<a class='action-link excel-link' href='https://dataworks-7b7x.onrender.com/audit/audit-history/map/map-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>View Map</a></td>";
+    }
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
         echo "<td><a class='action-link delete-link' href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Delete</a></td>";
     }

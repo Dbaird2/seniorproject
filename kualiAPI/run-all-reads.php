@@ -1237,8 +1237,8 @@ function check()
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
             $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
+            $dept = $edge['node']['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
             if ($check_out_type === 'Checking Out Equipment') {
-                $dept = $edge['node']['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
                 $borrower = $edge['node']['data']['JsHBzpz-AT']['displayName'] ?? $edge['node']['data']['JXLJ_AOov-']['displayName'];
                 $borrow_array = explode(" ", $borrower);
 
@@ -1269,6 +1269,13 @@ function check()
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":tag" => $tag]);
                 }
+            } else {
+                $serial = $edge['node']['data']['jYTHHgL10M'];
+                $type2 = $edge['node']['data']['aUVT1BLN6V'];
+                $name = $edge['node']['data']['cQOz4UQ0rQ'];
+                $insert = 'INSERT INTO asset_info (asset_tag, asset_name, type2, serial, dept_id) VALUES (?,?,?,?,?)';
+                $stmt = $dbh->prepare($insert);
+                $stmt->execute([$tag, $name, $type2, $serial, $dept_id]);
             }
             echo "<br>" . $count++;
             echo "<br>Updating<br>Tag " . $tag . "<br>";

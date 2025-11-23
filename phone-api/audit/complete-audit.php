@@ -25,46 +25,46 @@ try {
 }
 $info = $stmt->fetch();
 if ($info) {
-    if (password_verify($pw, $info['pw'])) {
-        try {
-            $select = "SELECT dept_id FROM department WHERE dept_name = :dept OR dept_id = :dept";
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([':dept'=>$dept]);
-            $dept_id = $stmt->fetchColumn();
-        } catch (PDOException $e) {
-            $msg = $e->getMessage();
-            echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-            exit;
-        }
-        if (empty($dept_id)) {
-            echo json_encode(['status'=>'Failed','reason'=>'Deptartment ID Not found']);
-            exit;
-        }
-
-        try {
-            $select = 'SELECT curr_self_id, curr_mgmt_id FROM audit_freq';
-            $stmt = $dbh->query($select);
-            $audit_ids = $stmt->fetch();
-            $audit_id = ($info['u_role'] === 'admin' || $info['u_role'] === 'management') ?  $audit_ids['curr_mgmt_id'] : $audit_ids ['curr_self_ids'];
-            $json_data = json_encode($data);
-        } catch (PDOException $e) {
-            $msg = $e->getMessage();
-            echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-            exit;
-        }
-
-        try {
-            $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id) VALUE (?, ?, ?, ?)";
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([$email, $audit_id, $json_data, $dept_id]);
-        } catch (PDOException $e) { 
-            echo json_encode(['status'=>'Failed', 'reason'=>$e->getMessage()]);
-            exit;
-        }
-
-        echo json_encode(['status'=>'Ok']);
+    if (!password_verify($pw, $info['pw'])) {
+        echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
         exit;
     }
 }
-echo json_encode(['status'=>'Failed']);
+try {
+    $select = "SELECT dept_id FROM department WHERE dept_name = :dept OR dept_id = :dept";
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([':dept'=>$dept]);
+    $dept_id = $stmt->fetchColumn();
+} catch (PDOException $e) {
+    $msg = $e->getMessage();
+    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
+    exit;
+}
+if (empty($dept_id)) {
+    echo json_encode(['status'=>'Failed','reason'=>'Deptartment ID Not found']);
+    exit;
+}
+
+try {
+    $select = 'SELECT curr_self_id, curr_mgmt_id FROM audit_freq';
+    $stmt = $dbh->query($select);
+    $audit_ids = $stmt->fetch();
+    $audit_id = ($info['u_role'] === 'admin' || $info['u_role'] === 'management') ?  $audit_ids['curr_mgmt_id'] : $audit_ids ['curr_self_ids'];
+    $json_data = json_encode($data);
+} catch (PDOException $e) {
+    $msg = $e->getMessage();
+    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
+    exit;
+}
+
+try {
+    $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, phone_audit) VALUE (?, ?, ?, ?, ?)";
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([$email, $audit_id, $json_data, $dept_id, 1]);
+} catch (PDOException $e) { 
+    echo json_encode(['status'=>'Failed', 'reason'=>$e->getMessage()]);
+    exit;
+}
+
+echo json_encode(['status'=>'Ok']);
 exit;
