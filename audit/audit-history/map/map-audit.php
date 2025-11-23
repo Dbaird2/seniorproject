@@ -12,6 +12,7 @@
     $stmt = $dbh->prepare($select);
     $stmt->execute([':dept'=>$dept_id, ':audit'=>$audit_id]);
     $results = $stmt->fetch();
+    $results = json_decode($results, true);
 /*
     $dbh = new PDO("sqlite:$dbFile");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -78,18 +79,13 @@
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
          crossorigin=""></script>
-     <style>
-         #map {
-             height: 400px;
-         }
-     </style>
-     <script>
+ <script>
          var map;
          window.onload = function() {
              var lat = <?= json_encode($lati) ?>;
              var lon = <?= json_encode($long) ?>;
              var ele = <?= json_encode($ele[0]) ?>;
-             map = L.map('map').setView([lat, lon], ele-2);
+             map = L.map('map').setView([lat, lon], ele - 2);
              L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                  maxZoom: 19,
                  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -106,14 +102,51 @@
                  var marker = L.marker([lat2, lon2]).addTo(map);
              });
 
+             const btns = document.querySelectorAll('.btn');
+             btns.forEach((value) => {
+                 value.addEventListener('click', function()  {
+                    console.log(this.dataset.x, this.dataset.y);
+                     map.setView([this.dataset.x, this.dataset.y], this.dataset.ele);
+                 })
+             })
+
          }
      </script>
  </head>
+ <style>
+     .window {
+         position: absolute;
+         right: 0%;
+         top: 5%;
+         z-index: 9999;
+         float: right;
+         font-size: 1vw;
+     }
+     #map {
+         height: 80%;
+         width: 80%;
+     }
+ </style>
 
  <body>
      <h1>Reverse Geolocation</h1>
-
      <div id="map"></div>
+     <div class="window">
+         <div id="assets"><?php foreach ($results as $asset) {
+                                $lat1 = $asset['geo_x'];
+                                $lon1 = $asset['geo_y'];
+                                $ele1 = $asset['elevation'];
+                            ?>
+                 <button class='btn' data-x="<?= $lat1 ?>" data-y="<?= $lon1 ?>" data-ele="<?= $ele1 ?>"><?= 'Asset: ' . $asset['asset_tag'] . ' X ' . $asset['geo_x'] . ' Y ' . $asset['geo_y'] ?></button><br>
+             <?php } ?>
+         </div>
+     </div>
  </body>
+ <script>
+     function changeView(lat, lon, ele) {
+
+         map = L.setView([lat, lon], ele);
+     }
+ </script>
 
  </html>
