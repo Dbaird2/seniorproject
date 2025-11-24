@@ -1756,6 +1756,8 @@ $depts_info = $stmt->fetchAll();
                                 }
                             } catch {
                                 //const b_t_data = await clone.json();
+                                    showToast('Bulk Transfer Form Failed', 5000);
+                                    console.log('failed');
                             }
                             bulk_t_tags.forEach((value) => {
                             hideUI('row', value);
