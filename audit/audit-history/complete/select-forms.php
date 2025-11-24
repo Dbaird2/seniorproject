@@ -1,6 +1,5 @@
 <?php
 include_once "../../../config.php";
-include_once "../../../ui/toast.php";
 check_auth();
 $select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
 $stmt = $dbh->prepare($select_dept);
@@ -22,6 +21,7 @@ $depts_info = $stmt->fetchAll();
 <head>
     <title>Form Submissions <?= $_SESSION['info'][2] . ' ' . $dept_name ?></title>
     <?php include_once "../../../navbar.php"; ?>
+    <?php include_once "../../../ui/toast.php"; ?>
     <style>
 * {
             box-sizing: border-box;
@@ -1748,8 +1748,10 @@ $depts_info = $stmt->fetchAll();
                                 const parse = JSON.parse(b_t_data);
                                 if (parse.status === 'Bulk Transfer Ok') {
                                     showToast('Bulk Transfer Form Submitted', 5000);
+                                    console.log('success');
                                 } else {
                                     showToast('Bulk Transfer Form Failed', 5000);
+                                    console.log('failed');
                                 }
                             } catch {
                                 //const b_t_data = await clone.json();
