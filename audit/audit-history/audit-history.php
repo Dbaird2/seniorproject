@@ -200,8 +200,9 @@ if (count($departments) > 0) {
             foreach ($form_array as $index2 => $form) {
                 $count = strlen($form);
                 echo '<br>' . $count . '<br>';
-                
-                if ($count === 24) {
+               $regex = '/(\s)/'; 
+
+                if ($count === 24 && !preg_match($regex, $form)) {
                     $id = $form;
                     echo '<br>';
                     //echo '<br>'. $form. ' ';
