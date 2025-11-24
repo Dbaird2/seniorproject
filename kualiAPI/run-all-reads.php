@@ -229,7 +229,7 @@ keyBy: ID
         }
     }
 
-    function addSignature($username, $email, $form_id, $signature, $school_id, $f_name, $l_name, $role = 'user', $dept_id)
+    function addSignature($username, $email, $form_id, $signature, $school_id, $f_name, $l_name, $dept_id, $role = 'user')
     {
         global $dbh;
         $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
@@ -338,7 +338,7 @@ keyBy: ID
                         } else {
                             $c_signature = $c_full_name;
                         }
-                        addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian', $dept_id);
+                        addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, $dept_id, 'custodian');
                     }
 
                     if (isset($edge['node']['data']['04PgxWqAbE'])) {
@@ -368,7 +368,7 @@ keyBy: ID
                             // Handle specific type case
                             $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
                         }
-                        addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user', $dept_id);
+                        addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, $dept_id, 'user');
                     }
                     if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                         // MANAGER/DEAN INFORMATION
@@ -426,7 +426,7 @@ keyBy: ID
                     } else {
                         $c_signature = $c_full_name;
                     }
-                    addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian', $dept_id);
+                    addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, $dept_id, 'custodian');
                 }
 
                 if (isset($edge['node']['data']['04PgxWqAbE'])) {
@@ -456,7 +456,7 @@ keyBy: ID
                         // Handle specific type case
                         $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
                     }
-                    addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user', $dept_id);
+                    addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, $dept_id, 'user');
                 }
                 if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                     // MANAGER/DEAN INFORMATION
