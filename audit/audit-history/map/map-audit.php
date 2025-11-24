@@ -46,9 +46,9 @@
  */
     $results = [
         ['geo_x' => 35.12345, 'geo_y'=>-118.33452, 'elevation'=>'10', 'Tag Number'=>'12345'],
-        ['geo_x' => 35.12545, 'geo_y'=>-118.36152, 'elevation'=>'10' 'Tag Number'=>'52123'],
-        ['geo_x' => 35.12815, 'geo_y'=>-118.34652, 'elevation'=>'10' 'Tag Number'=>'94872'],
-        ['geo_x' => 35.12405, 'geo_y'=>-118.34212, 'elevation'=>'10' 'Tag Number'=>'15264'],
+        ['geo_x' => 35.12545, 'geo_y'=>-118.36152, 'elevation'=>'10', 'Tag Number'=>'52123'],
+        ['geo_x' => 35.12815, 'geo_y'=>-118.34652, 'elevation'=>'10', 'Tag Number'=>'94872'],
+        ['geo_x' => 35.12405, 'geo_y'=>-118.34212, 'elevation'=>'10', 'Tag Number'=>'15264'],
     ];
     $lat = [];
 $lon = [];
