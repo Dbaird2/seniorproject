@@ -248,6 +248,12 @@ if ($data['form_type'] === 'dept') {
         $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
         $update_stmt = $dbh->prepare($update);
         $update_stmt->execute([':array'=>$input_array, ":dept"=>$audit_dept, ":id"=>$audit_id]);
+        if ($resp_data['data']['submitDocument'] === 'Ok') {
+            echo json_encode(['status'=>'Transfer Ok']);
+        } else {
+            echo json_encode(['status'=>'Transfer Failed', 'data'=>$resp_data]);
+        }
+        exit;
     }
 } else if ($data['form_type'] === 'location') {
     foreach ($data['tags'] as $index=>$asset) {
@@ -413,7 +419,12 @@ if (preg_match($email_regex, $
     $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
     $update_stmt = $dbh->prepare($update);
     $update_stmt->execute([':array'=>$input_array, ":dept"=>$data['dept_id'], ":id"=>$data['audit_id']]);
-    echo json_encode(['data'=>$data]);
+    if ($resp_data['data']['submitDocument'] === 'Ok') {
+        echo json_encode(['status'=>'Transfer Ok']);
+    } else {
+        echo json_encode(['status'=>'Transfer Failed', 'data'=>$resp_data]);
+    }
+    exit;
 }
 
 

@@ -446,10 +446,10 @@ $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :arr
 $update_stmt = $dbh->prepare($update);
 $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 
-if ($resp_data['submitDocument'] === 'Ok') {
-    echo json_encode(['status'=>'Ok']);
+if ($resp_data['data']['submitDocument'] === 'Ok') {
+    echo json_encode(['status'=>'Bulk Transfer Ok']);
 } else {
-    echo json_encode(['status'=>'Failed', 'res'=>$resp_data]);
+    echo json_encode(['status'=>'Bulk Transfer Failed', 'res'=>$resp_data]);
 }
 exit;
 

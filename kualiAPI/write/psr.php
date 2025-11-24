@@ -361,5 +361,9 @@ $resp = curl_exec($curl);
 curl_close($curl);
 $resp_data = json_decode($resp, true);
 
-echo json_encode(['status' => $submit_form, 'response' => $resp_data]);
+if ($resp_data['data']['submitDocument'] === 'Ok') {
+    echo json_encode(['status'=>'Property Survery Report Ok']);
+} else {
+    echo json_encode(['status'=>'Property Survey Report Failed', 'res'=>$resp_data]);
+}
 exit;

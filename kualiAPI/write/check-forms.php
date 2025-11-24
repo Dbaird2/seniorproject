@@ -286,10 +286,11 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
-curl_close($curl);
+$resp_data = json_decode($resp, true);
 
-echo json_encode([
-    'data' => $submit_form,
-    'resp' => $resp
-]);
+if ($resp_data['data']['submitDocument'] === 'Ok') {
+    echo json_encode(['status'=>'Check in/out Ok']);
+} else {
+    echo json_encode(['status'=>'Check in/out Failed', 'data'=>$resp_data]);
+}
 exit;

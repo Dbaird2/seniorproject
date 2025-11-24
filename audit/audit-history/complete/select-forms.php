@@ -1,5 +1,6 @@
 <?php
 include_once "../../../config.php";
+include_once "../../../ui/toast.php";
 check_auth();
 $select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
 $stmt = $dbh->prepare($select_dept);
@@ -330,7 +331,9 @@ $depts_info = $stmt->fetchAll();
                             <td style="font-weight: 600;background-color: #e5F3Fd;">
                                 <select name="form-type" id="form-<?= $row['Tag Number'] ?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                                     <option value="">No Form Needed</option>
-                                    <option value="bulk-transfer">Bulk Transfer</option>
+                                    <?php if (!empty($row['Found Room Tag'])) { ?> 
+                                        <option value="bulk-transfer">Bulk Transfer</option>
+                                    <?php } ?>
                                     <option value="psr">Property Survey Report</option>
                                     <option value="lsd">Equipment Loss/Stolen/Destroyed</option>
                                     <option value="check-out">Check Out</option>
@@ -1742,6 +1745,12 @@ $depts_info = $stmt->fetchAll();
                             try {
                                 const b_t_data = await clone.text();
                                 console.log("bulk-transfer response (JSON):", b_t_data);
+                                const parse = JSON.parse(b_t_data);
+                                if (parse.status === 'Bulk transfer Ok') {
+                                    showToast('Bulk Transfer Form Submitted');
+                                } else {
+                                    showToast('Bulk Transfer Form Failed');
+                                }
                             } catch {
                                 //const b_t_data = await clone.json();
                             }
