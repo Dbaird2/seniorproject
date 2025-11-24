@@ -23,7 +23,6 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $myself = $someone_else = false;
 $index = 0;
-echo json_encode(['tags'=>$data]);
 $variables = [[]];
 foreach($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {
@@ -158,8 +157,6 @@ $variables['data']['5mMKjTfnND']['id'] = $manager_info['id'];
 $variables['data']['5mMKjTfnND']['username'] = $manager_info['username'];
 $variables['data']['5mMKjTfnND']['firstName'] = $manager_info['firstName'];
 $variables['data']['5mMKjTfnND']['lastName'] = $manager_info['lastName'];
-$echo('Custodian', $manager);
-$array_echo($manager_info);
 $submitter_sig = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
 
 // DATE
@@ -180,9 +177,6 @@ $variables['data']['Tscy6BxbSj']['signatureType'] = 'type';
 $variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['lastName'];
 $variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['userId'];
 
-$echo('Custodian', $custodian);
-$array_echo($custodian_info);
-$echo('Date', $variables['data']['sQZpV5OhTo']);
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -195,7 +189,6 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
 $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
-$array_echo($resp_data);
 
 $tag = $data['tag'];
 $input_array =  $document_id . ',rlsd,in-progress,' . trim($tag);

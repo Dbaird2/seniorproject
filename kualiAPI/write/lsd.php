@@ -13,7 +13,6 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $tag_data = $data;
 $audit_dept = $data['dept_id'];
-echo json_encode([$data]);
 $variables = [[]];
 foreach($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {

@@ -11,9 +11,6 @@ if (!isset($_POST)) {
 }
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
-echo "<pre>";
-var_dump($data);
-echo "</pre>";
 /* DATA FROM POST */
 /* CHECK IN OR OUT */
 $form_type = trim($data['form_type']);
@@ -150,7 +147,6 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
-var_dump($resp);
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
@@ -191,9 +187,6 @@ if ($who !== 'Myself') {
 
     $borrower = trim($data['borrower']);
     $borrowers_info = getNameInfo($borrower, $audit_dept);
-    echo "<pre>";
-    var_dump($borrowers_info);
-    echo "</pre>";
         $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
         $stmt = $dbh->prepare($get_dept_name);
         $stmt->execute([':id'=>$data['dept_id']]);
@@ -239,12 +232,9 @@ if ($who !== 'Myself') {
 $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
 $custodian_stmt = $dbh->prepare($custodian);
 $custodian_stmt->execute([':dept_id' => $data['dept_id']]);
-echo $data['dept_id'] . '<br>';
 $custodian_name = $custodian_stmt->fetchColumn();
-echo $custodian_name . '<br>';
 
 $custodian_info = getNameInfo($custodian_name, $audit_dept);
-echo json_encode([$custodian_info]);
 $check_type_date = $date->format('m/d/Y');
 if ($form_type === 'Returning Equipment') {
     $variables['data']['73dNIwQS0c'] = $check_type_date;

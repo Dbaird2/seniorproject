@@ -2,9 +2,6 @@
 require_once "../../config.php";
 include_once "../../vendor/autoload.php";
 include_once "search.php";
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 if (!isset($_POST)) {
     die("Not submitted yet.");
 }
@@ -296,7 +293,6 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
-var_dump($resp);
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];

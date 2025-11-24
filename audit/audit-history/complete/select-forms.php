@@ -1746,6 +1746,7 @@ $depts_info = $stmt->fetchAll();
                                 const b_t_data = await clone.text();
                                 console.log("bulk-transfer response (JSON):", b_t_data);
                                 const parse = JSON.parse(b_t_data);
+                                console.log(parse);
                                 if (parse.status === 'Bulk Transfer Ok') {
                                     showToast('Bulk Transfer Form Submitted', 5000);
                                     console.log('success');

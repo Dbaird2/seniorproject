@@ -12,7 +12,6 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
 $index = 0;
-echo json_encode(['tags' => $data]);
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
 foreach ($data['psr_tags'] as $index => $tag) {
@@ -224,7 +223,6 @@ curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 $resp = curl_exec($curl);
-var_dump($resp);
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
