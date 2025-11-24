@@ -130,7 +130,7 @@ keyBy: ID
     function addInfo($username, $email, $form_id, $school_id, $signature, $full_name, $role, $dept_id)
     {
         echo '<br>Add Info<br>';
-        echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role;
+        echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role . ' Department ' . $dept_id;
         global $dbh;
         $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
         $stmt = $dbh->prepare($select);
@@ -157,6 +157,15 @@ keyBy: ID
                         $found = true;
                         break;
                     }
+                }
+                $select = 'SELECT 1 FROM user_table WHERE dept_id = ANY(:dept_id) AND email = :email';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
+                $cust_found = $stmt->fetch();
+                if (!$cust_found) {
+                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
                 }
                 if (!$found) {
                     $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
@@ -238,7 +247,7 @@ keyBy: ID
         $info = $stmt->fetch(PDO::FETCH_ASSOC);
         $full_name = $f_name . ' ' . $l_name;
         echo '<br>Add Signature<br>';
-        echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role;
+        echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role . ' Department' . $dept_id;
         if ($info) {
             if (empty($info['school_id'] || empty($info['form_id'] || empty($info['signature'])))) {
                 $update = 'UPDATE user_table SET school_id = :school, form_id = :form , signature = :sig WHERE email = :email';
@@ -256,6 +265,15 @@ keyBy: ID
                         $found = true;
                         break;
                     }
+                }
+                $select = 'SELECT 1 FROM user_table WHERE dept_id = ANY(:dept_id) AND email = :email';
+                $stmt = $dbh->prepare($select);
+                $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
+                $cust_found = $stmt->fetch();
+                if (!$cust_found) {
+                    $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
+                    $stmt = $dbh->prepare($update);
+                    $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
                 }
                 if (!$found) {
                     $select = 'SELECT email, dept_id FROM user_table WHERE :dept_id = ANY(dept_id)';
