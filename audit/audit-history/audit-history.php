@@ -208,69 +208,69 @@ if (count($departments) > 0) {
                 if ($form === 'lsd') {
                     if (!empty($id)) {
                         echo "<a href='https://csub.kualibuild.com/document-list/68d09e41d599f1028a9b9457/".$id."/view' taget='_blank'>To Form</a>";
-                        echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
-                        continue;
-                    } else if ($form === 'transfer') {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/".$id."/view' taget='_blank'>To Form</a>";
-                        echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
-                        continue;
-                    } else if ($form === 'rlsd') {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/".$id."/view' taget='_blank'>To Form</a>";
-                        echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
-                        continue;
-                    } else if ($form === 'rtransfer') {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/".$id."/view' taget='_blank'>To Form</a>";
-                        echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
-                        continue;
                     }
-                    if ($form === 'in-progress') {
-                        $color = '#F4C542';
-                        echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
+                    continue;
+                } else if ($form === 'transfer') {
+                    echo "<a href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/".$id."/view' taget='_blank'>To Form</a>";
+                    echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
+                    continue;
+                } else if ($form === 'rlsd') {
+                    echo "<a href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/".$id."/view' taget='_blank'>To Form</a>";
+                    echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
+                    continue;
+                } else if ($form === 'rtransfer') {
+                    echo "<a href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/".$id."/view' taget='_blank'>To Form</a>";
+                    echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
+                    continue;
+                }
+                if ($form === 'in-progress') {
+                    $color = '#F4C542';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>In Progress </span>
 <?php
-                        echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                        continue;
-                    } else if ($form === 'complete') {
-                        $color = '#28A745';
-                        echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'complete') {
+                    $color = '#28A745';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>Complete </span>
 <?php
-                        echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                        continue;
-                    } else if ($form === 'withdrawn') {
-                        $color = '#6C757D';
-                        echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'withdrawn') {
+                    $color = '#6C757D';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
             <span style='color: <?= $color ?> ;'>Withdrawn </span>
 <?php
-                        echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
-                        continue;
-                    } else if ($form === 'denied') {
-                        $color = '#DC3545';
-                        echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
+                    echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
+                    continue;
+                } else if ($form === 'denied') {
+                    $color = '#DC3545';
+                    echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 ?>
             <span style='color: <?= $color ?> ;'>Denied </span>
             <span style="font-weight:700; color: #003DA5;"> Tags </span>
 <?php
-                        continue;
-                    }
+                    continue;
+                }
 
-                    $form = trim($form, '"');
-                    if (
-                        preg_match($ASI, $form) || preg_match($STU, $form) ||
-                        preg_match($CMP, $form) || preg_match($FDN, $form) ||
-                        preg_match($SPA, $form)
-                    ) {
-                        echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
-                    }
+                $form = trim($form, '"');
+                if (
+                    preg_match($ASI, $form) || preg_match($STU, $form) ||
+                    preg_match($CMP, $form) || preg_match($FDN, $form) ||
+                    preg_match($SPA, $form)
+                ) {
+                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
                 }
             }
-        } 
+        }
     } else {
         '<td></td>';
     }
