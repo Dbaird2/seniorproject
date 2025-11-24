@@ -1746,10 +1746,10 @@ $depts_info = $stmt->fetchAll();
                                 const b_t_data = await clone.text();
                                 console.log("bulk-transfer response (JSON):", b_t_data);
                                 const parse = JSON.parse(b_t_data);
-                                if (parse.status === 'Bulk transfer Ok') {
-                                    showToast('Bulk Transfer Form Submitted');
+                                if (parse.status === 'Bulk Transfer Ok') {
+                                    showToast('Bulk Transfer Form Submitted', 5000);
                                 } else {
-                                    showToast('Bulk Transfer Form Failed');
+                                    showToast('Bulk Transfer Form Failed', 5000);
                                 }
                             } catch {
                                 //const b_t_data = await clone.json();
@@ -1760,6 +1760,9 @@ $depts_info = $stmt->fetchAll();
                             });
                         }
                     }
+                    bulk_t_tags.length = 0, psr_tags.length = 0;
+                    transfer_dept_array.length = 0;
+                    transfer_location_array.length = 0;
                 }
             });
         });

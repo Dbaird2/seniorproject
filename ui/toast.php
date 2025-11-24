@@ -19,6 +19,7 @@
 
     .toast.show {
         visibility: visible;
+        z-index: 9999;
         opacity: 1;
         bottom: 50px;
     }
