@@ -1,6 +1,6 @@
  <?php
-    include_once ("../../../config.php");
-    include_once ("../../../navbar.php");
+    include_once ("../../../../config.php");
+    include_once ("../../../../navbar.php");
 
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -288,7 +288,7 @@ for ($i = 0; $i < count($lat); $i++) {
                     $ele1 = $asset['elevation'];
                 ?>
                     <button class='btn' data-x="<?= $lat1 ?>" data-y="<?= $lon1 ?>" data-ele="<?= $ele1 ?>">
-                        <strong><?= $asset['asset_tag'] ?? $asset['Tag Number'] . ' ' . $asset['asset_name'] ?? '' ?></strong><br>
+                        <strong><?= $asset['Tag Number'] ?></strong><br>
                         <span style="font-size: 0.85em; opacity: 0.9;">X: <?= $lat1 ?> | Y: <?= $lon1 ?></span>
                     </button>
                 <?php } ?>
