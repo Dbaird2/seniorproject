@@ -158,7 +158,7 @@ keyBy: ID
                         break;
                     }
                 }
-                $select = 'SELECT 1 FROM user_table WHERE dept_id = ANY(:dept_id) AND email = :email';
+                $select = 'SELECT 1 FROM user_table WHERE :dept_id = ANY(dept_id) AND email = :email';
                 $stmt = $dbh->prepare($select);
                 $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
                 $cust_found = $stmt->fetch();
@@ -266,7 +266,7 @@ keyBy: ID
                         break;
                     }
                 }
-                $select = 'SELECT 1 FROM user_table WHERE dept_id = ANY(:dept_id) AND email = :email';
+                $select = 'SELECT 1 FROM user_table WHERE :dept_id = ANY(dept_id) AND email = :email';
                 $stmt = $dbh->prepare($select);
                 $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
                 $cust_found = $stmt->fetch();
