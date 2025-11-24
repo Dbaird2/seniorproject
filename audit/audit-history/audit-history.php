@@ -198,10 +198,8 @@ if (count($departments) > 0) {
             $counter = 0;
             $id = '';
             foreach ($form_array as $index2 => $form) {
-                $form = trim($form);
+                $form = trim($form, '"');
                 $count = strlen($form);
-                var_dump($form);
-                echo '<br>' . $count . '<br>';
                $regex = '/(\s)/'; 
 
                 if ($count === 24 && !preg_match($regex, $form)) {
