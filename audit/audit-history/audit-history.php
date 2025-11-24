@@ -276,7 +276,6 @@ if (count($departments) > 0) {
     }
         echo '</div>';
         echo '</div>';
-    }
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
