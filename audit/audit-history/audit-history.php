@@ -199,6 +199,8 @@ if (count($departments) > 0) {
             $id = '';
             foreach ($form_array as $index2 => $form) {
                 $count = strlen($form);
+                echo '<br>' . $count . '<br>';
+                
                 if ($count === 24) {
                     $id = $form;
                     echo '<br>';
