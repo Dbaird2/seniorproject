@@ -1031,7 +1031,6 @@ $depts_info = $stmt->fetchAll();
                             }
                         });
                         const transfer_type = document.getElementById('transfer-form-type-' + tag);
-                        console.log(transfer_type);
                         transfer_type.addEventListener('change', () => {
                             if (transfer_type.value === 'dept') {
                                 showUI('transfer-dept-change', tag);
@@ -1372,11 +1371,11 @@ $depts_info = $stmt->fetchAll();
                     } else {
                         const clone = form_submitted.clone();
                         try {
-                            const data = await clone.json();
+                            const forms_data = await clone.json();
                         } catch {
-                            const text = await clone.text();
+                            const forms_data = await clone.text();
                         }
-                            console.log("Update DB response (JSON):", data);
+                            console.log("Update DB response (JSON):", forms_data);
                     }
                 } else {
                     displayError('sub-label', 'Missing form information.', '', valid_forms);
@@ -1437,11 +1436,11 @@ $depts_info = $stmt->fetchAll();
                             } else {
                                 const clone = out_res.clone();
                                 try {
-                                    const data = await clone.json();
+                                    const out_res_data = await clone.json();
                                 } catch {
-                                    const text = await clone.text();
+                                    const out_res_data = await clone.text();
                                 }
-                                    console.log("Check out response (JSON):", data);
+                                    console.log("Check out response (JSON):", out_res_data);
                                     hideUI('row', type.dataset.tag);
                                     hideAll(type.dataset.tag);
                             }
@@ -1485,11 +1484,11 @@ $depts_info = $stmt->fetchAll();
                             } else {
                                 const clone = in_res.clone();
                                 try {
-                                    const data = await clone.json();
+                                    const in_res_data = await clone.json();
                                 } catch {
-                                    const text = await clone.text();
+                                    const in_res_data = await clone.text();
                                 }
-                                    console.log("Check in response (JSON):", data);
+                                    console.log("Check in response (JSON):", in_res_data);
                                     hideUI('row', type.dataset.tag);
                                     hideAll(type.dataset.tag);
                             }
@@ -1503,7 +1502,6 @@ $depts_info = $stmt->fetchAll();
                                 const upd = document.getElementById('upd-' + type.dataset.tag)?.value;
                                 const item_type = document.getElementById('item-type-' + type.dataset.tag)?.value;
                                 const date_reported = document.getElementById('upd-date-reported-' + type.dataset.tag)?.value;
-                                console.log(date_reported);
                                 const time_reported = document.getElementById('upd-time-reported-' + type.dataset.tag)?.value;
                                 const date_last_seen = document.getElementById('upd-date-last-seen-' + type.dataset.tag)?.value;
                                 const time_last_seen = document.getElementById('upd-time-last-seen-' + type.dataset.tag)?.value;
@@ -1585,11 +1583,11 @@ $depts_info = $stmt->fetchAll();
                                 } else {
                                     const clone = lsd_res.clone();
                                     try {
-                                        const data = await clone.json();
+                                        const lsd2_data = await clone.json();
                                     } catch {
-                                        const text = await clone.text();
+                                        const lsd2_data = await clone.text();
                                     }
-                                        console.log("Lsd response (JSON):", data);
+                                        console.log("Lsd response (JSON):", lsd2_data);
                                         hideUI('row', type.dataset.tag);
                                         hideAll(type.dataset.tag);
                                 }
@@ -1613,11 +1611,11 @@ $depts_info = $stmt->fetchAll();
                                 } else {
                                     const clone = lsd_res.clone();
                                     try {
-                                        const data = await clone.json();
+                                        const lsd_data = await clone.json();
                                     } catch {
-                                        const text = await clone.text();
+                                        const lsd_data = await clone.text();
                                     }
-                                        console.log("Lsd response (JSON):", data);
+                                        console.log("Lsd response (JSON):", lsd_data);
                                         hideUI('row', type.dataset.tag);
                                         hideAll(type.dataset.tag);
                                 }
@@ -1646,11 +1644,11 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = psr_res.clone();
                             try {
-                                const data = await clone.json();
+                                const psr_data = await clone.json();
                             } catch {
-                                const text = await clone.text();
+                                const psr_data = await clone.text();
                             }
-                                console.log("PSR response (JSON):", data);
+                                console.log("PSR response (JSON):", psr_data);
                                 psr_tags.forEach(async (value) => {
                                     hideUI('row', value);
                                     hideAll(value);
@@ -1678,11 +1676,11 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = transfer_res.clone();
                             try {
-                                const data = await clone.json();
+                                const t2_data = await clone.json();
                             } catch {
-                                const text = await clone.text();
+                                const t2_data = await clone.text();
                             }
-                                console.log("transfer dept response (text):", text);
+                                console.log("transfer dept response (text):", t2_data);
                                 transfer_location_array.forEach(async (value) => {
                                     hideUI('row', value.tag);
                                     hideAll(value.tag);
@@ -1710,11 +1708,11 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = transfer_res.clone();
                             try {
-                                const data = await clone.json();
+                                const t_data = await clone.json();
                             } catch {
-                                const text = await clone.text();
+                                const t_data = await clone.text();
                             }
-                                console.log("transfer dept response (text):", text);
+                                console.log("transfer dept response (text):", t_text);
                                 transfer_dept_array.forEach(async (value) => {
                                     console.log(value);
                                     hideUI('row', value.tag);
@@ -1743,11 +1741,11 @@ $depts_info = $stmt->fetchAll();
                         } else {
                             const clone = bulk_t_res.clone();
                             try {
-                                const data = await clone.text();
+                                const b_t_data = await clone.text();
                             } catch {
-                                const data = await clone.json();
+                                const b_t_data = await clone.json();
                             }
-                            console.log("bulk-transfer response (JSON):", data);
+                            console.log("bulk-transfer response (JSON):", b_t_data);
                             bulk_t_tags.forEach((value) => {
                             hideUI('row', value);
                             hideAll(value);

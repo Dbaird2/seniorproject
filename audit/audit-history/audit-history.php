@@ -50,7 +50,7 @@ include_once("../../config.php");
             $dept_stmt = $dbh->query($depts);
             $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
+            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, phone_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
             $stmt = $dbh->prepare($select_query);
             $stmt->execute();
         } else {
