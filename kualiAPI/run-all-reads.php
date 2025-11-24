@@ -127,11 +127,11 @@ keyBy: ID
         return implode($pass);
     }
 
-    function addInfo($username, $email, $form_id, $school_id, $signature, $full_name, $role)
+    function addInfo($username, $email, $form_id, $school_id, $signature, $full_name, $role, $dept_id)
     {
         echo '<br>Add Info<br>';
         echo 'Username ' . $username  . ' Email ' . $email . ' Form Id ' . $form_id . ' School id ' . $school_id . ' Signature ' . $signature . ' Full name ' . $full_name . ' Role ' . $role;
-        global $dbh, $dept_id;
+        global $dbh;
         $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
         $stmt = $dbh->prepare($select);
         $stmt->execute([":email" => $email]);
@@ -229,9 +229,9 @@ keyBy: ID
         }
     }
 
-    function addSignature($username, $email, $form_id, $signature, $school_id, $f_name, $l_name, $role = 'user')
+    function addSignature($username, $email, $form_id, $signature, $school_id, $f_name, $l_name, $role = 'user', $dept_id)
     {
-        global $dbh, $dept_id;
+        global $dbh;
         $select = 'SELECT username, email, form_id, signature, school_id FROM user_table WHERE email = :email';
         $stmt = $dbh->prepare($select);
         $stmt->execute([":email" => $email]);
@@ -338,7 +338,7 @@ keyBy: ID
                         } else {
                             $c_signature = $c_full_name;
                         }
-                        addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
+                        addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian', $dept_id);
                     }
 
                     if (isset($edge['node']['data']['04PgxWqAbE'])) {
@@ -368,7 +368,7 @@ keyBy: ID
                             // Handle specific type case
                             $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
                         }
-                        addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
+                        addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user', $dept_id);
                     }
                     if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                         // MANAGER/DEAN INFORMATION
@@ -379,7 +379,7 @@ keyBy: ID
                         $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
                         $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
                         $m2_signature = $m2_display_name;
-                        addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
+                        addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user', $dept_id);
                     }
                     if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
                         // CUSTODIAN INFORMATION
@@ -390,7 +390,7 @@ keyBy: ID
                         $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
                         $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
                         $m3_signature = $m3_display_name;
-                        addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
+                        addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian', $dept_id);
                     }
                     addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id, $dept_name);
                 }
@@ -426,7 +426,7 @@ keyBy: ID
                     } else {
                         $c_signature = $c_full_name;
                     }
-                    addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian');
+                    addSignature($c_username, $c_email, $c_id, $c_signature, $c_school_id, $custodian_array[0], $c_l_name, 'custodian', $dept_id);
                 }
 
                 if (isset($edge['node']['data']['04PgxWqAbE'])) {
@@ -456,7 +456,7 @@ keyBy: ID
                         // Handle specific type case
                         $m4_signature = $edge['node']['data']['04PgxWqAbE']['signedName'];
                     }
-                    addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user');
+                    addSignature($m4_username, $m4_email, $m4_id, $m4_signature, $m4_school_id, $m4_f_name, $m4_l_name, 'user', $dept_id);
                 }
                 if (isset($edge['node']['data']['jTxoK_Wsh7'])) {
                     // MANAGER/DEAN INFORMATION
@@ -467,7 +467,7 @@ keyBy: ID
                     $m2_id = $edge['node']['data']['jTxoK_Wsh7']['id'];
                     $m2_school_id = $edge['node']['data']['jTxoK_Wsh7']['schoolId'];
                     $m2_signature = $m2_display_name;
-                    addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user');
+                    addInfo($m2_username, $m2_email, $m2_id, $m2_school_id, $m2_signature, $m2_display_name, 'user', $dept_id);
                 }
                 if (isset($edge['node']['data']['kS_kp-Oo1y'])) {
                     // CUSTODIAN INFORMATION
@@ -478,7 +478,7 @@ keyBy: ID
                     $m3_id = $edge['node']['data']['kS_kp-Oo1y']['id'];
                     $m3_school_id = $edge['node']['data']['kS_kp-Oo1y']['schoolId'];
                     $m3_signature = $m3_display_name;
-                    addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian');
+                    addInfo($m3_username, $m3_email, $m3_id, $m3_school_id, $m3_signature, $m3_display_name, 'custodian', $dept_id);
                 }
                 addDepartment($documentSetId, $dept_kuali_id, $c_full_name, $m4_full_name, $dept_id, $dept_name);
             }
