@@ -1,6 +1,6 @@
  <?php
-    include_once ("../../../../config.php");
-    include_once ("../../../../navbar.php");
+    include_once ("../../../config.php");
+    include_once ("../../../navbar.php");
 
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
@@ -258,7 +258,7 @@ for ($i = 0; $i < count($lat); $i++) {
             btns.forEach((value) => {
                 value.addEventListener('click', function() {
                     console.log(this.dataset.x, this.dataset.y);
-                    map.setView([this.dataset.x, this.dataset.y], this.dataset.ele);
+                    map.setView([this.dataset.x, this.dataset.y], 7);
                 })
             })
         }

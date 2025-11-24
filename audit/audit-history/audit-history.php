@@ -272,8 +272,6 @@ include_once("../../config.php");
         }
         echo '</div>';
         echo '</div>';
-    } else {
-        echo '<td></td>';
     }
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
