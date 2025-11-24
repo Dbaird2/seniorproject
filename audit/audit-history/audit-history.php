@@ -211,25 +211,25 @@ if (count($departments) > 0) {
 
                 if ($form === 'lsd') {
                     if (!empty($id)) {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68d09e41d599f1028a9b9457/".$id."/view' taget='_blank'>To Form</a>";
+                        echo "<a href='https://csub.kualibuild.com/document-list/68d09e41d599f1028a9b9457/".$id."/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;">Custodian Loss/Stolen/Damaged Form: </span>';
                     continue;
                 } else if ($form === 'transfer') {
                     if (!empty($id)) {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/".$id."/view' taget='_blank'>To Form</a>";
+                        echo "<a href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/".$id."/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;">Bulk Transfer Form: </span>';
                     continue;
                 } else if ($form === 'rlsd') {
                     if (!empty($id)) {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/".$id."/view' taget='_blank'>To Form</a>";
+                        echo "<a href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/".$id."/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;">Management Loss/Stolen/Damaged Form: </span>';
                     continue;
                 } else if ($form === 'rtransfer') {
                     if (!empty($id)) {
-                        echo "<a href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/".$id."/view' taget='_blank'>To Form</a>";
+                        echo "<a href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/".$id."/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;">Transfer Form: </span>';
                     continue;
