@@ -76,6 +76,18 @@ if (isset($_FILES['file'])) {
     if (count($location_array) === 2) {
       echo $location_array[0] . ' ' . $location_array[1];
     }
+    $ASI = "/^A[SI]?\d+$/";
+    $STU = "/^S[RC]?[TU]?\d+$/";
+    $CMP = "/^\d+/";
+    $FDN = "/^F[DN]?\d+$/";
+    $SPA = "/^SP\d+$/";
+    if (preg_match($ASI, $row[3]) || preg_match($STU, $row[3]) || 
+        preg_match($CMP, $row[3]) || preg_match($FDN, $row[3]) ||
+        preg_match($SPA, $row[3])) {
+    } else {
+        echo 'Invalid Tag skipping<br>';
+        continue;
+    }
 
 $regex = '/^(\d{1,3})$/';
     if (count($location_array) === 2) {
