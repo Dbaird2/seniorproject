@@ -77,9 +77,12 @@ if (isset($_FILES['file'])) {
       echo $location_array[0] . ' ' . $location_array[1];
     }
 
-
+$regex = '/^(\d{1,3})$/';
     if (count($location_array) === 2) {
-        if ((int)$location_array[0] === 0) {
+        if ($location_array[0] === '44A') {
+            $location_array[0] = 44;
+        }
+        if ((int)$location_array[0] === 0 || !preg_match($regex, $location_array[0])) {
             echo 'Invalid Building ID<br>';
             $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
                 (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
@@ -87,9 +90,6 @@ if (isset($_FILES['file'])) {
             $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
             echo 'Insert/Updated No Location<br>';
             continue;
-        }
-        if ($location_array[0] === '44A') {
-            $location_array[0] = 44;
         }
       $room_select = 'SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :loc';
       $stmt = $dbh->prepare($room_select);
