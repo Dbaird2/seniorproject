@@ -82,7 +82,7 @@ if (isset($_FILES['file'])) {
         if ((int)$location_array[0] === 0) {
             echo 'Invalid Building ID<br>';
             $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
-                (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
+                (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
             $stmt = $dbh->prepare($insert);
             $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
             echo 'Insert/Updated No Location<br>';
@@ -111,7 +111,7 @@ if (isset($_FILES['file'])) {
     } else {
         echo 'Invalid Building ID<br>';
         $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
-            (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
+            (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
         $stmt = $dbh->prepare($insert);
         $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
         echo 'Insert/Updated No Location<br>';
