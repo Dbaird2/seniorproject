@@ -94,6 +94,9 @@ $regex = '/^(\d{1,3})$/';
         if ($location_array[0] === '44A') {
             $location_array[0] = 44;
         }
+        if (in_array($location_array[0], ['93', '97','104','85'])) {
+            continue;
+        }
         if ((int)$location_array[0] === 0 || !preg_match($regex, $location_array[0])) {
             echo 'Invalid Building ID<br>';
             $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES

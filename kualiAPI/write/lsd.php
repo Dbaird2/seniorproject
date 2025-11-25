@@ -375,9 +375,9 @@ $input_array =  $document_id . ',lsd,in-progress,' . trim($tag);
 
 $audit_id = $data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-$update_stmt = $dbh->prepare($update);
-$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 if ($resp_data['data']['submitDocument'] === 'Ok') {
+    $update_stmt = $dbh->prepare($update);
+    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
     echo json_encode(['status'=>'Loss/Stolen/Dmg Ok']);
 } else {
     echo json_encode(['status'=>'Loss/Stolen/Dmg Failed', 'data'=>$resp_data]);

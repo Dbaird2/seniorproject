@@ -439,10 +439,10 @@ foreach ($transfer_data as $tag_info) {
 
 $audit_id = $tag_data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-$update_stmt = $dbh->prepare($update);
-$update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
 
 if ($resp_data['data']['submitDocument'] === 'Ok') {
+    $update_stmt = $dbh->prepare($update);
+    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
     echo json_encode(['status'=>'Bulk Transfer Ok']);
 } else {
     echo json_encode(['status'=>'Bulk Transfer Failed', 'res'=>$resp_data]);
