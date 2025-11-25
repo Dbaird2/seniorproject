@@ -1831,7 +1831,7 @@ $depts_info = $stmt->fetchAll();
                             });
                         }
                     }
-                    btn.style.display = 'block';
+                    btn.style.display = 'inline';
                     bulk_t_tags.length = 0, psr_tags.length = 0;
                     transfer_dept_array.length = 0;
                     transfer_location_array.length = 0;
