@@ -83,6 +83,9 @@ if (isset($_FILES['file'])) {
             echo 'Invalid Building ID';
             continue;
         }
+        if ($location_array[0] === '44A') {
+            $location_array[0] = 44;
+        }
       $room_select = 'SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :loc';
       $stmt = $dbh->prepare($room_select);
       $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
