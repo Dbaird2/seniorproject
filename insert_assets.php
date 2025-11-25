@@ -108,12 +108,30 @@ $regex = '/^(\d{1,3})$/';
       $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
       $room_tag = $stmt->fetchColumn();
       if (!$room_tag) {
-        $insert = 'INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)';
-        $stmt = $dbh->prepare($insert);
-        $stmt->execute([$location_array[0], $location_array[1]]);
-        $stmt = $dbh->prepare($room_select);
-        $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
-        $room_tag = $stmt->fetchColumn();
+          try {
+              $insert = 'INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)';
+              $stmt = $dbh->prepare($insert);
+              $stmt->execute([$location_array[0], $location_array[1]]);
+              $stmt = $dbh->prepare($room_select);
+              $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
+              $room_tag = $stmt->fetchColumn();
+          } catch (PDOException $e) {
+              $code = $e->getCode();
+              while ($code == '23505') {
+                  try {
+                      $insert = 'INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)';
+                      $stmt = $dbh->prepare($insert);
+                      $stmt->execute([$location_array[0], $location_array[1]]);
+                      $stmt = $dbh->prepare($room_select);
+                      $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
+                      $room_tag = $stmt->fetchColumn();
+                      $code = true;
+                  } catch (PDOException $e) {
+                      $code->getCode();
+                  }
+              }
+          }
+
       }
       $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, room_tag, dept_id, is_it, fund) VALUES
       (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
@@ -121,14 +139,16 @@ $regex = '/^(\d{1,3})$/';
       $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $room_tag, $row[9], $is_it, $row[10]]);
       echo 'Inserted tag<br>';
     } else {
-        echo 'Invalid Building ID<br>';
-        $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
-            (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
-        $stmt = $dbh->prepare($insert);
-        $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
-        echo 'Insert/Updated No Location<br>';
+        try {
+            echo 'Invalid Building ID<br>';
+            $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
+                (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
+            $stmt = $dbh->prepare($insert);
+            $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
+            echo 'Insert/Updated No Location<br>';
+        } catch (PDOException $e) {
+        }
     }
-
   }
 }
 
