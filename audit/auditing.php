@@ -94,6 +94,7 @@ try {
     $total_count = count($_SESSION['data']);
     if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicInput'][0] !== '' || $_POST['dynamicInput'][1] !== '')) {
         foreach ($_POST['dynamicInput'] as $index => $row) {
+            $row = strtoupper($row);
             $found = false;
             $found_at = -2;
             if ($row === '') {
@@ -612,16 +613,20 @@ document.addEventListener("input", function(e) {
     const value = e.target.value.trim();
     let tab = 5;
     value[0] = value[0].toUpperCase();
-    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F' || value[0] === 'S') {
+    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F' 
+        || value[0] === 's' || value[0] === 'a' || value[0] === 'f') {
         value[1] = value[1].toUpperCase();
-        value[2] = value[2].toUpperCase();
         tab++;
-        if (value[1] === 'P' || value[1] === 'R') {
+        if (value[1] === 'P' || value[1] === 'R' ||
+            value[1] === 'p' || value[1] === 'r') {
+            value[2] = value[2].toUpperCase();
             tab++;
-        } else if (value[1] === 'T') {
+        } else if (value[1] === 'T' || value[1] === 't') {
+            value[2] = value[2].toUpperCase();
             tab++;
         }
-        if (value[2] == 'U' || value[2] === 'C') {
+        if (value[2] === 'U' || value[2] === 'C' ||
+            value[2] === 'u' || value [2] === 'c') {
             tab++;
         }
     }
