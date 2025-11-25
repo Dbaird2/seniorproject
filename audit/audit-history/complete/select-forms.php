@@ -792,7 +792,7 @@ $depts_info = $stmt->fetchAll();
         </div>
         <div style="text-align: center;">
             <label class="error-label" id='sub-label'></label>
-            <button id="submit">Submit Forms</button>
+            <button class="submit-btn" id="submit">Submit Forms</button>
         </div>
     </div>
     <script>
@@ -1384,6 +1384,8 @@ $depts_info = $stmt->fetchAll();
                 }
 
                 if (valid_forms) {
+                    const btn = document.querySelector('.submit-btn');
+                    btn.style.display = 'none';
                     forms_needed.forEach(async (type) => {
                         const val = type.value;
                         const tag = type.dataset.tag;
@@ -1441,6 +1443,15 @@ $depts_info = $stmt->fetchAll();
                                     //const out_res_data = await clone.json();
                                     const out_res_data = await clone.text();
                                     console.log("Check out response (JSON):", out_res_data);
+                                    const parse = JSON.parse(out_res_data);
+                                    console.log(parse);
+                                    if (parse.status === 'Check in/out Ok') {
+                                        showToast('Check Out Form Submitted', 5000);
+                                        console.log('success');
+                                    } else {
+                                        showToast('Check Out Form Failed', 5000);
+                                        console.log('failed');
+                                    }
                                 } catch {
                                 }
                                     hideUI('row', type.dataset.tag);
@@ -1489,10 +1500,19 @@ $depts_info = $stmt->fetchAll();
                                     const in_res_data = await clone.text();
                                     //const in_res_data = await clone.json();
                                     console.log("Check in response (JSON):", in_res_data);
+                                    const parse = JSON.parse(in_res_data);
+                                    console.log(parse);
+                                    if (parse.status === 'Check in/out Ok') {
+                                        showToast('Check In Form Submitted', 5000);
+                                        console.log('success');
+                                    } else {
+                                        showToast('Check In Form Failed', 5000);
+                                        console.log('failed');
+                                    }
                                 } catch {
                                 }
-                                    hideUI('row', type.dataset.tag);
-                                    hideAll(type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
+                                hideAll(type.dataset.tag);
                             }
                         } else if (val === 'lsd') {
                             if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
@@ -1588,6 +1608,15 @@ $depts_info = $stmt->fetchAll();
                                         const lsd2_data = await clone.text();
                                         //const lsd2_data = await clone.json();
                                         console.log("Lsd response (JSON):", lsd2_data);
+                                        const parse = JSON.parse(lsd2_data);
+                                        console.log(parse);
+                                        if (parse.status === 'Loss/Stolen/Dmg Ok') {
+                                            showToast('Lost/Stolen/Dmg Form Submitted', 5000);
+                                            console.log('success');
+                                        } else {
+                                            showToast('Lost/Stolen/Dmg Failed', 5000);
+                                            console.log('failed');
+                                        }
                                     } catch {
                                     }
                                         hideUI('row', type.dataset.tag);
@@ -1616,6 +1645,15 @@ $depts_info = $stmt->fetchAll();
                                         const lsd_data = await clone.text();
                                         //const lsd_data = await clone.json();
                                         console.log("Lsd response (JSON):", lsd_data);
+                                        const parse = JSON.parse(lsd_data);
+                                        console.log(parse);
+                                        if (parse.status === 'Loss/Stolen/Dmg Ok') {
+                                            showToast('Lost/Stolen/Dmg Form Submitted', 5000);
+                                            console.log('success');
+                                        } else {
+                                            showToast('Lost/Stolen/Dmg Failed', 5000);
+                                            console.log('failed');
+                                        }
                                     } catch {
                                     }
                                         hideUI('row', type.dataset.tag);
@@ -1649,6 +1687,15 @@ $depts_info = $stmt->fetchAll();
                                 const psr_data = await clone.text();
                                 //const psr_data = await clone.json();
                                 console.log("PSR response (JSON):", psr_data);
+                                const parse = JSON.parse(psr_data);
+                                console.log(parse);
+                                if (parse.status === 'Property Survey Report Ok') {
+                                    showToast('Property Suvery Report Form Submitted', 5000);
+                                    console.log('success');
+                                } else {
+                                    showToast('Property Survey Report Form Failed', 5000);
+                                    console.log('failed');
+                                }
                             } catch {
                             }
                                 psr_tags.forEach(async (value) => {
@@ -1681,6 +1728,16 @@ $depts_info = $stmt->fetchAll();
                                 const t2_data = await clone.text();
                                 //const t2_data = await clone.json();
                                 console.log("transfer dept response (text):", t2_data);
+                                console.log("transfer dept response (text):", t2_data);
+                                const parse = JSON.parse(t2_data);
+                                console.log(parse);
+                                if (parse.status === 'Transfer Ok') {
+                                    showToast('Transfer Form Submitted', 5000);
+                                    console.log('success');
+                                } else {
+                                    showToast('Transfer Form Failed', 5000);
+                                    console.log('failed');
+                                }
                             } catch {
                             }
                                 transfer_location_array.forEach(async (value) => {
@@ -1712,7 +1769,16 @@ $depts_info = $stmt->fetchAll();
                             try {
                                 //const t_data = await clone.json();
                                 const t_data = await clone.text();
-                                console.log("transfer dept response (text):", t_text);
+                                console.log("transfer dept response (text):", t_data);
+                                const parse = JSON.parse(t_data);
+                                console.log(parse);
+                                if (parse.status === 'Transfer Ok') {
+                                    showToast('Transfer Form Submitted', 5000);
+                                    console.log('success');
+                                } else {
+                                    showToast('Transfer Form Failed', 5000);
+                                    console.log('failed');
+                                }
                             } catch {
                             }
                                 transfer_dept_array.forEach(async (value) => {
@@ -1765,6 +1831,7 @@ $depts_info = $stmt->fetchAll();
                             });
                         }
                     }
+                    btn.style.display = 'block';
                     bulk_t_tags.length = 0, psr_tags.length = 0;
                     transfer_dept_array.length = 0;
                     transfer_location_array.length = 0;
