@@ -101,7 +101,7 @@ if (isset($_FILES['file'])) {
 }
 
 ?>
-<form id="sheet" name="form" action="tailwind.php" method="POST" enctype="multipart/form-data">
+<form id="sheet" name="form" action="insert_assets.php" method="POST" enctype="multipart/form-data">
   <h4 class="header">Concerned about Excel formatting? Check out our help page <a href="#">here</a></h4>
   <div class="container">
     <div class="folder">
