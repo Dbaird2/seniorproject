@@ -221,7 +221,7 @@ try {
                                 continue;
                             }
                             if ($data[1][$r_index] === 'Tag Number') {
-                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
+                                $select_q = "SELECT asset_notes, asset_status FROM asset_info WHERE asset_tag = :tag";
                                 $select_stmt = $dbh->prepare($select_q);
                                 $select_stmt->execute([":tag"=>$r_row]);
                                 $asset_notes = $select_stmt->fetchColumn();
@@ -233,6 +233,10 @@ try {
                                     $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
                                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] .= ',Disposed';
+                                    }
+
                                 } else {
                                     $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                     if ($tag_info) {
@@ -247,12 +251,20 @@ try {
                                         $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
                                         $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
                                         $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                        if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
+                                            $_SESSION['data'][$index - $skipped]['Found Note'] .= ',Disposed';
+                                        }
                                     } else {
                                         $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
                                         $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                         $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
                                         $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                        if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
+                                            $_SESSION['data'][$index - $skipped]['Found Note'] = ',Disposed';
+                                        } else {
+                                            $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                        }
+
                                         $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                                     }
                                 }
