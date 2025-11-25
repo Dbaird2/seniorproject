@@ -127,7 +127,7 @@ $regex = '/^(\d{1,3})$/';
                       $room_tag = $stmt->fetchColumn();
                       $code = true;
                   } catch (PDOException $e) {
-                      $code->getCode();
+                      $code = $e->getCode();
                   }
               }
           }
