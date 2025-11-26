@@ -3,8 +3,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 include_once "../../../config.php";
-$decoded_data = file_get_contents('php://input');
-$data = json_decode($decoded_data, true);
+$encoded_data = file_get_contents('php://input');
+$data = json_decode($encoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
 $data = trim($data['data']);
@@ -56,6 +56,29 @@ try {
     echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
     exit;
 }
+$formatted_data = [];
+foreach ($data as $index=>$row) {
+    $formatted_data[$index]['Tag Number'] = $row['tag'];
+    $formatted_data[$index]['Descr'] = $row['name'];
+    $formatted_data[$index]['Dept'] = $row['dept_id'];
+    $formatted_data[$index]['Unit'] = $row['bus_unit'];
+    $formatted_data[$index]['PO No.'] = $row['po'];
+    $formatted_data[$index]['Acq Date'] = $row['purchase_date'];
+    //$formatted_data[$index]['Location'] = $row[''];
+    $formatted_data[$index]['Serial ID'] = $row['serial'];
+    $formatted_data[$index]['Found Note'] = $row['notes'];
+    $formatted_data[$index]['Tag Status'] = $row['status'] ?? 'not-found';
+    $formatted_data[$index]['Found Room Tag'] = $row['found_room_tag'];
+    $formatted_data[$index]['COST Total Cost'] = $row['price'];
+    $formatted_data[$index]['Found Timestamp'] = $row['found_timestamp'];
+    $formatted_data[$index]['Found Room Number'] = $row['found_room_number'];
+    $formatted_data[$index]['Found Building Name'] = $row['found_building'];
+    $formatted_data[$index]['geo_x'] = $row['geo_x'];
+    $formatted_data[$index]['geo_y'] = $row['geo_y'];
+    $formatted_data[$index]['elevation'] = $row['elevation'];
+}
+$json_data = json_encode($formatted_data);
+
 
 try {
     $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, phone_audit) VALUE (?, ?, ?, ?, ?)";

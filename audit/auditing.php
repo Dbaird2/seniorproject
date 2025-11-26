@@ -293,7 +293,8 @@ try {
                             $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
                             $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
                             if ($result['asset_status'] === 'Disposed') {
-                            $_SESSION['data'][$total_count]['Found Note'] .= ' Disposed of ';
+                                $_SESSION['data'][$total_count]['Found Note'] .= ' Disposed of ';
+                            }
                             $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         } else {
                             $_SESSION['data'][$total_count]["Unit"] =  '';

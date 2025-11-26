@@ -73,21 +73,21 @@ try {
 
             if ($name === 'SPA Audit') {
                 $name = 'BKSPA';
-                $select_q = "SELECT a.found, a.asset_tag, a.asset_name, a.bus_unit,
+                $select_q = "SELECT a.asset_status, a.asset_tag, a.asset_name, a.bus_unit,
                     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
                     d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
                     FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
                     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                     LEFT JOIN department d ON a.dept_id = d.dept_id
-                    WHERE bus_unit = :name ORDER BY a.asset_tag";
+                    WHERE bus_unit = :name AND asset_status != 'Disposed' ORDER BY a.asset_tag";
             } else {
-                $select_q = "SELECT a.found, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
+                $select_q = "SELECT a.asset_status, a.found_at, a.asset_tag, a.asset_name, a.bus_unit,
                     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
                     d.custodian, a.date_added, a.asset_price, a.serial_num, b.bldg_id
                     FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
                     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                     LEFT JOIN department d ON a.dept_id = d.dept_id
-                    WHERE dept_name = :name ORDER BY a.asset_tag";
+                    WHERE dept_name = :name  AND asset_status != 'Disposed' ORDER BY a.asset_tag";
 
             }
             $select_stmt = $dbh->prepare($select_q);
