@@ -250,3 +250,10 @@ td[style*="color:green"] {
   cursor: pointer;
 }
 */
+    dialog {
+        margin: auto;
+  padding: 1.5rem;
+  border: 3px solid #ffb81c;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 61, 165, 0.2);
+  }

@@ -171,7 +171,11 @@ async function closeModal(dept, index) {
     document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
 }
 function openDialog(dept, index) {
+    const scroll_y = window.scrollY;
     document.getElementById(dept + '-' +index).showModal();
+    requestAnimationFrame(() => {
+        window.scrollTo(0, scroll_y);
+    });
 }
 function closeDialog(dept, index) {
     document.getElementById(dept + '-' +index).close();

@@ -280,11 +280,11 @@ if (count($departments) > 0) {
                 }
             }
         }
+       // echo '</div>';
+        echo '</dialog>';
     } else {
     echo "<td>" . $audits[$curr_index]['finished_at'] . '</td>';
     }
-       // echo '</div>';
-        echo '</dialog>';
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
     if ($audits[$curr_index]['audit_status'] === 'In Progress') {
