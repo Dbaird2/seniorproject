@@ -234,7 +234,7 @@ if (count($departments) > 0) {
                     continue;
                 }
                 if ($form === 'in-progress') {
-                    $color = '#F4C542';
+                    $color = '#FFA500';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
