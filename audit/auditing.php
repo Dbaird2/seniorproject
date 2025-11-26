@@ -263,7 +263,7 @@ try {
                         }
                     }
                     if ($found === 0) {
-                        $select_q = "SELECT a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, d.custodian, a.date_added
+                        $select_q = "SELECT a.asset_status, a.asset_name, a.serial_num, r.room_loc, b.bldg_id, a.dept_id, a.asset_price, a.po, a.bus_unit, d.custodian, a.date_added
                             FROM asset_info AS a LEFT JOIN room_table AS r ON r.room_tag = a.room_tag 
                             LEFT JOIN bldg_table AS b ON b.bldg_id = r.bldg_id 
                             LEFT JOIN department AS d ON a.dept_id = d.dept_id
@@ -292,6 +292,8 @@ try {
                             $_SESSION['data'][$total_count]['Found Room Number'] = $room_num_array[$index];
                             $_SESSION['data'][$total_count]['Found Building Name'] = $bldg_array[$index];
                             $_SESSION['data'][$total_count]['Found Note'] = $note_array[$index];
+                            if ($result['asset_status'] === 'Disposed') {
+                            $_SESSION['data'][$total_count]['Found Note'] .= ' Disposed of ';
                             $_SESSION['data'][$total_count]['Found Timestamp'] = $time_array[$index];
                         } else {
                             $_SESSION['data'][$total_count]["Unit"] =  '';
