@@ -238,6 +238,8 @@
   background-color: #003594;
   border: 1px solid #F5E6BD;
   border-radius: 7px;
+  cursor: pointer;
+  transform: translateY(-2px);
 }
 
 .show-tags {

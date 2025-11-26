@@ -749,16 +749,16 @@ function filterAssetStatus() {
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[3];
         console.log(filter);
-        if (td && filter === 'not-found') {
+        if (td && filter === 'NOT-FOUND') {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {
                 tr[i].style.display = "none";
             }
-        } else if (filter === 'All') {
+        } else if (filter === 'ALL') {
             tr[i].style.display = "";
-        } else if (td && (filter === 'found' || filter === 'extra')) {
+        } else if (td && (filter === 'FOUND' || filter === 'EXTRA')) {
             var filter2 = 'X';
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter2) > -1) {

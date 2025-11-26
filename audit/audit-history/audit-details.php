@@ -37,6 +37,9 @@ try {
             $data[$index]['Tag Status'] = $row['Tag Status'] ?? '';
             $data[$index]['Found Room Tag'] = $row['Found Room Tag'] ?? '';
             $data[$index]['Found Note'] = $row['Found Note'] ?? '';
+            $data[$index]['Found Building Name'] = $row['Found Building Name'] ?? '';
+            $data[$index]['Found Room Number'] = $row['Found Room Number'] ?? '';
+
             $data[$index++]['Found Timestamp'] = $row['Found Timestamp'] ?? '';
         }
     }
