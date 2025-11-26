@@ -11,7 +11,6 @@
 /*  padding: 2rem; */
   color: #1e293b;
 }
-
 .table-container {
     min-height: 60vh;
   background: rgba(255, 255, 255, 0.95);
@@ -216,39 +215,38 @@ td[style*="color:green"] {
     margin: 0.2rem;
   }
 }
+/*
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 15; /* Sit on top */
+  display: none; 
+  position: fixed; 
+  z-index: 15; 
   inset: 0;
-  /* overflow: auto; */ 
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 61, 165, 0.4); /* CSUB Blue with opacity */
+  background-color: rgb(0, 0, 0); 
+  background-color: rgba(0, 61, 165, 0.4);
 }
 
-/* Modal Content/Box */
 .modal-content {
-  background-color: #ffffff; /* Clean white background */
-  margin: 0; /* 15% from the top and centered */
+  background-color: #ffffff; 
+  margin: 0;
   padding: 20px;
-  border: 3px solid #ffb81c; /* CSUB Gold border */
-  border-radius: 8px; /* Added rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 61, 165, 0.2); /* CSUB Blue shadow */
-  width: 80%; /* Could be more or less, depending on screen size */
+  border: 3px solid #ffb81c; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 6px rgba(0, 61, 165, 0.2); 
+  width: 80%; 
 }
 
-/* The Close Button */
 .close {
-  color: #003da5; /* CSUB Blue */
+  color: #003da5; 
   float: right;
   font-size: 28px;
   font-weight: bold;
-  transition: color 0.3s ease; /* Smooth transition */
+  transition: color 0.3s ease;
 }
 
 .close:hover,
 .close:focus {
-  color: #ffb81c; /* CSUB Gold on hover */
+  color: #ffb81c; 
   text-decoration: none;
   cursor: pointer;
 }
+*/
