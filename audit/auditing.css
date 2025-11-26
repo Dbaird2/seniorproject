@@ -42,6 +42,14 @@
   box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
+#dynamicForm #room-tag {
+   border: 2px solid #FFC72C;
+}
+
+#insert-tags-div {
+    margin-bottom: 6px;
+}
+
 #dynamicForm {
   display: flex;
   align-items: flex-start;
@@ -225,11 +233,46 @@
 
 .wrapper button {
   justify-content: center;
+  padding: 5px;
+  color: #FFC72C;
+  background-color: #003594;
+  border: 1px solid #F5E6BD;
+  border-radius: 7px;
 }
 
 .show-tags {
   max-height: 65vh;
   overflow-y: auto;
+}
+
+#dynamicSubmit {
+  color: #FFC72C;
+  background-color: #003594;
+  border: 1px solid #F5E6BD;
+  border-radius: 7px;
+}
+button#dynamicSubmit:hover {
+    cursor:pointer;
+    background-color:aliceblue !important;
+    transform: translateY(-1px);
+}
+
+input#room-number {
+    position: sticky !important;
+    top: 2px;
+}
+input#room-tag {
+    position: sticky !important;
+    top: 2px;
+}
+input#bldg-name {
+    position: sticky !important;
+    top: 2px;
+}
+
+.btn {
+    position: sticky;
+    top: 10px;
 }
 
 /* Updated button styling with gold gradient */

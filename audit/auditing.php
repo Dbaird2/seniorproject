@@ -340,7 +340,6 @@ try {
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
-            <h4 class="gradient-text">Auditing</h4>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
@@ -359,7 +358,9 @@ try {
                 <div id="inputContainer"></div>
 
                 <input type="hidden" name="data" id="data">
-                <button type="submit" id='dynamicSubmit'>Submit</button>
+                <div class='btn'>
+                    <button type="submit" id='dynamicSubmit'>Submit</button>
+                </div>
 
             </form>
         </div>
@@ -472,7 +473,7 @@ function loadMoreRows() {
                 <td>${row["COST Total Cost"]}</td>
                 <td>${row["PO"] ?? ''}</td>
                 <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
-                <td><input class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Note"]}></td>
+                <td><textarea class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Note"]}></textarea></td>
                 `;
         table.appendChild(tr);
     }
@@ -747,6 +748,7 @@ function filterAssetStatus() {
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[3];
+        console.log(filter);
         if (td && filter === 'not-found') {
             txt_value = td.textContent || td.innerText;
             if (txt_value.toUpperCase().indexOf(filter) > -1) {
