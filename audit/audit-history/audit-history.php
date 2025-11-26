@@ -60,7 +60,7 @@ if ($search === 'all') {
     $dept_stmt->execute([":search" => $search]);
     $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE dept_id ILIKE :search AND " . $query_type . " ORDER BY audit_id";
+    $select_query = "SELECT h.dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history h LEFT JOIN department d ON d.dept_id = h.dept_id WHERE (h.dept_id ILIKE :search OR d.dept_name ILIKE :search) AND " . $query_type . " ORDER BY audit_id";
     $stmt = $dbh->prepare($select_query);
     $stmt->execute([':search' => $search]);
 }
