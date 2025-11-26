@@ -94,7 +94,7 @@ try {
     $total_count = count($_SESSION['data']);
     if (isset($_POST['data']) && isset($_POST['dynamicInput']) && ($_POST['dynamicInput'][0] !== '' || $_POST['dynamicInput'][1] !== '')) {
         foreach ($_POST['dynamicInput'] as $index => $row) {
-            $row = strtoupper($row);
+            $row = trim(strtoupper($row));
             $found = false;
             $found_at = -2;
             if ($row === '') {
@@ -110,7 +110,7 @@ try {
             $scanned_tags[] = $row;
             $scanned_notes[] = ($found === true && $_SESSION['data'][$found_at]['Found Note'] !== '') ? $_SESSION['data'][$found_at]['Found Note'] : '';
             $scanned_times[] = ($found === true && $_SESSION['data'][$found_at]['Found Timestamp'] !== '') ? $_SESSION['data'][$found_at]['Found Timestamp'] : $_POST['dynamicTime'][$index];
-            $scanned_rooms[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Tag'] !== '') ? $_SESSION['data'][$found_at]['Found Room Tag'] : $_POST['room-tag'];
+            $scanned_rooms[] = ($found === true && $_SESSION['data'][$found_at]['Found Room Tag'] !== '') ? $_SESSION['data'][$found_at]['Found Room Tag'] : (int)trim($_POST['room-tag']);
             $scanned_room_nums[] = ($found === true && !empty($_SESSION['data'][$found_at]['Found Room Number']) && isset($_SESSION['data'][$found_at]['Found Room Number'])) ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
             $scanned_bldg[] = ($found === true && isset($_SESSION['data'][$found_at]['Found Building Name']) && !empty($_SESSION['data'][$found_at]['Found Building Name']) !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
         }
@@ -347,7 +347,7 @@ try {
         </label>
         <div id="insert-tags-div">
             <form id="dynamicForm" method='POST' action='auditing.php' onLoad="addNewInput()" enctype="multipart/form-data">
-                <input type="text" name="room-tag" id="room-tag" placeholder="Scan room tag" required>
+                <input type="int" name="room-tag" id="room-tag" placeholder="Scan room tag" required>
                 <input list="bldg-names" name="bldg-name" id="bldg-name" required>
                 <datalist id="bldg-names">
                     <?php foreach($bldgs as $bldg) { ?>
@@ -370,8 +370,8 @@ try {
             <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
             <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
                 <option value="All">All</option>
-                <option value="X">Found</option>
-                <option value="O">Not Found</option>
+                <option value="found">Found</option>
+                <option value="not-found">Not Found</option>
             </select>
         </div>
         <div class="div-table">
@@ -756,7 +756,7 @@ function filterAssetStatus() {
             } else {
                 tr[i].style.display = "none";
             }
-        } else if (filter === 'ALL') {
+        } else if (filter === 'All') {
             tr[i].style.display = "";
         } else if (td && (filter === 'found' || filter === 'extra')) {
             var filter2 = 'X';
