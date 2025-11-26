@@ -13,6 +13,7 @@
 }
 
 .table-container {
+    min-height: 60vh;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 16px;

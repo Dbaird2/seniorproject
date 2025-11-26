@@ -164,10 +164,17 @@ echo "<script>showToast(".json_encode($reason).", 5000)</script>";
   </div>
 <script>
 async function openModal(dept, index) {
+    document.body.style.overflow = 'hidden';
     document.getElementById('form-modal-' + dept + '-' + index).style.display = 'block';
 }
 async function closeModal(dept, index) {
     document.getElementById('form-modal-' + dept + '-' + index).style.display = 'none';
+}
+function openDialog(dept, index) {
+    document.getElementById(dept + '-' +index).showModal();
+}
+function closeDialog(dept, index) {
+    document.getElementById(dept + '-' +index).close();
 }
 
 window.onclick = function(event) {

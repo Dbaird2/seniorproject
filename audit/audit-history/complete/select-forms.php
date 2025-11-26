@@ -164,7 +164,7 @@ $depts_info = $stmt->fetchAll();
         textarea:focus {
             outline: none;
             border-color: #003DA5;
-            background: white;
+            background: #1fa958;
             box-shadow: 0 0 0 4px rgba(0, 61, 165, 0.1);
         }
 
@@ -172,7 +172,7 @@ $depts_info = $stmt->fetchAll();
         input[type="text"]:hover,
         textarea:hover {
             border-color: #003DA5;
-            background: white;
+            background: #1FA958;
         }
 
         textarea {
