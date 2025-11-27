@@ -4,7 +4,7 @@ foreach ($_SESSION['data'] as $index => $asset) {
     if (in_array($asset['Tag Status'], ['Found', 'Extra'])) {
         continue;
     }
-    $audit_id = $_SESSION['info'][5];
+    $audit_id = $SESSION['info'][5];
     $select = 'SELECT asset_notes FROM asset_info WHERE asset_tag = :tag';
     $stmt = $dbh->prepare($select);
     $stmt->execute([':tag'=>$asset['Tag Number']]);
@@ -12,8 +12,20 @@ foreach ($_SESSION['data'] as $index => $asset) {
     if (!empty($notes)) {
         $regex = '/^D\d{5}\s+/';
         if (preg_match($regex, $notes)) {
-            $_SESSION['Found Notes'] .= $notes;
-            $_SESSION['Tag Status'] = 'Found';
+            $_SESSION[$index]['Found Notes'] .= $notes;
+            $_SESSION[$index]['Tag Status'] = 'Found';
+        }
+    }
+    if ($_SESSION[$index]['Tag Status'] !== 'Found') {
+        $select = 'SELECT asset_tag, note, dept_id FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id';
+        $stmt = $dbh->prepare($select);
+        $stmt->execute([':tag'=>$asset['Tag Number'], ':id'=>$audit_id]);
+        $result = $stmt->fetch();
+        if ($result) {
+            $_SESSION[$index]['Tag Status'] .= ' Found at ' . $result['dept_id'] . ' ' 
+            $_SESSION[$index]['Tag Status'] = 'Found';
         }
     }
 }
+echo json_encode(['status'=>'Ok']);
+exit;
