@@ -340,6 +340,7 @@ try {
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
+                <button id='kuali' name='kuali'>Update</button>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
@@ -500,6 +501,25 @@ addNewInput();
 addNewInput();
 });
 document.addEventListener("DOMContentLoaded", () => {
+    const update_btn = document.getElementById('kuali');
+    update_btn.addEventListener('click', async () => {
+        url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-kuali.php';
+        const kuali_res = await fetch(url2, {
+            method:' POST',
+            headers: {'Content-Type': 'application/json' },
+        }
+        if (kuali_res.ok) {
+            const text = await res.text();
+            const json = JSON.parse(text);
+            if (json.status === 'Ok') {
+                toast("Updated audit");
+                setTimeout(() => {
+                    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
+                }, 500);
+            }
+    });
+    );
+
     const complete_audit_btn = document.getElementById('complete-audit');
     complete_audit_btn.addEventListener("click", async () => {
         let audited_with = prompt("Did anyone help with the audit?");
@@ -790,6 +810,7 @@ document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
+
       </script>
       <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </div>

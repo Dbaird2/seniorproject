@@ -150,7 +150,7 @@ try {
                     $highest_row++;
                 }
             }
-            $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name];
+            $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name, $audit_id];
             header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
             exit;
         }
@@ -340,7 +340,7 @@ try {
                 }
 
 
-                $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name];
+                $_SESSION['info'] = [$highest_row, $highest_col, $file_path, $_POST['audit-type'], $file_name, $audit_id];
                 if (isset($_SESSION['data'][-1]) || isset($_SESSION['data'][0])) {
                     try {
                         $keys = array_keys($_SESSION['data'][0]);
