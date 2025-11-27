@@ -505,11 +505,11 @@ document.addEventListener("DOMContentLoaded", () => {
     update_btn.addEventListener('click', async () => {
         url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-kuali.php';
         const kuali_res = await fetch(url2, {
-            method:' POST',
+            method: 'POST',
             headers: {'Content-Type': 'application/json' },
         })
         if (kuali_res.ok) {
-            const text = await res.text();
+            const text = await kuali_res.text();
             const json = JSON.parse(text);
             if (json.status === 'Ok') {
                 toast("Updated audit");
