@@ -503,7 +503,7 @@ addNewInput();
 document.addEventListener("DOMContentLoaded", () => {
     const update_btn = document.getElementById('kuali');
     update_btn.addEventListener('click', async () => {
-        url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-kuali.php';
+        url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-audit.php';
         const kuali_res = await fetch(url2, {
             method: 'POST',
             headers: {'Content-Type': 'application/json' },
