@@ -10,7 +10,7 @@ foreach ($_SESSION['data'] as $index => $asset) {
     $stmt->execute([':tag'=>$asset['Tag Number']]);
     $notes = $stmt->fetchColumn();
     if (!empty($notes)) {
-        $regex = '/^D\d{5}\s+/';
+        $regex = '/^CHCKD/';
         if (preg_match($regex, $notes)) {
             $_SESSION[$index]['Found Notes'] .= $notes;
             $_SESSION[$index]['Tag Status'] = 'Found';
