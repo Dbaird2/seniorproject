@@ -22,7 +22,7 @@ foreach ($_SESSION['data'] as $index => $asset) {
         $stmt->execute([':tag'=>$asset['Tag Number'], ':id'=>$audit_id]);
         $result = $stmt->fetch();
         if ($result) {
-            $_SESSION[$index]['Tag Status'] .= ' Found at ' . $result['dept_id'] . ' ' 
+            $_SESSION[$index]['Found Notes'] .= ' Found at ' . $result['dept_id'] . ' ';
             $_SESSION[$index]['Tag Status'] = 'Found';
         }
     }
