@@ -507,7 +507,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const kuali_res = await fetch(url2, {
             method:' POST',
             headers: {'Content-Type': 'application/json' },
-        }
+        })
         if (kuali_res.ok) {
             const text = await res.text();
             const json = JSON.parse(text);
@@ -517,8 +517,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
                 }, 500);
             }
+        }
     });
-    );
 
     const complete_audit_btn = document.getElementById('complete-audit');
     complete_audit_btn.addEventListener("click", async () => {
