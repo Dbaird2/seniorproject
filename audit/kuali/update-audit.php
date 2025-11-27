@@ -5,11 +5,11 @@ foreach ($_SESSION['data'] as $index => $asset) {
         continue;
     }
     $audit_id = $_SESSION['info'][5];
-    $select = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag AND asset_notes ~ '[CHCKD]'";
+    $select = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag AND asset_notes ILIKE '%CHCKD%'";
     $stmt = $dbh->prepare($select);
     $stmt->execute([':tag'=>$asset['Tag Number']]);
     $notes = $stmt->fetchColumn();
-    if ($notes) {
+    if (!empty($notes)) {
         $_SESSION['data'][$index]['Found Notes'] .= $notes;
         $_SESSION['data'][$index]['Tag Status'] = 'Found';
         $_SESSION['data'][$index]['Found Room Number'] = 'CHCKD';
