@@ -25,8 +25,7 @@ try {
 $info = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
-        $select = 'SELECT  as profiles FROM user_asset_profile WHERE email = :email';
-        $select = 'select p.asset_tag, a.asset_name, r.room_tag, b.bldg_name, a.date_added, a.serial_num, a.asset_price, a.asset_type, a.po, a.geo_x, a.geo_y, a.elevation, a.bus_unit, a.asset_notes, a.dept_id, a.asset_model, a.make, a.type2, b.bldg_id, r.room_loc from user_asset_profile p LEFT JOIN asset_info a ON a.asset_tag = p.asset_tag LEFT JOIN room_table r ON r.room_tag = a.room_tag LEFT JOIN bldg_table b on r.bldg_id = b.bldg_id WHERE email = :email AND profile_name = :name';
+        $select = 'select p.asset_tag, a.asset_name, r.room_tag, b.bldg_name, a.date_added, a.serial_num, a.asset_price, a.asset_type, a.po, a.bus_unit, a.asset_notes, a.dept_id, a.asset_model, a.make, a.type2, b.bldg_id, r.room_loc from user_asset_profile p LEFT JOIN asset_info a ON a.asset_tag = p.asset_tag LEFT JOIN room_table r ON r.room_tag = a.room_tag LEFT JOIN bldg_table b on r.bldg_id = b.bldg_id WHERE email = :email AND profile_name = :name';
         $stmt = $dbh->prepare($select);
         $stmt->execute([':email'=>$email, ':name'=>$profile_name]);
         $profile_data = $stmt->fetchAll();
