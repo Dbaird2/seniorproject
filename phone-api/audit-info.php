@@ -55,5 +55,5 @@ try {
 }
 
 
-echo json_encode(['status'=>'Ok', 'selfCompleted'=>$self_count[0], 'selfInProgress'=>$self_count[1], 'mgmtCompleted'=>$mgmt_count[0], 'mgmtInProgress'=>$mgmt_count[1]]);
+echo json_encode(['status'=>'Ok', 'selfCompleted'=>$self_count[0]['status']?? 0, 'selfInProgress'=>$self_count[1]['status'] ?? 0, 'mgmtCompleted'=>$mgmt_count[0]['status'] ?? 0, 'mgmtInProgress'=>$mgmt_count[1]['status'] ?? 0]);
 exit;
