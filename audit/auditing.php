@@ -1,7 +1,7 @@
 <?php
 include_once("../config.php");
 check_auth();
-if (!isset($_SESSION['data']) && !isset($_POST)) {
+if (!isset($_SESSION['data'])) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php");
     exit;
 }
@@ -23,6 +23,7 @@ try {
     $highest_row = (int)$_SESSION['info'][0];
     $key_index = -1;
     $key_found = true;
+    /*
     while (!isset($_SESSION['data'][$key_index])) {
         $key_index++;
         if ($key_index >= 50) {
@@ -34,6 +35,7 @@ try {
         header("Location: https://dataworks-7b7x.onrender.com/audit/upload.php?error=key_fail");
         exit;
     }
+     */
     $keys = array_keys($_SESSION['data'][$key_index]);
 
     $file_path = $_SESSION['info'][2];
@@ -57,16 +59,36 @@ try {
             $filePath = str_replace(".xlsx", "_AUDIT", $filePath);
             $filePath = str_replace(".xls", "_AUDIT", $filePath);
             $filePath = $filePath . ".xlsx";
-            foreach ($keys as $index => $key) {
+            foreach ($_SESSION['data'] as $index => $data) {
+                $download_data[$index]['Unit'] = $data['Unit'];
+                $download_data[$index]['Tag Number'] = $data['Tag Number'];
+                $download_data[$index]['Tag Status'] = $data['Tag Status'];
+                $download_data[$index]['Descr'] = $data['Descr'];
+                $download_data[$index]['Serial ID'] = $data['Serial ID'];
+                $download_data[$index]['Found Room Number'] = $data['Found Room Number'];
+                $download_data[$index]['Found Building Name'] = $data['Found Building Name'];
+                $download_data[$index]['Found Room Tag'] = $data['Found Room Tag'];
+                $download_data[$index]['Found Note'] = $data['Found Note'];
+                $download_data[$index]['COST Total Cost'] = $data['COST Total Cost'];
+                $download_data[$index]['Po No.'] = $data['PO No.'];
+                $download_data[$index]['Location'] = $data['Location'];
+                $download_data[$index]['Dept'] = $data['Dept'];
+                $download_data[$index]['Acq Date'] = $data['Acq Date'];
+                $download_data[$index]['Custodian'] = $data['Custodian'];
+            }
+            $download_keys = array_keys($download_data[0]);
+            foreach ($download_keys as $index => $key) {
                 $sheet->setCellValue($column_letters[$index], $key);
             }
 
-            $sheet->fromArray($_SESSION['data'], NULL, 'A2');
+            $sheet->fromArray($download_data, NULL, 'A2');
+            unset($download_data);
+            unset($download_keys);
 
             $writer = new Xlsx($spreadsheet);
             $writer->save($filePath);
             header('Location: download.php?file=' . urlencode($filePath));
-            error_reporting(1);
+            unset($spreadsheet);
         } catch (Exception $e) {
             echo "Something went wrong trying to parse before downloading " . $e;
         }
@@ -202,6 +224,7 @@ try {
                 }
             }
         }
+        unset($_POST);
 
         $seen_tags = [];
         $filtered_tags = [];
