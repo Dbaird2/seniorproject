@@ -7,7 +7,7 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
-$data_array = trim($data['data']);
+$data_array = $data['data'];
 $dept = trim($data['dept_name']);
 file_put_contents('php//stdout', $encoded_data);
 if (empty($email) || empty($pw)) {
