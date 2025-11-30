@@ -13,7 +13,7 @@ $lon = [];
 $ele = [];
 $count = $lon_total = $lat_total = 0;
 foreach ($results as $latlon) {
-    if (empty($latlon['geo_x']) || empty($latlon['geo_y']) {
+    if (empty($latlon['geo_x']) || empty($latlon['geo_y'])) {
         continue;
     }
     $count++;
