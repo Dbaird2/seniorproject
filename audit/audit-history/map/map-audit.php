@@ -3,11 +3,11 @@
     include_once ("../../../navbar.php");
     $dept_id = $_GET['dept_id'];
     $audit_id = $_GET['audit_id'];
-    $select = 'SELECT audit_history FROM audit_history WHERE dept_id = :dept AND audit_id = :audit';
+    $select = 'SELECT audit_data FROM audit_history WHERE dept_id = :dept AND audit_id = :audit';
     $stmt = $dbh->prepare($select);
     $stmt->execute([':dept'=>$dept_id, ':audit'=>$audit_id]);
     $results = $stmt->fetch();
-    $results = json_decode($results, true);
+    $results = json_decode($results['audit_data'], true);
 /*
     $dbh = new PDO("sqlite:$dbFile");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
