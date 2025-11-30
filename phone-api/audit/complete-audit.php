@@ -84,9 +84,12 @@ foreach ($data_array as $index=>$row) {
     $formatted_data[$index]['geo_x'] = $row['geo_x'];
     $formatted_data[$index]['geo_y'] = $row['geo_y'];
     $formatted_data[$index]['elevation'] = $row['elevation'];
-    $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?)';
-    $stmt = $dbh->prepare($insert);
-    $stmt->execute([$dept, $audit_id, $row['tag'], $row['notes'] ?? '']);
+    $formatted_data[$index]['Tag Status'] = $row['found_status'];
+    if (in_array($row['found_status'], ['Extra', 'Found'])) {
+        $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?)';
+        $stmt = $dbh->prepare($insert);
+        $stmt->execute([$dept, $audit_id, $row['tag'], $row['notes'] ?? '']);
+    }
 }
 $json_data = json_encode($formatted_data);
 
@@ -94,9 +97,10 @@ $json_data = json_encode($formatted_data);
 
 try {
     $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, mobile_audit) VALUE (?, ?, ?, ?, ?)";
-    $stmt = $dbh->prepare($select);
+    $stmt = $dbh->prepare($insert);
     $stmt->execute([$email, $audit_id, $json_data, $dept_id, 1]);
 } catch (PDOException $e) { 
+    error_log($e->getMessage());
     echo json_encode(['status'=>'Failed', 'reason'=>$e->getMessage()]);
     exit;
 }
