@@ -1,8 +1,6 @@
  <?php
     include_once ("../../../config.php");
-    $dept_id = 'D21560';
     include_once ("../../../navbar.php");
-/*
     $dept_id = $_GET['dept_id'];
     $audit_id = $_GET['audit_id'];
     $select = 'SELECT audit_history FROM audit_history WHERE dept_id = :dept AND audit_id = :audit';
@@ -10,7 +8,6 @@
     $stmt->execute([':dept'=>$dept_id, ':audit'=>$audit_id]);
     $results = $stmt->fetch();
     $results = json_decode($results, true);
- */
 /*
     $dbh = new PDO("sqlite:$dbFile");
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -41,12 +38,6 @@
     $stmt = $dbh->query($select);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
  */
-    $results = [
-        ['geo_x' => 35.12345, 'geo_y'=>-118.33452, 'elevation'=>'10', 'Tag Number'=>'12345'],
-        ['geo_x' => 35.12545, 'geo_y'=>-118.36152, 'elevation'=>'10', 'Tag Number'=>'52123'],
-        ['geo_x' => 35.12815, 'geo_y'=>-118.34652, 'elevation'=>'10', 'Tag Number'=>'94872'],
-        ['geo_x' => 35.12405, 'geo_y'=>-118.34212, 'elevation'=>'10', 'Tag Number'=>'15264'],
-    ];
     $lat = [];
 $lon = [];
 $ele = [];

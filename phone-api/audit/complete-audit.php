@@ -61,7 +61,7 @@ $formatted_data = [];
 foreach ($data_array as $index=>$row) {
     $select = 'SELECT dept_id FROM department WHERE dept_id = :dept OR dept_name = :dept';
     $stmt = $dbh->prepare($select);
-    $stmt->execute([':dept'=>$row['dept_id']]);
+    $stmt->execute([':dept'=>trim($row['dept_id'])]);
     $dept = $stmt->fetchColumn();
     $formatted_data[$index]['Tag Number'] = $row['tag'];
     $formatted_data[$index]['Descr'] = $row['name'];
