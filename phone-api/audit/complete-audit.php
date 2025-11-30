@@ -93,7 +93,7 @@ $json_data = json_encode($formatted_data);
 
 
 try {
-    $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, phone_audit) VALUE (?, ?, ?, ?, ?)";
+    $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, mobile_audit) VALUE (?, ?, ?, ?, ?)";
     $stmt = $dbh->prepare($select);
     $stmt->execute([$email, $audit_id, $json_data, $dept_id, 1]);
 } catch (PDOException $e) { 
