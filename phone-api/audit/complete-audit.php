@@ -83,9 +83,9 @@ foreach ($data_array as $index=>$row) {
     $formatted_data[$index]['elevation'] = $row['elevation'];
     $formatted_data[$index]['Tag Status'] = $row['found_status'];
     if (in_array($row['found_status'], ['Extra', 'Found'])) {
-        $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET dept_id = EXCLUDED.dept_id';
+        $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO NOTHING';
         $stmt = $dbh->prepare($insert);
-        $stmt->execute([$dept_id, $audit_id, $row['tag'], $row['notes'] ?? '']);
+        $stmt->execute([$dept, $audit_id, $row['tag'], $row['notes'] ?? '']);
     }
 
 }
