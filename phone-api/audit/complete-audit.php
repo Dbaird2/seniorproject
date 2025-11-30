@@ -62,10 +62,10 @@ foreach ($data_array as $index=>$row) {
     $select = 'SELECT dept_id FROM department WHERE dept_id = :dept OR dept_name = :dept';
     $stmt = $dbh->prepare($select);
     $stmt->execute([':dept'=>trim($row['dept_id'])]);
-    $dept = $stmt->fetchColumn();
+    $dept_id = $stmt->fetchColumn();
     $formatted_data[$index]['Tag Number'] = $row['tag'];
     $formatted_data[$index]['Descr'] = $row['name'];
-    $formatted_data[$index]['Dept'] = $dept;
+    $formatted_data[$index]['Dept'] = $dept_id;
     $formatted_data[$index]['Unit'] = $row['bus_unit'];
     $formatted_data[$index]['PO No.'] = $row['po'];
     $formatted_data[$index]['Acq Date'] = $row['purchase_date'];
@@ -85,7 +85,7 @@ foreach ($data_array as $index=>$row) {
     if (in_array($row['found_status'], ['Extra', 'Found'])) {
         $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET dept_id = EXCLUDED.dept_id';
         $stmt = $dbh->prepare($insert);
-        $stmt->execute([$dept, $audit_id, $row['tag'], $row['notes'] ?? '']);
+        $stmt->execute([$dept_id, $audit_id, $row['tag'], $row['notes'] ?? '']);
     }
 
 }
