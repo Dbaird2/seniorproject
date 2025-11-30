@@ -301,10 +301,11 @@ if (count($departments) > 0) {
         echo "</td>";
     }
     echo "<td><a class='action-link pdf-link' href='audit-details.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>PDF</a>  ";
-    echo "<a class='action-link excel-link' href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Excel</a></td>";
+    echo "<a class='action-link excel-link' href='download-excel.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Excel</a>";
     if ($audits[$curr_index]['mobile_audit'] === true) {
-        echo "<a class='action-link excel-link' href='https://dataworks-7b7x.onrender.com/audit/audit-history/map/map-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>View Map</a></td>";
+        echo "<a class='action-link excel-link' href='https://dataworks-7b7x.onrender.com/audit/audit-history/map/map-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>View Map</a>";
     }
+    echo '</td>';
     if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
         echo "<td><a class='action-link delete-link' href='delete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&auditor=" . htmlspecialchars(urlencode($audits[$curr_index]['auditor'])) . "'>Delete</a></td>";
     }
