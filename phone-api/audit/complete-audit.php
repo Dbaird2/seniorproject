@@ -58,14 +58,11 @@ try {
     exit;
 }
 $formatted_data = [];
-$previous_dept;
 foreach ($data_array as $index=>$row) {
-    if ($previous_dept !== $row['dept_id']) {
-        $select = 'SELECT dept_id FROM department WHERE dept_id = :dept OR dept_name = :dept';
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':dept'=>$row['dept_id']]);
-        $dept = $stmt->fetchColumn();
-    }
+    $select = 'SELECT dept_id FROM department WHERE dept_id = :dept OR dept_name = :dept';
+    $stmt = $dbh->prepare($select);
+    $stmt->execute([':dept'=>$row['dept_id']]);
+    $dept = $stmt->fetchColumn();
     $formatted_data[$index]['Tag Number'] = $row['tag'];
     $formatted_data[$index]['Descr'] = $row['name'];
     $formatted_data[$index]['Dept'] = $dept;
@@ -86,17 +83,18 @@ foreach ($data_array as $index=>$row) {
     $formatted_data[$index]['elevation'] = $row['elevation'];
     $formatted_data[$index]['Tag Status'] = $row['found_status'];
     if (in_array($row['found_status'], ['Extra', 'Found'])) {
-        $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?)';
+        $insert = 'INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET dept_id = EXCLUDED.dept_id';
         $stmt = $dbh->prepare($insert);
         $stmt->execute([$dept, $audit_id, $row['tag'], $row['notes'] ?? '']);
     }
+
 }
 $json_data = json_encode($formatted_data);
 
 
 
 try {
-    $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, mobile_audit) VALUE (?, ?, ?, ?, ?)";
+    $insert = "INSERT INTO audit_history (auditor, audit_id, audit_data, dept_id, mobile_audit) VALUES (?, ?, ?, ?, ?)";
     $stmt = $dbh->prepare($insert);
     $stmt->execute([$email, $audit_id, $json_data, $dept_id, 1]);
 } catch (PDOException $e) { 
