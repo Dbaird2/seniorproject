@@ -363,6 +363,7 @@ try {
             </form>
                 <button id='kuali' name='kuali'>Update</button>
             <button class="tag-btn">Get Room Tag</button>
+            <button class="tag-btn2">Find Room Tag</button>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
@@ -832,17 +833,17 @@ document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
-document.getElementById('tag-btn').addEventListener('click', function(e) {
+document.getElementById('tag-btn').addEventListener('click', async function(e) {
     const room_tag = document.getElementById("room-tag");
     url = "https://dataworks-7b7x.onrender.com/audit/get-room-tag.php";
     const room_res = await fetch(url, {
     method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
     });
     if (!room_res.ok) {
-        const text = await res2.text();
+        const text = await room_res.text();
         toast("Failed to get room tag");
-        throw new Error (`HTTP ${res2.status}: ${text}`);
+        throw new Error (`HTTP ${room_res.status}: ${text}`);
     } else {
         console.log(room_res);
         const data = await room_res.json();
@@ -854,7 +855,36 @@ document.getElementById('tag-btn').addEventListener('click', function(e) {
             toast("Successfully got not used room tag");
         }
     }
+});
+document.getElementById('tag-btn2').addEventListener('click', async function(e) {
+    const room_tag = document.getElementById("room-tag");
+    let bldg = document.getElementById('bldg-name').value;
+    let room_num = document.getElementById('room-number').value;
+    if (bldg === '' || bldg === null || room_num === null || room_num === '') {
+        toast("Building Name or Room Number empty");
+        return;
+    }
 
+    url = "https://dataworks-7b7x.onrender.com/audit/find-room-tag.php";
+    const tag_res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify ({ bldg, room_num })
+    });
+    if (!tag_res.ok) {
+        const text = await tag_res.text();
+        toast("Failed to get room tag");
+        throw new Error (`HTTP ${tag_res.status}: ${text}`);
+    } else {
+        console.log(tag_res);
+        const data = await tag_res.json();
+        if (data['status'] === 'Ok') {
+            room_tag.value = data['room_tag'];
+            toast("Successfully got not used room tag");
+        } else { 
+            toast("Failed to get room tag");
+        }
+    }
 });
 
             </script>
