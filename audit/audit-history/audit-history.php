@@ -271,13 +271,7 @@ if (count($departments) > 0) {
                 }
 
                 $form = trim($form, '"');
-                if (
-                    preg_match($ASI, $form) || preg_match($STU, $form) ||
-                    preg_match($CMP, $form) || preg_match($FDN, $form) ||
-                    preg_match($SPA, $form)
-                ) {
                     echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
-                }
             }
         }
         // echo '</div>';

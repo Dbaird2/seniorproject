@@ -10,7 +10,8 @@ $count = 0;
 
 foreach ($room_tags as $tag) {
     $count++;
-    if ((int)$tag === $count) {
+    $room = (int)$tag['room_tag'];
+    if ((int)$room === $count) {
         continue;
     }
     break;
