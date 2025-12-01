@@ -1911,30 +1911,6 @@ keyBy: ID
             ]
         ]
     ]);
-    // $data = '{"query":"query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}","variables":{
-    //   "appId": "67e451d2cc3194027dfce429",
-    //   "skip": 0,
-    //   "limit": 25,
-    //   "sort": [
-    //     "meta.updatedAt"
-    //   ],
-    //   "query": "",
-    //   "fields": {
-    //     "type": "AND",
-    //     "operators": [
-    //       {
-    //         "field": "meta.workflowStatus",
-    //         "type": "IS",
-    //         "value": "Complete"
-    //       },
-    //       {
-    //         "field": "meta.updatedAt",
-    //         "type": "RANGE",
-    //         "min": ' . $highest_time . '
-    //       }
-    //     ]
-    //   }
-    // }}';
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);

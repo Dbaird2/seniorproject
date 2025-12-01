@@ -362,6 +362,7 @@ try {
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
                 <button id='kuali' name='kuali'>Update</button>
+            <button class="tag-btn">Get Room Tag</button>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
@@ -831,8 +832,32 @@ document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
+document.getElementById('tag-btn').addEventListener('click', function(e) {
+    const room_tag = document.getElementById("room-tag");
+    url = "https://dataworks-7b7x.onrender.com/audit/get-room-tag.php";
+    const room_res = await fetch(url, {
+    method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    if (!room_res.ok) {
+        const text = await res2.text();
+        toast("Failed to get room tag");
+        throw new Error (`HTTP ${res2.status}: ${text}`);
+    } else {
+        console.log(room_res);
+        const data = await room_res.json();
+        let tag = data['room_tag'];
+        if (tag === '' || tag === null) {
+            toast("Failed to get room tag");
+        } else { 
+            room_tag.value = tag;
+            toast("Successfully got not used room tag");
+        }
+    }
 
-      </script>
+});
+
+            </script>
       <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </div>
 </body>
