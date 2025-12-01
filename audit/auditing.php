@@ -362,8 +362,8 @@ try {
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
                 <button id='kuali' name='kuali'>Update</button>
-            <button class="tag-btn">Get Room Tag</button>
-            <button class="tag-btn2">Find Room Tag</button>
+            <button id="tag-btn">Get Room Tag</button>
+            <button id="tag-btn2">Find Room Tag</button>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
