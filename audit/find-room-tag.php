@@ -6,7 +6,7 @@ $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 
 $bldg = trim($data['bldg']);
-$loc = trim($data['room_loc']);
+$loc = trim($data['room_num']);
 
 $select = 'SELECT room_tag FROM room_table r LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id WHERE bldg_name = :name AND room_loc = :loc';
 $stmt = $dbh->prepare($select);
