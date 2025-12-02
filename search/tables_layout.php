@@ -481,12 +481,16 @@ foreach ($result as $row) {
                                     <label for="name">Department Name:</label>
                                     <input type="text" id="name" name="name" value="<?= $dept_name ?>">
                                     <br>
+<?php 
+        $custs = $custodian[0];
 
-<?php foreach ($custodian as $index=>$cust) { ?>
-                                    <label for="room_loc">Custodian:</label>
-                                    <input type="text" id="cust" name="cust" value="<?= $cust ?>">
+foreach ($custodian as $index=>$cust) { 
+    if ($index === 0) continue;
+$custs .= ',' . $cust;
+ } ?>
+                                    <label for="room_loc">Custodian(s):</label>
+                                    <input type="text" id="cust" name="cust" value="<?= $custs ?>">
                                     <br>
-<?php } ?>
 
                                     <label for="location">Manager:</label>
                                     <input type="text" id="manager" name="manager" value="<?= $manager ?>">
