@@ -101,12 +101,15 @@ if ($search === NULL) {
         <div class="section">
             <label class='search-label' id='search-label'></label>
             <input class="search-input" type="text" name="search" id="search" value="<?= $search ?>" placeholder="Search for an asset..." style="padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-            <select class="filter-select" name="categories" id="categories">
-                <option value="assets">Assets</option>
-                <option value="buildings">Buildings</option>
-                <option value="departments">Departments</option>
-                <option value="users">Users</option>
-            </select>
+            <div style="display:grid;">
+                <label class="search-label">Search Type</label>
+                <select class="filter-select" name="categories" id="categories">
+                    <option value="assets">Assets</option>
+                    <option value="buildings">Buildings</option>
+                    <option value="departments">Departments</option>
+                    <option value="users">Users</option>
+                </select>
+            </div>
         </div>
         <div class="section filter-bldg">
             <label class="filter-bldg">Building ID</label>
@@ -124,14 +127,16 @@ if ($search === NULL) {
         <div class="section filter-assets">
 
             <label class="filter-assets">Price Amount</label>
-            <select class="filter-assets" name="price-operator" id="price-filter">
-                <option value=">">&gt;</option>
-                <option value="<">&lt;</option>
-                <option value="=">=</option>
-                <option value=">=">&ge;</option>
-                <option value="<=">&le;</option>
-            </select>
-            <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
+            <div class='price'>
+                <select class="filter-assets" name="price-operator" id="price-filter">
+                    <option value=">">&gt;</option>
+                    <option value="<">&lt;</option>
+                    <option value="=">=</option>
+                    <option value=">=">&ge;</option>
+                    <option value="<=">&le;</option>
+                </select>
+                <input type="number" class="filter-assets" id="price-value" name="price-value" placeholder="Enter price" />
+            </div>
         </div>
         <div class="section filter-assets">
 
