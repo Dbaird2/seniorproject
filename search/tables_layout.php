@@ -484,7 +484,7 @@ foreach ($result as $row) {
 
 <?php foreach ($custodian as $index=>$cust) { ?>
                                     <label for="room_loc">Custodian:</label>
-                                    <input type="text" id="cust" name="cust[]" value="<?= $cust ?>">
+                                    <input type="text" id="cust" name="cust" value="<?= $cust ?>">
                                     <br>
 <?php } ?>
 
