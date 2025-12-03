@@ -2,7 +2,7 @@
 include_once "../../config.php";
 check_auth("high");
 
-if (isset($_POST['delete-dept'])) {
+if (!empty($_POST['delete-dept'])) {
     try {
         $old_dept_id = $_POST['old_dept'];
         $delete_q = "DELETE FROM department WHERE dept_id = :dept";
@@ -13,8 +13,7 @@ if (isset($_POST['delete-dept'])) {
     } catch (PDOException $e) {
         error_log($e->getMessage());
     }
-}
-if (isset($_POST['dept'])) {
+} else if (!empty($_POST['dept'])) {
     $old_dept_id = $_POST['old_dept'];
     $old_dept_name = $_POST['old_name'];
     $old_cust = $_POST['old_cust'];
@@ -29,18 +28,6 @@ if (isset($_POST['dept'])) {
     $set_array = [];
     $where_array = [];
     $count = 0;
-    if (isset($_POST['delete-dept'])) {
-        try {
-
-            $delete_q = "DELETE FROM department WHERE dept_id = :dept";
-            $delete_stmt = $dbh->prepare($delete_q);
-            $delete_stmt->execute([":dept"=>$old_dept_id]);
-            header("Location: https://dataworks-7b7x.onrender.com/search/search.php");
-            exit;
-        } catch (PDOException $e) {
-            error_log($e->getMessage());
-        }
-    }
 
     try {
         if ($old_cust !== $new_cust) {
@@ -59,7 +46,7 @@ if (isset($_POST['dept'])) {
             }
         }
         if ($old_manager !== $new_manager) {
-            $update_q = "UPDATE department SET manager = :new_mana WHERE dept_id = :dept";
+            $update_q = "UPDATE department SET dept_manager = :new_mana WHERE dept_id = :dept";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":new_mana"=>$new_manager, ":dept"=>$old_dept_id]);
         }
