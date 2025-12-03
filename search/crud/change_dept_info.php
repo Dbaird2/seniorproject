@@ -38,7 +38,9 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
                 $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
                 $update_stmt = $dbh->prepare($update);
                 $update_stmt->execute([":dept"=>$old_dept_id]);
+                echo '<pre>';
                 var_dump($new_cust_array);
+                echo '</pre>';
 
                 foreach ($new_cust_array as $cust) {
                     $cust = trim($cust, ' " ');
@@ -49,16 +51,19 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
                 }
             }
         } else {
+            echo 'Deleting Custodians<br>';
             $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
             $update_stmt = $dbh->prepare($update);
             $update_stmt->execute([":dept"=>$old_dept_id]);
         }
         if ($old_manager !== $new_manager) {
+            echo 'Changing manager<br>';
             $update_q = "UPDATE department SET dept_manager = :new_mana WHERE dept_id = :dept";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":new_mana"=>$new_manager, ":dept"=>$old_dept_id]);
         }
         if ($new_id !== $old_dept_id) {
+            echo 'Changing dept_id<br>';
             $update_q = "UPDATE department SET dept_id = :new_id WHERE dept_id = :old_id";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":new_id"=>$new_id, ":old_id"=>$old_dept_id]);
@@ -68,9 +73,10 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
             $update_stmt->execute([":new_id"=>$new_id, ":old_id"=>$old_dept_id]);
         }
         if ($old_dept_name !== $new_name) {
-            $update_q = "UPDATE department SET dept_name = :new_name WHERE dept_id = :old_name";
+            echo 'Changing dept_name<br>';
+            $update_q = "UPDATE department SET dept_name = :new_name WHERE dept_id = :dept";
             $update_stmt = $dbh->prepare($update_q);
-            $update_stmt->execute([":new_name"=>$new_name, ":old_name"=>$old_dept_name]);
+            $update_stmt->execute([":new_name"=>$new_name, ":old_name"=>$old_dept_id]);
         }
     } catch (PDOException $e) {
         echo $e->getMessage();
