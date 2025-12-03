@@ -146,16 +146,20 @@ $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, de
 $get_cust_stmt = $dbh->prepare($get_dept_custodians);
 $get_cust_stmt->execute([":dept_id"=>$dept_id]);
 $custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
+$custodian = trim($custodians[0]['cust'], ' " ');
 $dept_name = $custodians[0]['dept_name'];
 
 $cust_count = count($custodians);
 $get_cust_info = "select email, form_id, school_id, username, f_name, l_name from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $stmt = $dbh->prepare($get_cust_info);
-$stmt->execute([':full_name'=>$custodian[0]['cust']]);
+$stmt->execute([':full_name'=>$custodian]);
 $cust_info = $stmt->fetch();
+echo '<pre>complete_audit first part ';
+var_dump($cust_info);
+echo '</pre>';
 if (empty($cust_info['form_id'])) {
     echo ' Cust Info not found <br>';
-    $cust_info = getNameInfo($custodian[0]['cust'], $dept_id);
+    $cust_info = getNameInfo($custodian, $dept_id);
     $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
     $variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['firstName'];
