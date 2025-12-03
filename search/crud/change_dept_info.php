@@ -1,6 +1,7 @@
 <?php
 include_once "../../config.php";
 check_auth("high");
+var_dump($_POST);
 
 if (!empty($_POST['delete-dept'])) {
     try {
@@ -23,6 +24,7 @@ if (!empty($_POST['delete-dept'])) {
     $new_name = trim($_POST['name']);
     $new_cust = trim($_POST['cust']);
     $new_manager = trim($_POST['manager']);
+    echo $new_cust . ' ' . $old_cust;
 
     $params = [];
     $set_array = [];
