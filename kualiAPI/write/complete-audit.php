@@ -153,7 +153,7 @@ $get_cust_info = "select email, form_id, school_id, username, f_name, l_name fro
 $stmt = $dbh->prepare($get_cust_info);
 $stmt->execute([':full_name'=>$custodian[0]['cust']]);
 $cust_info = $stmt->fetch();
-if (!$cust_info) {
+if (empty($cust_info)) {
     echo ' Cust Info not found <br>';
     $cust_info = getNameInfo($custodian[0]['cust'], $dept_id);
     $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];

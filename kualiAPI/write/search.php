@@ -55,6 +55,10 @@ function searchName($search_name = '', $apikey = '', $dept_id = '')
         "Content-Type: application/json",
         "Authorization: Bearer {$apikey}",
     );
+    if (!empty($info['username'])) {
+        $search_name = $info['username'];
+    }
+
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     $kuali_json = json_encode([
         'query' => 'query ($query: String) {
