@@ -457,6 +457,7 @@ foreach ($result as $row) {
         $dept_name = htmlspecialchars($row['dept_name'] ?? '', ENT_QUOTES);
         //$custodian = htmlspecialchars($row['custodian'] ?? '', ENT_QUOTES);
         $custodian= str_getcsv(trim($row['custodian'], '{}'), ',', '"', '\\');
+        $old_custs = implode(',', $custodian);
         $manager = htmlspecialchars($row['dept_manager'] ?? '', ENT_QUOTES);
 ?>
                 <div id="modal<?= $dept_id ?>" class="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel<?= $dept_id; ?>" aria-hidden="true">
@@ -473,7 +474,7 @@ foreach ($result as $row) {
                                 <form action="crud/change_dept_info.php" method="post">
                                 <input type="hidden" id="old_dept" name="old_dept" value="<?= $dept_id ?>">
                                 <input type="hidden" id="old_name" name="old_name" value="<?= $dept_name ?>">
-                                <input type="hidden" id="old_cust" name="old_cust" value="<?= $custodian ?>">
+                                <input type="hidden" id="old_cust" name="old_cust" value="<?= $old_custs ?>">
                                 <input type="hidden" id="old_manager" name="old_manager" value="<?= $manager ?>">
                                     <label for="asset_tag">Department ID:</label>
                                     <input type="text" id="dept" name="dept" value="<?= $dept_id ?>">

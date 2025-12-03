@@ -67,5 +67,7 @@ if (!empty($_POST['delete-dept'])) {
     } catch (PDOException $e) {
         echo $e->getMessage();
     }
+
+    //header('location: https://dataworks-7b7x.onrender.com/serch/search.php');
     exit;
 }
