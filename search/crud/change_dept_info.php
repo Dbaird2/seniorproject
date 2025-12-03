@@ -3,7 +3,7 @@ include_once "../../config.php";
 check_auth("high");
 var_dump($_POST);
 
-if (!empty($_POST['delete-dept'])) {
+if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
     try {
         $old_dept_id = $_POST['old_dept'];
         $delete_q = "DELETE FROM department WHERE dept_id = :dept";
@@ -14,7 +14,7 @@ if (!empty($_POST['delete-dept'])) {
     } catch (PDOException $e) {
         error_log($e->getMessage());
     }
-} else if (!empty($_POST['dept'])) {
+} else if (!empty($_POST['dept']) || isset($_POST['dept'])) {
     $old_dept_id = $_POST['old_dept'];
     $old_dept_name = $_POST['old_name'];
     $old_cust = $_POST['old_cust'];
