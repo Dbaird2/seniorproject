@@ -32,13 +32,15 @@ if (!empty($_POST['delete-dept'])) {
     try {
         if ($old_cust !== $new_cust) {
             $new_cust_array = explode(',', $new_cust);
-            if (is_array($new_cust_array) && !empty($new_cust_array)) {
+            if (!empty($new_cust_array)) {
                 $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
                 $update_stmt = $dbh->prepare($update);
                 $update_stmt->execute([":dept"=>$old_dept_id]);
+                var_dump($new_cust_array);
 
                 foreach ($new_cust_array as $cust) {
                     $cust = trim($cust, ' " ');
+                    echo $cust . '<br>';
                     $update_q = "UPDATE department SET custodian = ARRAY_APPEND(custodian, :new_cust) WHERE dept_id = :dept";
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":new_cust"=>$cust, ":dept"=>$old_dept_id]);
