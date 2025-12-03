@@ -7,17 +7,26 @@ function getNameInfo($person_name, $dept_id) {
     $get_name_stmt = $dbh->prepare($query);
     $get_name_stmt->execute([":full_name"=>'%'.$person_name.'%']);
     $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$person_info) {
+    echo '<pre>getNameinfo';
+    var_dump($person_info);
+    echo '</pre>';
+    if (!is_array($person_info)) {
         searchName($person_name, $apikey, $dept_id);
         $get_name_stmt = $dbh->prepare($query);
         $get_name_stmt->execute([":full_name" => '%'.$person_name.'%']);
         $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+    echo '<pre> !$perosn_info';
+    var_dump($person_info);
+    echo '</pre>';
     }
     if ((empty($person_info['form_id']) || empty($person_info['school_id']))) {
         searchName($person_name, $apikey, $dept_id);
         $get_name_stmt = $dbh->prepare($query);
         $get_name_stmt->execute([":full_name" => $person_name]);
         $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+    echo '<pre>form_id empty';
+    var_dump($person_info);
+    echo '</pre>';
     }
     $now_array = new DateTime();                              
     $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
