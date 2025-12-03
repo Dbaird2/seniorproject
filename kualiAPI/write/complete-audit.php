@@ -13,6 +13,7 @@ if (!isset($_GET['dept_id'])) {
 }
 $dept_id = $_GET['dept_id'];
 $audit_id = (int)$_GET['audit_id'];
+echo $dept_id . '<br>';
 
 $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :dept_id";
 $stmt = $dbh->prepare($get_dept_name);
@@ -140,6 +141,7 @@ $variables['data']['Stimf2f9oY']['data']['AkMeIWWhoj'] = $dept_name;
 $variables['data']['Stimf2f9oY']['data']['IOw4-l7NsM'] = $dept_id;
 
 
+echo $dept_id . '<br>';
 $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_cust_stmt = $dbh->prepare($get_dept_custodians);
 $get_cust_stmt->execute([":dept_id"=>$dept_id]);
@@ -150,8 +152,9 @@ $cust_count = count($custodians);
 $get_cust_info = "select email, form_id, school_id, username, f_name, l_name from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $stmt = $dbh->prepare($get_cust_info);
 $stmt->execute([':full_name'=>$custodian[0]['cust']]);
-$cust_info = $stmt->fetchAll();
+$cust_info = $stmt->fetch();
 if (!$cust_info) {
+    echo ' Cust Info not found <br>';
     $cust_info = getNameInfo($custodian[0]['cust'], $dept_id);
     $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
@@ -162,16 +165,18 @@ if (!$cust_info) {
     $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['schoolId'];
     $variables['data']['lHuAQy0tZd']['username'] = $cust_info['username'];
 } else {
-    $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
+    echo ' Cust Info found <br>';
+    $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'] . '('.$cust_info['email'].')';
     $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
     $variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['f_name'];
-    $variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['form_idid'];
+    $variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['form_id'];
     $variables['data']['lHuAQy0tZd']['label'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['l_name'];
     $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['school_id'];
     $variables['data']['lHuAQy0tZd']['username'] = $cust_info['username'];
 }
-echo $custodians[0]['cust'] . ' ' . $cust_info['form_id'] . ' ' .  $cust_info['email'] . '<br>';
+echo $custodians[0]['cust'] . ' ' . $cust_info['form_id'] . ' ' .  $cust_info['email'] . ' line 176<br>';
+echo $dept_id . '<br>';
 echo '<pre>';
 var_dump ($cust_info);
 echo '</pre>';
