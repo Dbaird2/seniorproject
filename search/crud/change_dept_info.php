@@ -31,7 +31,7 @@ if (!empty($_POST['delete-dept'])) {
 
     try {
         if ($old_cust !== $new_cust) {
-            $new_cust_array = str_getcsv($new_cust, ',', '"');
+            $new_cust_array = explode(',', $new_cust);
             if (is_array($new_cust_array) && !empty($new_cust_array)) {
                 $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
                 $update_stmt = $dbh->prepare($update);
