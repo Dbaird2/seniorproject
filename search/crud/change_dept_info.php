@@ -30,7 +30,7 @@ if (!empty($_POST['delete-dept'])) {
     $count = 0;
 
     try {
-        if ($old_cust !== $new_cust) {
+        if (!empty($new_cust)) {
             $new_cust_array = explode(',', $new_cust);
             if (!empty($new_cust_array)) {
                 $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
@@ -46,6 +46,10 @@ if (!empty($_POST['delete-dept'])) {
                     $update_stmt->execute([":new_cust"=>$cust, ":dept"=>$old_dept_id]);
                 }
             }
+        } else {
+            $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
+            $update_stmt = $dbh->prepare($update);
+            $update_stmt->execute([":dept"=>$old_dept_id]);
         }
         if ($old_manager !== $new_manager) {
             $update_q = "UPDATE department SET dept_manager = :new_mana WHERE dept_id = :dept";
