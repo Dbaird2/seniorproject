@@ -46,7 +46,7 @@ if (isset($_POST['dept'])) {
         if ($old_cust !== $new_cust) {
             $new_cust_array = str_getcsv($new_cust, ',', '"');
             if (is_array($new_cust_array) && !empty($new_cust_array)) {
-                $update = 'UPDATE department SET custodian = {} WHERE dept_id = :dept';
+                $update = "UPDATE department SET custodian = '{}' WHERE dept_id = :dept";
                 $update_stmt = $dbh->prepare($update);
                 $update_stmt->execute([":dept"=>$old_dept_id]);
 
@@ -56,8 +56,8 @@ if (isset($_POST['dept'])) {
                     $update_stmt = $dbh->prepare($update_q);
                     $update_stmt->execute([":new_cust"=>$cust, ":dept"=>$old_dept_id]);
                 }
-                }
             }
+        }
         if ($old_manager !== $new_manager) {
             $update_q = "UPDATE department SET manager = :new_mana WHERE dept_id = :dept";
             $update_stmt = $dbh->prepare($update_q);
