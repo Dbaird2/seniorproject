@@ -7,6 +7,7 @@ function getNameInfo($person_name, $dept_id) {
     $get_name_stmt = $dbh->prepare($query);
     $get_name_stmt->execute([":full_name"=>'%'.$person_name.'%']);
     $person_info = $get_name_stmt->fetch(PDO::FETCH_ASSOC);
+    echo $person_name . ' ' . $dept_id . '<br>';
     echo '<pre>getNameinfo';
     var_dump($person_info);
     echo '</pre>';
