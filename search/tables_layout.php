@@ -477,7 +477,7 @@ foreach ($result as $row) {
                                 <input type="hidden" id="old_cust" name="old_cust" value="<?= $old_custs ?>">
                                 <input type="hidden" id="old_manager" name="old_manager" value="<?= $manager ?>">
                                     <label for="asset_tag">Department ID:</label>
-                                    <input type="text" id="dept" name="dept" value="<?= $dept_id ?>">
+                                    <input type="text" id="dept" name="new_dept" value="<?= $dept_id ?>">
                                     <br>
                                     <label for="name">Department Name:</label>
                                     <input type="text" id="name" name="name" value="<?= $dept_name ?>">

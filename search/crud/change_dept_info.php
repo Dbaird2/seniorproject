@@ -15,12 +15,12 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
         error_log($e->getMessage());
     }
 } else if (!empty($_POST['dept']) || isset($_POST['dept'])) {
-    $old_dept_id = $_POST['old_dept'];
-    $old_dept_name = $_POST['old_name'];
-    $old_cust = $_POST['old_cust'];
-    $old_manager = $_POST['old_manager'];
+    $old_dept_id = trim($_POST['old_dept']);
+    $old_dept_name = trim($_POST['old_name']);
+    $old_cust = trim($_POST['old_cust']);
+    $old_manager = trim($_POST['old_manager']);
 
-    $new_id = trim($_POST['dept']);
+    $new_id = trim($_POST['new_dept']);
     $new_name = trim($_POST['name']);
     $new_cust = trim($_POST['cust']);
     $new_manager = trim($_POST['manager']);
@@ -62,7 +62,7 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":new_mana"=>$new_manager, ":dept"=>$old_dept_id]);
         }
-        if ($new_id !== $old_dept_id) {
+        if ($new_id !== $old_dept_id && !empty($new_id)) {
             echo 'Changing dept_id<br>';
             $update_q = "UPDATE department SET dept_id = :new_id WHERE dept_id = :old_id";
             $update_stmt = $dbh->prepare($update_q);
@@ -79,7 +79,7 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
             $update_stmt->execute([":new_name"=>$new_name, ":old_name"=>$old_dept_id]);
         }
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        error_log($e->getMessage());
     }
 
     //header('location: https://dataworks-7b7x.onrender.com/serch/search.php');
