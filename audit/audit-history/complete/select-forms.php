@@ -1376,7 +1376,16 @@ $depts_info = $stmt->fetchAll();
                         try {
                             const forms_data = await clone.text();
                             console.log("Update DB response (JSON):", forms_data);
-                        } catch {
+                            const parse = JSON.parse(forms_data);
+                            if (parse.status === 'Ok') {
+                                showToast('Department Exists', 4000);
+                            } else {
+                                valid_forms = false;
+                                showToast('Department is not in Database', 5000);
+
+                            }
+                        } catch (error) {
+                            console.error("Error: ", error.message);
                         }
                     }
                 } else {
