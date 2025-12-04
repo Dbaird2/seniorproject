@@ -67,10 +67,6 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
             $update_q = "UPDATE department SET dept_id = :new_id WHERE dept_id = :old_id";
             $update_stmt = $dbh->prepare($update_q);
             $update_stmt->execute([":new_id"=>$new_id, ":old_id"=>$old_dept_id]);
-
-            $update_assets = "UPDATE asset_info SET dept_id = :new_id WHERE dept_id = :old_id";
-            $update_stmt = $dbh->prepare($update_assets);
-            $update_stmt->execute([":new_id"=>$new_id, ":old_id"=>$old_dept_id]);
         }
         if ($old_dept_name !== $new_name) {
             echo 'Changing dept_name<br>';
