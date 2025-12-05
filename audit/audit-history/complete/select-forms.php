@@ -1381,7 +1381,7 @@ $depts_info = $stmt->fetchAll();
                                 showToast('Department Exists', 4000);
                             } else {
                                 valid_forms = false;
-                                showToast('Department is not in Database', 5000);
+                                showToast(parse.reason, 5000);
 
                             }
                         } catch (error) {

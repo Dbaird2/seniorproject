@@ -68,6 +68,6 @@ if (!empty($_POST['delete-dept']) || isset($_POST['delete-dept'])) {
         error_log($e->getMessage());
     }
 
-    header('location: https://dataworks-7b7x.onrender.com/serch/search.php');
+    header('location: https://dataworks-7b7x.onrender.com/search/search.php');
     exit;
 }

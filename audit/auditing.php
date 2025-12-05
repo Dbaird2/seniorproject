@@ -802,9 +802,8 @@ function filterAssetStatus() {
         } else if (filter === 'ALL') {
             tr[i].style.display = "";
         } else if (td && (filter === 'FOUND' || filter === 'EXTRA')) {
-            var filter2 = 'X';
             txt_value = td.textContent || td.innerText;
-            if (txt_value.toUpperCase().indexOf(filter2) > -1) {
+            if (txt_value.toUpperCase().indexOf('found') > -1 || txt_value.toUpperCase().indexOf('extra') > -1) {
                 tr[i].style.display = "none";
             } else {
                 tr[i].style.display = "";
