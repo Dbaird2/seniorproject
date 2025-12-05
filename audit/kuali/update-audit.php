@@ -9,8 +9,8 @@ foreach ($_SESSION['data'] as $index => $asset) {
     $stmt = $dbh->prepare($select);
     $stmt->execute([':tag'=>$asset['Tag Number']]);
     $notes = $stmt->fetchColumn();
-    if (!empty($notes)) {
-        $_SESSION['data'][$index]['Found Notes'] .= $notes;
+    if (isset($notes['asset_notes'])) {
+        $_SESSION['data'][$index]['Found Notes'] .= ' ' .$notes;
         $_SESSION['data'][$index]['Tag Status'] = 'Found';
         $_SESSION['data'][$index]['Found Room Number'] = 'CHCKD';
     } else {

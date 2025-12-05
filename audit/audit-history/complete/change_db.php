@@ -8,7 +8,7 @@ if (!empty($data)) {
     try {
         $select = 'SELECT dept_id, dept_name, custodian[1] as cust, dept_manager FROM department WHERE dept_id = :dept';
         $stmt = $dbh->prepare($select);
-        $stmt->execute([':dept'=$data['dept_id']]);
+        $stmt->execute([':dept' => $data['dept_id']]);
         $dept_data = $stmt->fetch();
         if (!isset($dept_data['dept_id'])) {
             echo json_encode(['status'=>'failed', 'reason'=>'Department does not exist']);
