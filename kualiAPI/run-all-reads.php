@@ -813,7 +813,7 @@ function assetReceived()
             }
 
 
-            $model = $edge['node']['data']['L6q0gWhZ-Q'];
+            $model = $edge['node']['data']['L6q0gWhZ-Q']['label'];
             if ($model === 'Other') {
                 $model = $edge['node']['data'];
             }
@@ -1687,13 +1687,13 @@ function deptChange($edge, $raw_ms)
             $stmt->execute([':cust' => $custodian]);
             $check_cust = $stmt->fetch();
             if (!$check_cust) {
-                $update = 'UPDATE department SET custodian = ARRAY_APPEND(check_forms, :cust), dept_manager = :manager';
+                $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :department';
                 $stmt = $dbh->prepare($update);
-                $stmt->execute([':cust' => $custodian, ':manager' => $manager]);
+                $stmt->execute([':cust' => $custodian, ':manager' => $manager, ':department' => $dept_id]);
             } else {
-                $update = 'UPDATE department SET dept_manager = :manager';
+                $update = 'UPDATE department SET dept_manager = :manager WHERE dept_id = :department';
                 $stmt = $dbh->prepare($update);
-                $stmt->execute([':manager' => $manager]);
+                $stmt->execute([':manager' => $manager, ':department' => $dept_id]);
             }
         }
 
