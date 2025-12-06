@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 0);      
-ini_set('log_errors', 1);          
-error_reporting(0);
 header("Content-Type: application/json");
 try {
     header("Access-Control-Allow-Headers: Content-Type");
@@ -34,6 +31,9 @@ try {
         'oSPA'  => 9
     };
     foreach ($audit_data as $index=>$tag) {
+        if (!in_array($tag['Tag Status'], ['Found', 'Extra'])) {
+            continue;
+        }
         $insert_q = "INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET note = EXCLUDED.note";
         $stmt = $dbh->prepare($insert_q);
         $stmt->execute([$dept,$audit_id, $tag['Tag Number'], $tag['Found Note']]);
