@@ -743,39 +743,6 @@ function assetReceived()
             ]
         ]
     ]);
-    /*
-    $data = json_encode([
-        "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
-        "variables" => [
-            "skip" => 0,
-            "limit" => 200,
-            "sort" => [
-                "meta.createdAt"
-            ],
-            "query" => "",
-            "fields" => [
-                "type" => "AND",
-                "operators" => [
-                    [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]);
-     */
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -833,7 +800,7 @@ function assetReceived()
                 } else continue;
 
                 $serial_num = $tag['data']['Wrnezf-g0C'] ?? '';
-                $value = $tag['data']['QkRodcpQRN'];
+                $value = $tag['data']['he_zIFgDiT'];
                 $length = strlen($value);
                 $value = (float)substr_replace($value, '.', $length - 2, 0);
                 $name = $tag['data']['vNv8CdzZjv'];
@@ -867,7 +834,7 @@ function assetReceived()
                             $it_status = 1;
                         }
                         $insert_stmt = $dbh->prepare($insert_q);
-                        $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag, $it_status . $fund]);
+                        $insert_stmt->execute([$tag_num, $name, $date, $serial_num, $value, $model, $po, $dept_id, $lifecycle, $room_tag, $it_status, $fund]);
                         echo '<br>Inserted<br>Tag Number ' . $tag_num . '<br>Serial ID ' . $serial_num . '<br>Value ' . $value . '<br>Name ' . $name;
                         echo '<br>PO ' . $po . '<br>Model ' . $model . '<br>Dept ID ' . $dept_id . '<br>Date '  . $date . '<br><br>';
                     } catch (PDOException $e) {
