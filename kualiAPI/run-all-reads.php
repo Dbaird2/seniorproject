@@ -2728,8 +2728,8 @@ keyBy: ID
             $stmt = $dbh->prepare($select);
             $stmt->bindParam(':dept_id', $dept_id);
             $stmt->execute();
-            $result = $stmt->fetchColumn();
-            if ($result) {
+            $results = $stmt->fetchColumn();
+            if ($results) {
                 $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
                 $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
@@ -2754,13 +2754,13 @@ keyBy: ID
                 $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
                 $stmt = $dbh->query($select);
                 $audit_freq = $stmt->fetch();
-                if ($audit_ids == 6) {
+                if ($audit_ids['audit_id'] == 6) {
                     $prev_mgmt = ($audit_freq['curr_mgmt_id'] == 4) ? 5 : $audit_freq['curr_mgmt_id'];
                     updateOldAudit($dept_id, $audit_ids, $prev_mgmt);
-                } else if ($audit_ids == 9) {
+                } else if ($audit_ids['audit_id'] == 9) {
                     $prev_spa = ($audit_freq['curr_spa_id'] == 7) ? 8 : $audit_freq['curr_spa_id'];
                     updateOldAudit($dept_id, $audit_ids, $prev_spa);
-                } else if ($audit_ids == 3) {
+                } else if ($audit_ids['audit_id'] == 3) {
                     $prev_self = ($audit_freq['curr_self_id'] == 1) ? 2 : $audit_freq['curr_self_id'];
                     updateOldAudit($dept_id, $audit_ids, $prev_self);
                 } else {
@@ -2870,8 +2870,8 @@ keyBy: ID
             $stmt = $dbh->prepare($select);
             $stmt->bindParam(':dept_id', $dept_id);
             $stmt->execute();
-            $result = $stmt->fetchColumn();
-            if ($result) {
+            $results = $stmt->fetchColumn();
+            if ($results) {
                 $manager = $edge['node']['data']['55-0zfJWML']['displayName'];
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
                 $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
