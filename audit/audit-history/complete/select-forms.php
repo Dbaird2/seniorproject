@@ -1393,6 +1393,7 @@ $depts_info = $stmt->fetchAll();
                 }
 
                 if (valid_forms) {
+                    const request = [];
                     const btn = document.querySelector('.submit-btn');
                     btn.style.display = 'none';
                     forms_needed.forEach(async (type) => {
@@ -1411,6 +1412,7 @@ $depts_info = $stmt->fetchAll();
                             });
                         } else if (val == 'check-out') {
                             out_tags.push(type.dataset.tag);
+                            request.push((async () => {
                             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
                             const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
                             let borrower = '';
@@ -1463,10 +1465,12 @@ $depts_info = $stmt->fetchAll();
                                     }
                                 } catch {
                                 }
-                                    hideUI('row', type.dataset.tag);
-                                    hideAll(type.dataset.tag);
+                                hideUI('row', type.dataset.tag);
+                                hideAll(type.dataset.tag);
                             }
+                            })());
                         } else if (val == 'check-in') {
+                            request.push((async () => {
                             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
                             const check_type = document.querySelector('.who-' + type.dataset.tag)?.value;
                             let borrower = '';
@@ -1523,7 +1527,9 @@ $depts_info = $stmt->fetchAll();
                                 hideUI('row', type.dataset.tag);
                                 hideAll(type.dataset.tag);
                             }
+                            })());
                         } else if (val === 'lsd') {
+                            request.push((async () => {
                             if (document_audit_id !== 4 && document_audit_id !== 5 && document_audit_id !== 6) {
                                 const who = document.getElementById('lsd-who-' + type.dataset.tag)?.value;
                                 const borrower = document.getElementById('lsd-fill-for-' + type.dataset.tag)?.value;
@@ -1631,7 +1637,9 @@ $depts_info = $stmt->fetchAll();
                                         hideUI('row', type.dataset.tag);
                                         hideAll(type.dataset.tag);
                                 }
+                            })());
                             } else {
+                                request.push((async () => {
                                 url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
                                 const lsd_res = await fetch(url, {
                                     method: 'POST',
@@ -1669,11 +1677,13 @@ $depts_info = $stmt->fetchAll();
                                         hideAll(type.dataset.tag);
                                 }
                             }
+                            })());
                         }
                     });
 
 
                     if (psr_tags.length !== 0) {
+                        request.push((async () => {
                         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/psr.php";
                         const psr_res = await fetch(url, {
                             method: 'POST',
@@ -1712,8 +1722,10 @@ $depts_info = $stmt->fetchAll();
                                     hideAll(value);
                                 });
                         }
+                            })());
                     }
                     if (transfer_location_array.length !== 0) {
+                        request.push((async () => {
                         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/transfer.php";
                         const transfer_res = await fetch(url, {
                             method: 'POST',
@@ -1754,8 +1766,10 @@ $depts_info = $stmt->fetchAll();
                                     hideAll(value.tag);
                                 });
                         }
+                            })());
                     }
                     if (transfer_dept_array.length !== 0) {
+                        request.push((async () => {
                         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/transfer.php";
                         const transfer_res = await fetch(url, {
                             method: 'POST',
@@ -1796,9 +1810,11 @@ $depts_info = $stmt->fetchAll();
                                     hideAll(value.tag);
                                 });
                         }
+                            })());
                     }
 
                     if (bulk_t_tags.length !== 0) {
+                        request.push((async () => {
                         url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/bulk-transfer.php";
                         const bulk_t_res = await fetch(url, {
                             method: 'POST',
@@ -1835,11 +1851,19 @@ $depts_info = $stmt->fetchAll();
                                     console.log('failed');
                             }
                             bulk_t_tags.forEach((value) => {
-                            hideUI('row', value);
-                            hideAll(value);
+                                hideUI('row', value);
+                                hideAll(value);
                             });
                         }
+                            })());
                     }
+                    try {
+                        await Promise.all(request);
+                    } catch (error) {
+                        console.error('Requests failed: ', e);
+                        showToast('Request(s) failed');
+                    }
+
                     btn.style.display = 'inline';
                     bulk_t_tags.length = 0, psr_tags.length = 0;
                     transfer_dept_array.length = 0;
