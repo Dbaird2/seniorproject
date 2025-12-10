@@ -1384,6 +1384,8 @@ $depts_info = $stmt->fetchAll();
           forms_needed.forEach(async (type) => {
             const val = type.value;
             const tag = type.dataset.tag;
+            console.log(val);
+            if (val === '') continue;
 
             if (val == 'bulk-transfer') {
               bulk_t_tags.push(type.dataset.tag);
