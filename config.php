@@ -26,7 +26,7 @@ try {
         ini_set('session.cookie_samesite', 'Lax');
         ini_set('session.cookie_secure', '1');
         ini_set('session.use_trans_sid', '0');
-            ini_set('session.gc_probability', '1');
+        ini_set('session.gc_probability', '1');
         ini_set('session.gc_divisor', '1000');
         ini_set('memory_limit', '256M');
         ini_set('max_execution_time', '700');
