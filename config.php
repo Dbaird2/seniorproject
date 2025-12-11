@@ -1,10 +1,4 @@
 <?php
-use Dotenv\Dotenv;
-require __DIR__ . '/vendor/autoload.php';
-/*
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
- */
 $db_host = $_ENV['DB_HOST'] ?? NULL;
 $db_port = $_ENV['DB_PORT'] ?? NULL;
 $db_name = $_ENV['DB_NAME'] ?? NULL;
@@ -41,7 +35,6 @@ try {
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-    // Set up session only once
 } catch (PDOException $e) {
     error_log($e->getMessage());
 } 

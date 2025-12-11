@@ -1,4 +1,33 @@
 <?php
+/**
+ * dw-lsd.php
+ * ------------------------------------------------------------
+ * This script processes form submission data for the Loss/Stolen/Damaged
+ * asset workflow. It performs the following tasks:
+ *
+ * 1. Reads JSON POST input containing asset tag, dept_id, audit_id, etc.
+ * 2. Searches the user's session data to locate the matching asset record.
+ * 3. Looks up additional asset information from the database (make, model, type).
+ * 4. Gathers submitter, custodian, and manager information by querying:
+ *      - Local database (department + user info)
+ *      - Kuali Build user directory via helper functions (getNameInfo, getEmailInfo)
+ * 5. Initializes a new Kuali Build workflow instance via GraphQL
+ *      - Gets actionId
+ *      - Retrieves the associated draft documentId
+ * 6. Builds a large `$variables` array containing all required form fields,
+ *    user signatures, department info, asset info, and metadata.
+ * 7. Submits the completed Kuali Build document using a GraphQL
+ *    `submitDocument` mutation.
+ * 8. If submission succeeds:
+ *      - Updates the local audit_history table by appending a status entry.
+ *      - Returns a JSON success response.
+ *    Otherwise returns an error payload.
+ *
+ * In short: This page receives asset/form input, fetches all needed personnel
+ * and asset details, assembles a complete Kuali Build JSON payload, submits
+ * the workflow document through GraphQL, and logs the result in audit_history.
+ * ------------------------------------------------------------
+ */
 include_once "../../config.php";
 include_once "../../vendor/autoload.php";
 include_once 'search.php';
