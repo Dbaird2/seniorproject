@@ -1385,7 +1385,7 @@ $depts_info = $stmt->fetchAll();
             const val = type.value;
             const tag = type.dataset.tag;
             console.log(val);
-            if (val === '') continue;
+            if (val === '') return;
 
             if (val == 'bulk-transfer') {
               bulk_t_tags.push(type.dataset.tag);
@@ -1730,7 +1730,6 @@ $depts_info = $stmt->fetchAll();
                 try {
                   const t2_data = await clone.text();
                   //const t2_data = await clone.json();
-                  console.log("transfer dept response (text):", t2_data);
                   console.log("transfer dept response (text):", t2_data);
                   const parse = JSON.parse(t2_data);
                   console.log(parse);
