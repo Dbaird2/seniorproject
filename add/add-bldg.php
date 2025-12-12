@@ -43,7 +43,7 @@ if (isset($_GET['bldg-id'])) {
     }
 }
 if (isset($_GET['room-num'])) {
-    $bldg_name = isset($_GET['bldg-name']) ? strtoupper($_GET['bldg-name']) : exit('Missing building name.');
+    $bldg_name = isset($_GET['bldg-name']) ? $_GET['bldg-name'] : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id2'];
     $room_nums = $_GET['room-num'];
 
