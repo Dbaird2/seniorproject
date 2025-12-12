@@ -101,7 +101,7 @@ try {
 <html>
 
 <head>
-<title>Auditing <?= $_SESSION['info'][2] ?></title>
+    <title>Auditing <?= $_SESSION['info'][2] ?></title>
     <?php include_once("../navbar.php"); ?>
     <style>
     </style>
@@ -137,20 +137,20 @@ try {
         $skip = false;
         $check_if_right = "SELECT room_loc FROM room_table r JOIN bldg_table b ON r.bldg_id = b.bldg_id WHERE r.room_loc = :loc AND b.bldg_name = :name AND r.room_tag = :tag";
         $check_stmt = $dbh->prepare($check_if_right);
-        $check_stmt->execute([":tag"=>$_POST['room-tag'], ":name"=>$_POST['bldg-name'], ":loc"=>$_POST['room-number']]);
+        $check_stmt->execute([":tag" => $_POST['room-tag'], ":name" => $_POST['bldg-name'], ":loc" => $_POST['room-number']]);
         if ($check_stmt->rowCount() === 1) {
             $skip = true;
         }
         if (!$skip) {
             $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
             $select_stmt = $dbh->prepare($select_tag);
-            $select_stmt->execute([":tag"=>$_POST['room-tag']]);
+            $select_stmt->execute([":tag" => $_POST['room-tag']]);
             if ($select_stmt->rowCount() < 1) {
                 // ROOM TAG DOES NOT EXIST
                 $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
                 try {
                     $bldg_id_stmt = $dbh->prepare($get_bldg_id);
-                    $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']]);
+                    $bldg_id_stmt->execute([":name" => $_POST['bldg-name']]);
                     $bldg_id = $bldg_id_stmt->fetchColumn();
                     if (empty($bldg_id)) {
                         $message = "Error Building Name Does NOT Exist";
@@ -165,7 +165,7 @@ try {
                 // CHECK IF ROOM LOCATION EXISTS
                 $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
                 $check_loc = $dbh->prepare($select_room_loc);
-                $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
+                $check_loc->execute([":loc" => $_POST['room-number'], ":id" => $bldg_id]);
                 if ($check_loc->rowCount() < 1) {
                     // ROOM LOC ALSO DOES NOT EXIST
 
@@ -177,7 +177,7 @@ try {
                 } else {
                     $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
                     $update_stmt = $dbh->prepare($update_room_tag);
-                    $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$bldg_id]);
+                    $update_stmt->execute([':tag' => $_POST['room-tag'], ':room_loc' => $_POST['room-number'], ":id" => $bldg_id]);
                     $message = "Updated room tag";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 }
@@ -185,17 +185,17 @@ try {
                 // ROOM TAG EXISTS
                 // GET MAX TAG ADD 1
                 $select_max = "SELECT MAX(room_tag) FROM room_table";
-                $select_stmt =$dbh->query($select_max);
+                $select_stmt = $dbh->query($select_max);
                 $max_room = (int)$select_stmt->fetchColumn() + 1;
                 // UPDATE WRONG ROOM TAG
                 $update_old_room = "UPDATE room_table SET room_tag = :max WHERE room_tag = :tag";
                 $update_old_room_stmt = $dbh->prepare($update_old_room);
-                $update_old_room_stmt->execute([":max"=>$max_room, ":tag"=>$_POST['room-tag']]);
+                $update_old_room_stmt->execute([":max" => $max_room, ":tag" => $_POST['room-tag']]);
 
                 $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
                 try {
                     $bldg_id_stmt = $dbh->prepare($get_bldg_id);
-                    $bldg_id_stmt->execute([":name"=>$_POST['bldg-name']]);
+                    $bldg_id_stmt->execute([":name" => $_POST['bldg-name']]);
                     $bldg_id = $bldg_id_stmt->fetchColumn();
                 } catch (PDOException) {
                     $message = "Error Building Name Does NOT Exist IN ELSE STATEMENT";
@@ -205,7 +205,7 @@ try {
                 // CHECK IF ROOM LOCATION EXISTS
                 $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
                 $check_loc = $dbh->prepare($select_room_loc);
-                $check_loc->execute([":loc"=>$_POST['room-number'], ":id"=>$bldg_id]);
+                $check_loc->execute([":loc" => $_POST['room-number'], ":id" => $bldg_id]);
                 if ($check_loc->rowCount() < 1) {
                     // ROOM LOC ALSO DOES NOT EXIST
                     $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
@@ -216,7 +216,7 @@ try {
                 } else {
                     $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
                     $update_stmt = $dbh->prepare($update_room_tag);
-                    $update_stmt->execute([':tag'=>$_POST['room-tag'],':room_loc'=>$_POST['room-number'], ":id"=>$bldg_id]);
+                    $update_stmt->execute([':tag' => $_POST['room-tag'], ':room_loc' => $_POST['room-number'], ":id" => $bldg_id]);
                     $message = "Updated room tag FROM ELSE STATEMENT";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 }
@@ -267,7 +267,7 @@ try {
                     foreach ($_SESSION['data'] as $data_index => $row) {
 
                         if ($tag === $row["Tag Number"] && $row["Tag Status"] !== 'Extra') {
-                        /*
+                            /*
                         $update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($select_q);
                         $update_stmt->execute([":tag" => $row["Tag Number"], ':dept'=>$_SESSION['info'][2]]);
@@ -293,7 +293,7 @@ try {
                         $select_stmt->execute([":tag" => $tag]);
                         $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
                         if ($result) {
-                        /*$update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
+                            /*$update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($select_q);
                         $update_stmt->execute([":tag" => $tag, ':dept'=>$_SESSION['info'][2]]);*/
                             $_SESSION['data'][$total_count]["Unit"] =  $result['bus_unit'];
@@ -353,7 +353,7 @@ try {
 ?>
 
 <body>
-<div id="snackbar"></div>
+    <div id="snackbar"></div>
     <div class=" is-search">
         <div class="wrapper">
 
@@ -361,9 +361,8 @@ try {
             <form id="makeSheet" method='POST' action='auditing.php' enctype="multipart/form-data">
                 <button type='submit' id='create' name='create'>Export</button>
             </form>
-                <button id='kuali' name='kuali'>Update</button>
+            <button id='kuali' name='kuali'>Update</button>
             <button id="tag-btn">Get Room Tag</button>
-            <button id="tag-btn2">Find Room Tag</button>
         </div>
         <label class="switch">
             <input id="scanner-mode" type="checkbox" checked />
@@ -374,9 +373,9 @@ try {
                 <input type="int" name="room-tag" id="room-tag" placeholder="Scan room tag" required>
                 <input list="bldg-names" name="bldg-name" id="bldg-name" required>
                 <datalist id="bldg-names">
-                    <?php foreach($bldgs as $bldg) { ?>
+                    <?php foreach ($bldgs as $bldg) { ?>
                         <option value="<?= htmlspecialchars($bldg['bldg_name']) ?>">
-                    <?php } ?>
+                        <?php } ?>
                 </datalist>
                 <input type="text" name="room-number" id="room-number" placeholder="Room Number" required><br>
                 <div id="inputContainer"></div>
@@ -418,35 +417,35 @@ try {
                     </tr>
                 </thead>
                 <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
-<?php
-    $data = $_SESSION['data'];
-    $max_rows = 300;
-    $total_rows = count($data);
-    $j = 1;
-    $data_slice = array_slice($data, 0, $max_rows);
-    $i = 0;
+                    <?php
+                    $data = $_SESSION['data'];
+                    $max_rows = 300;
+                    $total_rows = count($data);
+                    $j = 1;
+                    $data_slice = array_slice($data, 0, $max_rows);
+                    $i = 0;
 
-    foreach ($data_slice as $index => $row) {
-        $color_class = ($i % 2 === 0) ? 'row-odd' : 'row-even';
-        $i++;
-        $j = $index + 1;
+                    foreach ($data_slice as $index => $row) {
+                        $color_class = ($i % 2 === 0) ? 'row-odd' : 'row-even';
+                        $i++;
+                        $j = $index + 1;
 
-        $file_name = $data[0]["Dept"] ?? $file_name;
-        $tag = htmlspecialchars($row["Tag Number"]);
-        $descr = htmlspecialchars($row["Descr"] ?? "");
-        $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
-        $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
+                        $file_name = $data[0]["Dept"] ?? $file_name;
+                        $tag = htmlspecialchars($row["Tag Number"]);
+                        $descr = htmlspecialchars($row["Descr"] ?? "");
+                        $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
+                        $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
 
-        $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "Found" : "";
-        $found_room = isset($row["Found Room Tag"]) ? $row["Found Room Tag"] : "";
-        $found_note = isset($row["Found Note"]) ? $row["Found Note"] : "";
-        $serial = htmlspecialchars($row["Serial ID"] ?? "");
-        $location = htmlspecialchars($row["Location"] ?? "");
-        $department = htmlspecialchars($row["Dept"] ?? "");
-        $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
-        $po = htmlspecialchars($row["PO No."] ?? "");
-        $encoded_tag = json_encode($tag);
-        echo "<tr class='{$color_class}'>
+                        $found_tag = (isset($row['Tag Status']) && $row['Tag Status'] !== '') ? "Found" : "";
+                        $found_room = isset($row["Found Room Tag"]) ? $row["Found Room Tag"] : "";
+                        $found_note = isset($row["Found Note"]) ? $row["Found Note"] : "";
+                        $serial = htmlspecialchars($row["Serial ID"] ?? "");
+                        $location = htmlspecialchars($row["Location"] ?? "");
+                        $department = htmlspecialchars($row["Dept"] ?? "");
+                        $cost = htmlspecialchars($row["COST Total Cost"] ?? "");
+                        $po = htmlspecialchars($row["PO No."] ?? "");
+                        $encoded_tag = json_encode($tag);
+                        echo "<tr class='{$color_class}'>
             <td><button onclick='deleteAsset({$encoded_tag});' name='delete'  class='delete' id='{$tag}' value='" . htmlspecialchars($tag) . "'>&#215;</button></td>
             <td class='{$match}'> {$j}. </td>
             <td class='{$match}'> {$tag}</td>
@@ -460,32 +459,32 @@ try {
             <td><input class='room' name='previousRms[]' id='{$tag}' value='" . htmlspecialchars($found_room) . "' readonly></td>
             <td><textarea class='note' name='previousNote[]' id='{$tag}' value='" . htmlspecialchars($found_note) . "'>$found_note</textarea></td>
             </tr>";
-    }
-?>
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
 
 
     </div>
-<script>
-const session_data = <?= json_encode(array_slice($_SESSION['data'], 300)) ?>;
-let index = 0;
-let offset = 0
-    const chunk_size = 300;
+    <script>
+        const session_data = <?= json_encode(array_slice($_SESSION['data'], 300)) ?>;
+        let index = 0;
+        let offset = 0
+        const chunk_size = 300;
 
-function loadMoreRows() {
+        function loadMoreRows() {
 
-    const table = document.querySelector(".table");
-    for (let i = offset; i < chunk_size && index < session_data.length; i++, index++) {
-        color_class = (i % 2 === 0) ? 'row-odd' : 'row-even';
+            const table = document.querySelector(".table");
+            for (let i = offset; i < chunk_size && index < session_data.length; i++, index++) {
+                color_class = (i % 2 === 0) ? 'row-odd' : 'row-even';
 
-        const row = session_data[index];
-        const tr = document.createElement("tr");
-        tr.classList.add(color_class);
-        match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
-        match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
-        tr.innerHTML = `
+                const row = session_data[index];
+                const tr = document.createElement("tr");
+                tr.classList.add(color_class);
+                match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
+                match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
+                tr.innerHTML = `
             <td><button onclick="deleteAsset(${row["Tag Number"]})" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
             <td class=${match}>${300 + index + 1}</td>
                 <td class=${match}>${row["Tag Number"]}</td>
@@ -499,394 +498,445 @@ function loadMoreRows() {
                 <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
                 <td><textarea class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Note"]}></textarea></td>
                 `;
-        table.appendChild(tr);
-    }
+                table.appendChild(tr);
+            }
 
-}
-const loops = Math.ceil(session_data.length / 300);
-console.log(session_data.length, loops);
-for (let i = 0; i < loops; i++) {
-    setTimeout(loadMoreRows, 1000);
-}
+        }
+        const loops = Math.ceil(session_data.length / 300);
+        console.log(session_data.length, loops);
+        for (let i = 0; i < loops; i++) {
+            setTimeout(loadMoreRows, 1000);
+        }
 
 
-var botmanWidget = {
-frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
-    chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
-    introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
-    title: "Chatbot",
-    mainColor: "#ADD8E6",
-    bubbleBackground: "#ADD8E6",
-    placeholderText: "Type your question here..."
-};
-window.requestIdleCallback(() => {
-addNewInput();
-addNewInput();
-});
-document.addEventListener("DOMContentLoaded", () => {
-    const update_btn = document.getElementById('kuali');
-    update_btn.addEventListener('click', async () => {
-        url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-audit.php';
-        const kuali_res = await fetch(url2, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json' },
-        })
-        if (kuali_res.ok) {
-            const text = await kuali_res.text();
-            const json = JSON.parse(text);
-            if (json.status === 'Ok') {
-                toast("Updated audit");
+        var botmanWidget = {
+            frameEndpoint: 'https://dataworks-7b7x.onrender.com/chat/botman-widget.html',
+            chatServer: 'https://dataworks-7b7x.onrender.com/chat/chatbot.php',
+            introMessage: "👋 Hello! I'm Chatbot. Ask me anything!",
+            title: "Chatbot",
+            mainColor: "#ADD8E6",
+            bubbleBackground: "#ADD8E6",
+            placeholderText: "Type your question here..."
+        };
+        window.requestIdleCallback(() => {
+            addNewInput();
+            addNewInput();
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const update_btn = document.getElementById('kuali');
+            update_btn.addEventListener('click', async () => {
+                url2 = 'https://dataworks-7b7x.onrender.com/audit/kuali/update-audit.php';
+                const kuali_res = await fetch(url2, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                if (kuali_res.ok) {
+                    const text = await kuali_res.text();
+                    const json = JSON.parse(text);
+                    if (json.status === 'Ok') {
+                        toast("Updated audit");
+                        setTimeout(() => {
+                            window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
+                        }, 500);
+                    }
+                }
+            });
+
+            const complete_audit_btn = document.getElementById('complete-audit');
+            complete_audit_btn.addEventListener("click", async () => {
+                let audited_with = prompt("Did anyone help with the audit?");
+                audited_with = audited_with.trim();
+                url = "https://dataworks-7b7x.onrender.com/audit/complete/complete_api.php";
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        audited_with
+                    })
+                });
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${text}`);
+                } else {
+                    console.log(res);
+                }
+            })
+            const room_tag = document.getElementById("room-tag")
+            room_tag.addEventListener("focusout", async () => {
+                tag = (room_tag.value || "").trim();
+                if (!tag) return;
+
+                url = "https://dataworks-7b7x.onrender.com/audit/get-bldg-info.php";
+                const res2 = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        room_tag: tag
+                    })
+                });
+                if (!res2.ok) {
+                    const text = await res2.text();
+                    throw new Error(`HTTP ${res2.status}: ${text}`);
+                    toast("Error getting data from database");
+                } else {
+                    console.log(res2);
+                    const data = await res2.json();
+                    if (data['bldg_name'] !== '' && data['bldg_name'] !== null) {
+                        const room_number = document.getElementById('room-number');
+                        room_number.value = data['room_number'];
+                        const bldg_name = document.getElementById('bldg-name');
+                        bldg_name.value = data['bldg_name'];
+                        toast("Successfully got building info");
+                    } else {
+                        toast("Room Tag Not Found in Database");
+                    }
+                }
+            });
+        });
+
+        function deleteAsset(tag) {
+            const params = new URLSearchParams({
+                tag: tag
+            });
+            url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
+            const response = confirm("Are you sure you want to delete this asset");
+            if (response) {
+                fetch(url, {
+                        method: 'POST',
+                        body: params,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error ', error));
+                //location.reload();
                 setTimeout(() => {
                     window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
                 }, 500);
-            }
-        }
-    });
-
-    const complete_audit_btn = document.getElementById('complete-audit');
-    complete_audit_btn.addEventListener("click", async () => {
-        let audited_with = prompt("Did anyone help with the audit?");
-        audited_with = audited_with.trim();
-        url = "https://dataworks-7b7x.onrender.com/audit/complete/complete_api.php";
-        const res = await fetch(url, {
-            method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify ({ audited_with })
-            });
-            if (!res.ok) {
-                const text = await res.text();
-                throw new Error (`HTTP ${res.status}: ${text}`);
             } else {
-                console.log(res);
+                console.log("User declined");
             }
-        })
-        const room_tag = document.getElementById("room-tag")
-        room_tag.addEventListener("focusout", async () => {
-            tag = (room_tag.value || "").trim();
-            if (!tag) return;
+        };
+        document.querySelector('.table').addEventListener('change', function(e) {
+            if (e.target.classList.contains('room')) {
+                const params = new URLSearchParams({
+                    tag: e.target.id,
+                    room: e.target.value
+                });
+                url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
+                fetch(url, {
+                        method: 'POST',
+                        body: params,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
 
-            url = "https://dataworks-7b7x.onrender.com/audit/get-bldg-info.php";
-            const res2 = await fetch(url, {
-            method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify ({ room_tag: tag })
-            });
-            if (!res2.ok) {
-                const text = await res2.text();
-                throw new Error (`HTTP ${res2.status}: ${text}`);
-                toast("Error getting data from database");
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
             } else {
-                console.log(res2);
-                const data = await res2.json();
-                if (data['bldg_name'] !== '' && data['bldg_name'] !== null) {
-                    const room_number = document.getElementById('room-number');
-                    room_number.value = data['room_number'];
-                    const bldg_name = document.getElementById('bldg-name');
-                    bldg_name.value = data['bldg_name'];
-                    toast("Successfully got building info");
+                const params = new URLSearchParams({
+                    tag: e.target.id,
+                    note: e.target.value
+                });
+                url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
+                fetch(url, {
+                        method: 'POST',
+                        body: params,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+            }
+
+        });
+
+        document.addEventListener("input", function(e) {
+            const scanner_mode = document.getElementById('scanner-mode').checked;
+            if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
+            const value = e.target.value.trim();
+            let tab = 5;
+            value[0] = value[0].toUpperCase();
+            if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F' ||
+                value[0] === 's' || value[0] === 'a' || value[0] === 'f') {
+                value[1] = value[1].toUpperCase();
+                tab++;
+                if (value[1] === 'P' || value[1] === 'R' ||
+                    value[1] === 'p' || value[1] === 'r') {
+                    value[2] = value[2].toUpperCase();
+                    tab++;
+                } else if (value[1] === 'T' || value[1] === 't') {
+                    value[2] = value[2].toUpperCase();
+                    tab++;
+                }
+                if (value[2] === 'U' || value[2] === 'C' ||
+                    value[2] === 'u' || value[2] === 'c') {
+                    tab++;
+                }
+            }
+            if (value.length >= tab) {
+                const inputs = Array.from(document.querySelectorAll(".dynamicId"));
+                const index = inputs.indexOf(e.target);
+                if (index > -1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
                 } else {
-                    toast("Room Tag Not Found in Database");
+                    e.target.blur();
                 }
             }
         });
-});
-function deleteAsset(tag) {
-    const params = new URLSearchParams({
-    tag: tag
-});
-url = "https://dataworks-7b7x.onrender.com/audit/delete-asset.php";
-const response = confirm("Are you sure you want to delete this asset");
-if (response) {
-    fetch(url, {
-    method: 'POST', 
-        body: params,
-        headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-}
-})
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error ', error));
-    //location.reload();
-    setTimeout(() => {
-    window.location.href = 'https://dataworks-7b7x.onrender.com/audit/auditing.php';
-    }, 500);
-} else {
-    console.log("User declined");
-}
-};
-document.querySelector('.table').addEventListener('change', function(e) {
-    if (e.target.classList.contains('room')) {
-        const params = new URLSearchParams({
-        tag: e.target.id,
-            room: e.target.value
-    });
-        url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
-        fetch(url, {
-        method: 'POST',
-            body: params,
-            headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+
+        function addNewInput() {
+            const inputDiv = document.createElement('div');
+            inputDiv.classList.add('input-container');
+
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = 'dynamicInput[]';
+            newInput.autocomplete = "off";
+            newInput.placeholder = 'Enter tag';
+            newInput.setAttribute("accesskey", "s");
+            newInput.style.textTransform = 'uppercase';
+            newInput.classList.add('dynamicId');
+
+
+            newInput.addEventListener("change", addNewInput, false);
+            inputDiv.appendChild(newInput);
+
+            const timeInput = document.createElement('input');
+            timeInput.type = 'hidden';
+            timeInput.name = 'dynamicTime[]';
+            timeInput.value = getFormattedDateTime();
+            inputDiv.appendChild(timeInput);
+
+            const noteInput = document.createElement('input');
+            noteInput.type = 'hidden';
+            noteInput.name = 'dynamicNote[]';
+            noteInput.placeholder = 'Notes';
+
+            inputDiv.appendChild(noteInput);
+
+            const inputContainer = document.getElementById('inputContainer');
+            inputContainer.appendChild(inputDiv);
+
         }
 
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-    } else {
-        const params = new URLSearchParams({
-        tag: e.target.id,
-            note: e.target.value
-    });
-        url = "https://dataworks-7b7x.onrender.com/audit/save-data.php";
-        fetch(url, {
-        method: 'POST',
-            body: params,
-            headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+
+        function getFormattedDateTime() {
+            const currentDate = new Date();
+
+            let month = currentDate.getMonth() + 1;
+            let day = currentDate.getDate();
+            let year = currentDate.getFullYear();
+
+            month = month.toString().padStart(2, '0');
+            day = day.toString().padStart(2, '0');
+            let formattedDate = `${year}-${month}-${day}`;
+
+            let formattedTime = currentDate.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+
+            let formattedDateTime = `${formattedDate} ${formattedTime}`;
+
+
+            return formattedDateTime;
         }
 
-        })
-            .then(res => res.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-    }
-
-});
-
-document.addEventListener("input", function(e) {
-    const scanner_mode = document.getElementById('scanner-mode').checked;
-    if (!e.target.classList.contains("dynamicId") || scanner_mode === false) return;
-    const value = e.target.value.trim();
-    let tab = 5;
-    value[0] = value[0].toUpperCase();
-    if (value[0] === 'S' || value[0] === 'A' || value[0] === 'F' 
-        || value[0] === 's' || value[0] === 'a' || value[0] === 'f') {
-        value[1] = value[1].toUpperCase();
-        tab++;
-        if (value[1] === 'P' || value[1] === 'R' ||
-            value[1] === 'p' || value[1] === 'r') {
-            value[2] = value[2].toUpperCase();
-            tab++;
-        } else if (value[1] === 'T' || value[1] === 't') {
-            value[2] = value[2].toUpperCase();
-            tab++;
-        }
-        if (value[2] === 'U' || value[2] === 'C' ||
-            value[2] === 'u' || value [2] === 'c') {
-            tab++;
-        }
-    }
-    if (value.length >= tab) {
-        const inputs = Array.from(document.querySelectorAll(".dynamicId"));
-        const index = inputs.indexOf(e.target);
-        if (index > -1 && index < inputs.length - 1) {
-            inputs[index + 1].focus();
-        } else {
-            e.target.blur();
-        }
-    }
-});
-
-function addNewInput() {
-    const inputDiv = document.createElement('div');
-    inputDiv.classList.add('input-container');
-
-    const newInput = document.createElement('input');
-    newInput.type = 'text';
-    newInput.name = 'dynamicInput[]';
-    newInput.autocomplete = "off";
-    newInput.placeholder = 'Enter tag';
-    newInput.setAttribute("accesskey", "s");
-    newInput.style.textTransform = 'uppercase';
-    newInput.classList.add('dynamicId');
-
-
-    newInput.addEventListener("change", addNewInput, false);
-    inputDiv.appendChild(newInput);
-
-    const timeInput = document.createElement('input');
-    timeInput.type = 'hidden';
-    timeInput.name = 'dynamicTime[]';
-    timeInput.value = getFormattedDateTime();
-    inputDiv.appendChild(timeInput);
-
-    const noteInput = document.createElement('input');
-    noteInput.type = 'hidden';
-    noteInput.name = 'dynamicNote[]';
-    noteInput.placeholder = 'Notes';
-
-    inputDiv.appendChild(noteInput);
-
-    const inputContainer = document.getElementById('inputContainer');
-    inputContainer.appendChild(inputDiv);
-
-}
-
-
-function getFormattedDateTime() {
-    const currentDate = new Date();
-
-    let month = currentDate.getMonth() + 1;
-    let day = currentDate.getDate();
-    let year = currentDate.getFullYear();
-
-    month = month.toString().padStart(2, '0');
-    day = day.toString().padStart(2, '0');
-    let formattedDate = `${year}-${month}-${day}`;
-
-    let formattedTime = currentDate.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    });
-
-    let formattedDateTime = `${formattedDate} ${formattedTime}`;
-
-
-    return formattedDateTime;
-}
-
-function filterTable() {
-    var input, filter, table, tr, td, i, txt_value;
-    input = document.getElementById("my-input");
-    filter = input.value.toUpperCase();
-    table = document.querySelector(".table");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[2];
-        if (td) {
-            txt_value = td.textContent || td.innerText;
-            if (txt_value.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                td = tr[i].getElementsByTagName("td")[4];
+        function filterTable() {
+            var input, filter, table, tr, td, i, txt_value;
+            input = document.getElementById("my-input");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
                 if (td) {
                     txt_value = td.textContent || td.innerText;
                     if (txt_value.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
-                        td = tr[i].getElementsByTagName("td")[5];
+                        td = tr[i].getElementsByTagName("td")[4];
                         if (td) {
                             txt_value = td.textContent || td.innerText;
                             if (txt_value.toUpperCase().indexOf(filter) > -1) {
                                 tr[i].style.display = "";
                             } else {
-                                tr[i].style.display = "none";
+                                td = tr[i].getElementsByTagName("td")[5];
+                                if (td) {
+                                    txt_value = td.textContent || td.innerText;
+                                    if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
-}
 
-function filterAssetStatus() {
-    var input, filter, table, tr, td, i, txt_value;
-    input = document.getElementById("my-status");
-    filter = input.value.toUpperCase();
-    table = document.querySelector(".table");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[3];
-        console.log(filter);
-        if (td && filter === 'NOT-FOUND') {
-            txt_value = td.textContent || td.innerText;
-            if (txt_value.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
+        function filterAssetStatus() {
+            var input, filter, table, tr, td, i, txt_value;
+            input = document.getElementById("my-status");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                console.log(filter);
+                if (td && filter === 'NOT-FOUND') {
+                    txt_value = td.textContent || td.innerText;
+                    if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                } else if (filter === 'ALL') {
+                    tr[i].style.display = "";
+                } else if (td && (filter === 'FOUND' || filter === 'EXTRA')) {
+                    txt_value = td.textContent || td.innerText;
+                    if (txt_value.toUpperCase().indexOf('found') > -1 || txt_value.toUpperCase().indexOf('extra') > -1) {
+                        tr[i].style.display = "none";
+                    } else {
+                        tr[i].style.display = "";
+                    }
+                }
             }
-        } else if (filter === 'ALL') {
-            tr[i].style.display = "";
-        } else if (td && (filter === 'FOUND' || filter === 'EXTRA')) {
-            txt_value = td.textContent || td.innerText;
-            if (txt_value.toUpperCase().indexOf('found') > -1 || txt_value.toUpperCase().indexOf('extra') > -1) {
-                tr[i].style.display = "none";
+        }
+
+        function toast(message) {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            x.textContent = message;
+            setTimeout(function() {
+                x.className = x.className.replace("show", "");
+            }, 5000);
+        }
+        document.getElementById('dynamicForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let input = document.getElementById('bldg-name').value;
+            let option = [...document.querySelectorAll('#bldg-names option')].map(o => o.value);
+            if (!option.includes(input)) {
+                alert("Invalid Building Name or Building is not in database");
             } else {
-                tr[i].style.display = "";
+                e.target.submit();
+            }
+        });
+        document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+        document.getElementById('tag-btn').addEventListener('click', async function(e) {
+            const room_tag = document.getElementById("room-tag");
+            url = "https://dataworks-7b7x.onrender.com/audit/get-room-tag.php";
+            const room_res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!room_res.ok) {
+                const text = await room_res.text();
+                toast("Failed to get room tag");
+                throw new Error(`HTTP ${room_res.status}: ${text}`);
+            } else {
+                console.log(room_res);
+                const data = await room_res.json();
+                let tag = data['room_tag'];
+                if (tag === '' || tag === null) {
+                    toast("Failed to get room tag");
+                } else {
+                    room_tag.value = tag;
+                    toast("Successfully got not used room tag");
+                }
+            }
+        });
+
+        document.getElementById('room-number').addEventListener('focusout', async function(e) {
+            const room_tag = document.getElementById("room-tag").value;
+            let bldg = document.getElementById('bldg-name').value;
+            let room_num = document.getElementById('room-number').value;
+            //console.log ('room before if')
+
+            if (room_tag !== '' && room_tag !== null) {
+                return;
+            }
+            if (bldg === '' || bldg === null || room_num === null || room_num === '') {
+
+                return;
+            }
+            //console.log ('room after if')
+            findRoomTag(bldg, room_num);
+
+        });
+
+        document.getElementById('bldg-name').addEventListener('focusout', async function(e) {
+            const room_tag = document.getElementById("room-tag").value;
+            let bldg = document.getElementById('bldg-name').value;
+            let room_num = document.getElementById('room-number').value;
+            //console.log ('bldg before if')
+            if (room_tag !== '' && room_tag !== null) {
+                return;
+            }
+            if (bldg === '' || bldg === null || room_num === null || room_num === '') {
+
+                return;
+            }
+            //console.log ('bldg after if')
+            findRoomTag(bldg, room_num);
+
+        });
+
+        async function findRoomTag(bldg, room_num) {
+            //console.log ('start of function')
+            url = "https://dataworks-7b7x.onrender.com/audit/find-room-tag.php";
+            const tag_res = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bldg,
+                    room_num
+                })
+            });
+            //console.log ('after fetch')
+            if (!tag_res.ok) {
+                const text = await tag_res.text();
+                toast("Failed to get room tag");
+                throw new Error(`HTTP ${tag_res.status}: ${text}`);
+            } else {
+                console.log(tag_res);
+                const data = await tag_res.json();
+                if (data['status'] === 'Ok') {
+                    console.log(data)
+                    document.getElementById("room-tag").value = data['room_tag'];
+                    toast("Successfully got unused room tag");
+                } else {
+                    toast("Failed to get room tag");
+                }
             }
         }
-    }
-}
-function toast(message) {
-  var x = document.getElementById("snackbar");
-  x.className = "show";
-  x.textContent = message;
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
-}
-document.getElementById('dynamicForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    let input = document.getElementById('bldg-name').value;
-    let option = [...document.querySelectorAll('#bldg-names option')].map(o => o.value);
-    if (!option.includes(input)) {
-        alert("Invalid Building Name or Building is not in database");
-    } else {
-        e.target.submit();
-    }
-});
-document.getElementById('dynamicForm').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-    }
-});
-document.getElementById('tag-btn').addEventListener('click', async function(e) {
-    const room_tag = document.getElementById("room-tag");
-    url = "https://dataworks-7b7x.onrender.com/audit/get-room-tag.php";
-    const room_res = await fetch(url, {
-    method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-    });
-    if (!room_res.ok) {
-        const text = await room_res.text();
-        toast("Failed to get room tag");
-        throw new Error (`HTTP ${room_res.status}: ${text}`);
-    } else {
-        console.log(room_res);
-        const data = await room_res.json();
-        let tag = data['room_tag'];
-        if (tag === '' || tag === null) {
-            toast("Failed to get room tag");
-        } else { 
-            room_tag.value = tag;
-            toast("Successfully got not used room tag");
-        }
-    }
-});
-document.getElementById('tag-btn2').addEventListener('click', async function(e) {
-    const room_tag = document.getElementById("room-tag");
-    let bldg = document.getElementById('bldg-name').value;
-    let room_num = document.getElementById('room-number').value;
-    if (bldg === '' || bldg === null || room_num === null || room_num === '') {
-        toast("Building Name or Room Number empty");
-        return;
-    }
-
-    url = "https://dataworks-7b7x.onrender.com/audit/find-room-tag.php";
-    const tag_res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify ({ bldg, room_num })
-    });
-    if (!tag_res.ok) {
-        const text = await tag_res.text();
-        toast("Failed to get room tag");
-        throw new Error (`HTTP ${tag_res.status}: ${text}`);
-    } else {
-        console.log(tag_res);
-        const data = await tag_res.json();
-        if (data['status'] === 'Ok') {
-            room_tag.value = data['room_tag'];
-            toast("Successfully got not used room tag");
-        } else { 
-            toast("Failed to get room tag");
-        }
-    }
-});
-
-            </script>
-      <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js"></script>
     </div>
 </body>
