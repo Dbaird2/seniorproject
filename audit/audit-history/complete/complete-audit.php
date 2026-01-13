@@ -13,7 +13,7 @@ if (isset($_GET['dept_id'])) {
 
     $select_audit = "SELECT unnest(check_forms) as check_forms FROM audit_history WHERE dept_id = :dept AND audit_id = :aid";
     $stmt = $dbh->prepare($select_audit);
-    $stmt->execute([':dept'=>$dept_id, ':aid'=>$audit_id]);
+    $stmt->execute([':dept' => $dept_id, ':aid' => $audit_id]);
     $audit_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if (!$audit_info) {
         die('Empty Audit');
@@ -21,16 +21,16 @@ if (isset($_GET['dept_id'])) {
     // GET TAGS
     $submit_audit = true;
     $transfer = $lsd = $in_progress = $done = false;
-    foreach ($audit_info['check_forms'] as $index1=>$form) {
+    foreach ($audit_info['check_forms'] as $index1 => $form) {
         $single_form = explode(',', $form);
-        foreach ($single_form as $index=>$single_array) {
+        foreach ($single_form as $index => $single_array) {
             if ($index === 0) {
                 $id = $single_array;
                 continue;
             }
 
             if ($single_array === 'transfer') {
-                if ($single_form[$index+1] !== 'denied') {
+                if ($single_form[$index + 1] !== 'denied') {
                     $transfer = true;
                     $app_id = '68c73600df46a3027d2bd386';
                     continue;
@@ -39,7 +39,7 @@ if (isset($_GET['dept_id'])) {
                 }
             }
             if ($single_array === 'lsd') {
-                if ($single_form[$index+1] !== 'denied') {
+                if ($single_form[$index + 1] !== 'denied') {
                     $lsd = true;
                     $app_id = '68d09e41d599f1028a9b9457';
                     continue;
@@ -48,7 +48,7 @@ if (isset($_GET['dept_id'])) {
                 }
             }
             if ($single_array === 'lsd-cust') {
-                if ($single_form[$index+1] !== 'denied') {
+                if ($single_form[$index + 1] !== 'denied') {
                     $lsd = true;
                     $app_id = '68e94e8a58fd2e028d5ec88f';
 
@@ -62,7 +62,7 @@ if (isset($_GET['dept_id'])) {
                 continue;
             }
             if ($in_progress) {
-                $done = checkForm($id, $single_array, $app_id);
+                $done = checkForm($id, $single_array, $app_id, $form); // WAS ($id, $single_array, $app_id) EXPECTED 4 ARGUMENTS ERROR
             }
             if (!$done) {
                 $submit_audit = false;
@@ -111,7 +111,7 @@ if (isset($_GET['dept_id'])) {
 
     $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, dept_manager FROM department d WHERE dept_id = :dept_id";
     $get_cust_stmt = $dbh->prepare($get_dept_custodians);
-    $get_cust_stmt->execute([":dept_id"=>$dept_id]);
+    $get_cust_stmt->execute([":dept_id" => $dept_id]);
     $custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
     $dept_name = $custodians[0]['dept_name'];
 
@@ -120,7 +120,7 @@ if (isset($_GET['dept_id'])) {
     $cust_name_split = explode(" ", $custodians[0]['cust']);
     try {
         $get_cust_stmt = $dbh->prepare($get_cust_info);
-        $get_cust_stmt->execute([":full_name"=>$custodians[0]['cust']]);
+        $get_cust_stmt->execute([":full_name" => $custodians[0]['cust']]);
         $cust_info = $get_cust_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($cust_info['form_id']) || empty($cust_info['school_id'])) {
             // SEARCH CUST IN KUALI
@@ -149,7 +149,7 @@ if (isset($_GET['dept_id'])) {
     $manager_name = $custodians['dept_manager'][0];
     try {
         $get_mana_stmt = $dbh->prepare($get_cust_info);
-        $get_mana_stmt->execute([":full_name"=>$manager_name]);
+        $get_mana_stmt->execute([":full_name" => $manager_name]);
         $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($mana_info['form_id']) || empty($mana_info['school_id'])) {
             // SEARCH CUST IN KUALI
@@ -252,7 +252,7 @@ if (isset($_GET['dept_id'])) {
         die("ERROR: actionId is NULL before submitting the document.");
     }
     $now_array = new DateTime();
-    $now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
+    $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
     $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
     $ms_time = round(microtime(true) * 1000);
@@ -262,7 +262,7 @@ if (isset($_GET['dept_id'])) {
     $submit_form = json_encode([
         'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
     { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-    'variables' => $variables
+        'variables' => $variables
     ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
@@ -274,15 +274,13 @@ if (isset($_GET['dept_id'])) {
 
     curl_close($curl);
     echo json_encode([
-        $document_id
-        ,$action_id
-        ,$form_id
-        ,$resp_data
+        $document_id,
+        $action_id,
+        $form_id,
+        $resp_data
     ]);
     ob_get_clean();
     exit;
-
 }
 header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?type=failure&reason=GET_NOT_SET");
 exit;
-

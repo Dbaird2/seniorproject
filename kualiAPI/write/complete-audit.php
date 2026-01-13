@@ -4,8 +4,10 @@ include_once "search.php";
 include_once "get-info.php";
 include_once "../dataworks-read/dw-check-forms.php";
 include_once "../../vendor/autoload.php";
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 ob_start();
 $variables = [[]];
 if (!isset($_GET['dept_id'])) {
@@ -17,7 +19,7 @@ echo $dept_id . '<br>';
 
 $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :dept_id";
 $stmt = $dbh->prepare($get_dept_name);
-$stmt->execute([":dept_id"=>$dept_id]);
+$stmt->execute([":dept_id" => $dept_id]);
 $dept_name = $stmt->fetchColumn();
 if (empty($dept_name)) {
     header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/search-history.php?status=failed&reason=dept-not-in-db");
@@ -32,17 +34,57 @@ $curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
 
 $select_audit = "SELECT unnest(check_forms) as check_forms FROM audit_history WHERE dept_id = :dept AND audit_id = :aid";
 $stmt = $dbh->prepare($select_audit);
-$stmt->execute([':dept'=>$dept_id, ':aid'=>$audit_id]);
+$stmt->execute([':dept' => $dept_id, ':aid' => $audit_id]);
 $audit_info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // GET TAGS
 $submit_audit = true;
 $transfer = $lsd = $in_progress = $done = $progress = false;
 $transfer_status = $lsd_status = false;
 $count = $count2 = 0;
+//<--------------------Confirm Submit for audits without Kuali forms-------------->
+if (empty($audit_info) && empty($_POST['confirm_submit'])) {
+?>
+    <h3>No forms were submitted</h3>
+    <p>Are you sure you want to submit this audit?</p>
+
+    <form method="post">
+        <button type="submit" name="confirm_submit" value="yes">Yes, submit</button>
+        <button type="submit" name="confirm_submit" value="no">No, go back</button>
+    </form>
+<?php
+    exit;
+}
+if (empty($audit_info)) {
+
+    if (($_POST['confirm_submit'] ?? '') === 'yes') {
+        $submit_audit = true;
+        $done = true;
+        $stmt = $dbh->prepare("
+  UPDATE audit_history
+  SET audit_status = 'Complete',
+      finished_at = NOW(),
+      forms_submitted = true
+  WHERE audit_id = :audit_id
+  RETURNING audit_status, finished_at
+");
+        $stmt->execute([
+            ':audit_id' => (int)$audit_id
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            die("Audit not found in DB");
+        }
+    }
+    if (($_POST['confirm_submit'] ?? '') === 'no') {
+        header("Location: /audit/audit-history/search-history.php");
+        exit;
+    }
+}
+$progress = $done = false;
 if ($audit_info) {
-    foreach ($audit_info as $index1=>$form) {
+    foreach ($audit_info as $index1 => $form) {
         $single_form = explode(',', $form['check_forms']);
-        if ($single_form[2] === 'denied' || $single_form[2] === 'withdrawn' ) {
+        if ($single_form[2] === 'denied' || $single_form[2] === 'withdrawn') {
             continue;
         }
         echo $single_form[0] . ' ' . $single_form[1] . ' ' . $single_form[2] . ' ' . $single_form[3] . '<br>';
@@ -83,14 +125,15 @@ if ($audit_info) {
                 }
             }
         }
-        if ($done) {
+        if ($done && !$progress) {
+            $submit_audit = true;
             foreach ($tags as $tag) {
                 echo 'For each of tags <br>';
                 if ($transfer) {
                     echo 'Transfer <br>';
                     $variables['data']['HgIvQwEnwb']['data'][$count]['data']['xVdCwxjKl-'] = trim($tag);
                     $variables['data']['HgIvQwEnwb']['data'][$count]['data']['2KqtRaCah1'] = 'Transfer update after auditing';
-                    $variables['data']['HgIvQwEnwb']['data'][$count]['id'] =(string) $count;
+                    $variables['data']['HgIvQwEnwb']['data'][$count]['id'] = (string) $count;
                     $count++;
                     $transfer_status = true;
                 } else if ($lsd) {
@@ -101,10 +144,27 @@ if ($audit_info) {
                     $lsd_status = true;
                 }
             }
-                echo '<br>End of for each of tags <br>';
+            error_log('End of for each of tags');
         }
         $progress = $done = false;
         $transfer = $lsd = false;
+    }
+    if ($submit_audit) {
+        $stmt = $dbh->prepare("
+  UPDATE audit_history
+  SET audit_status = 'Complete',
+      finished_at = NOW(),
+      forms_submitted = true
+  WHERE audit_id = :audit_id
+  RETURNING audit_status, finished_at
+");
+        $stmt->execute([
+            ':audit_id' => (int)$audit_id
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            die("Audit not found in DB");
+        }
     }
 }
 if (!$submit_audit) {
@@ -144,7 +204,7 @@ $variables['data']['Stimf2f9oY']['data']['IOw4-l7NsM'] = $dept_id;
 echo $dept_id . '<br>';
 $get_dept_custodians = "SELECT dept_id, dept_name, unnest(custodian) as cust, dept_manager FROM department d WHERE dept_id = :dept_id";
 $get_cust_stmt = $dbh->prepare($get_dept_custodians);
-$get_cust_stmt->execute([":dept_id"=>$dept_id]);
+$get_cust_stmt->execute([":dept_id" => $dept_id]);
 $custodians = $get_cust_stmt->fetchAll(PDO::FETCH_ASSOC);
 $custodian = trim($custodians[0]['cust'], ' " ');
 $dept_name = $custodians[0]['dept_name'];
@@ -152,7 +212,7 @@ $dept_name = $custodians[0]['dept_name'];
 $cust_count = count($custodians);
 $get_cust_info = "select email, form_id, school_id, username, f_name, l_name from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $stmt = $dbh->prepare($get_cust_info);
-$stmt->execute([':full_name'=>$custodian]);
+$stmt->execute([':full_name' => $custodian]);
 $cust_info = $stmt->fetch();
 echo '<pre>complete_audit first part ';
 var_dump($cust_info);
@@ -163,17 +223,17 @@ if (empty($cust_info['form_id'])) {
     $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
     $variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['firstName'];
-    $variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['id'];
+    $variables['data']['lHuAQy0tZd']['id'] = (string)$cust_info['id'];
     $variables['data']['lHuAQy0tZd']['label'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['lastName'];
     $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['schoolId'];
     $variables['data']['lHuAQy0tZd']['username'] = $cust_info['username'];
 } else {
     echo ' Cust Info found <br>';
-    $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'] . '('.$cust_info['email'].')';
+    $variables['data']['lHuAQy0tZd']['displayName'] = $custodians[0]['cust'] . '(' . $cust_info['email'] . ')';
     $variables['data']['lHuAQy0tZd']['email'] = $cust_info['email'];
     $variables['data']['lHuAQy0tZd']['firstName'] = $cust_info['f_name'];
-    $variables['data']['lHuAQy0tZd']['id'] =(string)$cust_info['form_id'];
+    $variables['data']['lHuAQy0tZd']['id'] = (string)$cust_info['form_id'];
     $variables['data']['lHuAQy0tZd']['label'] = $custodians[0]['cust'];
     $variables['data']['lHuAQy0tZd']['lastName'] = $cust_info['l_name'];
     $variables['data']['lHuAQy0tZd']['schoolId'] = $cust_info['school_id'];
@@ -182,13 +242,13 @@ if (empty($cust_info['form_id'])) {
 echo $custodians[0]['cust'] . ' ' . $cust_info['form_id'] . ' ' .  $cust_info['email'] . ' line 176<br>';
 echo $dept_id . '<br>';
 echo '<pre>';
-var_dump ($cust_info);
+var_dump($cust_info);
 echo '</pre>';
 
 $manager_name = $custodians[0]['dept_manager'];
 try {
     $get_mana_stmt = $dbh->prepare($get_cust_info);
-    $get_mana_stmt->execute([":full_name"=>$manager_name]);
+    $get_mana_stmt->execute([":full_name" => $manager_name]);
     $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     if (empty($mana_info['form_id']) || empty($mana_info['school_id'])) {
         // SEARCH CUST IN KUALI
@@ -198,7 +258,7 @@ try {
         $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
     }
 } catch (PDOException $e) {
-    error_log(e->getMessage());
+    error_log($e->getMessage());
 }
 $mana_info = getNameInfo($manager_name, $dept_id);
 $variables['data']['55-0zfJWML']['displayName'] = $manager_name;
@@ -289,7 +349,7 @@ if (!$action_id) {
     die("ERROR: actionId is NULL before submitting the document.");
 }
 $now_array = new DateTime();
-$now_array->setTimezone( new DateTimeZone('America/Los_Angeles'));
+$now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
 $ms_time = round(microtime(true) * 1000);
@@ -299,7 +359,7 @@ $variables['status'] = 'completed';
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables
+    'variables' => $variables
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
@@ -310,7 +370,7 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 $insert = 'UPDATE audit_history SET complete_form_id = :form_id WHERE audit_id = :aid AND dept_id = :dept_id';
 $stmt = $dbh->prepare($insert);
-$stmt->execute([':form_id'=>$document_id, ':aid'=>$audit_id, ':dept_id'=>$dept_id]);
+$stmt->execute([':form_id' => $document_id, ':aid' => $audit_id, ':dept_id' => $dept_id]);
 echo "<pre>";
 var_dump($resp);
 echo "</pre>";

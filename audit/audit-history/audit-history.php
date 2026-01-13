@@ -9,69 +9,69 @@ include_once("../../config.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit History</title>
     <link rel="stylesheet" href="audit-history.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
     <div class="page-wrapper">
-<?php
-$get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
-$curr_stmt = $dbh->query($get_curr_ids);
-$curr_stmt->execute();
-$curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
-$search = $_POST['search'];
-$type = $_POST['audit_type'];
-$status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
-$and = $status_search === '' ? '' : ' AND ';
-if ($type === 'SPA Audits') {
-    $id = $curr_results['curr_spa_id'];
-    $prev_id = ($id === 7) ? 8 : 7;
-    $old_and_going_id = 9;
-    $curr_type = "SPA Audit";
-    $old_type = "Previous SPA Audit";
-    $query_type = " audit_id = ANY(ARRAY[7,8,9]) ";
-} else if ($type === 'Management Audits') {
-    $id = $curr_results['curr_mgmt_id'];
-    $prev_id = ($id === 4) ? 5 : 4;
-    $old_and_going_id = 6;
-    $curr_type = "Management Audit";
-    $old_type = "Previous Management Audit";
-    $query_type = " audit_id = ANY(ARRAY[4,5,6]) ";
-} else if ($type === 'Self Audits') {
-    $id = $curr_results['curr_self_id'];
-    $prev_id = ($id === 1) ? 2 : 1;
-    $old_and_going_id = 3;
-    $curr_type = "Self Audit";
-    $old_type = "Previous Self Audit";
-    $query_type = " audit_id = ANY(ARRAY[1,2,3]) ";
-}
-if ($search === 'all') {
-    $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.dept_id)
+        <?php
+        $get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
+        $curr_stmt = $dbh->query($get_curr_ids);
+        $curr_stmt->execute();
+        $curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
+        $search = $_POST['search'];
+        $type = $_POST['audit_type'];
+        $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
+        $and = $status_search === '' ? '' : ' AND ';
+        if ($type === 'SPA Audits') {
+            $id = $curr_results['curr_spa_id'];
+            $prev_id = ($id === 7) ? 8 : 7;
+            $old_and_going_id = 9;
+            $curr_type = "SPA Audit";
+            $old_type = "Previous SPA Audit";
+            $query_type = " audit_id = ANY(ARRAY[7,8,9]) ";
+        } else if ($type === 'Management Audits') {
+            $id = $curr_results['curr_mgmt_id'];
+            $prev_id = ($id === 4) ? 5 : 4;
+            $old_and_going_id = 6;
+            $curr_type = "Management Audit";
+            $old_type = "Previous Management Audit";
+            $query_type = " audit_id = ANY(ARRAY[4,5,6]) ";
+        } else if ($type === 'Self Audits') {
+            $id = $curr_results['curr_self_id'];
+            $prev_id = ($id === 1) ? 2 : 1;
+            $old_and_going_id = 3;
+            $curr_type = "Self Audit";
+            $old_type = "Previous Self Audit";
+            $query_type = " audit_id = ANY(ARRAY[1,2,3]) ";
+        }
+        if ($search === 'all') {
+            $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.dept_id)
 UNION (SELECT dept_id, dept_name FROM department) ORDER BY dept_id";
-    $dept_stmt = $dbh->query($depts);
-    $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dept_stmt = $dbh->query($depts);
+            $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
-    $stmt = $dbh->prepare($select_query);
-    $stmt->execute();
-} else {
-    $search = '%' . $search . '%';
-    $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id WHERE a.dept_id ILIKE :search OR d.dept_name ILIKE :search) 
+            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
+            $stmt = $dbh->prepare($select_query);
+            $stmt->execute();
+        } else {
+            $search = '%' . $search . '%';
+            $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id WHERE a.dept_id ILIKE :search OR d.dept_name ILIKE :search) 
 UNION
 (SELECT dept_id, dept_name FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search) ORDER BY dept_id";
-    $dept_stmt = $dbh->prepare($depts);
-    $dept_stmt->execute([":search" => $search]);
-    $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
+            $dept_stmt = $dbh->prepare($depts);
+            $dept_stmt->execute([":search" => $search]);
+            $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $select_query = "SELECT h.dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history h LEFT JOIN department d ON d.dept_id = h.dept_id WHERE (h.dept_id ILIKE :search OR d.dept_name ILIKE :search) AND " . $query_type . " ORDER BY audit_id";
-    $stmt = $dbh->prepare($select_query);
-    $stmt->execute([':search' => $search]);
-}
-$audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $select_query = "SELECT h.dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history h LEFT JOIN department d ON d.dept_id = h.dept_id WHERE (h.dept_id ILIKE :search OR d.dept_name ILIKE :search) AND " . $query_type . " ORDER BY audit_id";
+            $stmt = $dbh->prepare($select_query);
+            $stmt->execute([':search' => $search]);
+        }
+        $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$count = 0;
-if (count($departments) > 0) {
-?>
+        $count = 0;
+        if (count($departments) > 0) {
+        ?>
             <!-- Added container div for better styling -->
             <div class="table-container">
                 <table class="is-history" id="is-history">
@@ -84,51 +84,51 @@ if (count($departments) > 0) {
                         </tr>
                     </thead>
                     <tbody>
-<?php
-    $i = 0;
+                        <?php
+                        $i = 0;
 
-    foreach ($departments as $index => $dept) {
-        $curr = $previous = $old_ongoing = false;
-        $count++;
-        $count_dept = 0;
-        $color = ($i++ % 2 == 0) ? 'even' : 'odd';
-        echo "<tr class='$color'>";
-        echo "<td>" . $dept['dept_id'] . "</td>";
-        echo "<td>" . $dept['dept_name'] . "</td>";
-        foreach ($audits as $index => $audit) {
-            if ($dept['dept_id'] === $audit['dept_id']) {
-                if ($audit['audit_id'] === $id) {
-                    $curr = true;
-                    $curr_index = $index;
-                }
-                if ($audit['audit_id'] === $prev_id) {
-                    $previous = true;
-                    $previous_index = $index;
-                }
-                if ($audit['audit_id'] === $old_and_going_id) {
-                    $old_ongoing = true;
-                    $old_ongoing_index = $index;
-                }
-            }
-        }
-        if ($curr) {
-            displayAuditData($curr_index, $dept['dept_id']);
-        } else {
-            notStart($curr_type);
-        }
-        if ($previous) {
-            displayAuditData($previous_index, $dept['dept_id']);
-        }
-        if ($old_ongoing) {
-            displayAuditData($old_ongoing_index, $dept['dept_id']);
-        }
-        if (!$old_ongoing && !$previous) {
-            notStart($old_type);
-        }
+                        foreach ($departments as $index => $dept) {
+                            $curr = $previous = $old_ongoing = false;
+                            $count++;
+                            $count_dept = 0;
+                            $color = ($i++ % 2 == 0) ? 'even' : 'odd';
+                            echo "<tr class='$color'>";
+                            echo "<td>" . $dept['dept_id'] . "</td>";
+                            echo "<td>" . $dept['dept_name'] . "</td>";
+                            foreach ($audits as $index => $audit) {
+                                if ($dept['dept_id'] === $audit['dept_id']) {
+                                    if ($audit['audit_id'] === $id) {
+                                        $curr = true;
+                                        $curr_index = $index;
+                                    }
+                                    if ($audit['audit_id'] === $prev_id) {
+                                        $previous = true;
+                                        $previous_index = $index;
+                                    }
+                                    if ($audit['audit_id'] === $old_and_going_id) {
+                                        $old_ongoing = true;
+                                        $old_ongoing_index = $index;
+                                    }
+                                }
+                            }
+                            if ($curr) {
+                                displayAuditData($curr_index, $dept['dept_id']);
+                            } else {
+                                notStart($curr_type);
+                            }
+                            if ($previous) {
+                                displayAuditData($previous_index, $dept['dept_id']);
+                            }
+                            if ($old_ongoing) {
+                                displayAuditData($old_ongoing_index, $dept['dept_id']);
+                            }
+                            if (!$old_ongoing && !$previous) {
+                                notStart($old_type);
+                            }
 
-        echo "</tr>";
-    }
-?>
+                            echo "</tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -177,13 +177,13 @@ if (count($departments) > 0) {
 
     echo '<tr>';
     if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && ($audits[$curr_index]['forms_submitted'] === true || !empty($audits[$curr_index]['check_forms']))) {
-        echo "<td>" . $audits[$curr_index]['finished_at'] . " <a href='#' data-dept='$dept' data-id='$curr_index' class='modal-btn' onclick='openDialog(".json_encode($dept)."," .json_encode($curr_index).")' style='color: #003DA5; text-decoration: none; padding: 8px 12px; background-color: #FFB81C; border-radius: 4px; display: inline-block; transition: all 0.3s ease;'><i class='fa fa-search'></i></a></td>";
+        echo "<td>" . $audits[$curr_index]['finished_at'] . " <a href='#' data-dept='$dept' data-id='$curr_index' class='modal-btn' onclick='openDialog(" . json_encode($dept) . "," . json_encode($curr_index) . ")' style='color: #003DA5; text-decoration: none; padding: 8px 12px; background-color: #FFB81C; border-radius: 4px; display: inline-block; transition: all 0.3s ease;'><i class='fa fa-search'></i></a></td>";
 
         $check_forms = $audits[$curr_index]['check_forms'];
         echo "<dialog id='$dept-$curr_index'>";
         //$check_forms = $audits[$curr_index]['check_forms'];
         //echo '<div class="modal-content">';
-        echo "<span class='close' onclick='closeDialog(".json_encode($dept).",".json_encode($curr_index).")'>&times;</span>";
+        echo "<span class='close' onclick='closeDialog(" . json_encode($dept) . "," . json_encode($curr_index) . ")'>&times;</span>";
         echo "<h3 style='color: #003DA5; border-bottom: 2px solid #FFB81C; padding-bottom: 10px; margin-top: 0;'>Audit Form Details</h3>";
         if (empty($check_forms) || trim($check_forms, '{"}') === '') {
             echo "<p style='color: #003DA5;'>No Loss/Stolen/Damaged Reports Submitted</p>";
@@ -202,7 +202,7 @@ if (count($departments) > 0) {
             foreach ($form_array as $index2 => $form) {
                 $form = trim($form, '"');
                 $count = strlen($form);
-               $regex = '/(\s)/'; 
+                $regex = '/(\s)/';
 
                 if ($count === 24 && !preg_match($regex, $form)) {
                     $id = $form;
@@ -213,25 +213,25 @@ if (count($departments) > 0) {
 
                 if ($form === 'lsd') {
                     if (!empty($id)) {
-                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68d09e41d599f1028a9b9457/".$id."/view' target='_blank'>To Form</a>";
+                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68d09e41d599f1028a9b9457/" . $id . "/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;"> Custodian Loss/Stolen/Damaged Form: </span>';
                     continue;
                 } else if ($form === 'transfer') {
                     if (!empty($id)) {
-                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/".$id."/view' target='_blank'>To Form</a>";
+                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68c73600df46a3027d2bd386/" . $id . "/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;"> Bulk Transfer Form: </span>';
                     continue;
                 } else if ($form === 'rlsd') {
                     if (!empty($id)) {
-                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/".$id."/view' target='_blank'>To Form</a>";
+                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68e94e8a58fd2e028d5ec88f/" . $id . "/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;"> Management Loss/Stolen/Damaged Form: </span>';
                     continue;
                 } else if ($form === 'rtransfer') {
                     if (!empty($id)) {
-                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/".$id."/view' target='_blank'>To Form</a>";
+                        echo "<a class='link link--metis' href='https://csub.kualibuild.com/document-list/68d09e38d599f1028a08969a/" . $id . "/view' target='_blank'>To Form</a>";
                     }
                     echo '<span style="color: #003DA5; font-weight: 600;"> Transfer Form: </span>';
                     continue;
@@ -241,46 +241,46 @@ if (count($departments) > 0) {
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
 ?>
-            <span style='color: <?= $color ?> ;'>In Progress </span>
-<?php
+                    <span style='color: <?= $color ?> ;'>In Progress </span>
+                <?php
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'complete') {
                     $color = '#28A745';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
-?>
-            <span style='color: <?= $color ?> ;'>Complete </span>
-<?php
+                ?>
+                    <span style='color: <?= $color ?> ;'>Complete </span>
+                <?php
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'withdrawn') {
                     $color = '#6C757D';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
 
-?>
-            <span style='color: <?= $color ?> ;'>Withdrawn </span>
-<?php
+                ?>
+                    <span style='color: <?= $color ?> ;'>Withdrawn </span>
+                <?php
                     echo '<span style="color: #003DA5; font-weight: 600;"> Tags </span>';
                     continue;
                 } else if ($form === 'denied') {
                     $color = '#DC3545';
                     echo '<span style="color: #003DA5; font-weight: 600;">Status: </span>';
-?>
-            <span style='color: <?= $color ?> ;'>Denied </span>
-            <span style="font-weight:700; color: #003DA5;"> Tags </span>
+                ?>
+                    <span style='color: <?= $color ?> ;'>Denied </span>
+                    <span style="font-weight:700; color: #003DA5;"> Tags </span>
 <?php
                     continue;
                 }
 
                 $form = trim($form, '"');
-                    echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
+                echo '<span style="font-weight:700; color: #003DA5;"> ' . $form . ' </span>';
             }
         }
         // echo '</div>';
         echo '</dialog>';
     } else {
-    echo "<td>" . $audits[$curr_index]['finished_at'] . '</td>';
+        echo "<td>" . $audits[$curr_index]['finished_at'] . '</td>';
     }
     echo "<td>" . $audit_type[(int)$audits[$curr_index]['audit_id']] . "</td>";
     echo "<td style='color:" . $color . ";'>" . $audits[$curr_index]['audit_status'] . "</td>";
@@ -292,7 +292,7 @@ if (count($departments) > 0) {
         if (($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3])) || $_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') {
             echo "<a class='action-link start-link' href='complete/start-bulk-transfer.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "&complete=true'>Start Forms</a>  ";
         }
-        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3]))) && $audits[$curr_index]['forms_submitted'] === true) {
+        if ((($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') || ($_SESSION['deptid'] === $dept && in_array((int)$audits[$curr_index]['audit_id'], [1, 2, 3])))) { // && $audits[$curr_index]['forms_submitted'] === true) { // REMOVED THE 'FORMS-SUBMITTED' REQUIREMENT
             echo "<a class='action-link complete-link' href='https://dataworks-7b7x.onrender.com/kualiAPI/write/complete-audit.php?dept_id=" . htmlspecialchars(urlencode($dept)) . "&audit_id=" . htmlspecialchars(urlencode($audits[$curr_index]['audit_id'])) . "'>Complete</a>";
         }
         echo "</td>";
@@ -309,16 +309,17 @@ if (count($departments) > 0) {
     echo '</tr>';
 }
 
-function notStart($type) {
+function notStart($type)
+{
     echo '<tr>';
     echo '<td>';
-    echo "<td>". $type ."</td>";
+    echo "<td>" . $type . "</td>";
     echo "<td style='color:red;'>Not Started</td>";
     echo '</tr>';
 }
 ?>
 <script>
-/*
+    /*
     document.addEventListener('DOMContentLoaded', () => {
         console.log('hello');
         const modal_btn = document.querySelectorAll('.modal-btn');
@@ -348,4 +349,3 @@ function notStart($type) {
     });
  */
 </script>
-
