@@ -68,7 +68,7 @@ if (empty($audit_info)) {
   RETURNING audit_status, finished_at
 ");
         $stmt->execute([
-            ':audit_id' => (int)$audit_id
+            ':dept_id' => $dept_id
         ]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
@@ -159,7 +159,7 @@ if ($audit_info) {
   RETURNING audit_status, finished_at
 ");
         $stmt->execute([
-            ':audit_id' => (int)$audit_id
+            ':dept_id' => $dept_id
         ]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
