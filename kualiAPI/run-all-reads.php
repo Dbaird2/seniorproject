@@ -789,9 +789,14 @@ function assetReceived()
 
 
             $model = $edge['node']['data']['L6q0gWhZ-Q']['label'];
+            if (strcasecmp($model, 'Other') === 0) {
+                $model = trim($_POST['vendor_name'] ?? 'Other');
+            }
+            /*
             if ($model === 'Other') {
                 $model = $edge['node']['data'];
             }
+            */
             $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
             $lifecycle = 10;
             foreach ($tag_data as $tag) {
