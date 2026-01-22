@@ -2413,7 +2413,8 @@ function checkFormStatus()
 {
     echo '<br>Check Form Status<br>';
     global $dbh, $result;
-    $apikey = $result['kuali_key'];
+    // $apikey = $result['kuali_key'];
+    $apikey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NjUxY2NkYWM0ZWZmMTQ4NjcyNGM3NyIsImlzcyI6Imt1YWxpLmNvIiwiaWF0IjoxNzY4MjM0MTkwLCJleHAiOjE3OTk3NzAxODl9.gcYGRAO8iiNKPYDHGXMuncsWWFNCgCZmGcz6ANILvVk';
     $subdomain = "csub";
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -2452,6 +2453,7 @@ function checkFormStatus()
                 "Authorization: Bearer {$apikey}",
             );
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
             $data = json_encode([
                 "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { 
                 app(id: $appId) { 
@@ -2460,8 +2462,9 @@ function checkFormStatus()
                 skip: $skip limit: $limit sort: $sort query: $query fields: $fields } 
                 keyBy: ID ) { 
                 totalCount 
-                edges { node { id meta } 
-                }
+                edges { 
+                node { id meta } 
+                } 
                 pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
                 "variables" => [
                     "appId" => $type,
@@ -2488,16 +2491,14 @@ function checkFormStatus()
                     ],
                 ]
             ]);
-
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-            //for debug only!
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
             $resp = curl_exec($curl);
             unset($curl);
+
             $decoded = json_decode($resp, true);
+            
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
@@ -2517,6 +2518,7 @@ function checkFormStatus()
                 break;
             }
         }
+
         if ($found) {
             $status = strtolower(str_replace('<br>', '', $status));
             switch ($status) {
@@ -2552,6 +2554,7 @@ function checkFormStatus()
                 default:
                     break;
             }
+
         }
     }
 }
