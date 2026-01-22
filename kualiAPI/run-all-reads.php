@@ -2,6 +2,8 @@
 include_once __DIR__ . '/../config.php';
 set_time_limit(900);
 
+file_put_contents(__DIR__ . '/debug.log', date('c') . " FILE LOADED\n", FILE_APPEND);
+
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', 'php://stderr');
@@ -2455,6 +2457,7 @@ function canonical_hex_id($s)
 
 function checkFormStatus()
 {
+    file_put_contents(__DIR__ . '/debug.log', date('c') . " checkFormStatus() STARTED\n", FILE_APPEND);
     echo '<br>Check Form Status<br>';
     global $dbh, $result;
     $apikey = $result['kuali_key'];
