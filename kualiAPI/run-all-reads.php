@@ -2558,7 +2558,7 @@ function checkFormStatus()
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
-                /*
+
                 if (!empty($edge['node']['meta']['workflowStatus'])) {
                     $status = $edge['node']['meta']['workflowStatus'];
                     if ($id === trim($edge['node']['id'])) {
@@ -2567,7 +2567,8 @@ function checkFormStatus()
                         break;
                     }
                 }
-                    */
+
+                /*
                 $edgeIdRaw = $edge['node']['id'] ?? '';
                 $idRaw = $id; // from your explode logic
 
@@ -2587,7 +2588,7 @@ function checkFormStatus()
                     $found = true;
                     break;
                 }
-
+                */
                 if ($found) {
                     break;
                 }
