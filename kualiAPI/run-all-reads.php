@@ -2413,8 +2413,7 @@ function checkFormStatus()
 {
     echo '<br>Check Form Status<br>';
     global $dbh, $result;
-    // $apikey = $result['kuali_key'];
-    $apikey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NjUxY2NkYWM0ZWZmMTQ4NjcyNGM3NyIsImlzcyI6Imt1YWxpLmNvIiwiaWF0IjoxNzY4MjM0MTkwLCJleHAiOjE3OTk3NzAxODl9.gcYGRAO8iiNKPYDHGXMuncsWWFNCgCZmGcz6ANILvVk';
+    $apikey = $result['kuali_key'];
     $subdomain = "csub";
     $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
 
@@ -2498,7 +2497,7 @@ function checkFormStatus()
             unset($curl);
 
             $decoded = json_decode($resp, true);
-            
+
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
@@ -2523,7 +2522,7 @@ function checkFormStatus()
             $status = strtolower(str_replace('<br>', '', $status));
             switch ($status) {
                 case 'in-progress':
-                    continue;
+                    continue 2;
                 case 'complete':
                     $new_form = str_replace('in-progress', $status, $form['form_id']);
                     $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
@@ -2554,7 +2553,6 @@ function checkFormStatus()
                 default:
                     break;
             }
-
         }
     }
 }
