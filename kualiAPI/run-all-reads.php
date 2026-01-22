@@ -2426,6 +2426,8 @@ function checkFormStatus()
         foreach ($seperate as $index => $ele) {
             if ($index === 0) {
                 $id = trim($ele);
+                echo $form['dept_id'] . ' ' . $id . '<br>';
+
                 continue;
             }
             if ($index === 1) {
@@ -2451,7 +2453,16 @@ function checkFormStatus()
             );
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             $data = json_encode([
-                "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+                "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { 
+                app(id: $appId) { 
+                id name documentConnection( 
+                args: { 
+                skip: $skip limit: $limit sort: $sort query: $query fields: $fields } 
+                keyBy: ID ) { 
+                totalCount 
+                edges { node { id meta } 
+                }
+                pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
                 "variables" => [
                     "appId" => $type,
                     "skip" => 0,
