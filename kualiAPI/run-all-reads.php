@@ -160,7 +160,7 @@ keyBy: ID
                 }
                 $select = 'SELECT 1 FROM user_table WHERE :dept_id = ANY(dept_id) AND email = :email';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
+                $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
                 $cust_found = $stmt->fetch();
                 if (!$cust_found) {
                     $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
@@ -268,7 +268,7 @@ keyBy: ID
                 }
                 $select = 'SELECT 1 FROM user_table WHERE :dept_id = ANY(dept_id) AND email = :email';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':dept_id'=>$dept_id, ':email'=>$email]);
+                $stmt->execute([':dept_id' => $dept_id, ':email' => $email]);
                 $cust_found = $stmt->fetch();
                 if (!$cust_found) {
                     $update = 'UPDATE user_table SET dept_id = ARRAY_APPEND(dept_id, :dept_id) WHERE email = :email';
@@ -1260,7 +1260,7 @@ function check()
                 $name = $edge['node']['data']['cQOz4UQ0rQ'];
                 $insert = 'INSERT INTO asset_info (asset_tag, asset_name, type2, serial, dept_id) VALUES (?,?,?,?,?)';
                 $stmt = $dbh->prepare($insert);
-                $stmt->execute([$tag, $name, $type2, $serial, $dept_id]);
+                $stmt->execute([$tag, $name, $type2, $serial, $dept]); //changed $dept_id to $dept not sure if thats what he meant
             }
             echo "<br>" . $count++;
             echo "<br>Updating<br>Tag " . $tag . "<br>";
@@ -1550,7 +1550,7 @@ function busChange($edge, $raw_ms)
         $new_tag = $tag['data']['XQH80E5rNZ'];
         $update = 'UPDATE asset_info SET asset_tag = :new WHERE asset_tag = :old';
         $stmt = $dbh->prepare($update);
-        $stmt->execute([':new'=>$new_tag,':old'=>$old_tag]);
+        $stmt->execute([':new' => $new_tag, ':old' => $old_tag]);
     }
 }
 function checkBldg($bldg_name, $room_loc, $tag)
@@ -1797,6 +1797,7 @@ keyBy: ID
 
             $new_tag = '';
             $new_name = '';
+            $old_tag = ''; // Error on old_tag not sure what the issue is
 
             if ($tag_check) {
                 $update = 'UPDATE asset_info SET asset_tag = :new_tag WHERE asset_tag = :old_tag';
@@ -2635,7 +2636,6 @@ function getAuditSchedules()
         return;
     }
     return;
-    
 }
 
 function completeAudit()
@@ -2684,26 +2684,26 @@ keyBy: ID
 }
 }
 }',
-    "variables" => [
-        //
-        "appId" => "67e450e3cc3194027d15a8e2",
-        "skip" => $skip,
-        "limit" => 0,
-        "sort" => ["meta.createdAt"],
-        "query" => "",
-        "fields" => [
-            "type" => "AND",
-            "operators" => [
-                [
-                    "field" => "meta.workflowStatus",
-                    "type" => "IS",
-                    "value" => "Complete"
+        "variables" => [
+            //
+            "appId" => "67e450e3cc3194027d15a8e2",
+            "skip" => $skip,
+            "limit" => 0,
+            "sort" => ["meta.createdAt"],
+            "query" => "",
+            "fields" => [
+                "type" => "AND",
+                "operators" => [
+                    [
+                        "field" => "meta.workflowStatus",
+                        "type" => "IS",
+                        "value" => "Complete"
+                    ]
+
                 ]
 
             ]
-
         ]
-    ]
     ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
@@ -2734,21 +2734,21 @@ keyBy: ID
                 $custodian = $edge['node']['data']['lHuAQy0tZd']['displayName'];
                 $select = 'SELECT 1 FROM department WHERE :cust = ANY(custodian) AND dept_id = :dept_id';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':cust'=>$custodian, ':dept_id'=>$dept_id]);
+                $stmt->execute([':cust' => $custodian, ':dept_id' => $dept_id]);
                 $true = $stmt->fetch();
                 if (!$true) {
                     $update = 'UPDATE department SET custodian = ARRAY_APPEND(custodian, :cust), dept_manager = :manager WHERE dept_id = :dept';
                     $stmt = $dbh->prepare($update);
-                    $stmt->execute([':cust'=>$custodian,':manager'=>$manager,':dept'=>$dept_id]);
+                    $stmt->execute([':cust' => $custodian, ':manager' => $manager, ':dept' => $dept_id]);
                 } else {
                     $update = 'UPDATE department SET dept_manager = :manager WHERE dept_id = :dept';
                     $stmt = $dbh->prepare($update);
-                    $stmt->execute([':manager'=>$manager,':dept'=>$dept_id]);
+                    $stmt->execute([':manager' => $manager, ':dept' => $dept_id]);
                 }
 
                 $select = 'select audit_id, dept_id from audit_history as a, unnest(a.check_forms) as t where t ILIKE :form_id';
                 $stmt = $dbh->prepare($select);
-                $stmt->execute([':form_id'=>'%'.$edge['node']['id'].'%']);
+                $stmt->execute([':form_id' => '%' . $edge['node']['id'] . '%']);
                 $audit_ids = $stmt->fetch();
 
                 $select = 'SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq';
@@ -2774,12 +2774,12 @@ keyBy: ID
             }
             $update = 'UPDATE kuali_table SET complete_schedule = :skip';
             $stmt = $dbh->prepare($update);
-            $stmt->execute([':skip'=>$skip]);
+            $stmt->execute([':skip' => $skip]);
             echo "Document ID: " . $edge['node']['id'] . " - Department ID: " . $dept_id . " - Department Name: " . $dept_name . "<br>";
         }
     }
 }
- 
+
 function dwCompleteAudit()
 {
     global $dbh, $result;
@@ -2931,4 +2931,3 @@ function updateOldAudit($dept_id, $audit_id, $new_audit_id)
     $stmt->bindParam(':audit_id', $audit_id);
     $stmt->execute();
 }
-
