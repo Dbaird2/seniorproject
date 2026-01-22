@@ -2409,6 +2409,44 @@ function dwPsr()
     }
 }
 
+function debug_log_id_pair($label, $a, $b)
+{
+    error_log("DEBUG $label A(raw): " . var_export($a, true));
+    error_log("DEBUG $label B(raw): " . var_export($b, true));
+    error_log("DEBUG $label A(len): " . strlen($a) . " B(len): " . strlen($b));
+    error_log("DEBUG $label A(hex): " . bin2hex($a) . " B(hex): " . bin2hex($b));
+    // show byte codes of first few chars if helpful:
+    $codesA = array_map('ord', preg_split('//u', $a, -1, PREG_SPLIT_NO_EMPTY));
+    $codesB = array_map('ord', preg_split('//u', $b, -1, PREG_SPLIT_NO_EMPTY));
+    error_log("DEBUG $label A(codes): " . implode(',', $codesA));
+    error_log("DEBUG $label B(codes): " . implode(',', $codesB));
+}
+
+function normalize_id($s)
+{
+    if ($s === null) return '';
+    // remove BOM, control chars, and trim whitespace (all spaces/newlines/tabs)
+    // remove any surrounding <br> or html fragments
+    $s = preg_replace('/<[^>]+>/', '', $s);                 // strip tags like <br>
+    $s = preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $s);   // remove control + NBSP
+    $s = trim($s);
+    // optionally remove all whitespace inside string if IDs should be contiguous:
+    $s = preg_replace('/\s+/', '', $s);
+    return (string)$s;
+}
+
+function canonical_hex_id($s)
+{
+    $s = (string)$s;
+    // lower-case, strip non-hex characters, trim
+    $s = trim($s);
+    $s = preg_replace('/[^0-9a-fA-F]/', '', $s);
+    return strtolower($s);
+}
+
+
+
+
 function checkFormStatus()
 {
     echo '<br>Check Form Status<br>';
@@ -2423,6 +2461,7 @@ function checkFormStatus()
     foreach ($forms_to_check as $form) {
         $seperate = explode(',', $form['form_id']);
         $id = '';
+
         foreach ($seperate as $index => $ele) {
             if ($index === 0) {
                 $id = trim($ele);
@@ -2497,10 +2536,15 @@ function checkFormStatus()
             unset($curl);
 
             $decoded = json_decode($resp, true);
+            if (!is_array($decoded)) {
+                error_log("Bad JSON response: " . substr((string)$resp, 0, 500));
+                continue; // or return;
+            }
 
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
+                /*
                 if (!empty($edge['node']['meta']['workflowStatus'])) {
                     $status = $edge['node']['meta']['workflowStatus'];
                     if ($id === trim($edge['node']['id'])) {
@@ -2509,6 +2553,27 @@ function checkFormStatus()
                         break;
                     }
                 }
+                    */
+                $edgeIdRaw = $edge['node']['id'] ?? '';
+                $idRaw = $id; // from your explode logic
+
+                // quick normalization + debug if not equal
+                $edgeId = normalize_id($edgeIdRaw);
+                $idClean = normalize_id($idRaw);
+
+                if ($idClean === $edgeId) {
+                    echo 'ID found <br>';
+                    $found = true;
+                    break;
+                } else {
+                    debug_log_id_pair('Compare', $idRaw, $edgeIdRaw);
+                }
+                if (canonical_hex_id($id) === canonical_hex_id($edge['node']['id'])) {
+                    echo 'ID found <br>';
+                    $found = true;
+                    break;
+                }
+
                 if ($found) {
                     break;
                 }
