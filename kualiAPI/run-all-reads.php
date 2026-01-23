@@ -2421,6 +2421,7 @@ function dwPsr()
         return;
     }
 }
+/*
 
 function debug_log_id_pair($label, $a, $b)
 {
@@ -2457,8 +2458,7 @@ function canonical_hex_id($s)
     return strtolower($s);
 }
 
-
-
+*/
 
 function checkFormStatus()
 {

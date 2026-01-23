@@ -64,11 +64,14 @@ if (empty($audit_info)) {
   SET audit_status = 'Complete',
       finished_at = NOW(),
       forms_submitted = true
-  WHERE dept_id = :dept_id
-  RETURNING audit_status, finished_at
+  WHERE audit_id = :audit_id
+    AND dept_id = :dept_id
+  RETURNING audit_id, audit_status, finished_at
 ");
+
         $stmt->execute([
-            ':dept_id' => $dept_id
+            ':audit_id' => (int)$audit_id,
+            ':dept_id'  => $dept_id
         ]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
@@ -155,11 +158,14 @@ if ($audit_info) {
   SET audit_status = 'Complete',
       finished_at = NOW(),
       forms_submitted = true
-  WHERE dept_id = :dept_id
-  RETURNING audit_status, finished_at
+  WHERE audit_id = :audit_id
+    AND dept_id = :dept_id
+  RETURNING audit_id, audit_status, finished_at
 ");
+
         $stmt->execute([
-            ':dept_id' => $dept_id
+            ':audit_id' => (int)$audit_id,
+            ':dept_id'  => $dept_id
         ]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
