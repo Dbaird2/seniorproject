@@ -801,7 +801,6 @@ try {
             tr = table.getElementsByTagName("tr");
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[3];
-                console.log(filter);
                 if (td && filter === 'NOT-FOUND') {
                     txt_value = td.textContent || td.innerText;
                     if (txt_value.toUpperCase().indexOf(filter) > -1) {
@@ -811,12 +810,12 @@ try {
                     }
                 } else if (filter === 'ALL') {
                     tr[i].style.display = "";
-                } else if (td && (filter === 'FOUND' || filter === 'EXTRA')) {
+                } else if (td && filter === 'FOUND') {
                     txt_value = td.textContent || td.innerText;
-                    if (txt_value.toUpperCase().indexOf('found') > -1 || txt_value.toUpperCase().indexOf('extra') > -1) {
-                        tr[i].style.display = "none";
-                    } else {
+                    if ((txt_value.toUpperCase().indexOf(filter) > -1 && txt_value.toUpperCase().indexOf(filter) < 4) || txt_value.toUpperCase().indexOf(filter) <= -1) {
                         tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
                 }
             }
