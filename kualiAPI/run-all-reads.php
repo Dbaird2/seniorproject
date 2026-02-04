@@ -564,40 +564,7 @@ function assetAddition()
             ]
         ]
     ]);
-    /*
-    $data = json_encode([
-        "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
-        "variables" => [
-            "appId" => "67ec557474c52c027eca23d8",
-            "skip" => 0,
-            "limit" => 100,
-            "sort" => [
-                "meta.createdAt"
-            ],
-            "query" => "",
-            "fields" => [
-                "type" => "AND",
-                "operators" => [
-                    [
-                        "type" => "AND",
-                        "operators" => [
-                            [
-                                "field" => "meta.workflowStatus",
-                                "type" => "IS",
-                                "value" => "Complete"
-                            ],
-                            [
-                                "field" => "meta.createdAt",
-                                "type" => "RANGE",
-                                "min" => (string)$raw_ms
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]);
-    */
+
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -2462,8 +2429,8 @@ function canonical_hex_id($s)
 
 function checkFormStatus()
 {
-    file_put_contents(__DIR__ . '/debug.log', date('c') . " checkFormStatus() STARTED\n", FILE_APPEND);
-    echo '<br>Check Form Status<br>';
+    // file_put_contents(__DIR__ . '/debug.log', date('c') . " checkFormStatus() STARTED\n", FILE_APPEND);
+    //echo '<br>Check Form Status<br>';
     global $dbh, $result;
     $apikey = $result['kuali_key'];
     $subdomain = "csub";
@@ -2549,12 +2516,10 @@ function checkFormStatus()
             $resp = curl_exec($curl);
             unset($curl);
 
-            $decoded = json_decode($resp, true);
-            if (!is_array($decoded)) {
-                error_log("Bad JSON response: " . substr((string)$resp, 0, 500));
-                continue; // or return;
+            if (empty($decoded['data']['app']['documentConnection']['edges'])) {
+                echo 'No edges found <br>';
+                continue;
             }
-
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
@@ -2597,42 +2562,78 @@ function checkFormStatus()
                 break;
             }
         }
+        if (!$found) {  
+            continue;
+        }
 
-        if ($found) {
-            $status = strtolower(str_replace('<br>', '', $status));
-            switch ($status) {
-                case 'in-progress':
-                    continue 2;
-                case 'complete':
-                    $new_form = str_replace('in-progress', $status, $form['form_id']);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':old_form' => $form['form_id'], ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    break;
-                case 'withdrawn':
-                    $new_form = str_replace('in-progress', $status, $form['form_id']);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':old_form' => $form['form_id'], ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    break;
-                case 'denied':
-                    $new_form = str_replace('in-progress', $status, $form['form_id']);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form) WHERE audit_id = :id AND dept_id = :dept";
-                    $stmt = $dbh->prepare($update);
-                    $stmt->execute([':old_form' => $form['form_id'], ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
-                    break;
-                default:
-                    break;
+          if ($found) {
+            echo 'found <br>';
+            if (empty($status)) continue;
+
+            $formString = $form['form_id'];
+            $parts = explode(',', $formString);
+
+            if (count($parts) < 3) {
+                continue;
             }
+
+            $formStatus = strtolower(trim($parts[2]));
+
+            if ($status === $formStatus) {
+                continue;
+            }
+
+            if ($status !== 'in progress' && $formStatus === 'in progress') {
+                switch ($status) {
+                    case 'in-progress':
+                        continue 2;
+                    case 'complete':
+                        $new_form = str_replace('in-progress', $status, $form['form_id']);
+                        $update = "UPDATE audit_history
+                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
+                    WHERE audit_id = :id
+                    AND dept_id  = :dept";
+                        $stmt = $dbh->prepare($update);
+                        $stmt->execute([
+                            ':old_form' => $form['form_id'],
+                            ':new_form' => $new_form,
+                            ':id'       => $form['audit_id'],
+                            ':dept'     => $form['dept_id'],
+                        ]);
+                        break;
+                    case 'withdrawn':
+                        $new_form = str_replace('in-progress', $status, $form['form_id']);
+                        $update = "UPDATE audit_history
+                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
+                    WHERE audit_id = :id
+                    AND dept_id  = :dept";
+                        $stmt = $dbh->prepare($update);
+                        $stmt->execute([
+                            ':old_form' => $form['form_id'],
+                            ':new_form' => $new_form,
+                            ':id'       => $form['audit_id'],
+                            ':dept'     => $form['dept_id'],
+                        ]);
+                        break;
+                    case 'denied':
+                        $new_form = str_replace('in-progress', $status, $form['form_id']);
+                        $update = "UPDATE audit_history
+                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
+                    WHERE audit_id = :id
+                    AND dept_id  = :dept";
+                        $stmt = $dbh->prepare($update);
+                        $stmt->execute([
+                            ':old_form' => $form['form_id'],
+                            ':new_form' => $new_form,
+                            ':id'       => $form['audit_id'],
+                            ':dept'     => $form['dept_id'],
+                        ]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
         }
     }
 }
