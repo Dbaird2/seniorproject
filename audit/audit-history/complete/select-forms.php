@@ -23,7 +23,7 @@ $depts_info = $stmt->fetchAll();
     <?php include_once "../../../navbar.php"; ?>
     <?php include_once "../../../ui/toast.php"; ?>
     <style>
-* {
+        * {
             box-sizing: border-box;
         }
 
@@ -295,14 +295,14 @@ $depts_info = $stmt->fetchAll();
 
 <body>
     <datalist id="bldg-list">
-    <?php foreach ($bldgs_info as $bldg) { ?>
-        <option value='<?= $bldg['bldg_name'] ?>'>
-    <?php } ?>
+        <?php foreach ($bldgs_info as $bldg) { ?>
+            <option value='<?= $bldg['bldg_name'] ?>'>
+            <?php } ?>
     </datalist>
     <datalist id="dept-list">
-    <?php foreach ($depts_info as $dept) { ?>
-        <option value='<?= $dept['dept_name'] ?>'>
-    <?php } ?>
+        <?php foreach ($depts_info as $dept) { ?>
+            <option value='<?= $dept['dept_name'] ?>'>
+            <?php } ?>
     </datalist>
     <div class="container">
         <div class="header">
@@ -331,7 +331,7 @@ $depts_info = $stmt->fetchAll();
                             <td style="font-weight: 600;background-color: #e5F3Fd;">
                                 <select name="form-type" id="form-<?= $row['Tag Number'] ?>" data-tag="<?= $row['Tag Number'] ?>" class="forms-needed">
                                     <option value="">No Form Needed</option>
-                                    <?php if (!empty($row['Found Room Tag'])) { ?> 
+                                    <?php if (!empty($row['Found Room Tag'])) { ?>
                                         <option value="bulk-transfer">Bulk Transfer</option>
                                     <?php } ?>
                                     <option value="psr">Property Survey Report</option>
@@ -796,21 +796,21 @@ $depts_info = $stmt->fetchAll();
         </div>
     </div>
     <script>
-    function binarySearch(arr, target) {
-        let left = 0;
-        let right = arr.length - 1;
-        while (left <= right) {
-            const mid = Math.floor((left + right) / 2);
-            if (arr[mid].bldg_name === target) {
-                return true;
-            } else if (arr[mid].bldg_name < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
+        function binarySearch(arr, target) {
+            let left = 0;
+            let right = arr.length - 1;
+            while (left <= right) {
+                const mid = Math.floor((left + right) / 2);
+                if (arr[mid].bldg_name === target) {
+                    return true;
+                } else if (arr[mid].bldg_name < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
             }
+            return false;
         }
-        return false;
-    }
         const bldgs = <?= json_encode($bldgs_info); ?>;
         const depts = <?= json_encode($depts_info); ?>;
         const document_audit_id = parseInt(<?= json_encode([$audit_id]) ?>);
@@ -1072,7 +1072,7 @@ $depts_info = $stmt->fetchAll();
                     });
                 });
             });
-            
+
             // ------------------------------------------------------------------------------------------
             transfer_count = 0;
             const btn = document.getElementById("submit").addEventListener("click", async () => {
@@ -1461,10 +1461,9 @@ $depts_info = $stmt->fetchAll();
                                         showToast('Check Out Form Failed', 5000);
                                         console.log('failed');
                                     }
-                                } catch {
-                                }
-                                    hideUI('row', type.dataset.tag);
-                                    hideAll(type.dataset.tag);
+                                } catch {}
+                                hideUI('row', type.dataset.tag);
+                                hideAll(type.dataset.tag);
                             }
                         } else if (val == 'check-in') {
                             url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/check-forms.php";
@@ -1518,8 +1517,7 @@ $depts_info = $stmt->fetchAll();
                                         showToast('Check In Form Failed', 5000);
                                         console.log('failed');
                                     }
-                                } catch {
-                                }
+                                } catch {}
                                 hideUI('row', type.dataset.tag);
                                 hideAll(type.dataset.tag);
                             }
@@ -1626,10 +1624,9 @@ $depts_info = $stmt->fetchAll();
                                             showToast('Lost/Stolen/Dmg Failed', 5000);
                                             console.log('failed');
                                         }
-                                    } catch {
-                                    }
-                                        hideUI('row', type.dataset.tag);
-                                        hideAll(type.dataset.tag);
+                                    } catch {}
+                                    hideUI('row', type.dataset.tag);
+                                    hideAll(type.dataset.tag);
                                 }
                             } else {
                                 url = "https://dataworks-7b7x.onrender.com/kualiAPI/write/dw-lsd.php";
@@ -1663,10 +1660,9 @@ $depts_info = $stmt->fetchAll();
                                             showToast('Lost/Stolen/Dmg Failed', 5000);
                                             console.log('failed');
                                         }
-                                    } catch {
-                                    }
-                                        hideUI('row', type.dataset.tag);
-                                        hideAll(type.dataset.tag);
+                                    } catch {}
+                                    hideUI('row', type.dataset.tag);
+                                    hideAll(type.dataset.tag);
                                 }
                             }
                         }
@@ -1705,12 +1701,16 @@ $depts_info = $stmt->fetchAll();
                                     showToast('Property Survey Report Form Failed', 5000);
                                     console.log('failed');
                                 }
-                            } catch {
-                            }
-                                psr_tags.forEach(async (value) => {
-                                    hideUI('row', value);
-                                    hideAll(value);
-                                });
+                            } catch {}
+                            psr_tags.forEach(async (value) => {
+                                const tag = (value && typeof value === 'object') ? value.tag : value;
+                                if (!tag) {
+                                    console.warn('Skipping bad tag:', value);
+                                    return;
+                                }
+                                hideUI('row', tag);
+                                hideAll(tag);
+                            });
                         }
                     }
                     if (transfer_location_array.length !== 0) {
@@ -1747,12 +1747,11 @@ $depts_info = $stmt->fetchAll();
                                     showToast('Transfer Form Failed', 5000);
                                     console.log('failed');
                                 }
-                            } catch {
-                            }
-                                transfer_location_array.forEach(async (value) => {
-                                    hideUI('row', value.tag);
-                                    hideAll(value.tag);
-                                });
+                            } catch {}
+                            transfer_location_array.forEach(async (value) => {
+                                hideUI('row', value.tag);
+                                hideAll(value.tag);
+                            });
                         }
                     }
                     if (transfer_dept_array.length !== 0) {
@@ -1788,13 +1787,12 @@ $depts_info = $stmt->fetchAll();
                                     showToast('Transfer Form Failed', 5000);
                                     console.log('failed');
                                 }
-                            } catch {
-                            }
-                                transfer_dept_array.forEach(async (value) => {
-                                    console.log(value);
-                                    hideUI('row', value.tag);
-                                    hideAll(value.tag);
-                                });
+                            } catch {}
+                            transfer_dept_array.forEach(async (value) => {
+                                console.log(value);
+                                hideUI('row', value.tag);
+                                hideAll(value.tag);
+                            });
                         }
                     }
 
@@ -1831,12 +1829,12 @@ $depts_info = $stmt->fetchAll();
                                 }
                             } catch {
                                 //const b_t_data = await clone.json();
-                                    showToast('Bulk Transfer Form Failed', 5000);
-                                    console.log('failed');
+                                showToast('Bulk Transfer Form Failed', 5000);
+                                console.log('failed');
                             }
                             bulk_t_tags.forEach((value) => {
-                            hideUI('row', value);
-                            hideAll(value);
+                                hideUI('row', value);
+                                hideAll(value);
                             });
                         }
                     }
@@ -1849,4 +1847,5 @@ $depts_info = $stmt->fetchAll();
         });
     </script>
 </body>
+
 </html>
