@@ -14,7 +14,7 @@ $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
 deleteOverdueSchedule();
-propertyTransfer();
+//propertyTransfer();
 addKualiInfo();
 assetAddition();
 assetReceived();
@@ -2562,11 +2562,11 @@ function checkFormStatus()
                 break;
             }
         }
-        if (!$found) {  
+        if (!$found) {
             continue;
         }
 
-          if ($found) {
+        if ($found) {
             echo 'found <br>';
             if (empty($status)) continue;
 
@@ -2633,7 +2633,6 @@ function checkFormStatus()
                         break;
                 }
             }
-
         }
     }
 }
