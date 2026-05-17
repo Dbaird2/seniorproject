@@ -12,23 +12,15 @@ $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
 if (empty($email) || empty($pw)) {
-    echo json_encode(['status'=>'Failed to login']);
+    echo json_encode(['status' => 'Failed to login']);
     exit;
 }
 
-try {
-    $select_user = "SELECT u_role, email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch();
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (!password_verify($pw, $info['pw'])) {
-        echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
+        echo json_encode(['status' => 'failed', 'reason' => 'invalid login']);
         exit;
     }
 }
@@ -41,16 +33,14 @@ if (isset($_POST)) {
     $select = "SELECT * FROM department WHERE 1=1 ";
     $params = [];
     if (!empty($search)) {
-        $select .= " AND (dept_id ILIKE :dept OR dept_name ILIKE :dept) ";
-        $params[':dept'] = '%' . $search . '%';
+        $select .= " AND (dept_id ILIKE ? OR dept_name ILIKE ?) ";
+        $params[] = '%' . $search . '%';
+        $params[] = '%' . $search . '%';
     }
-    $select .= " ORDER BY dept_id LIMIT :limit OFFSET :offset";
-    $params[":limit"] = $limit;
-    $params[':offset'] = $offset;
-    $stmt = $dbh->prepare($select);
-    $stmt->execute($params);
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(["data" =>$data]);
+    $select .= " ORDER BY dept_id LIMIT ? OFFSET ?";
+    $params[] = $limit;
+    $params[] = $offset;
+    $data = $query_repo->fetchAll($select, $params);
+    echo json_encode(["data" => $data]);
     exit;
 }
-

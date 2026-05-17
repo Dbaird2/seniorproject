@@ -15,16 +15,8 @@ if (empty($email) || empty($pw)) {
     exit;
 }
 
-try {
-    $select_user = "SELECT u_role, email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch();
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (!password_verify($pw, $info['pw'])) {
         echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
@@ -33,21 +25,17 @@ if ($info) {
 }
 try {
     $select = 'SELECT * FROM audit_freq';
-    $stmt = $dbh->query($select);
-    $ids = $stmt->fetch();
+    $ids = $query_repo($select);
     $mgmt = $ids['curr_mgmt_id'];
     $self = $ids['curr_self_id'];
 
-    $select = "select count(audit_status) as status from audit_history where audit_status = 'Completed' and audit_id = :id
+    $select = "select count(audit_status) as status from audit_history where audit_status = 'Completed' and audit_id = ?
         union
-        select count(audit_status) as status from audit_history where audit_status = 'In Progress' AND audit_id = :id";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':id'=>$self]);
-    $self_count = $stmt->fetchAll();
+        select count(audit_status) as status from audit_history where audit_status = 'In Progress' AND audit_id = ?";
 
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':id'=>$mgmt]);
-    $mgmt_count = $stmt->fetchAll();
+    $self_count = $query_repo->fetchAll($select, $self, $self);
+
+    $mgmt_count = $query_repo->fetchAll($select, $mgmt, $mgmt);
 } catch (PDOException $e) {
     error_log($e->getMessage());
     echo json_encode(['status'=>'failed', 'reason'=>'database query failed']);

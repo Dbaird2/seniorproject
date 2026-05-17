@@ -16,30 +16,22 @@ if (empty($email) || empty($pw)) {
     exit;
 }
 
-try {
-    $select_user = "SELECT u_role, email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch();
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (!password_verify($pw, $info['pw'])) {
-        echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
+        echo json_encode(['status' => 'failed', 'reason' => 'invalid login']);
         exit;
     }
 }
 
 if (isset($_POST)) {
     $select_count = "SELECT COUNT(*) FROM user_table";
-    $select_stmt = $dbh->query($select_count);
-    $row_count = $select_stmt->fetchColumn();
+    $row_count = $query_repo->fetchColumn($select_count);
+
     $select = "SELECT DISTINCT(CONCAT(f_name ,' ', l_name)) as custodian, STRING_AGG(c, ',') as dept_id FROM user_table, unnest(dept_id) as c group by custodian;";
-    $select_stmt = $dbh->query($select);
-    $data = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $data = $query_repo->fetchAll($select);
+
     echo json_encode(["data" =>$data, 'count'=>$row_count]);
     exit;
 }

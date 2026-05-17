@@ -12,32 +12,23 @@ $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
 if (empty($email) || empty($pw)) {
-    echo json_encode(['status'=>'Failed to login']);
+    echo json_encode(['status' => 'Failed to login']);
     exit;
 }
 
-try {
-    $select_user = "SELECT u_role, email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch();
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (!password_verify($pw, $info['pw'])) {
-        echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
+        echo json_encode(['status' => 'failed', 'reason' => 'invalid login']);
         exit;
     }
 }
 
 if (!empty($data['tag'])) {
-    $select = "SELECT * FROM asset_info WHERE asset_tag = :tag";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':tag'=>$data['tag']]);
-    $tag_info = $stmt->fetch();
+    $select = "SELECT * FROM asset_info WHERE asset_tag = ?";
+    $tag_info = $query_repo->fetchOne($select, $data['tag']);
+
     if ($tag_info) {
         $role = $info['u_role'];
         if (in_array($role, ['admin', 'management'])) {
@@ -45,12 +36,10 @@ if (!empty($data['tag'])) {
         } else {
             $select = 'SELECT curr_self_id FROM audit_freq';
         }
-        $stmt = $dbh->query($select);
-        $audit_id = $stmt->fetch();
+        $audit_id = $query_repo->fetchOne($select);
     }
-    echo json_encode(['status'=>'success', 'data'=>$tag_info]);
+    echo json_encode(['status' => 'success', 'data' => $tag_info]);
     exit;
 }
-echo json_encode(['POST'=>$data, 'status'=>'failure']);
+echo json_encode(['POST' => $data, 'status' => 'failure']);
 exit;
-

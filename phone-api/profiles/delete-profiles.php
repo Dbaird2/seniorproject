@@ -1,4 +1,4 @@
-<?php 
+<?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
@@ -9,28 +9,19 @@ $pw = trim($data['pw']);
 $email = trim($data['email']);
 $profile_name = trim($data['profile_name']);
 if (empty($email) || empty($pw)) {
-    echo json_encode(['status'=>'Failed to login']);
+    echo json_encode(['status' => 'Failed to login']);
     exit;
 }
 
-try {
-    $select_user = "SELECT email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch(PDO::FETCH_ASSOC);
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
-        $delete = 'DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name';
-        $stmt = $dbh->prepare($delete);
-        $stmt->execute([':email'=>$email, ':name'=>$profile_name]);
-        echo json_encode(['status'=>'Ok']);
+        $delete = 'DELETE FROM user_asset_profile WHERE email = ? AND profile_name = ?';
+        $query_repo->execute($delete, $email, $profile_name);
+        echo json_encode(['status' => 'Ok']);
         exit;
     }
 }
-echo json_encode(['status'=>'fail']);
+echo json_encode(['status' => 'fail']);
 exit;

@@ -12,23 +12,15 @@ $data = json_decode($decoded_data, true);
 $pw = trim($data['pw']);
 $email = trim($data['email']);
 if (empty($email) || empty($pw)) {
-    echo json_encode(['status'=>'Failed to login']);
+    echo json_encode(['status' => 'Failed to login']);
     exit;
 }
 
-try {
-    $select_user = "SELECT u_role, email, pw FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
-}
-$info = $stmt->fetch();
+$select_user = "SELECT pw, username FROM user_table WHERE (email = :email OR username = :email) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
 if ($info) {
     if (!password_verify($pw, $info['pw'])) {
-        echo json_encode(['status'=>'failed', 'reason'=>'invalid login']);
+        echo json_encode(['status' => 'failed', 'reason' => 'invalid login']);
         exit;
     }
 }
@@ -36,7 +28,7 @@ $offset = $data['offset'];
 $limit = $data['limit'];
 $search = $data['search'];
 
-$echo = function($array) {
+$echo = function ($array) {
     echo '<pre>';
     var_dump($array);
     echo '</pre>';
@@ -51,20 +43,20 @@ if (isset($_POST)) {
     $params = [];
     if (!empty($search)) {
         if (preg_match($dept_regex, $search)) {
-            $select .= " AND a.dept_id ILIKE :dept ";
-            $params[':dept'] = '%'.$search.'%';
+            $select .= " AND a.dept_id ILIKE ? ";
+            $params[] = '%' . $search . '%';
         } else {
-            $select .= " AND (asset_tag ILIKE :tag OR asset_name ILIKE :tag OR serial_num ILIKE :tag OR CAST(a.room_tag AS TEXT) ILIKE :tag) ";
-            $params[':tag'] = '%'.$search.'%';
-        } 
+            $select .= " AND (asset_tag ILIKE ? OR asset_name ILIKE ? OR serial_num ILIKE ? OR CAST(a.room_tag AS TEXT) ILIKE ?) ";
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
+            $params[] = '%' . $search . '%';
+        }
     }
-    $params[':limit'] = $limit;
-    $params[':offset'] = $offset;
-    $select .= " ORDER BY asset_tag LIMIT :limit OFFSET :offset";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute($params);
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode(["data" =>$data]);
+    $params[] = $limit;
+    $params[] = $offset;
+    $select .= " ORDER BY asset_tag LIMIT ? OFFSET ?";
+    $data = $query_repo->fetchAll($select, $params);
+    echo json_encode(["data" => $data]);
     exit;
 }
-

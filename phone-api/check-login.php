@@ -13,16 +13,14 @@ if (empty($email) || empty($pw)) {
 }
 
 
-try {
-    $select_user = "SELECT pw, username FROM user_table WHERE (email = :email OR username = :email) limit 1";
-    $stmt = $dbh->prepare($select_user);
-    $stmt->execute([":email"=>$email]);
-} catch (PDOException $e) {
-    $msg = $e->getMessage();
-    echo json_encode(['status'=>'Error with database', 'error'=>$msg]);
-    exit;
+$select_user = "SELECT pw, username FROM user_table WHERE (email = ? OR username = ?) limit 1";
+$info = $query_repo->fetchOne($select_user, $email, $email);
+if ($info) {
+    if (!password_verify($pw, $info['pw'])) {
+        echo json_encode(['status' => 'failed', 'reason' => 'invalid login']);
+        exit;
+    }
 }
-$info = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($info) {
     if (password_verify($pw, $info['pw'])) {
         echo json_encode(['status'=>'success']);

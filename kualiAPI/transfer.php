@@ -4,78 +4,11 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT transfer_time, kuali_key FROM kuali_table";
-$select_stmt = $dbh->query($select);
-$result = $select_stmt->fetch(PDO::FETCH_ASSOC);
+$result = $query_repo->fetchOne($select);
 $raw_ms = (int)$result['transfer_time'] ?? 0;
 $highest_time = date('c', $raw_ms / 1000);
 
-$apikey = $result['kuali_key'];
-$url = "https://csub.kualibuild.com/app/api/v0/graphql";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-$headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = json_encode([
-    "query" => 'query ( 
-        $appId: ID! 
-        $skip: Int! 
-        $limit: Int! 
-        $sort: [String!] 
-        $query: String 
-        $fields: Operator
-) { 
-    app(id: $appId) { 
-    id name documentConnection( 
-        args: { 
-        skip: $skip 
-            limit: $limit 
-            sort: $sort 
-            query: $query 
-            fields: $fields 
-            } 
-            keyBy: ID 
-            ) { 
-                totalCount edges { 
-                node { id data meta } } 
-                    pageInfo { hasNextPage hasPreviousPage skip limit } 
-                } 
-            }
-        }',
-"variables" => [
-    "appId" => "67e451d2cc3194027dfce429",
-    "skip" => $raw_ms,
-    "limit" => 100,
-    "sort" => ["meta.createdAt"],
-    "query" => "",
-    "fields" => [
-        "type" => "AND",
-        "operators" => [
-            [
-                "field" => "meta.workflowStatus",
-                "type" => "IS",
-                "value" => "Complete"
-            ]
-        ]
-    ]
-]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-curl_close($curl);
-$resp2 = json_decode($resp);
-
-$decode_true = json_decode($resp, true);
+$decode_true = $kuali->kualiRead("67e451d2cc3194027dfce429", $skip = $skip);
 $edges = $decode_true['data']['app']['documentConnection']['edges'];
 
 
@@ -92,45 +25,35 @@ foreach ($edges as $index => $edge) {
     }
 }
         
-echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
+echo '<pre>' . json_encode($decode_true, JSON_PRETTY_PRINT) . '</pre>';
 exit;
 function checkBldg($bldg_name, $room_loc, $tag) {
-    global $dbh;
-    $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = :name';
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':name'=>$bldg_name]);
-    $bldg_id = $stmt->fetchColumn();
+    global $query_repo;
+    $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = ?';
+    $bldg_id = $query_repo->fetchColumn($select, $bldg_name);
     if ($bldg_id) {
-        $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
-        $room_tag = $stmt->fetchColumn();
+        $select = 'SELECT room_tag FROM room_table WHERE bldg_id = ? AND room_loc = ?';
+        $room_tag = $query_repo->fetchColumn($select, $bldg_id, $room_loc);
         if (!$room_tag) {
             $update_room = 'INSERT INTO room_table (room_loc, bldg_id) VALUES (?,?)';
-            $stmt = $dbh->prepare($update_room);
-            $stmt->execute([$room_loc, $bldg_id]);
+            $query_repo->execute($update_room, $room_loc, $bldg_id);
 
-            $select = 'SELECT room_tag FROM room_table WHERE bldg_id = :id AND room_loc = :loc';
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([':id'=>$bldg_id, ':loc'=>$room_loc]);
-            $room_tag = $stmt->fetchColumn();
+            $select = 'SELECT room_tag FROM room_table WHERE bldg_id = ? AND room_loc = ?';
+            $room_tag = $query_repo->fetchColumn($select, $bldg_id, $room_loc);
         } 
-        $update = 'UPDATE asset_info SET room_tag = :room WHERE asset_tag = :tag';
-        $stmt = $dbh->prepare($update);
-        $stmt->execute([':room'=>$room_tag, ':tag'=>$tag]);
+        $update = 'UPDATE asset_info SET room_tag = ? WHERE asset_tag = ?';
+        $query_repo->execute($update, $room_tag, $tag);
         return true;
     }
 }
-function checkTag($tag) {
-    global $dbh;
-    $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = :tag';
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':tag'=>$tag]);
-    $confirm_tag = $stmt->fetchColumn();
+function checkTag(string $tag) {
+    global $query_repo;
+    $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = ?';
+    $confirm_tag = $query_repo->fetchColumn($select, $tag);
     return $confirm_tag !== false;
 }
 function deptChange() {
-    global $dbh, $edge, $raw_ms;
+    global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
         $tag = $data['data']['XZlIFEDX6Y'];
@@ -172,14 +95,12 @@ function deptChange() {
         } else {
             continue;
         }
-        $update_q = "UPDATE asset_info SET dept_id = :dept_id WHERE asset_tag = :tag";
-        $update_stmt = $dbh->prepare($update_q);
-        $update_stmt->execute([":dept_id" => $dept_id, ":tag" => $tag]);
+        $update_q = "UPDATE asset_info SET dept_id = ? WHERE asset_tag = ?";
+        $query_repo->execute($update_q, $dept_id, $tag);
 
         try {
-            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$raw_ms]);
+            $update_kuali_time = "UPDATE kuali_table SET transfer_time = ?";
+            $query_repo->execute($update_kuali_time, $raw_ms);
         } catch (PDOException $e) {
             echo "error updating kuali_table " . $e->getMessage();
         }
@@ -188,7 +109,7 @@ function deptChange() {
     }
 }
 function bldgChange() {
-    global $dbh, $edge, $raw_ms;
+    global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
         $tag = $data['data']['XZlIFEDX6Y'];
@@ -216,9 +137,9 @@ function bldgChange() {
         }
 
         try {
-            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$raw_ms]);
+            $update_kuali_time = "UPDATE kuali_table SET transfer_time = ?";
+            $query_repo->execute($update_kuali_time, $raw_ms);
+            
         } catch (PDOException $e) {
             echo "error updating kuali_table " . $e->getMessage();
         }
@@ -227,7 +148,7 @@ function bldgChange() {
     }
 }
 function busChange() {
-    global $dbh, $edge, $raw_ms;
+    global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
         $tag = $data['data']['XZlIFEDX6Y'];
@@ -238,13 +159,11 @@ function busChange() {
             continue;
         }
         $new_bus = ['data']['ARcUfSX-vJ']['label'];
-        $update = 'UPDATE asset_info SET bus_unit = :unit WHERE asset_tag = :tag';
-        $stmt = $dbh->prepare($update);
-        $stmt->execute([':unit'=>$new_bus, ':tag'=>$tag]);
+        $update = 'UPDATE asset_info SET bus_unit = ? WHERE asset_tag = ?';
+        $query_repo->execute($update, $new_bus, $tag);
         try {
-            $update_kuali_time = "UPDATE kuali_table SET transfer_time = :time";
-            $update_stmt = $dbh->prepare($update_kuali_time);
-            $update_stmt->execute([":time"=>$raw_ms]);
+            $update_kuali_time = "UPDATE kuali_table SET transfer_time = ?";
+            $query_repo->execute($update_kuali_time, $raw_ms);
         } catch (PDOException $e) {
             echo "error updating kuali_table " . $e->getMessage();
         }
