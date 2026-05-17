@@ -239,7 +239,7 @@ class KualiAPI
         return json_decode($resp, true);
     }
 
-    public function checkFormStatus(string $app, $query) {
+    public function queryKualiFormStatus(string $app, $query) {
         $curl = curl_init($this->url);
         curl_setopt($curl, CURLOPT_URL, $this->url);
         curl_setopt($curl, CURLOPT_POST, true);
