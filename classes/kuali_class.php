@@ -115,7 +115,7 @@ class KualiAPI
         }
     }
 
-    public function kualiRead(string $app_id, string $tag)
+    public function kualiRead(string $app_id, int $skip = 0, int $limit = 10, string $tag = "")
     {
         try {
             $curl = curl_init($this->url);
@@ -155,10 +155,20 @@ class KualiAPI
             }',
                 "variables" => [
                     "appId" => $app_id,
-                    "skip" => 0,
-                    "limit" => 100,
+                    "skip" => $skip,
+                    "limit" => $limit,
                     "sort" => ["meta.createdAt"],
                     "query" => $tag,
+                    "fields" => [
+                        "type" => "AND",
+                        "operators" => [
+                            [
+                                "field" => "meta.workflowStatus",
+                                "type" => "IS",
+                                "value" => "Complete"
+                            ]
+                        ]
+                    ]
                 ]
             ]);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -185,5 +195,91 @@ class KualiAPI
             return ['error' => 'Exception occurred'];
         }
     }
+
+    public function baseReads(string $app_id, int $skip = 0, int $limit = 200)
+    {
+        $curl = curl_init($this->url);
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $headers = array(
+            "Content-Type: application/json",
+            "Authorization: Bearer {$this->api_key}",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $data = json_encode([
+            "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+            "variables" => [
+                "appId" => $app_id,
+                "skip" => $skip,
+                "limit" => $limit,
+                "sort" => [
+                    "meta.createdAt"
+                ],
+                "query" => "",
+                "fields" => [
+                    "type" => "AND",
+                    "operators" => [
+                        [
+                            "field" => "meta.workflowStatus",
+                            "type" => "IS",
+                            "value" => "Complete"
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+        $resp = curl_exec($curl);
+        unset($curl);
+
+        return json_decode($resp, true);
+    }
+
+    public function checkFormStatus(string $app, $query) {
+        $curl = curl_init($this->url);
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Authorization: Bearer {$this->api_key}",
+        ]);
+
+        $data = json_encode([
+            "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { 
+                app(id: $appId) { 
+                id name documentConnection( 
+                args: { 
+                skip: $skip limit: $limit sort: $sort query: $query fields: $fields } 
+                keyBy: ID ) { 
+                totalCount 
+                edges { 
+                node { id meta } 
+                } 
+                pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+            "variables" => [
+                "appId"  => $app,
+                "skip"   => 0,
+                "limit"  => 100,
+                "sort"   => ["meta.updatedAt"],
+                "query"  => trim($query),
+                "fields" => [
+                    "type" => "OR",
+                    "operators" => [
+                        ["field" => "meta.workflowStatus", "type" => "IS", "value" => "Complete"],
+                        ["field" => "meta.updatedAt",      "type" => "RANGE", "min" => "0"]
+                    ]
+                ],
+            ]
+        ]);
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        $resp = curl_exec($curl);
+        unset($curl);
+        return json_decode($resp, true);
+    }
 }
-?>
