@@ -60,26 +60,20 @@ if (isset($_POST['add'])) {
     try {
         $bldg_search[] = "bldg_name";
         $bldg_search[] = "room_loc";
-        $bldg_q = "SELECT room_tag FROM room_table r NATURAL JOIN bldg_table b WHERE r.room_loc = :room_loc AND b.bldg_name = :bldg_name";
-        $b_stmt = $dbh->prepare($bldg_q);
-        $b_stmt->execute([":room_loc" => $room_name, ":bldg_name" => $bldg_name]);
-        $room_tag = $b_stmt->fetch(PDO::FETCH_ASSOC);
+    
+        $room_tag = $query_repo->fetchOne("SELECT room_tag FROM room_table r NATURAL JOIN bldg_table b WHERE r.room_loc = ? AND b.bldg_name = ?", $room_name, $bldg_name);
         if ($room_tag) {
             $column[] = "room_tag";
             $params[] = $room_tag["room_tag"];
         } else {
             exit;
         }
-        $tag_avail = "SELECT * FROM asset_info WHERE asset_tag = :tag";
-        $tag_stmt = $dbh->prepare($tag_avail);
-        $tag_stmt->execute([":tag" => $tag]);
-        $is_avail = $tag_stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $is_avail = $query_repo->fetchOne("SELECT * FROM asset_info WHERE asset_tag = ?", $tag);
         if (!$is_avail) {
             $column = implode(", ", $column);
             $question_marks = implode(", ", $question_marks);
-            $insert_q = "INSERT INTO asset_info ($column) VALUES ($question_marks)";
-            $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute($params);
+            $query_repo->execute("INSERT INTO asset_info ($column) VALUES ($question_marks)", $params);
        }
     } catch (PDOException $e) {
         error_log($e->getMessage());

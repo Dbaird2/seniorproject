@@ -12,12 +12,12 @@ if (isset($_GET['profile_name'])) {
         LEFT JOIN room_table r ON a.room_tag = r.room_tag
         LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
         LEFT JOIN department d ON a.dept_id = d.dept_id
-        WHERE p.profile_name = :profile_name AND p.email = :email ORDER BY p.asset_tag";
-    $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":profile_name"=>$profile,":email"=>$email]);
-    $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+        WHERE p.profile_name = ? AND p.email = ? ORDER BY p.asset_tag";
+    $result = $query_repo->fetchAll($select_q, $profile, $email);
+
     unset($_SESSION['data']);
     unset($_SESSION['info']);
+    
     $highest_row = 1;
     $info = '';
     if (!empty($result)) {

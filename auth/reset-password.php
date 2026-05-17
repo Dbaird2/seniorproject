@@ -25,16 +25,15 @@ try {
             $error = 'Password must be at least 8 characters long.';
         } else {
             // In a real application, you would verify the token and update the password in the database
-            $check_time = "SELECT ver_code, email FROM user_table WHERE email = :email AND expiry >= now() - INTERVAL '1 hour'";
-            $check_stmt = $dbh->prepare($check_time);
-            $check_stmt->execute([':email'=>$email]);
-            $token_result =$check_stmt->fetch(PDO::FETCH_ASSOC);
+            $check_time = "SELECT ver_code, email FROM user_table WHERE email = ? AND expiry >= now() - INTERVAL '1 hour'";
+            $token_result = $query_repo->fetchOne($check_time, $email);
             if ($token_result) {
                 if (isset($token_result['ver_code']) && $token_result['ver_code'] == $reset_token) {
                     $new_pass = password_hash($new_password, PASSWORD_DEFAULT);
-                    $update_pw = "UPDATE user_table SET pw = :pw WHERE email = :email";
-                    $update_stmt = $dbh->prepare($update_pw);
-                    $update_stmt->execute([':pw'=>$new_pass, ':email'=>$email]);
+
+                    $update_pw = "UPDATE user_table SET pw = ? WHERE email = ?";
+                    $query_repo->execute($update_pw, $new_pass, $email);
+                    
                     $message = 'Your password has been successfully reset! You can now log in with your new password.';
                     header("Location: login.php");
                     exit;

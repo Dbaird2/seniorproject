@@ -196,23 +196,24 @@ check_auth("low");
 </style>
 <?php
 try {
-    $query = "SELECT * FROM user_table WHERE email = :email";
-    $email=$_SESSION['email'];
-    $user_stmt = $dbh->prepare($query);
-    $user_stmt->execute([":email"=>$email]);
-    $result = $user_stmt->fetch(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo "error: " . $e->getMessage(); 
-}
-$email = $result["email"];
-$f_name = $result["f_name"];
-$l_name = $result["l_name"];
-$role = $result["u_role"];
-$dept_id = trim($result["dept_id"], "{");
-$dept_id = trim($dept_id, "}");
+    // $query = "SELECT * FROM user_table WHERE email = :email";
+    // $email=$_SESSION['email'];
+    // $user_stmt = $dbh->prepare($query);
+    // $user_stmt->execute([":email"=>$email]);
+    // $result = $user_stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $query_repo->fetchOne("SELECT * FROM user_table WHERE email = ?", $_SESSION['email']);
+    $email = $result["email"];
+    $f_name = $result["f_name"];
+    $l_name = $result["l_name"];
+    $role = $result["u_role"];
+    $dept_id = trim($result["dept_id"], "{");
+    $dept_id = trim($dept_id, "}");
 
-$kuali_key = $result["kuali_key"];
-$pw = $result["pw"];
+    $kuali_key = $result["kuali_key"];
+    $pw = $result["pw"];
+} catch (PDOException $e) {
+    echo "error: " . $e->getMessage();
+}
 ?>
 
 <body>

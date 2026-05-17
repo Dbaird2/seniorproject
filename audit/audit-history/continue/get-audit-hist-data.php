@@ -18,10 +18,8 @@ $audit_type = match ($audit_id) {
     9 => 'oSPA'
 };
 try {
-    $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
-    $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
-    $data = $select_stmt->fetch(PDO::FETCH_ASSOC);
+    $select_q = "SELECT auditor, audit_data FROM audit_history WHERE dept_id = ? AND audit_id = ?";
+    $data = $query_repo->fetchOne($select_q, $dept_id, $audit_id);
 } catch (PDOException $e) {
     error_log("Error getting info: " . $e->getMessage());
     exit;

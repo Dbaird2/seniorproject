@@ -13,33 +13,31 @@ try {
     $bind = [];
 
     if ($q !== '') {
-        $sql .= " AND (email ILIKE :q OR info ILIKE :q)";
-        $bind[':q'] = "%$q%";
+        $sql .= " AND (email ILIKE ? OR info ILIKE ?)";
+        $bind[] = "%$q%";
+        $bind[] = "%$q%";
     }
     if ($status !== '') {
-        $sql .= " AND ticket_status = :status";
-        $bind[':status'] = $status;
+        $sql .= " AND ticket_status = ?";
+        $bind[] = $status;
     }
     if ($type !== '') {
-        $sql .= " AND (type = :type)";
-        $bind[':type'] = $type;
+        $sql .= " AND (type = ?)";
+        $bind[] = $type;
     }
     if ($before !== null) {
-        $sql .= " AND id < :before";
-        $bind[':before'] = $before;
+        $sql .= " AND id < ?";
+        $bind[] = $before;
     }
 
-    $sql .= " ORDER BY date_added DESC, id DESC LIMIT :limit";
-    $stmt = $dbh->prepare($sql);
-    foreach ($bind as $k => $v) $stmt->bindValue($k, $v);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-
+    $sql .= " ORDER BY date_added DESC, id DESC LIMIT ?";
+    $bind[] = $limit;
+    
+    $query_repo->fetchAll($sql, ...$bind);
+    echo json_encode(['tickets' => $query_repo->fetchAll($sql, ...$bind)]);
+    exit;
 } catch (PDOException $e) {
     error_log($e->getMessage());
 } catch (Exception $e) {
     error_log($e->getMessage());
 }
-echo json_encode(['tickets' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
-exit;
-

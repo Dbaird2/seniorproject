@@ -104,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'AVCMP'  => 140,
         'AVC'    => 140,
         'LUC'    => 140,
-        'AVCMP'  => 140,
         'CAF'    => 38,
         'CENT'   => 11,
         'CORP'   => 37,
@@ -133,12 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         'OTHIMP-20' => 20,
         'OTHIMP-30' => 30,
         'OINTN'     => 10,
-        'NONCAPOTHR'=> 10,
-        'NONCAPAUTO'=> 20,
+        'NONCAPOTHR' => 10,
+        'NONCAPAUTO' => 20,
         'EQUIPCOMP' => 10
     ];
     try {
-        $dbh->beginTransaction();
+        $query_repo->beginTransaction();
         for ($i = $header_row; $i < $highest_row; $i++) {
             $location_array[$i] = [];
             if (searchstr($data[$i][$location_col] ?? '', "-")) {
@@ -170,10 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             }
             if ($location_array[$i][1] === 'OUT') {
                 $location_array[$i][1] = 'OUTSIDE';
-            } 
+            }
             if ($location_array[$i][1] === 'LOB') {
                 $location_array[$i][1] = 'LOBBY';
-            } 
+            }
             if ($location_array[$i][0] === '54' && $location_array[$i][1] === 'CLASSRO') {
                 $location_array[$i][1] = 'CLASSRM';
             }
@@ -210,36 +209,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 
             $loc_change = false;
             $set_array = [];
-            $check_tag_query = "SELECT 1 FROM asset_info WHERE asset_tag = :tag UNION SELECT 1 FROM complete_asset_view WHERE asset_tag = :tag OR new_tag = :tag";
-            $stmt = $dbh->prepare($check_tag_query);
-            $stmt->execute([':tag' => $data[$i][$tag_col]]);
-            $existing_asset = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $existing_asset = $query_repo->fetchOne("SELECT 1 FROM asset_info WHERE asset_tag = :tag UNION SELECT 1 FROM complete_asset_view WHERE asset_tag = ? OR new_tag = ?", $data[$i][$tag_col]);
             if ($existing_asset) {
                 echo "Asset with tag " . $data[$i][$tag_col] . " already exists. Skipping.<br>";
                 continue;
             }
-            $get_room_tag_query = "SELECT room_tag FROM room_table WHERE room_loc = :room_loc AND bldg_id = :bldg_id";
-            $stmt = $dbh->prepare($get_room_tag_query);
-            $stmt->execute([':room_loc' => $location_array[$i][1], ':bldg_id' => $location_array[$i][0]]);
-            $room_tag = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $room_tag = $query_repo->fetchOne("SELECT room_tag FROM room_table WHERE room_loc = ? AND bldg_id = ?", $location_array[$i][1], $location[$i][0]);
             if ($room_tag) {
                 $room_tag = $room_tag['room_tag'];
                 $po = $data[$i][$po_col] === '' ? null : (int)$data[$i][$po_col];
                 $cost = $data[$i][$cost_col] === '' ? 0 : (int)$data[$i][$cost_col];
-                
-                $insert_query = "INSERT INTO asset_info (asset_tag, asset_model, room_tag, asset_name, serial_num, po, asset_price, asset_type, lifecycle, dept_id) VALUES (:asset_tag, :asset_model, :room_tag, :asset_name, :serial_num, :po, :asset_price, :asset_type, :lifecycle, :dept_id)";
-                $insert_stmt = $dbh->prepare($insert_query);
-                $insert_stmt->execute([":asset_tag"=>$data[$i][$tag_col],
-                    ":asset_model"=>$data[$i][$model_col],
-                    ":room_tag"=>$room_tag,
-                    ":asset_name"=>$data[$i][$descr_col],
-                    ":serial_num"=>$data[$i][$serial_col],
-                    ":po"=>$po,
-                    ":asset_price"=>$cost,
-                    ":asset_type"=>$data[$i][$asset_type_col],
-                    ":lifecycle"=>$data[$i][$profile_id_col],
-                    ":dept_id"=>$data[$i][$dept_col]
-                ]);
+
+                $query_repo->execute(
+                    "INSERT INTO asset_info (asset_tag, asset_model, room_tag, asset_name, serial_num, po, asset_price, asset_type, lifecycle, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    $data[$i][$tag_col],
+                    $data[$i][$model_col],
+                    $room_tag,
+                    $data[$i][$descr_col],
+                    $data[$i][$serial_col],
+                    $po,
+                    $cost,
+                    $data[$i][$asset_type_col],
+                    $data[$i][$profile_id_col],
+                    $data[$i][$dept_col]
+                );
 
                 echo "Added " . $j++ . " " . $data[$i][$tag_col] . " ";
                 echo $location_array[$i][0] . " ";
@@ -265,15 +260,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 continue;
             }
         }
-        $dbh->commit();
+        $query_repo->commit();
     } catch (Exception $e) {
-        $dbh->rollBack();
+        $query_repo->rollBack();
         echo "Failed to add assets: " . $e->getMessage();
         echo "<br>";
         echo "Rolling back changes...";
     }
 }
-function searchstr($string, $char)
+function searchstr(string $string, string $char)
 {
     foreach (str_split($string) as $var) {
         if ($char === $var) {
@@ -291,11 +286,11 @@ function searchstr($string, $char)
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bulk Asset Upload</title>
     <link rel="stylesheet" href="styles.css">
-<style>
-* {
-    margin:0;
-}
-</style>
+    <style>
+        * {
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>

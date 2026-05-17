@@ -1,12 +1,13 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-include_once ('../config.php');
+include_once('../config.php');
 
 use OTPHP\TOTP;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
+
 try {
     $email = '';
     if (!empty($_GET['email'])) {
@@ -20,10 +21,11 @@ try {
         $dept_id = trim($_POST['dept_id']);
         $role = trim($_POST['role']);
     }
-    $stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
-    $stmt->bindParam(':email', $email);
-    $stmt->execute();
-    $row = $stmt->fetch();
+    $row = $query_repo->fetchOne("SELECT totp_secret FROM user_table WHERE email = ?", $email);
+    // $stmt = $dbh->prepare("SELECT totp_secret FROM user_table WHERE email = :email");
+    // $stmt->bindParam(':email', $email);
+    // $stmt->execute();
+    // $row = $stmt->fetch();
 
     $showQr   = false;
     $qrDataUri = null;
@@ -63,10 +65,11 @@ try {
         $totp->setLabel($email);
         $totp->setIssuer('Dataworks'); // shows as the "account provider" in apps
         $secret = $totp->getSecret();
-        $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
-        $stmt->bindParam(':secret', $secret);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
+        // $stmt = $dbh->prepare("UPDATE user_table SET totp_secret = :secret WHERE email = :email");
+        // $stmt->bindParam(':secret', $secret);
+        // $stmt->bindParam(':email', $email);
+        // $stmt->execute();
+        $query_repo->execute("UPDATE user_table SET totp_secret = ? WHERE email = ?", $secret, $email);
         $otpauth = $totp->getProvisioningUri();
         $builder = new Builder(
             writer: new PngWriter(),
@@ -319,40 +322,40 @@ try {
         </div>
 
         <?php if (empty($row['totp_secret'])) { ?>
-        <div class="setup-section">
-            <h2>Setup Instructions</h2>
-            <ol>
-                <li>Open Google Authenticator (or similar authenticator app)</li>
-                <li>Tap "+" → "Scan a QR code"</li>
-                <li>Scan the QR code below</li>
-            </ol>
-        </div>
-
-        <div class="qr-container">
-            <img src="<?= htmlspecialchars($qrDataUri, ENT_QUOTES) ?>" alt="TOTP QR Code" />
-        </div>
-
-        <div class="secret-code">
-            <label>Or enter this secret manually:</label>
-            <code><?= htmlspecialchars($secret, ENT_QUOTES) ?></code>
-        </div>
-    <?php } ?>
-
-    <form method="post" action="2fa.php">
-            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['error'])) { ?>
-            <div class="error-message">
-            Invalid code. Please try again.
+            <div class="setup-section">
+                <h2>Setup Instructions</h2>
+                <ol>
+                    <li>Open Google Authenticator (or similar authenticator app)</li>
+                    <li>Tap "+" → "Scan a QR code"</li>
+                    <li>Scan the QR code below</li>
+                </ol>
             </div>
+
+            <div class="qr-container">
+                <img src="<?= htmlspecialchars($qrDataUri, ENT_QUOTES) ?>" alt="TOTP QR Code" />
+            </div>
+
+            <div class="secret-code">
+                <label>Or enter this secret manually:</label>
+                <code><?= htmlspecialchars($secret, ENT_QUOTES) ?></code>
+            </div>
+        <?php } ?>
+
+        <form method="post" action="2fa.php">
+            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['error'])) { ?>
+                <div class="error-message">
+                    Invalid code. Please try again.
+                </div>
             <?php } ?>
-           <div class="form-group">
-           <label for="code">Enter the 6-digit code from your app:</label>
-           <input type="text" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" 
-            placeholder="000000" maxlength="6" required>
-           </div>
+            <div class="form-group">
+                <label for="code">Enter the 6-digit code from your app:</label>
+                <input type="text" id="code" name="code" inputmode="numeric" autocomplete="one-time-code"
+                    placeholder="000000" maxlength="6" required>
+            </div>
             <input type="hidden" name="user_id" value="<?= (int)$userId ?>">
             <input type="hidden" name="id" value="<?= $_GET['id'] ?? $_POST['id'] ?>">
             <input type="hidden" name="role" value="<?= $_GET['role'] ?? $_POST['role'] ?>">
-            <input type="hidden" name="email" value="<?= $email?>">
+            <input type="hidden" name="email" value="<?= $email ?>">
             <input type="hidden" name="dept_id" value="<?= $_GET['dept_id'] ?? $_POST['dept_id'] ?>">
 
             <button type="submit">Verify & Finish</button>
@@ -363,4 +366,3 @@ try {
 </body>
 
 </html>
-

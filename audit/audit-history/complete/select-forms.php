@@ -1,19 +1,16 @@
 <?php
 include_once "../../../config.php";
 check_auth();
-$select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
-$stmt = $dbh->prepare($select_dept);
-$stmt->execute([":id" => $_SESSION['info'][2]]);
-$dept_name = $stmt->fetchColumn();
+$select_dept = "SELECT dept_name FROM department WHERE dept_id = ?";
+// $dept_name = $stmt->fetchColumn();
+$dept_name = $query_repo->fetchColumn($select_dept, $_SESSION['info'][2]);
 $audit_id = $_SESSION['info'][5];
 
 $select_bldgs = "SELECT bldg_name, bldg_id FROM bldg_table ORDER BY bldg_name";
-$stmt = $dbh->query($select_bldgs);
-$bldgs_info = $stmt->fetchAll();
+$bldgs_info = $query_repo->fetchAll($select_bldgs);
 
 $select_depts = "SELECT dept_name, dept_id FROM department ORDER BY dept_name";
-$stmt = $dbh->query($select_depts);
-$depts_info = $stmt->fetchAll();
+$depts_info = $query_repo->fetchAll($select_depts);
 ?>
 <!DOCTYPE html>
 <html>

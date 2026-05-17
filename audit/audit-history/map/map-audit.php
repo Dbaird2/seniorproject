@@ -3,10 +3,10 @@ include_once ("../../../config.php");
 include_once ("../../../navbar.php");
 $dept_id = $_GET['dept_id'];
 $audit_id = $_GET['audit_id'];
-$select = 'SELECT audit_data FROM audit_history WHERE dept_id = :dept AND audit_id = :audit';
-$stmt = $dbh->prepare($select);
-$stmt->execute([':dept'=>$dept_id, ':audit'=>$audit_id]);
-$results = $stmt->fetch();
+
+$select = 'SELECT audit_data FROM audit_history WHERE dept_id = ? AND audit_id = ?';
+$results = $query_repo->fetchOne($select, $dept_id, $audit_id);
+
 $results = json_decode($results['audit_data'], true);
 $lat = [];
 $lon = [];

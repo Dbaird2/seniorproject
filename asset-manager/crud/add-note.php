@@ -7,17 +7,14 @@ if (isset($_POST)) {
     $email = $_SESSION['email'];
 
     try {
-    $update_q = "UPDATE user_asset_profile SET asset_note = :asset_note WHERE profile_name = :profile AND asset_tag = :tag AND email = :email";
-    $update_stmt = $dbh->prepare($update_q);
-    $update_stmt->execute([":asset_note"=>$note, ":profile"=>$profile, ":tag"=>$tag, ":email"=>$email]);
+        $query_repo->execute("UPDATE user_asset_profile SET asset_note = ? WHERE profile_name = ? AND asset_tag = ? AND email = ?", $note, $profile, $tag, $email);
     } catch (PDOException $e) {
-        echo json_encode(["Status"=>"failed to insert", "Message"=>$e->getMessage()]);
+        echo json_encode(["Status" => "failed to insert", "Message" => $e->getMessage()]);
         exit;
     }
-    echo json_encode(["Status"=>"Successful note insert"]);
+    echo json_encode(["Status" => "Successful note insert"]);
     exit;
 }
 
-echo json_encode(["Status"=>"METHOD not received"]);
+echo json_encode(["Status" => "METHOD not received"]);
 exit;
-

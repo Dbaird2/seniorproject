@@ -4,37 +4,31 @@ if (isset($_POST)) {
     $dept_name = trim($_POST['dept_name']);
     $profile_name = trim($_POST['profile_name']);
     $email = $_SESSION['email'];
+
     $select_q = "SELECT dept_id from department where dept_name = ?";
-    $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([$dept_name]);
-    $dept = $select_stmt->fetch(PDO::FETCH_ASSOC);
+    $dept = $query_repo->fetchOne($select_q, $dept_name);
+
     $dept_id = $dept['dept_id'];
 
     $select_q = "SELECT asset_tag
     FROM asset_info
-    WHERE dept_id = :dept_id";
-    $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":dept_id" => $dept_id]);
-    $asset_results = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    WHERE dept_id = ?";
+    $asset_results = $query_repo->fetchAll($select_q, $dept_id);
+
     // ADD DELETE QUERY TO THIS
-    $delete_q = "DELETE FROM user_asset_profile WHERE profile_name = :profile_name AND email = :email";
-    $delete_stmt = $dbh->prepare($delete_q);
-    $delete_stmt->execute([":profile_name"=>$profile_name,":email"=>$email]);
+    $delete_q = "DELETE FROM user_asset_profile WHERE profile_name = ? AND email = ?";
+    $query_repo->execute($delete_q, $profile_name, $email);
 
     try {
-        $dbh->beginTransaction();
-        foreach ($asset_results as $index=>$row) {
+        $query_repo->beginTransaction();
+        foreach ($asset_results as $index => $row) {
             $insert_q = "INSERT INTO user_asset_profile
-            (profile_name, email, asset_tag)
-            VALUES
-            (?, ?, ?)";
-            $insert_stmt = $dbh->prepare($insert_q);
-            $insert_stmt->execute([$profile_name, $email, $row['asset_tag']]);
+                (profile_name, email, asset_tag) VALUES (?, ?, ?)";
+            $query_repo->execute($insert_q, $profile_name, $email, $row['asset_tag']);
         }
-        $dbh->commit();
+        $query_repo->commit();
     } catch (PDOException $e) {
-        $dbh->rollback();
+        $query_repo->rollback();
         error_log("Error with Quick Start: rolling back db");
     }
 }
-?>

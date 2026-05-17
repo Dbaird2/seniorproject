@@ -7,31 +7,22 @@ $room_msg = [[]];
 if (isset($_GET['bldg-id'])) {
     $bldg_name = isset($_GET['bldg-name']) ? trim($_GET['bldg-name']) : exit('Missing building name.');
     $bldg_id = (int)$_GET['bldg-id'];
-    $check_bldg_name = "SELECT bldg_name, bldg_id from bldg_table where bldg_name = :bldg_name OR bldg_id = :bldg_id";
 
-    $statement = $dbh->prepare($check_bldg_name);
-    $statement->execute([":bldg_name" => $bldg_name, ":bldg_id" => $bldg_id]);
-    $already_in_db = $statement->fetch(PDO::FETCH_ASSOC);
-
+    $already_in_db = $query_repo->fetchOne("SELECT bldg_name, bldg_id from bldg_table where bldg_name = ? OR bldg_id = ?", $bldg_name, $bldg_id);
     try {
         if ($_GET['add-remove'] === 'add') {
             if (!$already_in_db) {
-                $insert_bldg = "INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)";
-
-                $statement = $dbh->prepare($insert_bldg);
-                $statement->execute([$bldg_name, $bldg_id]);
-
+                $query_repo->execute("INSERT INTO bldg_table (bldg_name, bldg_id) VALUES (?, ?)", $bldg_name, $bldg_id);
                 $bldg_msg = "Building: " . $bldg_id . " " . $bldg_name . " inserted into database";
                 $bldg_color = 'green';
+
             } else {
                 $bldg_msg = "Building with id of " . $bldg_id . " or name of " . $bldg_name . " already exists";
                 $bldg_color = 'red';
             }
         } else if ($_GET['add-remove'] === 'remove') {
             if ($already_in_db) {
-                $delete_bldg = "DELETE FROM bldg_table WHERE bldg_name = :bldg_name AND bldg_id = :bldg_id";
-                $delete_stmt = $dbh->prepare($delete_bldg);
-                if ($delete_stmt->execute([":bldg_name" => $bldg_name, "bldg_id" => $bldg_id])) {
+                if ($query_repo->execute("DELETE FROM bldg_table WHERE bldg_name = ? AND bldg_id = ?", $bldg_name, $bldg_id)) {
                     $bldg_msg = "Deleted " . $bldg_name . " from the database";
                 }
             }
@@ -63,14 +54,14 @@ if (isset($_GET['room-num'])) {
     try {
         foreach ($new_room_nums as $index => $room) {
 
-            $room_stmt = $dbh->prepare($check_room_avail);
-            $room_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
-            $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
+            // $room_stmt = $dbh->prepare($check_room_avail);
+            // $room_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
+            // $room_check = $room_stmt->fetch(PDO::FETCH_ASSOC);
+            $room_check = $query_repo->fetchOne("SELECT * FROM room_table WHERE room_loc = ? AND bldg_id = ?", $room, $bldg_id);
             if ($_GET['add-remove-room'] === 'add') {
                 if (!$room_check) {
-                    $insert_stmt = $dbh->prepare($insert_room);
-                    $insert_stmt->execute([$room, $bldg_id]);
-
+                    
+                    $query_repo->execute("INSERT INTO room_table (room_loc, bldg_id) VALUES (?, ?)", $room, $bldg_id);
                     echo "Adding " . $room;
 
                     $room_msg[$index][0] = 'green';
@@ -81,8 +72,8 @@ if (isset($_GET['room-num'])) {
                 }
             } else if ($_GET['add-remove-room'] === 'remove') {
                 if ($room_check) {
-                    $delete_stmt = $dbh->prepare($delete_room);
-                    $delete_stmt->execute([":room_loc" => $room, ":bldg_id" => $bldg_id]);
+                    
+                    $query_repo->execute("DELETE FROM room_table WHERE room_loc = ? AND bldg_id = ?", $room, $bldg_id);
                     echo "Deleting " . $room;
 
                     $room_msg[$index][0] = 'green';
@@ -99,11 +90,7 @@ if (isset($_GET['room-num'])) {
 
 include_once("../navbar.php");
 
-
-$select = "SELECT * FROM bldg_table ORDER BY bldg_name";
-$stmt = $dbh->prepare($select);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $query_repo->fetchAll("SELECT * FROM bldg_table ORDER BY bldg_name");
 
 ?>
 <link rel="stylesheet" href="bldg.css">

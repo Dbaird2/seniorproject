@@ -21,18 +21,13 @@ if ($dept_id === '' || $audit_id === '') {
 }
 
 // --- Fetch data ---
-$select_query = "
+$audit_details = $query_repo->fetchOne("
   SELECT * 
   FROM audit_history 
-  WHERE dept_id = :dept_id AND audit_id = :audit_id 
+  WHERE dept_id = ? AND audit_id = ? 
   ORDER BY finished_at DESC
-";
-$stmt = $dbh->prepare($select_query);
-$stmt->execute([
-    ':dept_id'  => $dept_id,
-    ':audit_id' => $audit_id,
-]);
-$audit_details = $stmt->fetch(PDO::FETCH_ASSOC);
+", $dept_id, $audit_id);
+
 if (!$audit_details) {
     http_response_code(404);
     exit('No audit found');

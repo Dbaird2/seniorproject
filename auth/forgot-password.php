@@ -30,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $mail->send();
        
-        $add_token_q = "UPDATE user_table SET ver_code = :token, expiry = CURRENT_TIMESTAMP WHERE email = :email";
-        $token_stmt = $dbh->prepare($add_token_q);
-        $token_stmt->execute([':token'=>$token, ':email'=>$email]);
+        $add_token_q = "UPDATE user_table SET ver_code = ?, expiry = CURRENT_TIMESTAMP WHERE email = ?";
+        $query_repo->execute($add_token_q, $token, $email);
         
         $message = "If an account with that email exists, you will receive a password reset link shortly.";
         $success = true;

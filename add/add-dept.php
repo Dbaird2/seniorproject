@@ -11,7 +11,6 @@ if (isset($_GET['dept-name'])) {
 
     $dept_name = trim($_GET['dept-name']);
     $dept_id = trim(strtoupper($_GET['dept-id']));
-    $dept_availibility = "SELECT * FROM department WHERE dept_name = :dept_name OR dept_id = :dept_id";
     if (isset($_GET['add'])) {
         $mailstop = $_GET['dept-stop'];
         $f_name = trim($_GET['dept-cust-f']);
@@ -19,23 +18,27 @@ if (isset($_GET['dept-name'])) {
         $custodian = '{' . $f_name . " " . $l_name . '}';
         $manager = trim($_GET['dept-mana-f']) . " " . trim($_GET['dept-mana-l']);
 
-        $check_cust_uid = "SELECT id FROM user_table WHERE f_name ILIKE :f_name AND l_name ILIKE :l_name";
         $dept_insert = "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            $get_id_stmt = $dbh->prepare($check_cust_uid);
-            $get_id_stmt->execute([":f_name" => $f_name, ":l_name" => $l_name]);
-            $id = $get_id_stmt->fetch(PDO::FETCH_ASSOC);
+            $id = $query_repo->fetchOne("SELECT id FROM user_table WHERE f_name ILIKE ? AND l_name ILIKE ?", $f_name, $l_name);
 
             $uid = (isset($id['id']) && is_array($id) && $id['id'] !== '') ? (int)$id['id'] :  -1;
             $mailstop = ($mailstop !== '') ? (int)$mailstop : -1;
 
-            $check_stmt = $dbh->prepare($dept_availibility);
-            $check_stmt->execute([":dept_name" => $dept_name, ":dept_id" => $dept_id]);
-            $is_avail = $check_stmt->fetch(PDO::FETCH_ASSOC);
+
+            $is_avail = $query_repo->fetchOne("SELECT * FROM department WHERE dept_name = ? OR dept_id = ?", $dept_name, $dept_id);
+
             if (!$is_avail) {
-                $insert_stmt = $dbh->prepare($dept_insert);
-                $insert_stmt->execute([$dept_id, $dept_name, $custodian, $manager, $mailstop, $uid]);
-                if ($insert_stmt) {
+
+                if ($query_repo->execute(
+                    "INSERT INTO department (dept_id, dept_name, custodian, dept_manager, mail_stop, uid) VALUES (?, ?, ?, ?, ?, ?)",
+                    $dept_id,
+                    $dept_name,
+                    $custodian,
+                    $manager,
+                    $mailstop,
+                    $uid
+                )) {
                     $msg = "Successfully added " . $dept_name;
                 } else {
                     $msg = "Failed to add " . $dept_name;
@@ -62,26 +65,20 @@ if (isset($_GET['dept-name'])) {
 
             if (isset($_GET['option']) && $_GET['option'] === 'add-cust') {
                 $update_q = "UPDATE department 
-                    SET custodian = COALESCE(custodian, ARRAY[]::TEXT[]) || ARRAY[:name] 
-                    WHERE dept_id = :dept_id";
+                    SET custodian = COALESCE(custodian, ARRAY[]::TEXT[]) || ARRAY[?] 
+                    WHERE dept_id = ?";
             } else if ($_GET['option'] === 'remove-cust') {
                 $update_q = "UPDATE department 
-                    SET custodian = array_remove(custodian, :name) 
-                    WHERE dept_id = :dept_id";
+                    SET custodian = array_remove(custodian, ?) 
+                    WHERE dept_id = ?";
             }
 
             if (isset($update_q)) {
-                $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([
-                    ":name" => $full_name,
-                    ":dept_id" => $dept_id
-                ]);
+                $query_repo->execute($update_q, $full_name, $dept_id);
             }
         } else {
             try {
-                $delete_q = "DELETE FROM department WHERE dept_name = :dept_name AND dept_id = :dept_id";
-                $delete_stmt = $dbh->prepare($delete_q);
-                $delete_msg = $delete_stmt->execute([":dept_id" => $dept_id, ":dept_name" => $dept_name]) ? "Successfully deleted " . $dept_name : "Failed to delete " . $dept_name;
+                $delete_msg = $query_repo->execute("DELETE FROM department WHERE dept_name = ? AND dept_id = ?", $dept_name, $dept_id) ? "Successfully deleted " . $dept_name : "Failed to delete " . $dept_name;;
             } catch (PDOException $e) {
                 $msg = "Failed to delete " . $dept_name;
                 echo "Error " . $e->getMessage();
@@ -90,10 +87,7 @@ if (isset($_GET['dept-name'])) {
     }
 }
 
-$select = "SELECT dept_id, dept_name, custodian FROM department ORDER BY dept_name";
-$stmt = $dbh->prepare($select);
-$stmt->execute();
-$result_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result_raw = $query_repo->fetchAll("SELECT dept_id, dept_name, custodian FROM department ORDER BY dept_name");
 $result = [[]];
 foreach ($result_raw as $index => $row) {
     $result[$index]['dept_id'] = $row['dept_id'];

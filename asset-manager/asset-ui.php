@@ -33,10 +33,8 @@ check_auth();
                         <input type="search" id="profiles" list="profile-list" placeholder="Load Profile" autocomplete="on" accept="text/plain">
                         <datalist id="profile-list">
                             <?php
-                            $query = "SELECT distinct profile_name FROM user_asset_profile WHERE email = :email";
-                            $query_stmt = $dbh->prepare($query);
-                            $query_stmt->execute([":email" => $_SESSION['email']]);
-                            $result = $query_stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
+                            $query = "SELECT distinct profile_name FROM user_asset_profile WHERE email = ?";
+                            $result = $query_repo->fetchAll($query, $_SESSION['email']);
                             foreach ($result as $row) {
                                 echo "<option value='" . htmlspecialchars($row['profile_name']) . "' data-id='" . htmlspecialchars($row['profile_name']) . "'>";
                             }
@@ -52,7 +50,7 @@ check_auth();
                 <datalist id="dept-list">
                     <?php
                     $query = "SELECT dept_name FROM department";
-                    $result = $dbh->query($query);
+                    $result = $query_repo->fetchAll($query);
                     foreach ($result as $row) {
                         echo "<option value='" . htmlspecialchars($row['dept_name']) . "' data-id='" . htmlspecialchars($row['dept_name'])  . "'>";
                     }
@@ -72,7 +70,7 @@ check_auth();
                     <datalist id="asset-list">
                         <?php
                         $query = "SELECT asset_tag FROM asset_info WHERE asset_status = 'In Service'";
-                        $result = $dbh->query($query);
+                        $result = $query_repo->fetchAll($query);
                         foreach ($result as $row) {
                             echo "<option value='" . htmlspecialchars($row['asset_tag']) . "' data-id='" . htmlspecialchars($row['asset_tag']) . "'>";
                         }

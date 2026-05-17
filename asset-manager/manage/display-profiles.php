@@ -13,16 +13,12 @@ require_once '../../config.php';
 <body>
     <?php
     $email = $_SESSION['email'];
-    $select = "SELECT distinct profile_name FROM user_asset_profile WHERE email = :email";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([":email" => $email]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? null;
+    $select = "SELECT distinct profile_name FROM user_asset_profile WHERE email = ?";
+    $result = $query_repo->fetchAll($select, $email);
 
     if (in_array($_SESSION['role'], ['admin', 'management'], true)) {
         $select_q = "SELECT DISTINCT(email, profile_name) as profiles from user_asset_profile";
-        $stmt = $dbh->prepare($select_q);
-        $stmt->execute();
-        $result2 = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $result2 = $query_repo->fetchAll($select_q);
     }
 
 ?>

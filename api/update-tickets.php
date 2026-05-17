@@ -7,9 +7,7 @@ try {
 
         if ($action === 'delete') {
             try {
-                $delete_q = "DELETE FROM ticket_table WHERE id = :id";
-                $delete_stmt = $dbh->prepare($delete_q);
-                $delete_stmt->execute([":id"=>$id]);
+                $query_repo->execute("DELETE FROM ticket_table WHERE id = ?", $id);
                 echo json_encode(["status"=>"deleted ticket " . $id]);
                 exit;
             } catch (PDOException $e) {
@@ -18,9 +16,7 @@ try {
             }
         } else if ($action === 'completed') {
             try {
-                $update_q = "UPDATE ticket_table SET ticket_status = 'Complete' WHERE id = :id";
-                $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":id"=>$id]);
+                $query_repo->execute("UPDATE ticket_table SET ticket_status = 'Complete' WHERE id = ?", $id);
                 echo json_encode(["status"=>"updated ticket " . $id]);
                 exit;
             } catch (PDOException $e) {

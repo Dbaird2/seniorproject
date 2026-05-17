@@ -27,11 +27,13 @@ try {
         if (!empty($username)) {
             $stmt = "SELECT * FROM user_table WHERE username = ? OR email = ?;";
             $stmt = $dbh->prepare($stmt);
-            if (!($stmt->execute([$username, $email]))) {
+
+            $user_check = $query_repo->fetchOne($stmt, $username, $email);
+            if (!$user_check) {
                 echo "<p> Error with database </p>";
                 $err = 1;
             } else {
-                $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
+               
                 if ($user_check > 0) {
                     if ($user_check['username'] === $username) {
                         $user_err = "Username or Email already exists";
@@ -57,9 +59,8 @@ try {
         if (!empty($deptid)) {
             $placeholder = implode(',', array_fill(0, count($dept_id_array), '?'));
             $stmt = "SELECT distinct dept_id FROM department where dept_id IN ($placeholder)";
-            $stmt = $dbh->prepare($stmt);
-            $stmt->execute($dept_id_array);
-            if ($stmt->fetch(PDO::FETCH_ASSOC) === false) {
+            $dept = $query_repo->fetchAll($stmt, ...$dept_id_array);
+            if (!$dept) {
                 $dept_err = "Department does not exist";
                 $err = 1;
             }
@@ -67,8 +68,7 @@ try {
 
         if (!$err) {
             $stmt = "INSERT INTO user_table (username, pw, email, u_role, f_name, l_name, dept_id, position) 
-                VALUES (:username, :pw, :email, :u_role, :f_name, :l_name, :dept::VARCHAR[], :status_type);";
-            $stmt = $dbh->prepare($stmt);
+                VALUES (?, ?, ?, ?, ?, ?, ?::VARCHAR[], ?);";
             $full_name = $f_name . " " . $l_name;
             $dept_id_array = array_map('trim', $dept_id_array);
             $dept_pg_array = '{' . implode(',', array_map(function($val) {
@@ -76,13 +76,11 @@ try {
             }, $dept_id_array)) . '}';
 
             try {
-                if ($stmt->execute([':username'=>$username, ':pw'=>$password, 
-                    ':email'=>$email, ':u_role'=>$role, ':f_name'=>$f_name, ':l_name'=>$l_name,
-                    ':dept'=>$dept_pg_array, ":status_type"=>$status_type])) {
+                $result = $query_repo->execute($stmt, $username, $password, $email, $role, $f_name, $l_name, $dept_pg_array, $status_type);
+                if ($result) {
                     if ($role === 'custodian') {
                         $dept_cust = "UPDATE department SET custodian = ARRAY_APPEND(custodian, ?) WHERE dept_id IN ($placeholder)";
-                        $dept_stmt = $dbh->prepare($dept_cust);
-                        $dept_stmt->execute([$full_name, $dept_id_array]);
+                        $query_repo->execute($dept_cust, $full_name, $dept_id_array);
                     }
                     header("Location: https://dataworks-7b7x.onrender.com/index.php");
                     exit;

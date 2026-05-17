@@ -16,9 +16,8 @@ include_once("../../config.php");
     <div class="page-wrapper">
         <?php
         $get_curr_ids = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
-        $curr_stmt = $dbh->query($get_curr_ids);
-        $curr_stmt->execute();
-        $curr_results = $curr_stmt->fetch(PDO::FETCH_ASSOC);
+        $curr_results = $query_repo->fetchOne($get_curr_ids);
+
         $search = $_POST['search'];
         $type = $_POST['audit_type'];
         $status_search = (isset($_POST['audit-status'])) ? $_POST['audit-status'] : '';
@@ -48,26 +47,21 @@ include_once("../../config.php");
         if ($search === 'all') {
             $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.dept_id)
 UNION (SELECT dept_id, dept_name FROM department) ORDER BY dept_id";
-            $dept_stmt = $dbh->query($depts);
-            $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
+            $departments = $query_repo->fetchAll($depts);
 
-            $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
-            $stmt = $dbh->prepare($select_query);
-            $stmt->execute();
+            // $select_query = "SELECT dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history WHERE " . $query_type . " ORDER BY audit_id";
+            // $stmt = $dbh->prepare($select_query);
+            // $stmt->execute();
+            // $query_repo->execute($select_query);
         } else {
             $search = '%' . $search . '%';
             $depts = "(SELECT DISTINCT(a.dept_id) as dept_id, dept_name FROM asset_info a LEFT JOIN department d ON a.dept_id = d.dept_id WHERE a.dept_id ILIKE :search OR d.dept_name ILIKE :search) 
 UNION
 (SELECT dept_id, dept_name FROM department WHERE dept_id ILIKE :search OR dept_name ILIKE :search) ORDER BY dept_id";
-            $dept_stmt = $dbh->prepare($depts);
-            $dept_stmt->execute([":search" => $search]);
-            $departments = $dept_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            $select_query = "SELECT h.dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history h LEFT JOIN department d ON d.dept_id = h.dept_id WHERE (h.dept_id ILIKE :search OR d.dept_name ILIKE :search) AND " . $query_type . " ORDER BY audit_id";
-            $stmt = $dbh->prepare($select_query);
-            $stmt->execute([':search' => $search]);
+            $departments = $query_repo->fetchAll($depts);
         }
-        $audits = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $select_query = "SELECT h.dept_id, auditor, TO_CHAR(finished_at, 'Mon DD, YYYY HH12:MI AM') as finished_at, mobile_audit, audit_id, audit_status, forms_submitted, check_forms FROM audit_history h LEFT JOIN department d ON d.dept_id = h.dept_id WHERE (h.dept_id ILIKE :search OR d.dept_name ILIKE :search) AND " . $query_type . " ORDER BY audit_id";
+        $audits = $query_repo->fetchAll($select_query);
 
         $count = 0;
         if (count($departments) > 0) {

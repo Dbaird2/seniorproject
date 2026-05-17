@@ -30,13 +30,12 @@ try {
         'SPA'  => 7,
         'oSPA'  => 9
     };
-    foreach ($audit_data as $index=>$tag) {
+    foreach ($audit_data as $index => $tag) {
         if (!in_array($tag['Tag Status'], ['Found', 'Extra'])) {
             continue;
         }
         $insert_q = "INSERT INTO audited_asset (dept_id, audit_id, asset_tag, note) VALUES (?, ?, ?, ?) ON CONFLICT (dept_id, audit_id, asset_tag) DO UPDATE SET note = EXCLUDED.note";
-        $stmt = $dbh->prepare($insert_q);
-        $stmt->execute([$dept,$audit_id, $tag['Tag Number'], $tag['Found Note']]);
+        $query_repo->execute($insert_q, $dept, $audit_id, $tag['Tag Number'], $tag['Found Note']);
     }
 
 
@@ -44,11 +43,8 @@ try {
     $auditor = $_SESSION['email'];
     try {
         $get_curr_audit_q = "SELECT curr_self_id, curr_mgmt_id, curr_spa_id FROM audit_freq";
-        $get_id_stmt = $dbh->query($get_curr_audit_q);
-        $id_results = $get_id_stmt->fetch(PDO::FETCH_ASSOC);
+        $id_results = $query_repo->fetchOne($get_curr_audit_q);
 
-        $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE audit_id = :audit_id AND dept_id = :dept_id";
-        $check_stmt = $dbh->prepare($check_recent_audits);
 
         if (isset($_SESSION['info'][5])) {
             $id = (int)$_SESSION['info'][5];
@@ -64,14 +60,13 @@ try {
             }
         }
 
-        $check_stmt->execute([":dept_id" => $dept, ":audit_id" => $id]);
-        $result = $check_stmt->fetch(PDO::FETCH_ASSOC);
+        $check_recent_audits = "SELECT dept_id, audit_id FROM audit_history WHERE audit_id = ? AND dept_id = ?";
+        $result = $query_repo->fetchOne($check_recent_audits, $id, $dept);
 
         if ($result) {
             try {
-                $update_q = "UPDATE audit_history SET audited_with = :with, finished_at = CURRENT_TIMESTAMP, auditor = :auditor, audit_data = :audit_data WHERE audit_id = :audit_id AND dept_id = :dept_id";
-                $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":with"=>$audited_with, ":audit_id" => $id, ":dept_id" => $result['dept_id'], ":auditor" => $auditor, ":audit_data" => $audited_asset_json]);
+                $update_q = "UPDATE audit_history SET audited_with = ?, finished_at = CURRENT_TIMESTAMP, auditor = ?, audit_data = ? WHERE audit_id = ? AND dept_id = ?";
+                $query_repo->execute($update_q, $audited_with, $auditor,  $audited_asset_json, $id, $result['dept_id']);
             } catch (PDOException $e) {
                 echo json_encode(['status' => 'failure', "Message" => 'Fail on update ' . $e->getMessage()]);
                 exit;
@@ -81,8 +76,7 @@ try {
         } else {
             try {
                 $insert_q = "INSERT INTO audit_history (dept_id, audit_id, auditor, audit_data, audited_with) VALUES (?, ?, ?, ?, ?)";
-                $insert_stmt = $dbh->prepare($insert_q);
-                $insert_stmt->execute([$dept, $audit_id, $auditor, $audited_asset_json, $audited_with]);
+                $query_repo->execute($dept, $audit_id, $auditor, $audited_asset_json, $audited_with);
 
 
                 echo json_encode(['status' => 'success', 'message' => 'Insert audit id ' . $audit_id]);
@@ -99,4 +93,3 @@ try {
     echo json_encode(['status' => 'failed', 'Error' => $e->getMessage()]);
     exit;
 }
-

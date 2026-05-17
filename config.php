@@ -1,10 +1,9 @@
 <?php
-$db_host = $_ENV['DB_HOST'] ?? NULL;
-$db_port = $_ENV['DB_PORT'] ?? NULL;
-$db_name = $_ENV['DB_NAME'] ?? NULL;
-$db_user = $_ENV['DB_USER'] ?? NULL;
-$db_pass = $_ENV['DB_PASS'] ?? NULL;
-$db_pass = $_ENV['DB_PASS'] ?? NULL;
+
+require_once "classes/db_class.php";
+require_once "classes/kuali_class.php";
+
+
 
 try {
     if (session_status() === PHP_SESSION_NONE) {
@@ -13,7 +12,7 @@ try {
         ini_set('error_logs', '1');
         ini_set('display_startup_errors', '0');
         ini_set('error_reporting', (string)E_ALL);
-        ini_set('error_log','/var/log/php/app-error.log');
+        ini_set('error_log', '/var/log/php/app-error.log');
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_httponly', '1');
@@ -31,14 +30,25 @@ try {
         session_start();
         $_SESSION['app_pass'] = $_ENV['APP_PASS'] ?? NULL;
     }
-    $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, array());
-    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $db_host = $_ENV['DB_HOST'] ?? NULL;
+    $db_port = $_ENV['DB_PORT'] ?? NULL;
+    $db_name = $_ENV['DB_NAME'] ?? NULL;
+    $db_user = $_ENV['DB_USER'] ?? NULL;
+    $db_pass = $_ENV['DB_PASS'] ?? NULL;
 
+    $dbh = new DB($db_host, $db_port, $db_name, $db_user, $db_pass);
+    $query_repo = new QueryRepository($dbh);
+
+    $kuali = new KualiAPI();
+
+    // $dbh = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name", $db_user, $db_pass, array());
+    // $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log($e->getMessage());
-} 
-function check_auth($level = 'low') {
+}
+function check_auth($level = 'low')
+{
     $levels = [
         'low' => ['user', 'custodian', 'admin', 'management'],
         'medium' => ['custodian', 'admin', 'management'],
@@ -55,4 +65,3 @@ function check_auth($level = 'low') {
     }
     return true;
 }
-?>

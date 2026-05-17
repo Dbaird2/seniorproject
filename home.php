@@ -4,15 +4,11 @@ include_once "config.php";
 check_auth();
 /* QUERIES */
 $dept_count_q = "SELECT COUNT(DISTINCT(dept_id)) AS total_depts FROM asset_info";
-
-$dept_count_stmt = $dbh->query($dept_count_q);
-$total_departments = $dept_count_stmt->fetchColumn();
+$total_departments = $query_repo->fetchColumn($dept_count_q);
 
 /* GET FREQ DATA */
 $due_dates_q = "SELECT * FROM audit_freq";
-
-$due_dates_stmt = $dbh->query($due_dates_q);
-$due_dates = $due_dates_stmt->fetch(PDO::FETCH_ASSOC);
+$due_dates = $query_repo->fetchOne($due_dates_q);
 
 $spa_due = $due_dates['spa_due'] ?? '2026-07-01';
 $old_spa_id = (int)$due_dates['curr_spa_id'] === 8 ? 9 : 8;
@@ -28,9 +24,7 @@ $old_mgmt_id = (int)$due_dates['curr_mgmt_id'] === 4 ? 5 : 4;
 
 /* GET AUDITS */
 $audit_progress_q = "SELECT audit_id, dept_id, audit_status FROM audit_history ORDER BY finished_at desc";
-
-$audit_progress_stmt = $dbh->query($audit_progress_q);
-$audit_progress = $audit_progress_stmt->fetchAll(PDO::FETCH_ASSOC);
+$audit_progress = $query_repo->fetchAll($audit_progress_q);
 
 /* CHART DATA/CONFIGURING */
 $depts = [];
@@ -499,8 +493,7 @@ $mgmt_prev_completion_status = round(($mgmt_prev_audits_complete / $total_depart
                 <div id="date-list" class="scroll">
 <?php 
 $select = "SELECT a.custodian, a.dept_id, d.dept_name, a.audit_date FROM audit_schedule a LEFT JOIN department d ON a.dept_id = d.dept_id ORDER BY a.audit_date::date DESC, array_position(ARRAY[8,9,10,11,12,1,2,3,4,5], to_char(a.audit_date, 'HH12')::int) ASC";
-$stmt = $dbh->query($select);
-$audit_schedules = $stmt->fetchAll();
+$audit_schedules = $query_repo->fetchAll($select);
 if ($audit_schedules) {
     foreach ($audit_schedules as $index => $audit) {
 ?>        

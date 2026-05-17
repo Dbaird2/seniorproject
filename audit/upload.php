@@ -6,42 +6,35 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 try {
 
     $get_depts = "SELECT dept_id, dept_name FROM department";
-    $stmt = $dbh->prepare($get_depts);
-    $stmt->execute();
-    $depts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $depts = $query_repo->fetchAll($get_depts);
 
     $blank_msg = '';
     check_auth();
     function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
-        global $dbh;
+        global $query_repo;
         $old = false;
         if ($type === 'ocust') {
             $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = ? AND audit_id IN (?, 3)";
         } else if ($type === 'omgmt') {
             $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = ? AND audit_id IN (?, 6)";
         } else if ($type === 'oSPA') {
             $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = ? AND audit_id IN (?, 9)";
         }
         if ($old) {
-            $stmt = $dbh->prepare($audited_tag);
-            $stmt->execute([":tag"=>$tag, ':prev'=>$audit_id]);
-            $tag_info = $stmt->fetch();
+            $tag_info = $query_repo->fetchOne($audited_tag, $tag, $audit_id);
         } else {
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-            $stmt = $dbh->prepare($audited_tag);
-            $stmt->execute([":tag"=>$tag, ':id'=>$auditing_id]);
-            $tag_info = $stmt->fetch();
+            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = ? AND audit_id = ?";
+            $tag_info = $query_repo->fetchOne($audited_tag, $tag, $auditing_id);
         }
         return $tag_info ?: null;
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $select_audit_freq = "SELECT * FROM audit_freq";
-        $stmt = $dbh->query($select_audit_freq);
-        $audit_ids = $stmt->fetch();
+        $audit_ids = $query_repo->fetchOne($select_audit_freq);
         $prev_id = '';
         if ($_POST['audit-type'] === 'ocust') { 
             $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
@@ -79,7 +72,7 @@ try {
                     FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
                     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                     LEFT JOIN department d ON a.dept_id = d.dept_id
-                    WHERE bus_unit = :name AND asset_status != 'Disposed' ORDER BY a.asset_tag";
+                    WHERE bus_unit = ? AND asset_status != 'Disposed' ORDER BY a.asset_tag";
             } else {
                 $select_q = "SELECT a.asset_status, a.asset_tag, a.asset_name, a.bus_unit,
                     a.room_tag, r.room_loc, b.bldg_name, a.dept_id, a.po, a.asset_notes,
@@ -87,12 +80,10 @@ try {
                     FROM asset_info a LEFT JOIN room_table r ON a.room_tag = r.room_tag
                     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                     LEFT JOIN department d ON a.dept_id = d.dept_id
-                    WHERE dept_name = :name  AND asset_status != 'Disposed' ORDER BY a.asset_tag";
+                    WHERE dept_name = ?  AND asset_status != 'Disposed' ORDER BY a.asset_tag";
 
             }
-            $select_stmt = $dbh->prepare($select_q);
-            $select_stmt->execute([":name"=>$name]);
-            $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $query_repo->fetchAll($select_q, $name);
             unset($_SESSION['data']);
             unset($_SESSION['info']);
             $highest_row = 1;
@@ -221,10 +212,8 @@ try {
                                 continue;
                             }
                             if ($data[1][$r_index] === 'Tag Number') {
-                                $select_q = "SELECT asset_notes, asset_status FROM asset_info WHERE asset_tag = :tag";
-                                $select_stmt = $dbh->prepare($select_q);
-                                $select_stmt->execute([":tag"=>$r_row]);
-                                $asset_notes = $select_stmt->fetchColumn();
+                                $select_q = "SELECT asset_notes, asset_status FROM asset_info WHERE asset_tag = ?";
+                                $asset_notes = $query_repo->fetchColumn($select_q, $r_row);
                                 if (!empty($asset_notes)) {
                                     $info = explode(",", $asset_notes);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
@@ -240,10 +229,8 @@ try {
                                 } else {
                                     $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
                                     if ($tag_info) {
-                                        $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
-                                        $stmt = $dbh->prepare($check_notes);
-                                        $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
-                                        $notes = $stmt->fetchAll();
+                                        $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE ?";
+                                        $notes = $query_repo->fetchAll($check_notes, '%'.$tag_info['dept_id'].'%');
                                         //$echo($tag_info);
                                         $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
                                         $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
@@ -289,10 +276,9 @@ try {
                                 continue;
                             }
                             if ($data[0][$r_index] === 'Tag Number') {
-                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                                $select_stmt = $dbh->prepare($select_q);
-                                $select_stmt->execute([":tag"=>$r_row]);
-                                $asset_notes = $select_stmt->fetchColumn();
+                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = ?";
+                                $asset_notes = $query_repo->fetchColumn($select_q, $r_row);
+                                
                                 if (!empty($asset_notes)) {
                                     $info = explode(",", $asset_notes);
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';

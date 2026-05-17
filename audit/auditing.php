@@ -134,24 +134,17 @@ try {
             $scanned_room_nums[] = ($found === true && !empty($_SESSION['data'][$found_at]['Found Room Number']) && isset($_SESSION['data'][$found_at]['Found Room Number'])) ? $_SESSION['data'][$found_at]['Found Room Number'] : $_POST['room-number'];
             $scanned_bldg[] = ($found === true && isset($_SESSION['data'][$found_at]['Found Building Name']) && !empty($_SESSION['data'][$found_at]['Found Building Name']) !== '') ? $_SESSION['data'][$found_at]['Found Building Name'] : $_POST['bldg-name'];
         }
-        $skip = false;
-        $check_if_right = "SELECT room_loc FROM room_table r JOIN bldg_table b ON r.bldg_id = b.bldg_id WHERE r.room_loc = :loc AND b.bldg_name = :name AND r.room_tag = :tag";
-        $check_stmt = $dbh->prepare($check_if_right);
-        $check_stmt->execute([":tag" => $_POST['room-tag'], ":name" => $_POST['bldg-name'], ":loc" => $_POST['room-number']]);
-        if ($check_stmt->rowCount() === 1) {
-            $skip = true;
-        }
+        $check_if_right = "SELECT room_loc FROM room_table r JOIN bldg_table b ON r.bldg_id = b.bldg_id WHERE r.room_loc = ? AND b.bldg_name = ? AND r.room_tag = ?";
+        $if_skip = $query_repo->fetchOne($check_if_right, $_POST['room-number'], $_POST['bldg-name'], $_POST['room-tag']);
+        $skip = (bool) $if_skip;
         if (!$skip) {
-            $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = :tag";
-            $select_stmt = $dbh->prepare($select_tag);
-            $select_stmt->execute([":tag" => $_POST['room-tag']]);
-            if ($select_stmt->rowCount() < 1) {
+            $select_tag = "SELECT b.bldg_id, r.room_loc, r.room_tag, b.bldg_name FROM bldg_table b LEFT JOIN room_table r ON r.bldg_id = b.bldg_id WHERE room_tag = ?";
+            $tag_select = $query_repo->fetchOne($select_tag, $_POST['room-tag']);
+            if (!$tag_select) {
                 // ROOM TAG DOES NOT EXIST
                 $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
                 try {
-                    $bldg_id_stmt = $dbh->prepare($get_bldg_id);
-                    $bldg_id_stmt->execute([":name" => $_POST['bldg-name']]);
-                    $bldg_id = $bldg_id_stmt->fetchColumn();
+                    $bldg_id = $query_repo->fetchColumn($get_bldg_id, $_POST['bldg-name']);
                     if (empty($bldg_id)) {
                         $message = "Error Building Name Does NOT Exist";
                         echo "<script type='text/javascript'>toast('$message');</script>";
@@ -163,21 +156,18 @@ try {
                     exit;
                 }
                 // CHECK IF ROOM LOCATION EXISTS
-                $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
-                $check_loc = $dbh->prepare($select_room_loc);
-                $check_loc->execute([":loc" => $_POST['room-number'], ":id" => $bldg_id]);
-                if ($check_loc->rowCount() < 1) {
+                $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = ? AND bldg_id = ?";
+                $check_loc = $query_repo->fetchOne($select_room_loc, $_POST['room-number'], $bldg_id);
+                if (!$check_loc) {
                     // ROOM LOC ALSO DOES NOT EXIST
 
                     $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
-                    $insert_stmt = $dbh->prepare($insert_room);
-                    $insert_stmt->execute([$bldg_id, $_POST['room-number'], $_POST['room-tag']]);
+                    $query_repo->execute($insert_room, $bldg_id, $_POST['room-number'], $_POST['room-tag']);
                     $message = "Added room number and room tag to database";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 } else {
-                    $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
-                    $update_stmt = $dbh->prepare($update_room_tag);
-                    $update_stmt->execute([':tag' => $_POST['room-tag'], ':room_loc' => $_POST['room-number'], ":id" => $bldg_id]);
+                    $update_room_tag = "UPDATE room_table SET room_tag = ? WHERE room_loc = ? AND bldg_id = ?";
+                    $query_repo->execute($update_room_tag, $_POST['room-tag'], $_POST['room-number'], $bldg_id);
                     $message = "Updated room tag";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 }
@@ -185,38 +175,31 @@ try {
                 // ROOM TAG EXISTS
                 // GET MAX TAG ADD 1
                 $select_max = "SELECT MAX(room_tag) FROM room_table";
-                $select_stmt = $dbh->query($select_max);
-                $max_room = (int)$select_stmt->fetchColumn() + 1;
+                $max_room = (int)$query_repo->fetchColumn($select_max) + 1;
                 // UPDATE WRONG ROOM TAG
-                $update_old_room = "UPDATE room_table SET room_tag = :max WHERE room_tag = :tag";
-                $update_old_room_stmt = $dbh->prepare($update_old_room);
-                $update_old_room_stmt->execute([":max" => $max_room, ":tag" => $_POST['room-tag']]);
+                $update_old_room = "UPDATE room_table SET room_tag = ? WHERE room_tag = ?";
+                $query_repo->execute($update_old_room, $max_room, $_POST['room-tag']);
 
-                $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
                 try {
-                    $bldg_id_stmt = $dbh->prepare($get_bldg_id);
-                    $bldg_id_stmt->execute([":name" => $_POST['bldg-name']]);
-                    $bldg_id = $bldg_id_stmt->fetchColumn();
+                    $get_bldg_id = "SELECT bldg_id FROM bldg_table WHERE bldg_name = :name";
+                    $bldg_id = $query_repo->fetchColumn($get_bldg_id, $_POST['bldg-name']);
                 } catch (PDOException) {
                     $message = "Error Building Name Does NOT Exist IN ELSE STATEMENT";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                     exit;
                 }
                 // CHECK IF ROOM LOCATION EXISTS
-                $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = :loc AND bldg_id = :id";
-                $check_loc = $dbh->prepare($select_room_loc);
-                $check_loc->execute([":loc" => $_POST['room-number'], ":id" => $bldg_id]);
-                if ($check_loc->rowCount() < 1) {
+                $select_room_loc = "SELECT room_loc, bldg_id FROM room_table WHERE room_loc = ? AND bldg_id = ?";
+                $check_lost = $query_repo->fetchOne($select_room_loc, $_POST['room-number'], $bldg_id);
+                if (!$check_lost) {
                     // ROOM LOC ALSO DOES NOT EXIST
                     $insert_room = "INSERT INTO room_table (bldg_id, room_loc, room_tag) VALUES (?, ?, ?)";
-                    $insert_stmt = $dbh->prepare($insert_room);
-                    $insert_stmt->execute([$bldg_id, $_POST['room-number'], $_POST['room-tag']]);
+                    $query_repo->execute($insert_room, $bldg_id, $_POST['room-nuimber'], $_POST['room-tag']);
                     $message = "Added room number and room tag to database IN ELSE STATEMENT";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 } else {
-                    $update_room_tag = "UPDATE room_table SET room_tag = :tag WHERE room_loc = :room_loc AND bldg_id = :id";
-                    $update_stmt = $dbh->prepare($update_room_tag);
-                    $update_stmt->execute([':tag' => $_POST['room-tag'], ':room_loc' => $_POST['room-number'], ":id" => $bldg_id]);
+                    $update_room_tag = "UPDATE room_table SET room_tag = ? WHERE room_loc = ? AND bldg_id = ?";
+                    $query_repo->execute($update_room_tag, $_POST['room-tag'], $_POST['room-number'], $bldg_id);
                     $message = "Updated room tag FROM ELSE STATEMENT";
                     echo "<script type='text/javascript'>toast('$message');</script>";
                 }
@@ -288,10 +271,8 @@ try {
                             FROM asset_info AS a LEFT JOIN room_table AS r ON r.room_tag = a.room_tag 
                             LEFT JOIN bldg_table AS b ON b.bldg_id = r.bldg_id 
                             LEFT JOIN department AS d ON a.dept_id = d.dept_id
-                            WHERE a.asset_tag = :tag";
-                        $select_stmt = $dbh->prepare($select_q);
-                        $select_stmt->execute([":tag" => $tag]);
-                        $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
+                            WHERE a.asset_tag = ?";
+                        $result = $query_repo->fetchOne($select_q, $tag);
                         if ($result) {
                             /*$update_tag = "UPDATE asset_info SET found = true, found_at = :dept WHERE asset_tag = :tag";
                         $update_stmt = $dbh->prepare($select_q);
@@ -343,8 +324,7 @@ try {
         }
     }
     $select_bldgs = "SELECT * FROM bldg_table";
-    $select_stmt = $dbh->query($select_bldgs);
-    $bldgs = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bldgs = $query_repo->fetchAll($select_bldgs);
 } catch (PDOException $e) {
     error_log($e->getMessage());
 } catch (Exception $e) {

@@ -6,11 +6,10 @@ if (isset($_POST)) {
     $tag = trim($_POST['asset_tag']);
     try {
         $delete_q = "DELETE FROM user_asset_profile 
-        WHERE asset_tag = :asset_tag AND 
-        profile_name = :name AND
-        email = :email";
-        $delete_stmt = $dbh->prepare($delete_q);
-        $delete_stmt->execute([":asset_tag"=>$tag,":name"=>$profile_name,":email"=>$email]);
+        WHERE asset_tag = ? AND 
+        profile_name = ? AND
+        email = ?";
+        $query_repo->execute($delete_q, $tag, $profile_name, $email);
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
     }

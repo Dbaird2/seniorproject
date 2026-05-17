@@ -5,14 +5,12 @@ if (isset($_POST)) {
     $email = $_SESSION['email'];
     try {
         $delete_q = "DELETE FROM user_asset_profile
-    WHERE email = :email AND profile_name = :name";
-        $delete_stmt = $dbh->prepare($delete_q);
-        $delete_stmt->execute([":email" => $email, ":name" => $profile_name]);
+            WHERE email = :email AND profile_name = :name";
+        $query_repo->execute($delete_q, $email, $profile_name);
 
         $insert_q = "INSERT INTO user_asset_profile (email, profile_name)
-    VALUES (?, ?)";
-        $insert_stmt = $dbh->prepare($insert_q);
-        $insert_stmt->execute([$email, $profile_name]);
+            VALUES (?, ?)";
+        $query_repo->execute($insert_q, $email, $profile_name);
     } catch (PDOException $e) {
         error_log("Error: " . $e->getMessage());
     }

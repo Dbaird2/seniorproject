@@ -81,59 +81,51 @@ if (isset($_FILES['file'])) {
     $CMP = "/^\d+/";
     $FDN = "/^F[DN]?\d+$/";
     $SPA = "/^SP\d+$/";
-    if (preg_match($ASI, $row[3]) || preg_match($STU, $row[3]) || 
-        preg_match($CMP, $row[3]) || preg_match($FDN, $row[3]) ||
-        preg_match($SPA, $row[3])) {
+    if (
+      preg_match($ASI, $row[3]) || preg_match($STU, $row[3]) ||
+      preg_match($CMP, $row[3]) || preg_match($FDN, $row[3]) ||
+      preg_match($SPA, $row[3])
+    ) {
     } else {
-        echo 'Invalid Tag skipping<br>';
-        continue;
+      echo 'Invalid Tag skipping<br>';
+      continue;
     }
-
-$regex = '/^(\d{1,3})$/';
-    if (count($location_array) === 2) {
-        if ($location_array[0] === '44A') {
-            $location_array[0] = 44;
-        }
-        if (in_array($location_array[0], ['93', '97','104','85'])) {
-            continue;
-        }
-        if ((int)$location_array[0] === 0 || !preg_match($regex, $location_array[0])) {
-            echo 'Invalid Building ID<br>';
-            $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
+    $insert_asset = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
                 (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
-            $stmt = $dbh->prepare($insert);
-            $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
-            echo 'Insert/Updated No Location<br>';
-            continue;
-        }
-      $room_select = 'SELECT room_tag FROM room_table WHERE bldg_id = :bid AND room_loc = :loc';
-      $stmt = $dbh->prepare($room_select);
-      $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
-      $room_tag = $stmt->fetchColumn();
-      if (!$room_tag) {
-          $insert = 'INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)';
-          $stmt = $dbh->prepare($insert);
-          $stmt->execute([$location_array[0], $location_array[1]]);
-          $stmt = $dbh->prepare($room_select);
-          $stmt->execute([':bid' => $location_array[0], ':loc' => $location_array[1]]);
-          $room_tag = $stmt->fetchColumn();
-
+    $regex = '/^(\d{1,3})$/';
+    if (count($location_array) === 2) {
+      if ($location_array[0] === '44A') {
+        $location_array[0] = 44;
       }
-      $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, room_tag, dept_id, is_it, fund) VALUES
-      (?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
-      $stmt = $dbh->prepare($insert);
-      $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $room_tag, $row[9], $is_it, $row[10]]);
+      if (in_array($location_array[0], ['93', '97', '104', '85'])) {
+        continue;
+      }
+      if ((int)$location_array[0] === 0 || !preg_match($regex, $location_array[0])) {
+        echo 'Invalid Building ID<br>';
+        
+        $query_repo->execute($insert_asset, $row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]);
+        echo 'Insert/Updated No Location<br>';
+        continue;
+      }
+      $room_select = 'SELECT room_tag FROM room_table WHERE bldg_id = ? AND room_loc = ?';
+      $room_tag = $query_repo->fetchColumn($room_select, $location_array[0], $location_array[1]);
+      if (!$room_tag) {
+        $insert = 'INSERT INTO room_table (bldg_id, room_loc) VALUES (?, ?)';
+        $query_repo->execute($insert, $location_array[0], $location_array[1]);
+
+        $room_tag = $query_repo->fetchColumn($room_select, $location_array[0], $location_array[1]);
+      }
+      
+      $query_repo->execute($insert_asset, $row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]);
       echo 'Inserted tag<br>';
     } else {
-        try {
-            echo 'Invalid Building ID<br>';
-            $insert = 'INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, asset_status, asset_type, dept_id, is_it, fund) VALUES
-                (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (asset_tag) DO UPDATE SET fund = EXCLUDED.fund, is_it = EXCLUDED.is_it';
-            $stmt = $dbh->prepare($insert);
-            $stmt->execute([$row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]]);
-            echo 'Insert/Updated No Location<br>';
-        } catch (PDOException $e) {
-        }
+      try {
+        echo 'Invalid Building ID<br>';
+        
+        $query_repo->execute($insert, $row[3], $row[4], $row[13], $row[6], 1.00, $status, $row[14], $row[9], $is_it, $row[10]);
+        echo 'Insert/Updated No Location<br>';
+      } catch (PDOException $e) {
+      }
     }
   }
 }

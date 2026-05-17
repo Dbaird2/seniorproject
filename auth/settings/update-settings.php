@@ -10,18 +10,17 @@ $old_l_name = $data['old_l_name'] ?? '';
 $old_key = $data['old_key'] ?? '';
 $params = [];
 $set_q = [];
-$params[":email"] = $_SESSION["email"] ?? null;
 if ($f_name !== $old_f_name) {
-    $params[":f_name"] = $f_name;
-    $set_q[] = "f_name = :f_name";
+    $params[] = $f_name;
+    $set_q[] = "f_name = ?";
 }
 if ($l_name !== $old_l_name) {
-    $params[":l_name"] = $l_name;
-    $set_q[] = "l_name = :l_name";
+    $params[] = $l_name;
+    $set_q[] = "l_name = ?";
 }
 if ($key !== $old_key) {
-    $params[":kuali_key"] = $key;
-    $set_q[] = "kuali_key = :kuali_key";
+    $params[] = $key;
+    $set_q[] = "kuali_key = ?";
 }
 if (!empty($set_q)) {
     $query_to_add = implode(", ", $set_q);
@@ -30,9 +29,9 @@ if (!empty($set_q)) {
     echo json_encode(['status' => 'failed', 'msg' => 'Nothing to change']);
     exit;
 }
+$params[] = $_SESSION["email"];
 try {
-    $update_stmt = $dbh->prepare($update_q);
-    $update_stmt->execute($params);
+    $query_repo->execute($update_q, $params);
 } catch (PDOException $e) {
     echo json_encode(['status' => 'failed', 'error' => $e->getMessage()]);
     exit;
@@ -40,4 +39,3 @@ try {
 
 echo json_encode(['status' => 'success']);
 exit;
-

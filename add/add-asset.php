@@ -119,16 +119,11 @@ check_auth('high');
         }
 </style>
 <?php
-$query = "SELECT DISTINCT bldg_name FROM bldg_table";
-$stmt = $dbh->prepare($query);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$query = "SELECT DISTINCT dept_id FROM department";
-$stmt = $dbh->prepare($query);
-$stmt->execute();
-$dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-/*$result = [["dept_id" => "D21560", "bldg_name" => "DISTRIBUTION"]];*/
+$result = $query_repo->fetchAll("SELECT DISTINCT bldg_name FROM bldg_table");
+
+$dept_result = $query_repo->fetchAll("SELECT DISTINCT dept_id FROM department");
+
 ?>
 
 <body>
@@ -153,19 +148,19 @@ $dept_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <div class="input-container">
                                                 <label for="type2">Type</label>
                                                 <select name="type2" class="input" required>
-                                                    <option value="Laptop">Laptop</option>
-                                                    <option value="Tablet">Tablet</option>
-                                                    <option value="Desktop">Desktop</option>
-                                                    <option value="Other">Other</option>
+                                                        <option value="Laptop">Laptop</option>
+                                                        <option value="Tablet">Tablet</option>
+                                                        <option value="Desktop">Desktop</option>
+                                                        <option value="Other">Other</option>
                                                 </select>
                                         </div>
                                         <div class="input-container">
                                                 <label for="type">Asset Category</label>
                                                 <select name="type" class="input" required>
-                                                    <option value="Equipment">Equipment</option>
-                                                    <option value="Property">Property</option>
-                                                    <option value="Fleet">Fleet</option>
-                                                    <option value="Other">Other</option>
+                                                        <option value="Equipment">Equipment</option>
+                                                        <option value="Property">Property</option>
+                                                        <option value="Fleet">Fleet</option>
+                                                        <option value="Other">Other</option>
                                                 </select>
                                         </div>
                                         <div class="input-container">

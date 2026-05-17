@@ -9,10 +9,8 @@ $auditor = $_GET['auditor'] ?? '';
 $dept_id = $_GET['dept_id'] ?? '';
 $audit_id = $_GET['audit_id'] ?? '';
 
-$select_query = "SELECT * FROM audit_history WHERE dept_id = :dept_id AND auditor = :auditor AND audit_id = :audit_id ORDER BY finished_at DESC";
-$stmt = $dbh->prepare($select_query);
-$stmt->execute([':dept_id' => $dept_id, ':auditor' => $auditor, ':audit_id' => $audit_id]);
-$audit_details = $stmt->fetch(PDO::FETCH_ASSOC);
+$select_query = "SELECT * FROM audit_history WHERE dept_id = ? AND auditor = ? AND audit_id = ? ORDER BY finished_at DESC";
+$audit_details = $query_repo->fetchOne($select_query, $dept_id, $auditor, $audit_id);
 if (!$audit_details) {
     exit;
 }

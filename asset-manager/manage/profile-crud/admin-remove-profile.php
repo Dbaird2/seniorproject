@@ -4,10 +4,9 @@ if (isset($_POST['profile_name'])) {
     $email = $_POST['email'];
     $name = trim($_POST['profile_name']);
 
-    $delete_q = "DELETE FROM user_asset_profile WHERE email = :email AND profile_name = :name";
+    $delete_q = "DELETE FROM user_asset_profile WHERE email = ? AND profile_name = ?";
     try {
-        $delete_stmt = $dbh->prepare($delete_q);
-        $delete_stmt->execute([":email" => $email, ":name" => $name]);
+        $query_repo->execute($delete_q, $email, $name);
         echo json_encode(["status"=>"success"]);
         exit;
     } catch (PDOException $e) {

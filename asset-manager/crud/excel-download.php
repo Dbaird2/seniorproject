@@ -15,11 +15,9 @@ $select_q = "SELECT p.asset_tag, a.asset_name, a.serial_num, a.asset_price
     FROM user_asset_profile p LEFT JOIN asset_info a ON p.asset_tag = a.asset_tag
     LEFT JOIN room_table r ON a.room_tag = r.room_tag
     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
-    WHERE p.profile_name = :profile_name AND p.email = :email";
+    WHERE p.profile_name = ? AND p.email = ?";
 try {
-    $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":profile_name" => $profile_name, ":email" => $email]);
-    $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $query_repo->fetchAll($select_q, $profile_name, $email);
 } catch (PDOException $e) {
     error_log("Error: " . $e->getMessage());
     die("Failed to retrieve data.");

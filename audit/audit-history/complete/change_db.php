@@ -6,10 +6,8 @@ $data = json_decode($encoded_data, true);
 
 if (!empty($data)) {
     try {
-        $select = 'SELECT dept_id, dept_name, custodian[1] as cust, dept_manager FROM department WHERE dept_id = :dept';
-        $stmt = $dbh->prepare($select);
-        $stmt->execute([':dept' => $data['dept_id']]);
-        $dept_data = $stmt->fetch();
+        $select = 'SELECT dept_id, dept_name, custodian[1] as cust, dept_manager FROM department WHERE dept_id = ?';
+        $dept_data = $query_repo->fetchOne($select, $data['dept_id']);
         if (!isset($dept_data['dept_id'])) {
             echo json_encode(['status'=>'failed', 'reason'=>'Department does not exist']);
             exit;
@@ -23,8 +21,7 @@ if (!empty($data)) {
             exit;
         }
         $update = "UPDATE audit_history SET forms_submitted = true WHERE audit_id = :id AND dept_id = :dept";
-        $update_stmt = $dbh->prepare($update);
-        $update_stmt->execute([":id"=>$data['audit_id'], ":dept"=>$data['dept_id']]);
+        $query_repo->execute($update, $data['audit_id'], $data['dept_id']);
         echo json_encode(['status'=>'Ok']);
         exit;
     } catch (PDOException $e) {

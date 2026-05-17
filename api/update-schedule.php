@@ -8,9 +8,7 @@ try {
 
         if ($action === 'delete') {
             try {
-                $delete_q = "DELETE FROM audit_schedule WHERE dept_id = :id AND audit_date = :date";
-                $delete_stmt = $dbh->prepare($delete_q);
-                $delete_stmt->execute([":id"=>$id, ':date'=>$date]);
+                $query_repo->execute("DELETE FROM audit_schedule WHERE dept_id = ? AND audit_date = ?", $id, $date);
                 echo json_encode(["status"=>"deleted schedule " . $id]);
                 exit;
             } catch (PDOException $e) {
