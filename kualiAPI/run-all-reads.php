@@ -110,9 +110,6 @@ function isValidTagFormat(string $tag): bool
     return false;
 }
 
-/**
- * Returns 1 if the asset name matches known IT equipment keywords, 0 otherwise.
- */
 function isItEquipment(string $name): int
 {
     $pattern = '/\b(LENOVO|APPLE|DELL|HP|CPU|MACBOOK|CHROMEBOOK|TABLET|SERVER|PRECISION\s\d*\sTOWER|iPAD)\b/i';
@@ -497,7 +494,7 @@ function deleteOverdueSchedule(): void
  */
 function addKualiInfo(): void
 {
-    global $result, $kuali;
+    global $result, $kuali, $query_repo;
     echo '<br>Add Kuali Info<br>';
 
     $skip  = (int)($result['cust_responsibility_time'] ?? 0);

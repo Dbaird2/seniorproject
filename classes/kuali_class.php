@@ -239,7 +239,8 @@ class KualiAPI
         return json_decode($resp, true);
     }
 
-    public function queryKualiFormStatus(string $app, $query) {
+    public function queryKualiFormStatus(string $app, $query)
+    {
         $curl = curl_init($this->url);
         curl_setopt($curl, CURLOPT_URL, $this->url);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -280,6 +281,59 @@ class KualiAPI
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         $resp = curl_exec($curl);
         unset($curl);
+        return json_decode($resp, true);
+    }
+
+    public function dataworksCheckForms(string $app_id, $query)
+    {
+        $curl = curl_init($this->url);
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $headers = array(
+            "Content-Type: application/json",
+            "Authorization: Bearer {$this->api_key}",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $data = json_encode([
+            "query" => 'query ( 
+            $appId: ID! 
+            $skip: Int! 
+            $limit: Int! 
+            $sort: [String!] 
+            $query: String 
+            $fields: Operator
+    ) { 
+        app(id: $appId) { 
+        id name documentConnection( 
+            args: { 
+            skip: $skip 
+                limit: $limit 
+                sort: $sort 
+                query: $query 
+                fields: $fields 
+        } 
+        keyBy: ID 
+        ) { 
+            totalCount edges { 
+            node { id data meta } } 
+                pageInfo { hasNextPage hasPreviousPage skip limit } 
+        } 
+    }
+}',
+            "variables" => [
+                "appId" => $app_id,
+                "skip" => 0,
+                "limit" => 100,
+                "sort" => ["meta.createdAt"],
+                "query" => $query,
+            ]
+        ]);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+        $resp = curl_exec($curl);
+        curl_close($curl);
         return json_decode($resp, true);
     }
 }

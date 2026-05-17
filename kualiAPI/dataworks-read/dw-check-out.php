@@ -4,62 +4,11 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 $select = "SELECT dw_check_time, kuali_key FROM kuali_table";
-$select_stmt = $dbh->query($select);
-$result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$raw_ms = (int)$result['dw_check_time'] ?? 1744307816063;
-$highest_time = date('c', $raw_ms / 1000);
+$result = $query_repo->fetchOne($select);
 
-$apikey = $result['kuali_key'];
+$raw_ms = (int)$result['dw_check_time'] ?? 0;
 
-$url = "https://csub.kualibuild.com/app/api/v0/graphql";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-$headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = json_encode([
-    "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
-    "variables" => [
-        "appId" => "68bf09aaadec5e027fe35187",
-        "skip" => $raw_ms,
-        "limit" => 300,
-        "sort" => [
-            "meta.createdAt"
-        ],
-        "query" => "",
-        "fields" => [
-            "type" => "AND",
-            "operators" => [
-                [
-                    "type" => "AND",
-                    "operators" => [
-                        [
-                            "field" => "meta.workflowStatus",
-                            "type" => "IS",
-                            "value" => "Complete"
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-curl_close($curl);
-$resp2 = json_decode($resp);
-
-$decode_true = json_decode($resp, true);
+$decode_true = $kuali->baseReads("68bf09aaadec5e027fe35187", $raw_ms);
 $edges = $decode_true['data']['app']['documentConnection']['edges'];
 
 $ASI = "/^A[SI]?\d+$/";
@@ -95,26 +44,21 @@ try {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = :tag";
-        $select_stmt = $dbh->prepare($select_q);
-        $select_stmt->execute([":tag" => $tag]);
-        if ($select_stmt->rowCount() === 1) {
+        $select_q = "SELECT 1 FROM asset_info WHERE asset_tag = ?";
+        $asset_info_check = $query_repo->fetchOne($select_q, $tag);
+        if ($asset_info_check) {
             if ($check_out) {
-                $update_q = "UPDATE asset_info SET asset_notes = :note WHERE asset_tag = :tag";
-                $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":note" => $info, ":tag" => $tag]);
+                $update_q = "UPDATE asset_info SET asset_notes = ? WHERE asset_tag = ?";
+                $query_repo->execute($update_q, $info, $tag);
 
-                $update_kuali = "UPDATE kuali_table SET check_out_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $update_time]);
+                $update_kuali = "UPDATE kuali_table SET check_out_time = ?";
+                $query_repo->execute($update_kuali, $update_time);
             } else if ($check_in) {
-                $update_q = "UPDATE asset_info SET asset_notes = NULL WHERE asset_tag = :tag";
-                $update_stmt = $dbh->prepare($update_q);
-                $update_stmt->execute([":tag" => $tag]);
+                $update_q = "UPDATE asset_info SET asset_notes = NULL WHERE asset_tag = ?";
+                $query_repo->execute($update_q, $tag);
 
-                $update_kuali = "UPDATE kuali_table SET dw_check_time = :time";
-                $update_stmt = $dbh->prepare($update_kuali);
-                $update_stmt->execute([":time" => $count2]);
+                $update_kuali = "UPDATE kuali_table SET dw_check_time = ?";
+                $query_repo->execute($update_kuali, $count2);
             }
         }
         echo "<br>" . $count++;
@@ -124,6 +68,5 @@ try {
     echo "Error with database " . $e->getMessage();
     exit;
 }
-echo '<pre>' . json_encode(json_decode($resp), JSON_PRETTY_PRINT) . '</pre>';
+echo '<pre>' . json_encode($decode_true, JSON_PRETTY_PRINT) . '</pre>';
 exit;
-
