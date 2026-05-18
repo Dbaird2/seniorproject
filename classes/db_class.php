@@ -120,7 +120,8 @@ class DB
         }
     }
 
-    public function executeColumn(string $query, mixed ...$args) {
+    public function executeColumn(string $query, mixed ...$args)
+    {
         try {
             $stmt = $this->dbh->prepare($query);
             $stmt->execute($args);
@@ -218,20 +219,27 @@ class QueryRepository
 
     public function getUserInfo(string $email)
     {
-        $query = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username, email FROM user_table WHERE email = ?";
+        $query = "SELECT * FROM user_table WHERE email = ?";
 
         return $this->db->executeFetch($query, $email);
     }
 
     public function getCustInfo(string $full_name)
     {
-        $query = "SELECT email, form_id, school_id, username, f_name, l_name from user_table where CONCAT(f_name, ' ', l_name) = ?";
+        $query = "SELECT * from user_table where CONCAT(f_name, ' ', l_name) = ?";
 
         return $this->db->executeFetch($query, $full_name);
     }
 
-    public function getDeptData(string $dept_id) {
-        $query = 'SELECT dept_name, document_set_id, form_id, dept_manager, dept_id FROM department WHERE dept_id = ?';
-        return $this->db->executeFetch($query, $dept_id);
+    public function getDeptData(string $dept)
+    {
+        $query = 'SELECT * FROM department WHERE dept_id = ? or dept_name = ?';
+        return $this->db->executeFetch($query, $dept, $dept);
+    }
+
+    public function getAssetData(string $tag)
+    {
+        $select = "SELECT * FROM asset_info WHERE asset_tag = :tag";
+        return $this->db->executeFetch($select, $tag);
     }
 }

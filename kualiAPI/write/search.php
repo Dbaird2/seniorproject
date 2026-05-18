@@ -1,7 +1,7 @@
 <?php
 function randomPassword()
 {
-$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     $pass = array();
     $alphaLength = strlen($alphabet) - 1;
     for ($i = 0; $i < 8; $i++) {
@@ -20,11 +20,9 @@ function searchName($search_name = '', $dept_id = '')
     $search_name = trim($search_name);
     $dept_id = trim($dept_id);
     include_once __DIR__ . "/../../vendor/autoload.php";
-    global $dbh;
-    $select = "SELECT dept_id[1], f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) ILIKE :full_name";
-    $stmt = $dbh->prepare($select);
-    $stmt->execute([':full_name'=>'%'.$search_name.'%']);
-    $info = $stmt->fetch();
+    global $query_repo, $kuali;
+    $select = "SELECT dept_id[1], f_name, l_name, signature, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ' ,l_name) ILIKE ?";
+    $info = $query_repo->fetchOne($select, '%' . $search_name . '%');
     if ($info) {
         if (!empty($info['form_id']) && !empty($info['school_id'])) {
             return;
@@ -42,46 +40,17 @@ function searchName($search_name = '', $dept_id = '')
     if (!empty($name_array[4])) {
         $user_l_name .= ' ' . $name_array[4];
     }
-    $subdomain = "csub";
 
-    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    $headers = array(
-        "Content-Type: application/json",
-        "Authorization: Bearer {$apikey}",
-    );
     if (!empty($info['username'])) {
         $search_name = $info['username'];
     }
 
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $kuali_json = json_encode([
-        'query' => 'query ($query: String) {
-        usersConnection(args: { query: $query }) {
-        edges {
-        node { id displayName email username firstName lastName schoolId }
-}
-}
-}',
-        'variables' => [
-            'query' => $search_name
-        ]
-    ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
+    $resp = $kuali->searchKuali($search_name);
 
-    /* for debug only! */
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $resp = curl_exec($curl);
-    curl_close($curl);
     $name_data = json_decode($resp, true);
+
     $name_edges = $name_data['data']['usersConnection']['edges'];
+
     foreach ($name_edges as $info) {
         $id = $info['node']['id'];
         $display_name = $info['node']['displayName'];
@@ -93,16 +62,13 @@ function searchName($search_name = '', $dept_id = '')
         if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name))) {
             continue;
         }
-        $select = "SELECT * from user_table WHERE email = :email";
-        $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":email" => $email]);
-        if ($select_stmt->rowCount() <= 0) {
+        $user = $query_repo->getUserInfo($email);
+        if (!$user) {
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([trim($id), trim($username), trim($email),trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}']);
+            $query_repo->execute($insert, trim($id), trim($username), trim($email), trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}');
             try {
                 /*
                                     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -130,75 +96,42 @@ function searchName($search_name = '', $dept_id = '')
                 return;
             }
         } else {
-            $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
             $update = "UPDATE user_table SET ";
             $count = 0;
-            $params = [":email" => $email];
+            $params = [];
             if (empty($user['school_id'])) {
                 $count++;
-                $update .= 'school_id = :school';
-                $params[":school"] = $schoolid;
+                $update .= 'school_id = ?';
+                $params[] = $schoolid;
             }
             if (empty($user['form_id'])) {
                 if ($count == 1) {
-                    $update .= ', form_id = :form';
+                    $update .= ', form_id = ?';
                 } else {
-                    $update .= 'form_id = :form';
+                    $update .= ', form_id = ?';
                 }
                 $count++;
-                $params[":form"] = $id;
+                $params[] = $id;
             }
-            $update .= " WHERE email = :email";
+            $update .= " WHERE email = ?";
+            $params[] = $email;
             if ($count > 0) {
-                $update_stmt = $dbh->prepare($update);
-                $update_stmt->execute($params);
+                $query_repo->execute($update, ...$params);
             }
         }
     }
 }
-function searchEmail($email = '', $apikey = '', $dept_id = '')
+function searchEmail($email = '', $dept_id = '')
 {
     $email = trim($email);
     $dept_id = trim($dept_id);
     include_once __DIR__ . "/../../vendor/autoload.php";
-    global $dbh;
+    global $query_repo, $kuali;
     $email_array = explode('@', $email);
     $input_username = $email_array[0];
-    $subdomain = "csub";
 
-    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
+    $resp = $kuali->searchKuali($input_username);
 
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    $headers = array(
-        "Content-Type: application/json",
-        "Authorization: Bearer {$apikey}",
-    );
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $kuali_json = json_encode([
-        'query' => 'query ($query: String) {
-        usersConnection(args: { query: $query }) {
-        edges {
-        node { id displayName email username firstName lastName schoolId }
-}
-}
-}',
-        'variables' => [
-            'query' => $input_username
-        ]
-    ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
-
-
-    /* for debug only! */
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $resp = curl_exec($curl);
-    curl_close($curl);
     $name_data = json_decode($resp, true);
     $name_edges = $name_data['data']['usersConnection']['edges'];
     foreach ($name_edges as $info) {
@@ -209,69 +142,64 @@ function searchEmail($email = '', $apikey = '', $dept_id = '')
         $f_name = $info['node']['firstName'];
         $l_name = $info['node']['lastName'];
         $schoolid = $info['node']['schoolId'];
-        if (strtolower(trim($username)) !== strtolower(trim($input_username))) {
+        if (strtolower(trim($f_name)) !== strtolower(trim($user_f_name)) || strtolower(trim($l_name)) !== strtolower(trim($user_l_name))) {
             continue;
         }
-        /* CHECK DB */
-        $select = "SELECT * from user_table WHERE email = :email";
-        $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":email" => $email]);
-        if ($select_stmt->rowCount() <= 0) {
+        $user = $query_repo->getUserInfo($email);
+        if (!$user) {
             $pw = randomPassword();
             $hashed_pw = password_hash($pw, PASSWORD_DEFAULT);
 
             $insert = "INSERT INTO user_table (form_id, username, email, f_name, l_name, school_id, u_role, pw, dept_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $insert_stmt = $dbh->prepare($insert);
-            $insert_stmt->execute([trim($id), trim($username), trim($email), trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}']);
+            $query_repo->execute($insert, trim($id), trim($username), trim($email), trim($f_name), trim($l_name), trim($schoolid), 'user', $hashed_pw, '{' . trim($dept_id) . '}');
             try {
                 /*
-                $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'dasonbaird25@gmail.com';
-                $mail->Password   = $_SESSION['app_pass'];
-                $mail->SMTPSecure = 'tls';
-                $mail->Port       = 587;
-                $mail->isHTML(true);
-                $mail->CharSet = 'UTF-8';
-                $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
-                $mail->addAddress($email, 'User');
-                $mail->Subject = 'Account Auto Create';
-                $mail->Body    = '<p><strong>This email is to notify you of your automatic account creation for dataworks<strong>. <br>Dataworks is Senior Project group project designed to help with auditing and asset tracking.
-                    Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu for more info.</p><br>
-                    <a href="https://dataworks-7b7x.onrender.com">Dataworks Link</a>';
-                $mail->AltBody = 'Click this link to access Dataworks...';
+                                    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+                                    $mail->isSMTP();
+                                    $mail->Host       = 'smtp.gmail.com';
+                                    $mail->SMTPAuth   = true;
+                                    $mail->Username   = 'dasonbaird25@gmail.com';
+                                    $mail->Password   = $_SESSION['app_pass'];
+                                    $mail->SMTPSecure = 'tls';
+                                    $mail->Port       = 587;
+                                    $mail->isHTML(true);
+                                    $mail->CharSet = 'UTF-8';
+                                    $mail->setFrom('dasonbaird25@gmail.com', 'Dataworks No Reply');
+                                    $mail->addAddress($email, 'User');
+                                    $mail->Subject = 'Account Auto Create';
+                                    $mail->Body    = '<p><strong>This email is to notify you of your automatic account creation for dataworks<strong>. <br>Dataworks is Senior Project group project designed to help with auditing and asset tracking.
+                                        Email: ' . $email . '<br>Password: ' . $pw . '<br>If you have any questions, concerns, or issues, feel free to reach out to distribution@csub.edu for more info.</p><br>
+                                        <a href="https://dataworks-7b7x.onrender.com">Dataworks Link</a>';
+                                    $mail->AltBody = 'Click this link to access Dataworks...';
 
-                $mail->send();
-                 */
+                                    $mail->send();
+                */
             } catch (Exception $e) {
                 error_log("Error sending email: " . $e->getMessage());
                 return;
             }
         } else {
-            $user = $select_stmt->fetch(PDO::FETCH_ASSOC);
             $update = "UPDATE user_table SET ";
             $count = 0;
-            $params = [":email" => $email];
+            $params = [];
             if (empty($user['school_id'])) {
                 $count++;
-                $update .= 'school_id = :school';
-                $params[":school"] = $schoolid;
+                $update .= 'school_id = ?';
+                $params[] = $schoolid;
             }
             if (empty($user['form_id'])) {
                 if ($count == 1) {
-                    $update .= ', form_id = :form';
+                    $update .= ', form_id = ?';
                 } else {
-                    $update .= 'form_id = :form';
+                    $update .= ', form_id = ?';
                 }
                 $count++;
-                $params[":form"] = $id;
+                $params[] = $id;
             }
-            $update .= " WHERE email = :email";
+            $update .= " WHERE email = ?";
+            $params[] = $email;
             if ($count > 0) {
-                $update_stmt = $dbh->prepare($update);
-                $update_stmt->execute($params);
+                $query_repo->execute($update, ...$params);
             }
         }
     }

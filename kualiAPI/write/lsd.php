@@ -14,12 +14,10 @@ $data = json_decode($encoded_data, true);
 $tag_data = $data;
 $audit_dept = $data['dept_id'];
 $variables = [[]];
-foreach($_SESSION['data'] as $session) {
+foreach ($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {
-        $select = "SELECT make, type2, asset_model FROM asset_info WHERE asset_tag = :tag";
-        $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":tag"=>$data['tag']]);
-        $tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+        $tag_info = $query_repo->getAssetData($data['tag']);
+
         $data['type2'] = $tag_info['type2'];
         $data['Make'] = $tag_info['make'];
         $data['Unit'] = $session['Unit'];
@@ -57,7 +55,7 @@ foreach($_SESSION['data'] as $session) {
             $seconds = (int)$time_split[0] * 3600 + (int)$time_split[1] * 60;
             $variables['data']['1CBE3qoL2S'] = $seconds;
 
-            if (strtolower($data['insurance']) === 'yes') { 
+            if (strtolower($data['insurance']) === 'yes') {
                 $variables['data']['B4_rSiiFLc'] = $data['state'] ?? 'N/A';
                 $variables['data']['4XDMj4Dg_M'] = $data['zip'] ?? 'N/A';
                 $variables['data']['B7qvma1zkp'] = $data['city'] ?? 'N/A';
@@ -88,9 +86,9 @@ foreach($_SESSION['data'] as $session) {
 
                 if (preg_match('/@/i', $data['access_keys'])) {
                     $email = explode('@', $data['access_keys']);
-                    $access_key = getEmailInfo($email[0], $audit_dept);
+                    $access_keys = getEmailInfo($email[0], $audit_dept);
                 } else {
-                    $access_key = getNameInfo($data['access_keys'], $audit_dept);
+                    $access_keys = getNameInfo($data['access_keys'], $audit_dept);
                 }
                 $variables['data']['Ctc-VTU0KG']['displayName'] = $access_keys['displayName'];
                 $variables['data']['Ctc-VTU0KG']['email'] = $access_keys['email'];
@@ -147,19 +145,12 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 
-$dept_id =  (isset($data['dept_id'])&& !empty($data['dept_id'])) ? $data['dept_id'] : $_SESSION['info'][2];
+$dept_id =  (isset($data['dept_id']) && !empty($data['dept_id'])) ? $data['dept_id'] : $_SESSION['info'][2];
 
-$subdomain = "csub";
 // SUBMITTER INFO
-$select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
-$select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":email" => $_SESSION['email']]);
-$submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
-$apikey = $submitter_info['kuali_key'];
-if (empty($apikey)) {
-    die("API Key Not Found");
-}
+$submitter_info = $query_repo->getUserInfo($email);
+
 $display_name = $submitter_info['username'];
 $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
 $school_id = $submitter_info['school_id'] ?? '';
@@ -167,11 +158,8 @@ $signature = $submitter_info['signature'] ?? $full_name;
 $form_id = $submitter_info['form_id'] ?? '';
 $email_array = explode('@', $email);
 if (empty($school_id) || empty($form_id)) {
-    searchEmail($email_array[0], $apikey, $dept_id);
-    $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
-    $email = $_SESSION['email'];
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":email" => $_SESSION['email']]);
+    searchEmail($email_array[0], $dept_id);
+    $submitter_info = $query_repo->getUserInfo($email);
     $display_name = $submitter_info['username'];
     $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
     $school_id = $submitter_info['school_id'] ?? '';
@@ -179,82 +167,10 @@ if (empty($school_id) || empty($form_id)) {
     $form_id = $submitter_info['form_id'] ?? '';
 }
 
+$dept_info = $query_repo->getDeptData($dept_id);
 
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department d WHERE dept_id = :dept_id";
-$get_mana_stmt = $dbh->prepare($get_dept_manager);
-$get_mana_stmt->execute([":dept_id"=>$dept_id]);
-$dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
 $manager = trim($dept_info['dept_manager']);
-
-$get_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-$get_info_email = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where email = :email";
-$get_info_name = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
-
-
-if (!$apikey) {
-    die("No API key found for user.");
-}
-
-$url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-$headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$form1 = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68d09e41d599f1028a9b9457"
-      }}';
-
-curl_setopt($curl, CURLOPT_POSTFIELDS, $form1);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-
-$decoded_data = json_decode($resp, true);
-$action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-curl_close($curl);
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-$get_draft_id = json_encode([
-    'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-    'variables' => [
-        'actionId' => $action_id
-    ]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-$resp = curl_exec($curl);
-
-$decoded_data = json_decode($resp, true);
-$document_id = $decoded_data['data']['action']['document']['id'];
-$action_id = $decoded_data['data']['action']['id'];
-
-curl_close($curl);
-
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-if (!$action_id || !$document_id) {
-    die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-}
 
 $manager_info = getNameInfo($manager, $audit_dept);
 $variables['data']['0Qm43mG2vV']['displayName'] = $manager_info['displayName'];
@@ -285,18 +201,18 @@ if (!empty($data['borrower'])) {
     $variables['data']["N00EmVKFnd"]['username'] = $borrower_signature['username'];
 }
 $upd_id = match ($data['upd']) {
-"No" => "CbModhwutSo",
+    "No" => "CbModhwutSo",
     "Yes" => "YU12SPShKnx"
 };
 
 $item_type_id = match ($data['item_type']) {
-"Instructional Equipment" => "iZ6HWywjL",
+    "Instructional Equipment" => "iZ6HWywjL",
     "IT Equipment" => "Ycmcbo5hp",
     "Other" => "813J2qxw1"
 };
 
 $lsd_id = match ($data['lsd']) {
-"Lost" => "bqRxkqovw",
+    "Lost" => "bqRxkqovw",
     "Stolen" => "fmp7EdgUx",
     "Destroyed" => "-rR6VXHWp"
 };
@@ -311,7 +227,6 @@ $lsd_who_id = match ($who) {
 $date = new DateTime($data['date_discovered']);
 $date_discovered = $date->format('m/d/Y');
 
-$variables['documentId'] = $document_id;
 $variables['data']['Sg2RTLnC5r']['id'] = $lsd_who_id;
 $variables['data']['fy16ygj_ST'] = $date_discovered;
 $variables['data']['Sg2RTLnC5r']['label'] = $who;
@@ -319,18 +234,18 @@ $variables['data']["9eJvzLeMS0"]['id'] = "9JrVQuqdIQS";
 $variables['data']["9eJvzLeMS0"]["label"] = "Staff / Faculty";
 $variables['data']["6lJyeq9g1v"]['id'] = $item_type_id;
 $variables['data']["6lJyeq9g1v"]["label"] = $data['item_type'];
-            // REPORTED TO UPD?
+// REPORTED TO UPD?
 $variables['data']["7BHQb4jTbS"]['id'] = $upd_id;
 $variables['data']["7BHQb4jTbS"]["label"] = $data['upd'];
-            // SERIAL NUMBER
+// SERIAL NUMBER
 $variables['data']["7Gzhcg_35S"] = $data['Serial ID'];
-            // SUBMITTER SIGNATURE
+// SUBMITTER SIGNATURE
 $variables['data']["EeUWxyyaOUR"] = $submitter_sig;
-            // DEPT IF STAFF
+// DEPT IF STAFF
 $variables['data']["GOiwf3tjc0"]['data']['AkMeIWWhoj'] = $dept_name;
 $variables['data']["GOiwf3tjc0"]['data']['IOw4-l7NsM'] = $dept_id;
 $variables['data']["GOiwf3tjc0"]['label'] = $dept_name;
-            // MAKE
+// MAKE
 $variables['data']["Qb1ac69GLa"] = $data['Make'] ?? 'N/A';
 // LSD
 $variables['data']["Sc5_swYeHS"]['id'] = $lsd_id;
@@ -353,33 +268,21 @@ $variables['data']["vedcAP4N1t"] = $current_date;
 $variables['data']["MiLvvsoH5a"] = $current_date;
 // CURRENT DATE
 $variables['data']["vedcAP4N1t"] = $current_date;
-$variables['actionId'] = $action_id;
-$variables['status'] = 'completed';
 
 $ms_time = round(microtime(true) * 1000);
-$submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables,
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-$resp_data = json_decode($resp, true);
+$resp_data = $kuali->writeToKuali("68d09e41d599f1028a9b9457", $variables);
+$decoded = json_decode($resp_data, true);
 $tag = $data['tag'];
-$input_array =  $document_id . ',lsd,in-progress,' . trim($tag);
+$input_array =  $decoded['document_id'] . ',lsd,in-progress,' . trim($tag);
 
 
 $audit_id = $data['audit_id'];
-$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-if ($resp_data['data']['submitDocument'] === 'Ok') {
-    $update_stmt = $dbh->prepare($update);
-    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Ok']);
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ?) WHERE dept_id = ? AND audit_id = ?";
+if ($decoded['status'] === 'Ok') {
+    $query_repo->execute($update, $input_array, $dept_id, $audit_id);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Ok']);
 } else {
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Failed', 'data'=>$resp_data]);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Failed', 'data' => $resp_data]);
 }
 exit;

@@ -11,6 +11,7 @@ if (!isset($_POST)) {
 $encoded_data = file_get_contents('php://input');
 $data = json_decode($encoded_data, true);
 $transfer_data = [[]];
+$variable = [[]];
 $index = 0;
 $its = false;
 $cmp = $spa = $stu = $fdn = $asi = false;
@@ -18,9 +19,7 @@ foreach ($data['psr_tags'] as $index => $tag) {
     foreach ($_SESSION['data'] as $session) {
         if ($session['Tag Number'] === $tag['tag']) {
             $select = "SELECT type2 FROM asset_info WHERE asset_tag = :tag";
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([":tag" => $tag['tag']]);
-            $type = $stmt->fetchColumn();
+            $type = $query_repo->fetchColumn($select, $tag['tag']);
             if (in_array($type, ['Laptop', 'Tablet', 'Desktop'])) {
                 $its = true;
             }
@@ -49,20 +48,14 @@ foreach ($data['psr_tags'] as $index => $tag) {
 }
 $dept_id = $_SESSION['info'][2];
 
-$select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
 $email = $_SESSION['email'];
-$select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":email" => $email]);
-$submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+$submitter_info = $query_repo->getCustInfo($email);
+
 $apikey = $submitter_info['kuali_key'] ?? '';
-if (empty($apikey)) {
-    die("API Key Not Found");
-}
+
 if (empty($submitter_info)) {
-    searchName($submitter_info['f_name'] . ' ' . $submitter_info['l_name'], $apikey, $dept_id);
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":email" => $email]);
-    $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+    searchName($submitter_info['f_name'] . ' ' . $submitter_info['l_name'], $dept_id);
+    $submitter_info = $query_repo->getCustInfo($email);
 }
 $display_name = $submitter_info['username'];
 $full_name = $submitter_info['f_name'] . ' ' . $submitter_info['l_name'];
@@ -74,7 +67,7 @@ $last_name = $submitter_info['l_name'];
 
 $submitter_key = 'Jpy9KU-X3P';
 $submitter_kauli = [
-    "displayName"=> $full_name ,
+    "displayName" => $full_name,
     "email" => $_SESSION['email'],
     "firstName" => $first_name,
     "id" => $form_id,
@@ -84,30 +77,22 @@ $submitter_kauli = [
     "username" => $display_name
 ];
 
-
-
-$subdomain = "csub";
 /* CUSTODIAN INFO */
 $get_custodian = "SELECT unnest(custodian) FROM department WHERE dept_id = :dept";
-$get_cust_stmt = $dbh->prepare($get_custodian);
-$get_cust_stmt->execute([":dept" => $_SESSION['info'][2]]);
-$dept_custodian = $get_cust_stmt->fetchColumn();
 
-$select = "SELECT email, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
+$dept_custodian = $query_repo->fetchColumn($get_custodian, $_SESSION['info'][2]);
+
 $email = $_SESSION['email'];
-$select_stmt = $dbh->prepare($select);
-$select_stmt->execute([":fullname" => $dept_custodian]);
-if ($select_stmt->rowCount() <= 0) {
-    searchName($dept_custodian, $apikey, $dept_id);
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":fullname" => $dept_custodian]);
+$custodian_info = $query_repo->getCustInfo($dept_custodian);
+
+if (!$custodian_info) {
+    searchName($dept_custodian, $dept_id);
+    $custodian_info = $query_repo->getCustInfo($dept_custodian);
 }
 if (empty($school_id) || empty($form_id)) {
-    searchName($full_name, $apikey, $dept_id);
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":email" => $_SESSION['email']]);
+    searchName($full_name, $dept_id);
+    $custodian_info = $query_repo->getCustInfo($email);
 }
-$custodian_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
 
 $cust_display_name = $custodian_info['username'];
 $cust_full_name = $custodian_info['f_name'] . ' ' . $custodian_info['l_name'];
@@ -131,41 +116,28 @@ $custodian_kuali = [
 /*----------------------------------------- CUSTODIAN INFO
  * ------------------------------------------ */
 
-/* MANAGER INFO */
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager FROM department WHERE dept_id = :dept_id";
-$get_mana_stmt = $dbh->prepare($get_dept_manager);
-$get_mana_stmt->execute([":dept_id" => $dept_id]);
-if ($get_mana_stmt->rowCount() <= 0) {
-    die("Department not found.");
-}
-$manager_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+$manager_info = $query_repo->getDeptData($dept_id);
+
 $dept_name = $manager_info['dept_name'];
 $manager = $manager_info['dept_manager'];
 
-$get_mana_info = "SELECT l_name, f_name, email, form_id, school_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :full_name";
 try {
-    $get_mana_stmt = $dbh->prepare($get_mana_info);
-    $get_mana_stmt->execute([":full_name" => $manager]);
-    if ($get_mana_stmt->rowCount() <= 0) {
-        searchName($manager, $apikey, $dept_id);
-        $get_mana_stmt = $dbh->prepare($get_mana_info);
-        $get_mana_stmt->execute([":full_name" => $manager]);
-        $mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+    $mana_info = $query_repo->getCustInfo($manager);
+    if (!$manager_info) {
+        searchName($manager, $dept_id);
+        $mana_info = $query_repo->getCustInfo($manager);
     }
     if (empty($manager_info['form_id']) || empty($manager_info['school_id'])) {
         /* SEARCH CUST IN KUALI */
-        searchName($manager, $apikey, $dept_id);
-        $get_mana_stmt = $dbh->prepare($get_mana_info);
-        $get_mana_stmt->execute([":full_name" => $manager]);
+        searchName($manager, $dept_id);
+        $mana_info = $query_repo->getCustInfo($manager);
     }
 } catch (PDOException $e) {
     /* CUST DID NOT MATCH EXACTLY */
-    searchName($manager, $apikey, $dept_id);
-    $get_mana_stmt = $dbh->prepare($get_mana_info);
-    $get_mana_stmt->execute([":full_name" => $manager]);
+    searchName($manager, $dept_id);
+    $mana_info = $query_repo->getCustInfo($manager);
     /* SEARCH CUST IN KUALI */
 }
-$mana_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $manager_kuali_key = 'Jpy9KU-X3P';
 $manager_kuali = [
     "displayName" => $manager,
@@ -177,71 +149,7 @@ $manager_kuali = [
     "schoolId" => $mana_info['school_id'],
     "username" => $mana_info['username']
 ];
-/*----------------------------------------- MANAGER INFO
- * ------------------------------------------ */
 
-$url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-$headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68d09dcd7688dc028af9b5e7"
-          }}';
-
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-
-$decoded_data = json_decode($resp, true);
-$action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-curl_close($curl);
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-$get_draft_id = json_encode([
-    'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-    'variables' => [
-        'actionId' => $action_id
-    ]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-$resp = curl_exec($curl);
-$decoded_data = json_decode($resp, true);
-$document_id = $decoded_data['data']['action']['document']['id'];
-$action_id = $decoded_data['data']['action']['id'];
-
-curl_close($curl);
-
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-if (!$action_id || !$document_id) {
-    die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-}
-
-if (!$action_id) {
-    die("ERROR: actionId is NULL before submitting the document.");
-}
 $json_form = [];
 foreach ($transfer_data as $index => $data) {
     $vin = false;
@@ -310,10 +218,10 @@ $bus_units = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
 $bus_units = array_filter($bus_units, fn($info) => (!empty($info['label']) && !empty($info['id'])));
 if (!$vin) {
     $form_type_id = match ($its) {
-    true => "iK43J2G3IH",
+        true => "iK43J2G3IH",
         false => "2DyVz03Xr"
-};
-$form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
+    };
+    $form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
 } else {
     $form_type_id = "p4UJVwrfG";
     $form_type_label = 'Vehicle';
@@ -324,44 +232,24 @@ $now_array->setTimezone(new DateTimeZone('America/Los_Angeles'));
 $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
 $ms_time = round(microtime(true) * 1000);
-$submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        $custodian_kuali_key => $custodian_kuali,
-        $bus_units_key => $bus_units,
-        "COwZg-7nwQ" => [
-            "id" => $form_type_id,
-            "label" => $form_type_label
-        ],
-        "tc1F0ohejI" => [
-            "data" => [
-                "AkMeIWWhoj" => $dept_name,
-                "IOw4-l7NsM" => $_SESSION['info'][2]
-            ],
-            "label" => $dept_name
-        ],
-        $manager_kuali_key => $manager_kuali,
-        "W_Uw0hSpff" => $json_form,
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+$variables = [[]];
+$variables['data'][$custodian_kuali_key] = $custodian_kuali;
+$variables['data'][$bus_units_key] = $bus_units;
+$variables['data']["COwZg-7nwQ"]['id'] = $form_type_id;
+$variables['data']["COwZg-7nwQ"]['label'] = $form_type_label;
+$variables['data']['tc1F0ohejI']['data']['AkMeIWWhoj'] = $dept_name;
+$variables['data']['tc1F0ohejI']['data']['IOw4-l7NsM'] = $_SESSION['info'][2];
+$variables['data']['tc1F0ohejI']['label'] = $dept_name;
+$variables['data'][$manager_kuali_key] = $manager_kuali;
+$variables['data']['W_Uw0hSpff'] = $json_form;
 
-$resp = curl_exec($curl);
-curl_close($curl);
-$resp_data = json_decode($resp, true);
+$resp_data = $kuali->writeToKuali("68d09dcd7688dc028af9b5e7", $variables);
+$decoded = json_decode($resp_data, true);
 
-if ($resp_data['data']['submitDocument'] === 'Ok') {
-    echo json_encode(['status'=>'Property Survery Report Ok']);
+if ($decoded['submitDocument'] === 'Ok') {
+    echo json_encode(['status' => 'Property Survery Report Ok']);
 } else {
-    echo json_encode(['status'=>'Property Survey Report Failed', 'res'=>$resp_data]);
+    echo json_encode(['status' => 'Property Survey Report Failed', 'res' => $resp_data]);
 }
 exit;

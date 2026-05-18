@@ -339,4 +339,40 @@ class KualiAPI
         curl_close($curl);
         return json_decode($resp, true);
     }
+
+    public function searchKuali(string $name)
+    {
+        $curl = curl_init($this->url);
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $headers = array(
+            "Content-Type: application/json",
+            "Authorization: Bearer {$this->api_key}",
+        );
+
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        $kuali_json = json_encode([
+            'query' => 'query ($query: String) {
+        usersConnection(args: { query: $query }) {
+        edges {
+        node { id displayName email username firstName lastName schoolId }
+}
+}
+}',
+            'variables' => [
+                'query' => $name
+            ]
+        ]);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $kuali_json);
+
+        /* for debug only! */
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+        $resp = curl_exec($curl);
+        curl_close($curl);
+        return $resp;
+    }
 }
