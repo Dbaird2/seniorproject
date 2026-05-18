@@ -16,12 +16,14 @@ if ($data['form'] === 'check-in') {
     transfer($data);
 }
 
-function checkIn($data) {
+function checkIn($data)
+{
     global $dbh;
 }
 
-function checkOut($data) {
-    global $dbh;
+function checkOut($data)
+{
+    global $query_repo, $kuali;
     /* CHECK IN OR OUT */
     $form_type = trim($data['form']);
     /* MYSELF/SOMEONEELSE */
@@ -31,16 +33,13 @@ function checkOut($data) {
     if (!empty(trim($data['borrower']))) {
         $email_regex = '/(@csub.edu)/';
         if (preg_match($email_regex, $data['borrower'])) {
-
             $select = "SELECT dept_id[1] FROM user_table WHERE email = :borrower";
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([':borrower'=>$data['borrower']]);
+
+            $audit_dept = $query_repo->fetchColumn($select, $data['borrower']);
         } else {
             $select = "SELECT dept_id[1] FROM user_table WHERE CONCAT(f_name, ' ', l_name) ILIKE :borrower";
-            $stmt = $dbh->prepare($select);
-            $stmt->execute([':borrower'=>'%'.$data['borrower'].'%']);
+            $audit_dept = $query_repo->fetchColumn($select, '%' . $data['borrower'] . '%');
         }
-        $audit_dept = $stmt->fetchColumn();
     } else {
         $audit_dept = $_SESSION['deptid'];
     }
@@ -52,19 +51,17 @@ function checkOut($data) {
     $now = $now_array->format('Y-m-d\TH:i:s.v\Z');
 
     /* SERIAL */
-    $tag_info = 'SELECT serial_num, asset_name, type2 FROM asset_info WHERE asset_tag = :tag';
-    $tag_stmt = $dbh->prepare($tag_info);
-    $tag_stmt->execute([':tag' => $tag]);
-    $tag_data = $tag_stmt->fetch(PDO::FETCH_ASSOC);
+    $tag_info = 'SELECT serial_num, asset_name, type2 FROM asset_info WHERE asset_tag = ?';
+    $tag_data = $query_repo->fetchOne($tag_info, $tag);
+
     $serial = $tag_data['serial_num'] ?? 'N/A';
     $asset_name = $tag_data['asset_name'] ?? 'Unknown Asset';
 
     /* DEPT INFO */
     $dept_id = $_SESSION['deptid'];
-    $select_dept = 'SELECT dept_name, document_set_id, form_id FROM department WHERE dept_id = :dept_id';
-    $dept_stmt = $dbh->prepare($select_dept);
-    $dept_stmt->execute([':dept_id' => $_SESSION['deptid']]);
-    $dept_data = $dept_stmt->fetch(PDO::FETCH_ASSOC);
+
+    $dept_data = $query_repo->getDeptData($dept_id);
+
     $dept_name = $dept_data['dept_name'] ?? 'Unknown Department';
     $documentsetid = $dept_data['document_set_id'] ?? '';
     $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $dept_name;
@@ -83,7 +80,7 @@ function checkOut($data) {
     $variables['data']['Smva-ICjnV'] = $street;
 
     $condition_id = match ($condition) {
-    "New" => "PMMV9ld3ML",
+        "New" => "PMMV9ld3ML",
         "Good" => "uPq0cgV51",
         "Used" => "2zmA7sZQnX",
         "Damaged" => "s0MNB7p9vx"
@@ -92,107 +89,36 @@ function checkOut($data) {
     $variables['data']['UTQZbrKiio']['label'] = $condition;
 
     $asset_type_id = match ($asset_type) {
-    "Laptop" => "VMjSpx4-H",
+        "Laptop" => "VMjSpx4-H",
         "Desktop" => "UHFK_j1G7L",
         "Tablet" => "-wWkrsS_A_"
     };
     $variables['data']['aUVT1BLN6V']['id'] = $asset_type_id;
     $variables['data']['aUVT1BLN6V']['label'] = $asset_type;
 
-    if ($who === 'someone-else'){
+    if ($who === 'someone-else') {
         $who = 'Someone Else';
     }
     $who_id = match ($who) {
-    "Myself" => "fK-8m6dzx",
+        "Myself" => "fK-8m6dzx",
         "Someone Else" => "y89ptC2TA"
     };
     $variables['data']['e0fZiLYomu']['id'] = $who_id;
     $variables['data']['e0fZiLYomu']['label'] = $who;
 
     $form_type = match ($form_type) {
-    "check-in" => "Returning Equipment",
+        "check-in" => "Returning Equipment",
         "check-out" => "Checking Out Equipment"
     };
 
     $form_type_id = match ($form_type) {
-    "Returning Equipment" => "z0IRqD2_Z",
+        "Returning Equipment" => "z0IRqD2_Z",
         "Checking Out Equipment" => "Nwnp1xzbH"
     };
 
     $variables['data']['fyaCF8g3Uh']['id'] = $form_type_id;
     $variables['data']['fyaCF8g3Uh']['label'] = $form_type;
 
-    /*-----------------------------------------------------------------------------*/
-    $select_key = "SELECT kuali_key FROM user_table WHERE email = :email";
-    $key_stmt = $dbh->prepare($select_key);
-    $key_stmt->execute([":email"=>$_SESSION['email']]);
-    $apikey = $key_stmt->fetchColumn();
-
-    $subdomain = 'csub';
-    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    $headers = array(
-        "Content-Type: application/json",
-        "Authorization: Bearer {$apikey}",
-    );
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-    "appId": "68bf09aaadec5e027fe35187"
-}}';
-
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
-
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $resp = curl_exec($curl);
-
-    $decoded_data = json_decode($resp, true);
-    $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-    curl_close($curl);
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-    $get_draft_id = json_encode([
-        'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-        'variables' => [
-            'actionId' => $action_id
-        ]
-    ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    $resp = curl_exec($curl);
-    var_dump($resp);
-    $decoded_data = json_decode($resp, true);
-    $document_id = $decoded_data['data']['action']['document']['id'];
-    $action_id = $decoded_data['data']['action']['id'];
-
-    curl_close($curl);
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-    if (!$action_id || !$document_id) {
-        die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-    }
-
-    if (!$action_id) {
-        die("ERROR: actionId is NULL before submitting the document.");
-    }
-    /*-----------------------------------------------------------------------------*/
     $date = new DateTime();
     $date->setTimezone(new DateTimeZone('America/Los_Angeles'));
     if ($who !== 'Myself') {
@@ -206,10 +132,9 @@ function checkOut($data) {
         echo "<pre>";
         var_dump($borrowers_info);
         echo "</pre>";
-        $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
-        $stmt = $dbh->prepare($get_dept_name);
-        $stmt->execute([':id'=>$audit_dept]);
-        $new_dept_name = $stmt->fetchColumn();
+        $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = ?";
+        $new_dept_name = $query_repo->fetchColumn($get_dept_name, $audit_dept);
+
         if ($new_dept_name) {
             $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $new_dept_name;
             $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $audit_dept;
@@ -229,7 +154,7 @@ function checkOut($data) {
         /* SIGNATURE */
         $submitter_info = getSubmitterSig();
         $check_type_date = $date->format('m/d/Y');
-        $variables['data']['JXLJ_AOov-']['actionId'] = $action_id;
+        // $variables['data']['JXLJ_AOov-']['actionId'] = $action_id;
         $variables['data']['JXLJ_AOov-']['date'] = $now;
         $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_info['displayName'];
         $variables['data']['JXLJ_AOov-']['signatureType'] = 'type';
@@ -237,10 +162,9 @@ function checkOut($data) {
         $variables['data']['JXLJ_AOov-']['userId'] = $submitter_info['userId'];
         /*---------------------------------*/
     }
-    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = :dept_id LIMIT 1";
-    $custodian_stmt = $dbh->prepare($custodian);
-    $custodian_stmt->execute([':dept_id' => $audit_dept]);
-    $custodian_name = $custodian_stmt->fetchColumn();
+    $custodian = "SELECT unnest(custodian) AS custodian FROM department WHERE dept_id = ? LIMIT 1";
+    $custodian_name = $query_repo->fetchColumn($custodian, $audit_dept);
+
     echo 'Custodian ' . $custodian_name . '<br>';
 
     $custodian_info = getNameInfo($custodian_name, $audit_dept);
@@ -268,57 +192,35 @@ function checkOut($data) {
         $variables['data']['NdN80WJusb']['username'] = $custodian_info['username'];
     }
 
-    $variables['documentId'] = $document_id;
-    $variables['actionId'] = $action_id;
-    $variables['status'] = 'completed';
     $variables['data']['0LZvRo9vT5'] = $note;
     $variables['data']['BOZIA6hewQ'] = $tag;
     $variables['data']['cQOz4UQ0rQ'] = $asset_name;
     $variables['data']['jYTHHgL10M'] = $serial;
-    $submit_form = json_encode([
-        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-    { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-    'variables' => $variables,
-    ]);
 
-    /*-----------------------------------------------------------------------------*/
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    $resp = curl_exec($curl);
-    curl_close($curl);
+    $resp = $kuali->writeToKuali("68bf09aaadec5e027fe35187", $variables);
+    $decoded = json_decode($resp, true);
 
-    echo json_encode([
-        'data' => $submit_form,
-        'resp' => $resp
-    ]);
+    echo json_encode($decoded);
     exit;
 }
 
-function transfer($data) {
-    global $dbh;
+function transfer($data)
+{
+    global $query_repo, $kuali;
     $email = $_SESSION['email'];
     $audit_dept = $_SESSION['deptid'];
 
-    $subdomain = "csub";
     // SUBMITTER INFO
-    $select = "SELECT kuali_key, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE email = :email";
-    $email = $_SESSION['email'];
-    $select_stmt = $dbh->prepare($select);
-    $select_stmt->execute([":email" => $_SESSION['email']]);
-    $submitter_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
-    $apikey = $submitter_info['kuali_key'];
-    if (empty($apikey)) {
-        die("API Key Not Found");
-    }
+    $submitter_name = $query_repo->getUserInfo($email);
+
     // IS THIS A (form type)
-    $form_type_id = match($data['form_type']) {
-    'bus' => 'BhQ_qXc6Tji',
+    $form_type_id = match ($data['form_type']) {
+        'bus' => 'BhQ_qXc6Tji',
         'dept' => '9A_6UOlDb',
         'location' => 'LfK1qG_G6'
     };
-    $form_type = match($data['form_type']) {
-    'bus' => 'Business Unit change (for example from BKSPA to BKCMP)',
+    $form_type = match ($data['form_type']) {
+        'bus' => 'Business Unit change (for example from BKSPA to BKCMP)',
         'dept' => 'From one department to another department ',
         'location' => 'Building/Room/Location change (Business Unit stays the same)'
     };
@@ -328,29 +230,22 @@ function transfer($data) {
     // ASSETS
     $bus_id = function ($type) {
         $id = match ($type) {
-        'BKCMP' => 'NLNTmkvx_u',
+            'BKCMP' => 'NLNTmkvx_u',
             'BKSPA' => 'ztmVBnRjT1',
             'BKSTU' => 'Duom3fxkyA',
             'BKFDN' => 'Xi6koaglZc',
             'BKASI' => 'E9lk-ahtpd',
-    };
+        };
         return $id;
     };
 
     $it = false;
 
-    // SUBMITTER NAME
-    $select_sub = "SELECT f_name, l_name FROM user_table WHERE email = :email";
-    $stmt = $dbh->prepare($select_sub);
-    $stmt->execute([':email'=>$_SESSION['email']]);
-    $submitter_name = $stmt->fetch();
-    $variables['data']['VFp8qQLrUk'] = trim($submitter_name['f_name']) . ' ' . trim($submitter_name['l_name']); 
+    $variables['data']['VFp8qQLrUk'] = trim($submitter_name['f_name']) . ' ' . trim($submitter_name['l_name']);
 
     $now = new DateTime();
     $variables['data']['R-jIGrtlfO'] = $now->format('m/d/Y');
 
-    $email_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE email = :email";
-    $name_select = "SELECT school_id, form_id, f_name, l_name, email, signature FROM user_info WHERE CONCAT(f_name, ' ', l_name) ILIKE :name";
     $dept_select = 'SELECT dept_manager FROM department WHERE dept_id = :id';
 
     if ($data['in_bldg'] === 'Yes') {
@@ -367,13 +262,11 @@ function transfer($data) {
         $variables['data']['t7mH-1FlaO']['data'][0]['data']['zZztPX8Pcw'] = $data['room'];
     }
     $variables['data']['t7mH-1FlaO']['data'][0]['id'] = '0';
-    $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = :tag";
-    $it_stmt = $dbh->prepare($it_select);
-    $it_stmt->execute([":tag"=>$data['tag']]);
-    $it_related = $it_stmt->fetch(PDO::FETCH_ASSOC);
+    $it_select = "SELECT type2, serial_num, asset_name, bus_unit from asset_info WHERE asset_tag = ?";
+    $it_related = $query_repo->fetchOne($it_select, $data['tag']);
+
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["pwkDQndmwN"] = $it_related['asset_name'];
     $variables['data']['t7mH-1FlaO']['data'][0]['data']["XZlIFEDX6Y"] = $data['tag'];
-    $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
     if (!empty($data['notes'])) {
         $variables['data']['t7mH-1FlaO']['data'][0]['data']['WzqON1QbTK'] = $data['notes'];
     }
@@ -385,9 +278,8 @@ function transfer($data) {
         $variables['data']['xPQtXjuWnk']['id'] = 'no';
         $variables['data']['xPQtXjuWnk']['label'] = 'No';
     }
-        $dept_stmt = $dbh->prepare($get_dept_info);
-        $dept_stmt->execute([':dept'=>$data['dept_name']]);
-        $dept_info = $dept_stmt->fetch(PDO::FETCH_ASSOC);
+    $get_dept_info = "SELECT dept_manager, dept_id FROM department WHERE dept_name = :dept";
+    $dept_info = $query_repo->fetchOne($get_dept_info, $data['dept_name']);
     if ($data['form_type'] === 'dept') {
 
         $variables['data']['K3p03X2Jvx'] = $data['why'];
@@ -401,13 +293,8 @@ function transfer($data) {
     }
 
     // GET CURRENT MANAGER INFO
-    $stmt = $dbh->prepare($dept_select);
-    $stmt->execute([':id'=>$_SESSION['deptid']]);
-    $current_manager = $stmt->fetchColumn();
-/*
-$email_regex = '/\b(@)\b/i';
-if (preg_match($email_regex, $
- */
+    $current_manager = $query_repo->fetchColumn($dept_select, $_SESSION['deptid']);
+
     $current_manager_info = getNameInfo($current_manager, $audit_dept);
     $variables['data']['u7YkM8hmb-']['displayName'] = $current_manager_info['displayName'];
     $variables['data']['u7YkM8hmb-']['email'] = $current_manager_info['email'];
@@ -432,100 +319,21 @@ if (preg_match($email_regex, $
     $variables['data']['SZ24nXDBVk']['schoolId'] = $manager_info['schoolId'];
     $variables['data']['SZ24nXDBVk']['username'] = $manager_info['username'];
 
-    echo json_encode(['variables'=>$variables]);
-
-
-    $url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-    $headers = array(
-        "Content-Type: application/json",
-        "Authorization: Bearer {$apikey}",
-    );
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-    "appId": "68d09e38d599f1028a08969a"
-}}';
-
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
-
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $resp = curl_exec($curl);
-
-    $decoded_data = json_decode($resp, true);
-    $action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-    curl_close($curl);
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-    $get_draft_id = json_encode([
-        'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-        'variables' => [
-            'actionId' => $action_id
-        ]
-    ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    $resp = curl_exec($curl);
-
-    $decoded_data = json_decode($resp, true);
-    $document_id = $decoded_data['data']['action']['document']['id'];
-    $action_id = $decoded_data['data']['action']['id'];
-
-    curl_close($curl);
-
-
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    if (!$action_id || !$document_id) {
-        die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-    }
+    echo json_encode(['variables' => $variables]);
 
     $submitter_sig = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
-    $variables['data']['ne3KPx1Wy3']['actionId'] = $action_id;
+    // $variables['data']['ne3KPx1Wy3']['actionId'] = $action_id;
     $variables['data']['ne3KPx1Wy3']['date'] = $submitter_sig['date'];
     $variables['data']['ne3KPx1Wy3']['displayName'] = $submitter_sig['displayName'];
     $variables['data']['ne3KPx1Wy3']['signatureType'] = 'type';
     $variables['data']['ne3KPx1Wy3']['signedName'] = $submitter_sig['signedName'];
     $variables['data']['ne3KPx1Wy3']['userId'] = $submitter_sig['userId'];
 
-    $variables['documentId'] = $document_id;
-    $variables['actionId'] = $action_id;
-    $variables['status'] = 'completed';
 
-    $ms_time = round(microtime(true) * 1000);
-    $submit_form = json_encode([
-        'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-    { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-    'variables' => $variables,
-    ]);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
-
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-    $resp = curl_exec($curl);
-    $resp_data = json_decode($resp, true);
-    echo json_encode(['data'=>$data]);
-    curl_close($curl);
+    $resp_data = $kuali->writeToKuali("68d09e38d599f1028a08969a", $variables);
+    echo json_encode(['data' => $data, 'variables' => $variables]);
 
 
-    echo json_encode(['form'=>$submit_form, 'resp data'=>$resp_data]);
+    echo $resp_data;
     exit;
-
-
 }

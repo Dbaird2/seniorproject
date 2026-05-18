@@ -24,10 +24,11 @@ foreach ($edges as $index => $edge) {
         bldgChange();
     }
 }
-        
+
 echo '<pre>' . json_encode($decode_true, JSON_PRETTY_PRINT) . '</pre>';
 exit;
-function checkBldg($bldg_name, $room_loc, $tag) {
+function checkBldg($bldg_name, $room_loc, $tag)
+{
     global $query_repo;
     $select = 'SELECT bldg_id FROM bldg_table WHERE bldg_name = ?';
     $bldg_id = $query_repo->fetchColumn($select, $bldg_name);
@@ -40,19 +41,21 @@ function checkBldg($bldg_name, $room_loc, $tag) {
 
             $select = 'SELECT room_tag FROM room_table WHERE bldg_id = ? AND room_loc = ?';
             $room_tag = $query_repo->fetchColumn($select, $bldg_id, $room_loc);
-        } 
+        }
         $update = 'UPDATE asset_info SET room_tag = ? WHERE asset_tag = ?';
         $query_repo->execute($update, $room_tag, $tag);
         return true;
     }
 }
-function checkTag(string $tag) {
+function checkTag(string $tag)
+{
     global $query_repo;
     $select = 'SELECT asset_tag FROM asset_info WHERE asset_tag = ?';
     $confirm_tag = $query_repo->fetchColumn($select, $tag);
     return $confirm_tag !== false;
 }
-function deptChange() {
+function deptChange()
+{
     global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
@@ -83,7 +86,7 @@ function deptChange() {
         }
 
         echo '<br>Bldg name: ' . $bldg_name . ' Dept id: ' . $dept_id . ' Dept name: ' . $dept_name . ' Room Location ' . $room_loc . '<br>';
-        
+
         if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc, $tag);
         }
@@ -108,7 +111,8 @@ function deptChange() {
         echo "<br>--------------------------------------<br>";
     }
 }
-function bldgChange() {
+function bldgChange()
+{
     global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
@@ -131,7 +135,7 @@ function bldgChange() {
             $bldg_name = $data['data']['YtHlHUNY_q']['label'];
         }
         echo '<br>Bldg name: ' . $bldg_name . ' Room Loc ' . $room_loc . '<br>';
-        
+
         if (!empty($bldg_name) && !empty($room_loc)) {
             checkBldg($bldg_name, $room_loc, $tag);
         }
@@ -139,7 +143,6 @@ function bldgChange() {
         try {
             $update_kuali_time = "UPDATE kuali_table SET transfer_time = ?";
             $query_repo->execute($update_kuali_time, $raw_ms);
-            
         } catch (PDOException $e) {
             echo "error updating kuali_table " . $e->getMessage();
         }
@@ -147,7 +150,8 @@ function bldgChange() {
         echo "<br>--------------------------------------<br>";
     }
 }
-function busChange() {
+function busChange()
+{
     global $query_repo, $edge, $raw_ms;
     $tags = $edge['node']['data']['t7mH-1FlaO']['data'];
     foreach ($tags as $index => $data) {
@@ -158,7 +162,7 @@ function busChange() {
             echo "<br>Tag field empty<br>";
             continue;
         }
-        $new_bus = ['data']['ARcUfSX-vJ']['label'];
+        $new_bus = $data['data']['ARcUfSX-vJ']['label'];
         $update = 'UPDATE asset_info SET bus_unit = ? WHERE asset_tag = ?';
         $query_repo->execute($update, $new_bus, $tag);
         try {
@@ -171,4 +175,3 @@ function busChange() {
         echo "<br>--------------------------------------<br>";
     }
 }
-

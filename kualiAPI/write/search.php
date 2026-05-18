@@ -15,7 +15,7 @@ $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     $pass[] = 'A';
     return implode($pass);
 }
-function searchName($search_name = '', $apikey = '', $dept_id = '')
+function searchName($search_name = '', $dept_id = '')
 {
     $search_name = trim($search_name);
     $dept_id = trim($dept_id);

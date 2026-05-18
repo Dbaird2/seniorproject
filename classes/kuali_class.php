@@ -94,6 +94,7 @@ class KualiAPI
             $action_id = $decoded_data['data']['action']['id'];
             $variables['documentId'] = $document_id;
             $variables['actionId'] = $action_id;
+            $variables['status'] = 'completed';
             $submit_form = json_encode([
                 'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
             { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
@@ -108,7 +109,9 @@ class KualiAPI
                 return ['error' => curl_error($curl)];
             }
             curl_close($curl);
-            return json_decode($resp, true);
+            $res = json_decode($resp, true);
+            $return_stmt = ['status' => $res['data']['submitDocument'], 'document_id' => $document_id];
+            return json_encode($return_stmt);
         } catch (Exception $e) {
             error_log("Error Writing to Kuali: " . $e->getMessage());
             return ['error' => 'Error with Writing to Kuali'];

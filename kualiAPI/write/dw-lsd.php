@@ -1,4 +1,5 @@
 <?php
+
 /**
  * dw-lsd.php
  * ------------------------------------------------------------
@@ -37,7 +38,7 @@ if (!isset($_POST)) {
 }
 
 $variables = [[]];
-$echo = function($type, $msg) {
+$echo = function ($type, $msg) {
     echo $type . ': ' . $msg . '<br>';
     return;
 };
@@ -53,12 +54,10 @@ $data = json_decode($encoded_data, true);
 $myself = $someone_else = false;
 $index = 0;
 $variables = [[]];
-foreach($_SESSION['data'] as $session) {
+foreach ($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {
-        $select = "SELECT make, type2, asset_model FROM asset_info WHERE asset_tag = :tag";
-        $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":tag"=>$data['tag']]);
-        $tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
+        $select = "SELECT make, type2, asset_model FROM asset_info WHERE asset_tag = ?";
+        $tag_info = $query_repo->fetchOne($select, $data['tag']);
         // ASSET
         $variables['data']['dpHYE3a-ml'] = $session['Descr'];
         $variables['data']['8Rob3wGhC-'] = $session['Serial ID'];
@@ -72,7 +71,7 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 if (empty($variables['data']['2iwsFa0_2j'])) {
-    echo json_encode(['error'=>'No Tag was found']);
+    echo json_encode(['error' => 'No Tag was found']);
     die('No Tag was found');
 }
 
@@ -90,10 +89,9 @@ if (empty($apikey)) {
 $variables['data']['WDA7EMUZg_'] = $submitter['fullName'];
 
 
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = :dept_id";
-$get_mana_stmt = $dbh->prepare($get_dept_manager);
-$get_mana_stmt->execute([":dept_id"=>$dept_id]);
-$dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = ?";
+$dept_info = $query_repo->fetchOne($get_dept_manager, $dept_id);
+
 $dept_name = $dept_info['dept_name'];
 $manager = trim($dept_info['dept_manager']);
 // DEPARTMENT
@@ -103,67 +101,7 @@ $variables['data']['lVtSabqSUh']['data']['IOw4-l7NsM'] = $dept_id;
 
 $get_info = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 $get_info_email = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where email = :email";
-$get_info_name = "select f_name, l_name, signature, email, form_id, school_id, username from user_table where CONCAT(f_name, ' ', l_name) = :full_name";
 
-$url = "https://{$subdomain}.kualibuild.com/app/api/v0/graphql";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-$headers = array(
-    "Content-Type: application/json",
-    "Authorization: Bearer {$apikey}",
-);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-$form_data = '{"query":"mutation ($appId: ID!) { initializeWorkflow(args: {id: $appId}) { actionId }}","variables":{
-"appId": "68e94e8a58fd2e028d5ec88f"
-      }}';
-
-curl_setopt($curl, CURLOPT_POSTFIELDS, $form_data);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-
-$decoded_data = json_decode($resp, true);
-$action_id = $decoded_data['data']['initializeWorkflow']['actionId'];
-curl_close($curl);
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-$get_draft_id = json_encode([
-    'query' => 'query ($actionId: String!) { action(actionId: $actionId) { id appId document { id } } }',
-    'variables' => [
-        'actionId' => $action_id
-    ]
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $get_draft_id);
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-$resp = curl_exec($curl);
-
-$decoded_data = json_decode($resp, true);
-$document_id = $decoded_data['data']['action']['document']['id'];
-$action_id = $decoded_data['data']['action']['id'];
-
-curl_close($curl);
-
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-if (!$action_id || !$document_id) {
-    die("Missing required data.\nactionId: $action_id\ndocumentId: $document_id");
-}
 $custodian = $dept_info['cust'];
 $custodian_info = getNameInfo($custodian, $audit_dept_id);
 
@@ -193,43 +131,28 @@ $date = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
 $current_date = $date->format('m/d/Y');
 $variables['data']["sQZpV5OhTo"] = $current_date;
 
-$variables['documentId'] = $document_id;
-$variables['actionId'] = $action_id;
-$variables['status'] = 'completed';
 
 // SUBMITTER SIG
-$sbmitter_info = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
-$variables['data']['Tscy6BxbSj']['actionId'] = $action_id;
+$submitter_info = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
+// $variables['data']['Tscy6BxbSj']['actionId'] = $action_id;
 $variables['data']['Tscy6BxbSj']['date'] = $submitter_info['date'];
 $variables['data']['Tscy6BxbSj']['displayName'] = $submitter_info['displayName'];
 $variables['data']['Tscy6BxbSj']['signatureType'] = 'type';
 $variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['lastName'];
 $variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['userId'];
 
-$submit_form = json_encode([
-    'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
-{ submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables,
-]);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
-
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-$resp = curl_exec($curl);
-$resp_data = json_decode($resp, true);
+$resp = $kuali->writeToKuali("68e94e8a58fd2e028d5ec88f", $variables);
+$decoded = json_decode($resp, true);
 
 $tag = $data['tag'];
-$input_array =  $document_id . ',rlsd,in-progress,' . trim($tag);
+$input_array =  $decoded['document_id'] . ',rlsd,in-progress,' . trim($tag);
 
 $audit_id = $data['audit_id'];
-$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
-if ($resp_data['data']['submitDocument'] === 'Ok') {
-    $update_stmt = $dbh->prepare($update);
-    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Ok']);
+$update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, ?) WHERE dept_id = ? AND audit_id = ?";
+if ($decoded['status'] === 'Ok') {
+    $query_repo->execute($update, $input_array, $dept_id, $audit_id);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Ok']);
 } else {
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Failed', 'data'=>$resp_data]);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Failed', 'data' => $decoded]);
 }
 exit;
-
