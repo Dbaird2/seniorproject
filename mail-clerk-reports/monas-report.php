@@ -64,12 +64,28 @@ if (isset($_POST['submit'])) {
     move_uploaded_file($ref_file_tmp_path, $ref_file);
 
     $spreadsheet = IOFactory::load($file_path);
+    /*
     $sheet = $spreadsheet->setActiveSheetIndex(0);
     $sheet1 = $sheet->toArray(null, false, false, false);
     $sheet = $spreadsheet->setActiveSheetIndex(1);
     $sheet2 = $sheet->toArray(null, false, false, false);
+    */
+
+    $allSheets = [];
+
+    foreach ($spreadsheet->getWorksheetIterator() as $worksheet) {
+        $sheetName = $worksheet->getTitle();
+
+        $allSheets[$sheetName] = $worksheet->toArray(
+            null,
+            false,
+            false,
+            false
+        );
+    }
     $spreadsheet->disconnectWorksheets();
-    unset($spreadsheet, $sheet);
+    //unset($spreadsheet, $sheet);
+    unset($spreadsheet);
 
     $ref_spread_sheet = IOFactory::load($ref_file);
     $ref_sheet = $ref_spread_sheet->getActiveSheet();
@@ -139,8 +155,68 @@ if (isset($_POST['submit'])) {
     $rows = [];
     $data_to_write = [];
     $skipped = 0;
+    foreach ($allSheets as $sheetName => $sheetData) {
+
+        $account = null;
+        $startRow = 0;
+
+        foreach ($sheetData as $index => $row) {
+            if (isset($row[0]) && trim($row[0]) === 'Account') {
+                $startRow = $index + 1;
+                break;
+            }
+        }
+
+        for ($i = $startRow; $i < count($sheetData); $i++) {
+
+            if ((int)$sheetData[$i][0] === 9000) {
+                continue;
+            }
+
+            if (!empty($sheetData[$i][0])) {
+
+                $account = trim((int)$sheetData[$i][0]);
+            } else {
+
+                if (empty($account)) {
+                    continue;
+                }
+
+                if (empty($postage_pieces[$account])) {
+                    $postage_pieces[$account] = 0.00;
+                }
+
+                if ($sheetData[$i][6] === 'No Class') {
+                    continue;
+                }
+
+                $data_to_write[$account][] = [
+                    $sheetData[$i][1],
+                    $sheetData[$i][6],
+                    $sheetData[$i][11],
+                    $sheetData[$i][12],
+                    $sheetData[$i][13],
+                    $sheetData[$i][14],
+                    $sheetData[$i][15],
+                    $sheetName
+                ];
+
+                $g = $sheetData[$i][6];
+
+                if (
+                    !preg_match('/(Flat)/', $g) &&
+                    !preg_match('/(Correction)/', $g)
+                ) {
+                    $postage_pieces[$account] += (
+                        (float)$sheetData[$i][11] * $postage_fee
+                    );
+                }
+            }
+        }
+    }
+    /*
     for ($i = 7; $i < count($sheet1); $i++) {
-        if ((int)$sheet1[$i-$skipped][0] === 9000 && empty($sheet1[$i][0])) {
+        if ((int)$sheet1[$i - $skipped][0] === 9000 && empty($sheet1[$i][0])) {
             $skipped++;
             continue;
         }
@@ -159,7 +235,7 @@ if (isset($_POST['submit'])) {
                 $data_to_write[$account][] = [$sheet1[$i][1], $sheet1[$i][6], $sheet1[$i][11], $sheet1[$i][12], $sheet1[$i][13], $sheet1[$i][14], $sheet1[$i][15]];
 
                 $g = $sheet1[$i][6];
-                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE) && !preg_match('/(Correction)/', $g, $matches, PREG_OFFSET_CAPTURE) ) {
+                if (!preg_match('/(Flat)/', $g, $matches, PREG_OFFSET_CAPTURE) && !preg_match('/(Correction)/', $g, $matches, PREG_OFFSET_CAPTURE)) {
                     $postage_pieces[$account] += ((float) $sheet1[$i][11] * $postage_fee);
                 }
             }
@@ -189,6 +265,7 @@ if (isset($_POST['submit'])) {
             }
         }
     }
+        */
     ksort($postage_pieces);
     $keys = array_keys($postage_pieces);
     $start_of_data = 4;
@@ -211,7 +288,7 @@ if (isset($_POST['submit'])) {
             ->getStartColor()
             ->setARGB('000000');
         $postage_sheet->getStyle('B' . $start_of_data)->getFont()->getColor()->setARGB(Color::COLOR_WHITE);
-        
+
         $start_of_data++;
 
         foreach ($data_to_write[$row] as $info) {
@@ -236,18 +313,18 @@ if (isset($_POST['submit'])) {
 
     $ref_index = 2;
     $last_index = count($postage_pieces) + 1;
-    $new_ref_sheet->setCellValue('A' . $last_index+1, 'Grand Total');
-    $new_ref_sheet->setCellValue('B' . $last_index+1, 0);
-    $new_ref_sheet->setCellValue('C' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('D' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('E' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('F' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('G' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('H' . $last_index+1, '-');
-    $new_ref_sheet->setCellValue('I' . $last_index+1, '=SUM(I2:I'.$last_index . ')');
-    $new_ref_sheet->setCellValue('L' . $last_index+1, 'BK001');
-    $new_ref_sheet->setCellValue('N' . $last_index+1, '107800');
-    $new_ref_sheet->setCellValue('Q' . $last_index+1, 'C1060');
+    $new_ref_sheet->setCellValue('A' . $last_index + 1, 'Grand Total');
+    $new_ref_sheet->setCellValue('B' . $last_index + 1, 0);
+    $new_ref_sheet->setCellValue('C' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('D' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('E' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('F' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('G' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('H' . $last_index + 1, '-');
+    $new_ref_sheet->setCellValue('I' . $last_index + 1, '=SUM(I2:I' . $last_index . ')');
+    $new_ref_sheet->setCellValue('L' . $last_index + 1, 'BK001');
+    $new_ref_sheet->setCellValue('N' . $last_index + 1, '107800');
+    $new_ref_sheet->setCellValue('Q' . $last_index + 1, 'C1060');
     foreach (range('B', 'I') as $column) {
         $postage_sheet
             ->getStyle($column . $last_index)
@@ -293,8 +370,8 @@ if (isset($_POST['submit'])) {
                 if (!empty($ref[7])) {
                     $new_ref_sheet->setCellValue('Q' . $ref_index, $ref[7]);
                 }
-                $new_ref_sheet->setCellValue('I'.$ref_index, "=SUM(F".$ref_index.", G".$ref_index.",H".$ref_index.")");
-                $new_ref_sheet->setCellValue('R'.$ref_index, "=(I".$ref_index.")");
+                $new_ref_sheet->setCellValue('I' . $ref_index, "=SUM(F" . $ref_index . ", G" . $ref_index . ",H" . $ref_index . ")");
+                $new_ref_sheet->setCellValue('R' . $ref_index, "=(I" . $ref_index . ")");
 
                 $ref_index++;
             }
@@ -473,4 +550,3 @@ if (isset($_POST['submit'])) {
 </body>
 
 </html>
-
