@@ -1220,6 +1220,10 @@ function check()
             }
 
             $tag = $edge['node']['data']['AvjKneaxPz'][1]['jswe8fMFPT'] ?? $edge['node']['data']['BOZIA6hewQ'];
+            if (strlen($tag) > 15) {
+                echo '<br> TAG LONGER THAN 15 CHAR';
+                continue;
+            }
 
             if ($tag === '' || $tag === 'N/A' || $tag === 'NA' || $tag === NULL) {
                 echo "<br>Tag field empty<br>";
