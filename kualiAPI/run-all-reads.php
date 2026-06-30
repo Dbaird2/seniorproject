@@ -13,7 +13,7 @@ error_reporting(E_ALL);
 $select = "SELECT * FROM kuali_table";
 $select_stmt = $dbh->query($select);
 $result = $select_stmt->fetch(PDO::FETCH_ASSOC);
-deleteOverdueSchedule();
+//deleteOverdueSchedule();
 //propertyTransfer();
 addKualiInfo();
 assetAddition();
@@ -1244,7 +1244,7 @@ function check()
                 $name = $edge['node']['data']['cQOz4UQ0rQ'];
                 $insert = 'INSERT INTO asset_info (asset_tag, asset_name, type2, serial_num, dept_id) VALUES (?,?,?,?,?)';
                 $stmt = $dbh->prepare($insert);
-                $stmt->execute([$tag, $name, $type2, $serial, $dept]); 
+                $stmt->execute([$tag, $name, $type2, $serial, $dept]);
             }
             echo "<br>" . $count++;
             echo "<br>Updating<br>Tag " . $tag . "<br>";
