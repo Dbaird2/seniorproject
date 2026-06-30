@@ -652,7 +652,7 @@ function assetAddition()
                 $it_regex = '/\b(LENOVO)|(APPLE)|(DELL)|(HP)|(CPU)|(MACBOOK)|(CHROMEBOOK)|(TABLET)|(SERVER)|(PRECISION\s\d*\sTOWER)\b/i';
                 $it_status = (preg_match($it_regex, $name)) ? 1 : 0;
                 $tag_taken = $s_stmt->fetch(PDO::FETCH_ASSOC);
-                $fund = $tag['data']['TSeIOwwu6t'];
+                $fund = $edge['node']['data']['tdCq6KU0B2']['data'][0]['data']['f2HRFBrjLG'];
                 if (!$tag_taken) {
                     $insert_q = "INSERT INTO asset_info (asset_tag, asset_name, date_added, serial_num, asset_price, dept_id, lifecycle, po, is_IT, fund) VALUES
                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -768,7 +768,7 @@ function assetReceived()
                 $model = $edge['node']['data'];
             }
             */
-            $dept_id = $edge['node']['data']['KMudjEpsXS']['data']['IOw4-l7NsM'];
+            $dept_id = $edge['node']['data']['4jat9kzuMx']['data']['IOw4-l7NsM'];
             $lifecycle = 10;
             foreach ($tag_data as $tag) {
                 $tag_num = '';
