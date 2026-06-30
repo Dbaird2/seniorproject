@@ -239,6 +239,10 @@ keyBy: ID
                 $update_stmt->execute([':cust' => $c_display_name, ':id' => $dept_id]);
             }
         } else {
+            if (empty($dept_id) || empty($dept_name)) {
+                echo '<br>Skipping department insert due to missing dept_id/dept_name<br>';
+                return;
+            }
             $insert = 'INSERT INTO department (dept_id, dept_name, custodian, dept_manager, document_set_id, form_id) VALUES (?, ?, ?, ?, ?, ?)';
             $insert_stmt = $dbh->prepare($insert);
             $custodian = '{' . $c_display_name . '}';
