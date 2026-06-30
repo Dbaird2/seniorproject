@@ -2308,7 +2308,7 @@ function dwPsr()
 {
     echo '<br>DW PSR<br>';
     global $dbh, $result;
-    $raw_ms = $result['dw_psr_time'] ?? 0;
+    $raw_ms = (int)$result['dw_psr_time'] ?? 0;
 
     $apikey = $result['kuali_key'];
 
