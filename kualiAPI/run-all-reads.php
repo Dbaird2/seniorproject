@@ -4,7 +4,7 @@ set_time_limit(900);
 
 file_put_contents(__DIR__ . '/debug.log', date('c') . " FILE LOADED\n", FILE_APPEND);
 
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', 'php://stderr');
 error_reporting(E_ALL);
