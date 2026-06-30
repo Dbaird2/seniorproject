@@ -1242,9 +1242,9 @@ function check()
                 $serial = $edge['node']['data']['jYTHHgL10M'];
                 $type2 = $edge['node']['data']['aUVT1BLN6V'];
                 $name = $edge['node']['data']['cQOz4UQ0rQ'];
-                $insert = 'INSERT INTO asset_info (asset_tag, asset_name, type2, serial, dept_id) VALUES (?,?,?,?,?)';
+                $insert = 'INSERT INTO asset_info (asset_tag, asset_name, type2, serial_num, dept_id) VALUES (?,?,?,?,?)';
                 $stmt = $dbh->prepare($insert);
-                $stmt->execute([$tag, $name, $type2, $serial, $dept]); //changed $dept_id to $dept not sure if thats what he meant
+                $stmt->execute([$tag, $name, $type2, $serial, $dept]); 
             }
             echo "<br>" . $count++;
             echo "<br>Updating<br>Tag " . $tag . "<br>";
