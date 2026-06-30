@@ -1206,7 +1206,7 @@ function check()
             $check_out_type = $edge['node']['data']['fyaCF8g3Uh']['label'];
             $check_out = $check_in = false;
             $who_did_form = $edge['node']['data']['e0fZiLYomu']['label'];
-            $dept = $edge['node']['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
+            $dept = $edge['node']['data']['UpzHLk5rWo']['data']['IOw4-l7NsM'] ?? 'Unknown Dept';
             if ($check_out_type === 'Checking Out Equipment') {
                 $borrower = $edge['node']['data']['JsHBzpz-AT']['displayName'] ?? $edge['node']['data']['JXLJ_AOov-']['displayName'];
                 $borrow_array = explode(" ", $borrower);
