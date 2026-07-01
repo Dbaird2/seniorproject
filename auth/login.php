@@ -16,7 +16,7 @@ try {
             } else {
                 $user_check = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($user_check && password_verify($pw, $user_check['pw'])) {
-                /*
+                    /*
                 $_SESSION['id'] = $user_check['id'];
                 $_SESSION['role'] = $user_check['u_role'];
                 $_SESSION['email'] = $user_check['email'];
@@ -36,36 +36,34 @@ try {
                             $params[':spa_id'] = $new_spa_id;
                             $update_c[] = 'curr_spa_id = :spa_id';
 
-                            $update_history_q = "UPDATE audit_history SET audit_id = 9 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_spa_id']]);
+                            $update_history_q = "UPDATE audit_history SET audit_id = 9 WHERE audit_id = :id AND audit_status = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id" => $audit_check['curr_spa_id']]);
                         }
                         if ((int)$audit_check['self_check'] >= 0) {
                             $new_self_id = (int)$audit_check['curr_self_id'] === 1 ? 2 : 1;
                             $params[':self_id'] = $new_self_id;
                             $update_c[] = 'curr_self_id = :self_id';
 
-                            $update_history_q = "UPDATE audit_history SET audit_id = 3 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_self_id']]);
+                            $update_history_q = "UPDATE audit_history SET audit_id = 3 WHERE audit_id = :id AND audit_status = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id" => $audit_check['curr_self_id']]);
                         }
                         if ((int)$audit_check['mgmt_check'] >= 0) {
                             $new_mgmt_id = (int)$audit_check['curr_mgmt_id'] === 4 ? 5 : 4;
                             $params[':mgmt_id'] = $new_mgmt_id;
                             $update_c[] = 'curr_mgmt_id = :mgmt_id';
 
-                            $update_history_q = "UPDATE audit_history SET audit_id = 6 WHERE audit_id = :id AND audit_statis = 'In Progress'";
-                            $dbh->prepare($update_history_q)->execute([":id"=>$audit_check['curr_mgmt_id']]);
+                            $update_history_q = "UPDATE audit_history SET audit_id = 6 WHERE audit_id = :id AND audit_status = 'In Progress'";
+                            $dbh->prepare($update_history_q)->execute([":id" => $audit_check['curr_mgmt_id']]);
                         }
                         if (!empty($update_c)) {
                             $ready_columns = implode(',', $update_c);
                             $update_id = "UPDATE audit_freq SET $ready_columns";
                             $update_stmt = $dbh->prepare($update_id)->execute($params);
                         }
-
                     }
 
                     if ($stmt->execute([$user_check['email']])) {
-                        header("location: https://dataworks-7b7x.onrender.com/auth/2fa.php?id=".urlencode($user_check['id'])."&role=".urlencode($user_check['u_role'])."&email=".urlencode($user_check['email'])."&dept_id=".urlencode($user_check['dept_id']));
-
+                        header("location: https://dataworks-7b7x.onrender.com/auth/2fa.php?id=" . urlencode($user_check['id']) . "&role=" . urlencode($user_check['u_role']) . "&email=" . urlencode($user_check['email']) . "&dept_id=" . urlencode($user_check['dept_id']));
                     } else {
                         error_log("Error updating last_login");
                     }
@@ -86,14 +84,15 @@ include_once("../navbar.php");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CSUB Portal</title>
     <style>
-*  {
-                margin: 0;
-                padding: 0;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -259,7 +258,7 @@ include_once("../navbar.php");
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
 
@@ -333,8 +332,13 @@ include_once("../navbar.php");
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive design */
@@ -343,15 +347,15 @@ include_once("../navbar.php");
                 margin: 10px;
                 max-width: none;
             }
-            
+
             .login-body {
                 padding: 30px 20px 20px;
             }
-            
+
             .login-header {
                 padding: 25px 20px;
             }
-            
+
             .login-header h2 {
                 font-size: 24px;
             }
@@ -367,6 +371,7 @@ include_once("../navbar.php");
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -382,126 +387,126 @@ include_once("../navbar.php");
         }
     </style>
 </head>
+
 <body>
-<div class="has-login">
-    <div class="login-container">
-        <div class="login-header">
-            <h2>Welcome Back</h2>
-            <p>Sign in to your CSUB account</p>
+    <div class="has-login">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your CSUB account</p>
+            </div>
+
+            <div class="login-body">
+                <?php if (!empty($err)): ?>
+                    <div class="server-error">
+                        <?php echo htmlspecialchars($err); ?>
+                    </div>
+                <?php endif; ?>
+
+                <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return handleSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input
+                            class="form-input"
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="example@csub.edu"
+                            onblur="validateEmail()"
+                            required
+                            autocomplete="email">
+                        <div id="err_email" class="error-message" style="display: none;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="pw">Password</label>
+                        <input
+                            class="form-input"
+                            type="password"
+                            name="pw"
+                            id="pw"
+                            placeholder="Enter your password"
+                            required
+                            autocomplete="current-password">
+                    </div>
+
+                    <div class="forgot-password">
+                        <a href="forgot-password.php">Forgot your password?</a>
+                    </div>
+
+                    <button id="btn" class="login-button" type="submit" disabled>
+                        Sign In
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-footer">
+                <p>Secure CSUB Portal Access</p>
+            </div>
         </div>
 
-        <div class="login-body">
-            <?php if (!empty($err)): ?>
-                <div class="server-error">
-                    <?php echo htmlspecialchars($err); ?>
-                </div>
-            <?php endif; ?>
+        <script>
+            function validateEmail() {
+                const email = document.getElementById("email").value;
+                const emailInput = document.getElementById("email");
+                const errEmail = document.getElementById("err_email");
 
-            <form id="login-form" method="post" action="login.php" oninput="validateForm()" onsubmit="return handleSubmit(event)">
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
-                    <input 
-                        class="form-input" 
-                        type="email" 
-                        name="email" 
-                        id="email" 
-                        placeholder="example@csub.edu" 
-                        onblur="validateEmail()" 
-                        required
-                        autocomplete="email"
-                    >
-                    <div id="err_email" class="error-message" style="display: none;"></div>
-                </div>
+                if (email.length === 0) {
+                    emailInput.classList.remove('error');
+                    errEmail.style.display = 'none';
+                    return false;
+                }
 
-                <div class="form-group">
-                    <label class="form-label" for="pw">Password</label>
-                    <input 
-                        class="form-input" 
-                        type="password" 
-                        name="pw" 
-                        id="pw" 
-                        placeholder="Enter your password" 
-                        required
-                        autocomplete="current-password"
-                    >
-                </div>
+                const emailCheck = email.slice(-9);
+                if (emailCheck !== '@csub.edu') {
+                    emailInput.classList.add('error');
+                    errEmail.textContent = "Please use your CSUB email address";
+                    errEmail.style.display = 'block';
+                    return false;
+                }
 
-                <div class="forgot-password">
-                    <a href="forgot-password.php">Forgot your password?</a>
-                </div>
-
-                <button id="btn" class="login-button" type="submit" disabled>
-                    Sign In
-                </button>
-            </form>
-        </div>
-
-        <div class="login-footer">
-            <p>Secure CSUB Portal Access</p>
-        </div>
-    </div>
-
-    <script>
-        function validateEmail() {
-            const email = document.getElementById("email").value;
-            const emailInput = document.getElementById("email");
-            const errEmail = document.getElementById("err_email");
-            
-            if (email.length === 0) {
                 emailInput.classList.remove('error');
                 errEmail.style.display = 'none';
-                return false;
+                return true;
             }
-            
-            const emailCheck = email.slice(-9);
-            if (emailCheck !== '@csub.edu') {
-                emailInput.classList.add('error');
-                errEmail.textContent = "Please use your CSUB email address";
-                errEmail.style.display = 'block';
-                return false;
+
+            function validateForm() {
+                const isEmailValid = validateEmail();
+                const password = document.getElementById("pw").value;
+                const btn = document.getElementById("btn");
+
+                const isFormValid = isEmailValid && password.length > 0;
+
+                btn.disabled = !isFormValid;
+
+                return isFormValid;
             }
-            
-            emailInput.classList.remove('error');
-            errEmail.style.display = 'none';
-            return true;
-        }
 
-        function validateForm() {
-            const isEmailValid = validateEmail();
-            const password = document.getElementById("pw").value;
-            const btn = document.getElementById("btn");
-            
-            const isFormValid = isEmailValid && password.length > 0;
-            
-            btn.disabled = !isFormValid;
-            
-            return isFormValid;
-        }
+            function handleSubmit(event) {
+                const btn = document.getElementById("btn");
 
-        function handleSubmit(event) {
-            const btn = document.getElementById("btn");
-            
-            if (!validateForm()) {
-                event.preventDefault();
-                return false;
+                if (!validateForm()) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                // Add loading state
+                btn.classList.add('loading');
+                btn.textContent = 'Signing In...';
+
+                return true;
             }
-            
-            // Add loading state
-            btn.classList.add('loading');
-            btn.textContent = 'Signing In...';
-            
-            return true;
-        }
 
-        // Initialize form validation on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            validateForm();
-            
-            // Add real-time validation
-            document.getElementById('email').addEventListener('input', validateForm);
-            document.getElementById('pw').addEventListener('input', validateForm);
-        });
-    </script>
-</div>
+            // Initialize form validation on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                validateForm();
+
+                // Add real-time validation
+                document.getElementById('email').addEventListener('input', validateForm);
+                document.getElementById('pw').addEventListener('input', validateForm);
+            });
+        </script>
+    </div>
 </body>
+
 </html>
