@@ -74,7 +74,7 @@ $last_name = $submitter_info['l_name'];
 
 $submitter_key = 'Jpy9KU-X3P';
 $submitter_kauli = [
-    "displayName"=> $full_name ,
+    "displayName" => $full_name,
     "email" => $_SESSION['email'],
     "firstName" => $first_name,
     "id" => $form_id,
@@ -310,10 +310,10 @@ $bus_units = [$bkcmp, $bkspa, $bkstu, $bkfdn, $bkasi];
 $bus_units = array_filter($bus_units, fn($info) => (!empty($info['label']) && !empty($info['id'])));
 if (!$vin) {
     $form_type_id = match ($its) {
-    true => "iK43J2G3IH",
+        true => "iK43J2G3IH",
         false => "2DyVz03Xr"
-};
-$form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
+    };
+    $form_type_label = ($its === true) ? 'IT Equipment' : 'Other';
 } else {
     $form_type_id = "p4UJVwrfG";
     $form_type_label = 'Vehicle';
@@ -327,28 +327,29 @@ $ms_time = round(microtime(true) * 1000);
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => [
-    'documentId' => $document_id,
-    'data' => [
-        $custodian_kuali_key => $custodian_kuali,
-        $bus_units_key => $bus_units,
-        "COwZg-7nwQ" => [
-            "id" => $form_type_id,
-            "label" => $form_type_label
-        ],
-        "tc1F0ohejI" => [
-            "data" => [
-                "AkMeIWWhoj" => $dept_name,
-                "IOw4-l7NsM" => $_SESSION['info'][2]
+    'variables' => [
+        'documentId' => $document_id,
+        'data' => [
+            $custodian_kuali_key => $custodian_kuali,
+            $bus_units_key => $bus_units,
+            "COwZg-7nwQ" => [
+                "id" => $form_type_id,
+                "label" => $form_type_label
             ],
-            "label" => $dept_name
+            "tc1F0ohejI" => [
+                "data" => [
+                    "AkMeIWWhoj" => $dept_name,
+                    "IOw4-l7NsM" => $_SESSION['info'][2]
+                ],
+                "label" => $dept_name,
+                "id" => $action_id
+            ],
+            $manager_kuali_key => $manager_kuali,
+            "W_Uw0hSpff" => $json_form,
         ],
-        $manager_kuali_key => $manager_kuali,
-        "W_Uw0hSpff" => $json_form,
-    ],
-    'actionId' => $action_id,
-    'status' => 'completed'
-]
+        'actionId' => $action_id,
+        'status' => 'completed'
+    ]
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
@@ -360,8 +361,8 @@ curl_close($curl);
 $resp_data = json_decode($resp, true);
 
 if ($resp_data['data']['submitDocument'] === 'Ok') {
-    echo json_encode(['status'=>'Property Survery Report Ok']);
+    echo json_encode(['status' => 'Property Survery Report Ok']);
 } else {
-    echo json_encode(['status'=>'Property Survey Report Failed', 'res'=>$resp_data]);
+    echo json_encode(['status' => 'Property Survey Report Failed', 'res' => $resp_data]);
 }
 exit;
