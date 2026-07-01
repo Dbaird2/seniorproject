@@ -2396,49 +2396,10 @@ function dwPsr()
         return;
     }
 }
-/*
-
-function debug_log_id_pair($label, $a, $b)
-{
-    error_log("DEBUG $label A(raw): " . var_export($a, true));
-    error_log("DEBUG $label B(raw): " . var_export($b, true));
-    error_log("DEBUG $label A(len): " . strlen($a) . " B(len): " . strlen($b));
-    error_log("DEBUG $label A(hex): " . bin2hex($a) . " B(hex): " . bin2hex($b));
-    // show byte codes of first few chars if helpful:
-    $codesA = array_map('ord', preg_split('//u', $a, -1, PREG_SPLIT_NO_EMPTY));
-    $codesB = array_map('ord', preg_split('//u', $b, -1, PREG_SPLIT_NO_EMPTY));
-    error_log("DEBUG $label A(codes): " . implode(',', $codesA));
-    error_log("DEBUG $label B(codes): " . implode(',', $codesB));
-}
-
-function normalize_id($s)
-{
-    if ($s === null) return '';
-    // remove BOM, control chars, and trim whitespace (all spaces/newlines/tabs)
-    // remove any surrounding <br> or html fragments
-    $s = preg_replace('/<[^>]+>/', '', $s);                 // strip tags like <br>
-    $s = preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $s);   // remove control + NBSP
-    $s = trim($s);
-    // optionally remove all whitespace inside string if IDs should be contiguous:
-    $s = preg_replace('/\s+/', '', $s);
-    return (string)$s;
-}
-
-function canonical_hex_id($s)
-{
-    $s = (string)$s;
-    // lower-case, strip non-hex characters, trim
-    $s = trim($s);
-    $s = preg_replace('/[^0-9a-fA-F]/', '', $s);
-    return strtolower($s);
-}
-
-*/
 
 function checkFormStatus()
 {
-    // file_put_contents(__DIR__ . '/debug.log', date('c') . " checkFormStatus() STARTED\n", FILE_APPEND);
-    //echo '<br>Check Form Status<br>';
+    echo '<br>Check Form Status<br>';
     global $dbh, $result;
     $apikey = $result['kuali_key'];
     $subdomain = "csub";
@@ -2447,15 +2408,13 @@ function checkFormStatus()
     $select = "select unnest(check_forms) AS form_id, dept_id, audit_id from audit_history where check_forms is not null and CAST(check_forms AS TEXT) ILIKE '%in-progress%'";
     $stmt = $dbh->query($select);
     $forms_to_check = $stmt->fetchAll();
+    $found = false;
     foreach ($forms_to_check as $form) {
         $seperate = explode(',', $form['form_id']);
         $id = '';
-
         foreach ($seperate as $index => $ele) {
             if ($index === 0) {
                 $id = trim($ele);
-                echo $form['dept_id'] . ' ' . $id . '<br>';
-
                 continue;
             }
             if ($index === 1) {
@@ -2480,19 +2439,8 @@ function checkFormStatus()
                 "Authorization: Bearer {$apikey}",
             );
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
             $data = json_encode([
-                "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { 
-                app(id: $appId) { 
-                id name documentConnection( 
-                args: { 
-                skip: $skip limit: $limit sort: $sort query: $query fields: $fields } 
-                keyBy: ID ) { 
-                totalCount 
-                edges { 
-                node { id meta } 
-                } 
-                pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
+                "query" => 'query ( $appId: ID! $skip: Int! $limit: Int! $sort: [String!] $query: String $fields: Operator) { app(id: $appId) { id name documentConnection( args: { skip: $skip limit: $limit sort: $sort query: $query fields: $fields } keyBy: ID ) { totalCount edges { node { id data meta } } pageInfo { hasNextPage hasPreviousPage skip limit } } }}',
                 "variables" => [
                     "appId" => $type,
                     "skip" => 0,
@@ -2518,20 +2466,19 @@ function checkFormStatus()
                     ],
                 ]
             ]);
+
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+            //for debug only!
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
             $resp = curl_exec($curl);
             unset($curl);
-
-            if (empty($decoded['data']['app']['documentConnection']['edges'])) {
-                echo 'No edges found <br>';
-                continue;
-            }
+            $decoded = json_decode($resp, true);
             $found = false;
             $edges = $decoded['data']['app']['documentConnection']['edges'];
             foreach ($edges as $edge) {
-
                 if (!empty($edge['node']['meta']['workflowStatus'])) {
                     $status = $edge['node']['meta']['workflowStatus'];
                     if ($id === trim($edge['node']['id'])) {
@@ -2540,28 +2487,6 @@ function checkFormStatus()
                         break;
                     }
                 }
-
-                /*
-                $edgeIdRaw = $edge['node']['id'] ?? '';
-                $idRaw = $id; // from your explode logic
-
-                // quick normalization + debug if not equal
-                $edgeId = normalize_id($edgeIdRaw);
-                $idClean = normalize_id($idRaw);
-
-                if ($idClean === $edgeId) {
-                    echo 'ID found <br>';
-                    $found = true;
-                    break;
-                } else {
-                    debug_log_id_pair('Compare', $idRaw, $edgeIdRaw);
-                }
-                if (canonical_hex_id($id) === canonical_hex_id($edge['node']['id'])) {
-                    echo 'ID found <br>';
-                    $found = true;
-                    break;
-                }
-                */
                 if ($found) {
                     break;
                 }
@@ -2570,80 +2495,21 @@ function checkFormStatus()
                 break;
             }
         }
-        if (!$found) {
-            continue;
-        }
-
         if ($found) {
-            echo 'found <br>';
-            if (empty($status)) continue;
-
-            $formString = $form['form_id'];
-            $parts = explode(',', $formString);
-
-            if (count($parts) < 3) {
-                continue;
-            }
-
-            $formStatus = strtolower(trim($parts[2]));
-
-            if ($status === $formStatus) {
-                continue;
-            }
-
-            if ($status !== 'in progress' && $formStatus === 'in progress') {
-                switch ($status) {
-                    case 'in-progress':
-                        continue 2;
-                    case 'complete':
-                        $new_form = str_replace('in-progress', $status, $form['form_id']);
-                        $update = "UPDATE audit_history
-                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
-                    WHERE audit_id = :id
-                    AND dept_id  = :dept";
-                        $stmt = $dbh->prepare($update);
-                        $stmt->execute([
-                            ':old_form' => $form['form_id'],
-                            ':new_form' => $new_form,
-                            ':id'       => $form['audit_id'],
-                            ':dept'     => $form['dept_id'],
-                        ]);
-                        break;
-                    case 'withdrawn':
-                        $new_form = str_replace('in-progress', $status, $form['form_id']);
-                        $update = "UPDATE audit_history
-                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
-                    WHERE audit_id = :id
-                    AND dept_id  = :dept";
-                        $stmt = $dbh->prepare($update);
-                        $stmt->execute([
-                            ':old_form' => $form['form_id'],
-                            ':new_form' => $new_form,
-                            ':id'       => $form['audit_id'],
-                            ':dept'     => $form['dept_id'],
-                        ]);
-                        break;
-                    case 'denied':
-                        $new_form = str_replace('in-progress', $status, $form['form_id']);
-                        $update = "UPDATE audit_history
-                    SET check_forms = array_append(array_remove(COALESCE(check_forms, '{}'::text[]), :old_form), :new_form)
-                    WHERE audit_id = :id
-                    AND dept_id  = :dept";
-                        $stmt = $dbh->prepare($update);
-                        $stmt->execute([
-                            ':old_form' => $form['form_id'],
-                            ':new_form' => $new_form,
-                            ':id'       => $form['audit_id'],
-                            ':dept'     => $form['dept_id'],
-                        ]);
-                        break;
-                    default:
-                        break;
-                }
+            $status = strtolower(str_replace('<br>', '', $status));
+            if ($status !== 'in progress') {
+                $new_form = str_replace('in-progress', $status, $form['form_id']);
+                $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :new_form) WHERE audit_id = :id AND dept_id = :dept";
+                $stmt = $dbh->prepare($update);
+                $stmt->execute([':new_form' => $new_form, ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
+                $update = "UPDATE audit_history SET check_forms = ARRAY_REMOVE(check_forms, :old_form) WHERE audit_id = :id AND dept_id = :dept";
+                $stmt = $dbh->prepare($update);
+                $stmt->execute([':old_form' => $form['form_id'], ':id' => $form['audit_id'], ':dept' => $form['dept_id']]);
             }
         }
     }
 }
+
 function deleteOverdueSchedule()
 {
     global $dbh;
