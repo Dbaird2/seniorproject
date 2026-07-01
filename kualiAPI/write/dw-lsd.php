@@ -1,4 +1,5 @@
 <?php
+
 /**
  * dw-lsd.php
  * ------------------------------------------------------------
@@ -37,7 +38,7 @@ if (!isset($_POST)) {
 }
 
 $variables = [[]];
-$echo = function($type, $msg) {
+$echo = function ($type, $msg) {
     echo $type . ': ' . $msg . '<br>';
     return;
 };
@@ -53,11 +54,11 @@ $data = json_decode($encoded_data, true);
 $myself = $someone_else = false;
 $index = 0;
 $variables = [[]];
-foreach($_SESSION['data'] as $session) {
+foreach ($_SESSION['data'] as $session) {
     if ($session['Tag Number'] === $data['tag']) {
         $select = "SELECT make, type2, asset_model FROM asset_info WHERE asset_tag = :tag";
         $select_stmt = $dbh->prepare($select);
-        $select_stmt->execute([":tag"=>$data['tag']]);
+        $select_stmt->execute([":tag" => $data['tag']]);
         $tag_info = $select_stmt->fetch(PDO::FETCH_ASSOC);
         // ASSET
         $variables['data']['dpHYE3a-ml'] = $session['Descr'];
@@ -72,7 +73,7 @@ foreach($_SESSION['data'] as $session) {
     }
 }
 if (empty($variables['data']['2iwsFa0_2j'])) {
-    echo json_encode(['error'=>'No Tag was found']);
+    echo json_encode(['error' => 'No Tag was found']);
     die('No Tag was found');
 }
 
@@ -92,7 +93,7 @@ $variables['data']['WDA7EMUZg_'] = $submitter['fullName'];
 
 $get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
-$get_mana_stmt->execute([":dept_id"=>$dept_id]);
+$get_mana_stmt->execute([":dept_id" => $dept_id]);
 $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
 $manager = trim($dept_info['dept_manager']);
@@ -152,6 +153,7 @@ $resp = curl_exec($curl);
 $decoded_data = json_decode($resp, true);
 $document_id = $decoded_data['data']['action']['document']['id'];
 $action_id = $decoded_data['data']['action']['id'];
+$variables['data']['lVtSabqSUh']['id'] = $action_id;
 
 curl_close($curl);
 
@@ -198,18 +200,18 @@ $variables['actionId'] = $action_id;
 $variables['status'] = 'completed';
 
 // SUBMITTER SIG
-$sbmitter_info = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
+$submitter_info = getEmailInfo($_SESSION['email'], $_SESSION['deptid']);
 $variables['data']['Tscy6BxbSj']['actionId'] = $action_id;
 $variables['data']['Tscy6BxbSj']['date'] = $submitter_info['date'];
 $variables['data']['Tscy6BxbSj']['displayName'] = $submitter_info['displayName'];
 $variables['data']['Tscy6BxbSj']['signatureType'] = 'type';
-$variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['lastName'];
+$variables['data']['Tscy6BxbSj']['signedName'] = $submitter_info['firstName'] . ' ' . $submitter_info['lastName'];
 $variables['data']['Tscy6BxbSj']['userId'] = $submitter_info['userId'];
 
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables,
+    'variables' => $variables,
 ]);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $submit_form);
 
@@ -226,10 +228,9 @@ $audit_id = $data['audit_id'];
 $update = "UPDATE audit_history SET check_forms = ARRAY_APPEND(check_forms, :array) WHERE dept_id = :dept AND audit_id = :id";
 if ($resp_data['data']['submitDocument'] === 'Ok') {
     $update_stmt = $dbh->prepare($update);
-    $update_stmt->execute([':array'=>$input_array, ":dept"=>$dept_id, ":id"=>$audit_id]);
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Ok']);
+    $update_stmt->execute([':array' => $input_array, ":dept" => $dept_id, ":id" => $audit_id]);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Ok']);
 } else {
-    echo json_encode(['status'=>'Loss/Stolen/Dmg Failed', 'data'=>$resp_data]);
+    echo json_encode(['status' => 'Loss/Stolen/Dmg Failed', 'data' => $resp_data]);
 }
 exit;
-
