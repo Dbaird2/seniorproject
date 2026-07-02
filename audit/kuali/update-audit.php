@@ -5,6 +5,7 @@ foreach ($_SESSION['data'] as $index => $asset) {
         continue;
     }
     $audit_id = $_SESSION['info'][5];
+    $dept_id = $_SESSION['info'][4];
     $select = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag AND asset_notes ILIKE '%CHCKD%'";
     $stmt = $dbh->prepare($select);
     $stmt->execute([':tag' => $asset['Tag Number']]);
@@ -14,9 +15,9 @@ foreach ($_SESSION['data'] as $index => $asset) {
         $_SESSION['data'][$index]['Tag Status'] = 'Found';
         $_SESSION['data'][$index]['Found Room Number'] = 'CHCKD';
     } else {
-        $select = 'SELECT asset_tag, note, dept_id FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id';
+        $select = 'SELECT asset_tag, note, dept_id FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id AND dept_id != :dept_id';
         $stmt = $dbh->prepare($select);
-        $stmt->execute([':tag' => $asset['Tag Number'], ':id' => $audit_id]);
+        $stmt->execute([':tag' => $asset['Tag Number'], ':id' => $audit_id, ':dept_id' => $dept_id]);
         $result = $stmt->fetch();
         if ($result) {
             $_SESSION['data'][$index]['Found Note'] .= ' Found at ' . $result['dept_id'] . ' ';
