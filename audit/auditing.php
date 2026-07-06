@@ -391,11 +391,20 @@ try {
 
         <div class="filter-seciton">
             <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
-            <select type="text" id="my-status" onchange="filterAssetStatus()" placeholder="Search for tags.." accesskey="c">
+            <select type="text" id="my-status" onchange="applyAllFilters()" placeholder="Search for tags.." accesskey="c"><!--"filterAssetStatus()" placeholder="Search for tags.." accesskey="c">-->
                 <option value="All">All</option>
                 <option value="found">Found</option>
                 <option value="not-found">Not Found</option>
             </select>
+            <div class="comment-filter">
+                <span class="filter-icon">&#9776;</span>
+
+                <select id="text-status"
+                    onchange="applyAllFilters()">
+                    <option value="FILTER">All Notes</option>
+                    <option value="COMMENTS">Comments</option>
+                </select>
+            </div>
         </div>
         <div class="div-table">
 
@@ -793,6 +802,15 @@ try {
             }
         }
 
+        function applyAllFilters() {
+            var rows = document.querySelector(".table").getElementsByTagName("tr");
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].style.display = "";
+            }
+            filterAssetStatus();
+            filterComment();
+        }
+
         function filterAssetStatus() {
             var input, filter, table, tr, td, i, txt_value;
             input = document.getElementById("my-status");
@@ -817,6 +835,31 @@ try {
                     } else {
                         tr[i].style.display = "none";
                     }
+                }
+            }
+        }
+
+        function filterComment() {
+            var input, filter, table, tr, td, i, comment;
+            input = document.getElementById("text-status");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i].style.display === "none") {
+                    continue;
+                }
+                td = tr[i].querySelector("textarea.note");
+                comment = td ? td.value.trim() : "";
+                console.log(comment);
+                if (filter === 'COMMENTS') {
+                    if (comment !== "") {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                } else if (filter === 'FILTER') {
+                    tr[i].style.display = "";
                 }
             }
         }

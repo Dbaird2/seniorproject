@@ -110,6 +110,57 @@
   box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
+
+/* comment filter */
+.filter-seciton {
+    position: relative;
+}
+
+.comment-filter {
+    position: absolute;
+
+    right: 2%;
+    top: 82px;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+
+    width: 130px;
+    height: 42px;
+
+    border: 2px solid #003594;
+    border-radius: 10px;
+
+    background: white;
+
+    box-shadow: 0 2px 4px rgba(0,53,148,.1);
+}
+
+.comment-filter select {
+    border: none;
+    background: transparent;
+    outline: none;
+
+    width: 100%;
+    height: 100%;
+
+    font-size: 13px;
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.comment-filter .filter-icon {
+    font-size: 18px;
+    color: #003594;
+
+    padding-left: 8px;
+    padding-right: 4px;
+
+    user-select: none;
+}
+
 /* Updated table inputs with gold focus border */
 .table input {
   padding: 14px 16px;
