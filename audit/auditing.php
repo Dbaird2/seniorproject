@@ -803,7 +803,7 @@ try {
                 td = tr[i].getElementsByTagName("td")[3];
                 if (td && filter === 'NOT-FOUND') {
                     txt_value = td.textContent || td.innerText;
-                    if (txt_value.toUpperCase().indexOf(filter) > -1) {
+                    if (txt_value.toUpperCase().indexOf(filter) > -1 || txt_value === "") {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
@@ -812,7 +812,7 @@ try {
                     tr[i].style.display = "";
                 } else if (td && filter === 'FOUND') {
                     txt_value = td.textContent || td.innerText;
-                    if ((txt_value.toUpperCase().indexOf(filter) > -1 && txt_value.toUpperCase().indexOf(filter) < 4) || txt_value.toUpperCase().indexOf(filter) <= -1) {
+                    if (((txt_value.toUpperCase().indexOf(filter) > -1 && txt_value.toUpperCase().indexOf(filter) < 4) || txt_value.toUpperCase().indexOf(filter) <= -1) && txt_value !== "") {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
