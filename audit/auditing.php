@@ -851,7 +851,11 @@ try {
                 }
                 td = tr[i].querySelector("textarea.note");
                 comment = td ? td.value.trim() : "";
-                console.log(comment);
+                //console.log(comment);
+                if (!td) {
+                    continue;
+                }
+
                 if (filter === 'COMMENTS') {
                     if (comment !== "") {
                         tr[i].style.display = "";
