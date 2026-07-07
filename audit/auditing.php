@@ -428,8 +428,8 @@ try {
                 <tbody id="contentArea" class="clusterize-content" style="width:10vw;">
                     <?php
                     $data = $_SESSION['data'];
-                    $max_rows = 300;
                     $total_rows = count($data);
+                    $max_rows = $total_rows;
                     $j = 1;
                     $data_slice = array_slice($data, 0, $max_rows);
                     $i = 0;
