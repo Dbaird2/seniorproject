@@ -433,6 +433,7 @@ try {
                     $j = 1;
                     $data_slice = array_slice($data, 0, $max_rows);
                     $i = 0;
+                    $seen = [];
 
                     foreach ($data_slice as $index => $row) {
                         $color_class = ($i % 2 === 0) ? 'row-odd' : 'row-even';
@@ -441,6 +442,14 @@ try {
 
                         $file_name = $data[0]["Dept"] ?? $file_name;
                         $tag = htmlspecialchars($row["Tag Number"]);
+
+                        /* Checks for duplicate asset_tags and skips over any already seen tags*/
+                        $rawTag = $row["Tag Number"];
+                        if (isset($seen[$rawTag])) {
+                            continue;
+                        }
+                        $seen[$rawTag] = true;
+
                         $descr = htmlspecialchars($row["Descr"] ?? "");
                         $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Found') ? "found" : "not-found";
                         $match = (isset($row['Tag Status']) && $row['Tag Status'] === 'Extra') ? "extra" : $match;
@@ -485,12 +494,19 @@ try {
         function loadMoreRows() {
 
             const table = document.querySelector(".table");
+            const seen = new Set();
             for (let i = offset; i < chunk_size && index < session_data.length; i++, index++) {
                 color_class = (i % 2 === 0) ? 'row-odd' : 'row-even';
 
                 const row = session_data[index];
                 const tr = document.createElement("tr");
                 tr.classList.add(color_class);
+
+                /* Checks for duplicate asset_tags and skips over any already seen tags*/
+                if (seen.has(row['Tag Number'])) {
+                    continue;
+                }
+
                 match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
                 match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
                 tr.innerHTML = `
@@ -508,6 +524,7 @@ try {
                 <td><textarea class='note' name='previousNote[]' id=${row["Tag Number"]} value="${row["Found Note"]}">${row["Found Note"]}</textarea></td>
                 `;
                 table.appendChild(tr);
+                seen.add(row['Tag Number']);
             }
 
         }
