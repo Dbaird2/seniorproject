@@ -11,7 +11,7 @@ foreach ($_SESSION['data'] as $index => $asset) {
     $stmt->execute([':tag' => $asset['Tag Number']]);
     $notes = $stmt->fetchColumn();
     if (isset($notes['asset_notes'])) {
-        $_SESSION['data'][$index]['Found Note'] .= ' ' . $notes;
+        $_SESSION['data'][$index]['Found Note'] .= 'Check-Out {' . $notes . '}';
         $_SESSION['data'][$index]['Tag Status'] = 'Found';
         $_SESSION['data'][$index]['Found Room Number'] = 'CHCKD';
     } else {
