@@ -505,7 +505,7 @@ try {
                 <td>${row["COST Total Cost"]}</td>
                 <td>${row["PO"] ?? ''}</td>
                 <td><input class='room' name='previousRms[]' id=${row["Tag Number"]} value=${row["Found Room Tag"]}></td>
-                <td><textarea class='note' name='previousNote[]' id=${row["Tag Number"]} value=${row["Found Note"]}></textarea></td>
+                <td><textarea class='note' name='previousNote[]' id=${row["Tag Number"]} value="${row["Found Note"]}">${row["Found Note"]}</textarea></td>
                 `;
                 table.appendChild(tr);
             }
