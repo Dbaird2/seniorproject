@@ -429,7 +429,7 @@ try {
                     <?php
                     $data = $_SESSION['data'];
                     $total_rows = count($data);
-                    $max_rows = $total_rows;
+                    $max_rows = 300;
                     $j = 1;
                     $data_slice = array_slice($data, 0, $max_rows);
                     $i = 0;
@@ -494,7 +494,7 @@ try {
                 match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Found') ? "found" : "not-found";
                 match = (row['Tag Status'] !== 'undefined' && row['Tag Status'] === 'Extra') ? "extra" : match;
                 tr.innerHTML = `
-            <td><button onclick="deleteAsset(${row["Tag Number"]})" class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
+            <td><button onclick='deleteAsset("${row["Tag Number"]}")' class='delete' id=${row["Tag Number"]} value=${row["Tag Number"]} name='delete'>&#215;</button></td>
             <td class=${match}>${300 + index + 1}</td>
                 <td class=${match}>${row["Tag Number"]}</td>
                 <td class=${match}>${row["Tag Status"]}</td>
