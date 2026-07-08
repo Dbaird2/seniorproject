@@ -899,25 +899,35 @@ try {
         }
 
         /* Filter commetns by Keywords*/
-        function filterByComment() {
-            var input, filter, table, tr, td, i, comment;
+        function filterbycomment() {
+            var input, filter, table, tr, td, i, comment, dept;
             input = document.getElementById("comment-filter2");
             filter = input.value.toUpperCase();
             table = document.querySelector(".table");
             tr = table.getElementsByTagName("tr");
+
             const keywords = {
-                CHCKD: "CHECK-OUT",
                 VERIFY: "VERIFY"
             };
             const found = "Found at";
+            const chckd = "Check-Out";
             const foundDeptCode = /\bD\d{5}\b/i;
+            console.log(dept);
+            console.log(typeof dept);
+
             for (i = 0; i < tr.length; i++) {
+                if (typeof tr[i].getElementsByTagName("td")[7] !== "undefined" && tr[i].getElementsByTagName("td")[7] !== null) {
+                    dept = tr[i].getElementsByTagName("td")[7].textContent.trim();
+                }
+
                 if (tr[i].style.display === "none") {
                     continue;
                 }
+
                 td = tr[i].querySelector("textarea.note");
                 comment = td ? td.value.trim().toUpperCase() : "";
-                //console.log(comment);
+                match = comment.match(foundDeptCode);
+
                 if (!td) {
                     continue;
                 }
@@ -925,7 +935,13 @@ try {
                 if (comment.includes(keywords[filter])) {
                     tr[i].style.display = "";
                 } else if (filter === 'FOUND') {
-                    if (comment.includes(found) || foundDeptCode.test(comment)) {
+                    if (comment.includes(found) || (foundDeptCode.test(comment) && match[0] !== dept)) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                } else if (filter === 'CHCKD') {
+                    if (comment.includes(chckd) || (foundDeptCode.test(comment) && match[0] === dept)) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
