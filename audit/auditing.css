@@ -97,7 +97,7 @@
 #my-status,
 .comment-filter {
     width: 155px;
-    height: 60px;
+    height: 50px;
     box-sizing: border-box;
 
     border: 2px solid #003594;
@@ -153,6 +153,53 @@
 }
 
 .comment-filter:focus-within {
+  outline: none;
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
+}
+
+/* Comment keyword filter */
+ 
+.filter-section {
+    position: relative;
+}
+
+.filter-by-comment {
+    position: absolute;
+
+    right: 2%;
+    top: 82px;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+
+    width: 130px;
+    height: 42px;
+
+    border: 2px solid #003594;
+    border-radius: 10px;
+
+    background: white;
+
+    box-shadow: 0 2px 4px rgba(0,53,148,.1);
+}
+
+.filter-by-comment select {
+    border: none;
+    background: transparent;
+    outline: none;
+
+    width: 100%;
+    height: 100%;
+
+    font-size: 13px;
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.filter-by-comment:focus-within {
   outline: none;
   border-color: #ffc72c;
   box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);

@@ -407,6 +407,15 @@ try {
                     </select>
                 </div>
             </div>
+            <div class="filter-by-comment">
+                <select id="comment-filter2"
+                    onchange="applyAllFilters()">
+                    <option value="ALL">No Filter</option>
+                    <option value="FOUND">Found In</option>
+                    <option value="CHCKD">Checked Out</option>
+                    <option value="VERIFY">Verify</option>
+                </select>
+            </div>
         </div>
         <div class="div-table">
 
@@ -828,6 +837,7 @@ try {
             }
             filterAssetStatus();
             filterComment();
+            filterByComment();
         }
 
         function filterAssetStatus() {
@@ -858,6 +868,7 @@ try {
             }
         }
 
+        /* Filter by existence of comments */
         function filterComment() {
             var input, filter, table, tr, td, i, comment;
             input = document.getElementById("text-status");
@@ -886,6 +897,47 @@ try {
                 }
             }
         }
+
+        /* Filter commetns by Keywords*/
+        function filterByComment() {
+            var input, filter, table, tr, td, i, comment;
+            input = document.getElementById("comment-filter2");
+            filter = input.value.toUpperCase();
+            table = document.querySelector(".table");
+            tr = table.getElementsByTagName("tr");
+            const keywords = {
+                CHCKD: "CHECK-OUT",
+                VERIFY: "VERIFY"
+            };
+            const found = "Found at";
+            const foundDeptCode = /\bD\d{5}\b/i;
+            for (i = 0; i < tr.length; i++) {
+                if (tr[i].style.display === "none") {
+                    continue;
+                }
+                td = tr[i].querySelector("textarea.note");
+                comment = td ? td.value.trim().toUpperCase() : "";
+                //console.log(comment);
+                if (!td) {
+                    continue;
+                }
+
+                if (comment.includes(keywords[filter])) {
+                    tr[i].style.display = "";
+                } else if (filter === 'FOUND') {
+                    if (comment.includes(found) || foundDeptCode.test(comment)) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                } else if (filter === 'ALL') {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
 
         function toast(message) {
             var x = document.getElementById("snackbar");
