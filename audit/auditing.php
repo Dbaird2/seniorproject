@@ -389,21 +389,23 @@ try {
         </div>
 
 
-        <div class="filter-seciton">
+        <div class="filter-section">
             <input type="text" id="my-input" onchange="filterTable()" placeholder="Search for tags.." accesskey="c">
-            <select type="text" id="my-status" onchange="applyAllFilters()" placeholder="Search for tags.." accesskey="c"><!--"filterAssetStatus()" placeholder="Search for tags.." accesskey="c">-->
-                <option value="All">All</option>
-                <option value="found">Found</option>
-                <option value="not-found">Not Found</option>
-            </select>
-            <div class="comment-filter">
-                <span class="filter-icon">&#9776;</span>
-
-                <select id="text-status"
-                    onchange="applyAllFilters()">
-                    <option value="FILTER">All Notes</option>
-                    <option value="COMMENTS">Comments</option>
+            <div class="filter-row">
+                <select type="text" id="my-status" onchange="applyAllFilters()" placeholder="Search for tags.." accesskey="c"><!--"filterAssetStatus()" placeholder="Search for tags.." accesskey="c">-->
+                    <option value="All">All Assets</option>
+                    <option value="found">Found</option>
+                    <option value="not-found">Not Found</option>
                 </select>
+                <div class="comment-filter">
+                    <span class="filter-icon">&#9776;</span>
+
+                    <select id="text-status"
+                        onchange="applyAllFilters()">
+                        <option value="FILTER">All Notes</option>
+                        <option value="COMMENTS">Comments</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="div-table">

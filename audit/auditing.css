@@ -60,35 +60,25 @@
 }
 
 .filter-section {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Updated status dropdown with gold focus border */
-#my-status {
-  width: 10%;
-  padding: 14px 16px;
-  border: 2px solid #003594;
-  border-radius: 10px;
-  font-size: 15px;
-  transition: all 0.3s ease;
-  background-color: white;
-  color: #333;
-  text-align: center;
-  display: block;
-  place-self: center;
-  box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
+.filter-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    margin-top: 0px;
 }
 
-#my-status:focus {
-  outline: none;
-  border-color: #ffc72c;
-  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
+#my-status,
+.comment-filter {
+    width: 155px;
+    height: 60px;  
 }
 
-/* Updated input with gold focus border */
 #my-input {
   width: 25%;
   padding: 14px 16px;
@@ -100,8 +90,60 @@
   color: #333;
   text-align: center;
   display: block;
-  place-self: center;
+  margin: 0 auto 2px auto;
   box-shadow: 0 2px 4px rgba(0, 53, 148, 0.1);
+}
+
+#my-status,
+.comment-filter {
+    width: 155px;
+    height: 60px;
+    box-sizing: border-box;
+
+    border: 2px solid #003594;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,53,148,.1);
+}
+
+#my-status {
+    padding: 0 12px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.comment-filter {
+    display: flex;
+    align-items: center;
+}
+
+.comment-filter select {
+    flex: 1;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    outline: none;
+}
+
+.filter-icon {
+    padding: 0 10px;
+    font-size: 18px;
+    color: #003594;
+}
+
+.comment-filter .filter-icon {
+  font-size: 18px;
+  color: #003594;
+  padding-left: 8px;
+  padding-right: 4px;
+  user-select: none;
+}
+
+#my-status:focus {
+  outline: none;
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
 #my-input:focus {
@@ -110,55 +152,10 @@
   box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
-
-/* comment filter */
-.filter-seciton {
-    position: relative;
-}
-
-.comment-filter {
-    position: absolute;
-
-    right: 2%;
-    top: 82px;
-    transform: translateY(-50%);
-
-    display: flex;
-    align-items: center;
-
-    width: 130px;
-    height: 42px;
-
-    border: 2px solid #003594;
-    border-radius: 10px;
-
-    background: white;
-
-    box-shadow: 0 2px 4px rgba(0,53,148,.1);
-}
-
-.comment-filter select {
-    border: none;
-    background: transparent;
-    outline: none;
-
-    width: 100%;
-    height: 100%;
-
-    font-size: 13px;
-    text-align: center;
-
-    cursor: pointer;
-}
-
-.comment-filter .filter-icon {
-    font-size: 18px;
-    color: #003594;
-
-    padding-left: 8px;
-    padding-right: 4px;
-
-    user-select: none;
+.comment-filter:focus-within {
+  outline: none;
+  border-color: #ffc72c;
+  box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.2);
 }
 
 /* Updated table inputs with gold focus border */
