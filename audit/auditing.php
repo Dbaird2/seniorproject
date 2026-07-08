@@ -912,8 +912,6 @@ try {
             const found = "Found at";
             const chckd = "Check-Out";
             const foundDeptCode = /\bD\d{5}\b/i;
-            console.log(dept);
-            console.log(typeof dept);
 
             for (i = 0; i < tr.length; i++) {
                 if (typeof tr[i].getElementsByTagName("td")[7] !== "undefined" && tr[i].getElementsByTagName("td")[7] !== null) {
