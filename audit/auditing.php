@@ -899,7 +899,7 @@ try {
         }
 
         /* Filter commetns by Keywords*/
-        function filterbycomment() {
+        function filterByComment() {
             var input, filter, table, tr, td, i, comment, dept;
             input = document.getElementById("comment-filter2");
             filter = input.value.toUpperCase();
