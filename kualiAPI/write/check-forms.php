@@ -58,7 +58,7 @@ $street = "9001 Stockdale Hwy";
 $variables['data']['Smva-ICjnV'] = $street;
 
 $condition_id = match ($condition) {
-"New" => "PMMV9ld3ML",
+    "New" => "PMMV9ld3ML",
     "Good" => "uPq0cgV51",
     "Used" => "2zmA7sZQnX",
     "Damaged" => "s0MNB7p9vx"
@@ -67,30 +67,30 @@ $variables['data']['UTQZbrKiio']['id'] = $condition_id;
 $variables['data']['UTQZbrKiio']['label'] = $condition;
 
 $asset_type_id = match ($asset_type) {
-"Laptop" => "VMjSpx4-H",
+    "Laptop" => "VMjSpx4-H",
     "Desktop" => "UHFK_j1G7L",
     "Tablet" => "-wWkrsS_A_"
 };
 $variables['data']['aUVT1BLN6V']['id'] = $asset_type_id;
 $variables['data']['aUVT1BLN6V']['label'] = $asset_type;
 
-if ($who === 'someone-else'){
+if ($who === 'someone-else') {
     $who = 'Someone Else';
 }
 $who_id = match ($who) {
-"Myself" => "fK-8m6dzx",
+    "Myself" => "fK-8m6dzx",
     "Someone Else" => "y89ptC2TA"
 };
 $variables['data']['e0fZiLYomu']['id'] = $who_id;
 $variables['data']['e0fZiLYomu']['label'] = $who;
 
 $form_type = match ($form_type) {
-"check-in" => "Returning Equipment",
+    "check-in" => "Returning Equipment",
     "check-out" => "Checking Out Equipment"
 };
 
 $form_type_id = match ($form_type) {
-"Returning Equipment" => "z0IRqD2_Z",
+    "Returning Equipment" => "z0IRqD2_Z",
     "Checking Out Equipment" => "Nwnp1xzbH"
 };
 
@@ -100,7 +100,7 @@ $variables['data']['fyaCF8g3Uh']['label'] = $form_type;
 /*-----------------------------------------------------------------------------*/
 $select_key = "SELECT kuali_key FROM user_table WHERE email = :email";
 $key_stmt = $dbh->prepare($select_key);
-$key_stmt->execute([":email"=>$_SESSION['email']]);
+$key_stmt->execute([":email" => $_SESSION['email']]);
 $apikey = $key_stmt->fetchColumn();
 
 $subdomain = 'csub';
@@ -173,7 +173,7 @@ $select_manager = 'SELECT dept_manager FROM department WHERE dept_id = :dept';
 $stmt = $dbh->prepare($select_manager);
 if ($who !== 'Myself') {
 
-    $stmt->execute([':dept'=>$audit_dept]);
+    $stmt->execute([':dept' => $audit_dept]);
     $manager = $stmt->fetchColumn();
     $manager_info = getNameInfo($manager, $audit_dept);
     $variables['data']['FOTHZUATua']['displayName'] = $manager_info['displayName'];
@@ -187,15 +187,15 @@ if ($who !== 'Myself') {
 
     $borrower = trim($data['borrower']);
     $borrowers_info = getNameInfo($borrower, $audit_dept);
-        $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
-        $stmt = $dbh->prepare($get_dept_name);
-        $stmt->execute([':id'=>$data['dept_id']]);
-        $new_dept_name = $stmt->fetchColumn();
-        if ($new_dept_name) {
-            $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $new_dept_name;
-            $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $audit_dept;
-            $variables['data']['isFMbCuv8e']['label'] = $new_dept_name;
-        }
+    $get_dept_name = "SELECT dept_name FROM department WHERE dept_id = :id";
+    $stmt = $dbh->prepare($get_dept_name);
+    $stmt->execute([':id' => $data['dept_id']]);
+    $new_dept_name = $stmt->fetchColumn();
+    if ($new_dept_name) {
+        $variables['data']['isFMbCuv8e']['data']['AkMeIWWhoj'] = $new_dept_name;
+        $variables['data']['isFMbCuv8e']['data']['IOw4-l7NsM'] = $audit_dept;
+        $variables['data']['isFMbCuv8e']['label'] = $new_dept_name;
+    }
 
     $variables['data']['J06VDujK2F']['displayName'] = $borrowers_info['displayName'];
     $variables['data']['J06VDujK2F']['email'] = $borrowers_info['email'];
@@ -215,9 +215,9 @@ if ($who !== 'Myself') {
     $variables['data']['JXLJ_AOov-']['displayName'] = $submitter_info['displayName'];
     $variables['data']['JXLJ_AOov-']['signatureType'] = 'type';
     $variables['data']['JXLJ_AOov-']['signedName'] = $submitter_info['signature'];
-    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_into['userId'];
+    $variables['data']['JXLJ_AOov-']['userId'] = $submitter_info['userId'];
     /*---------------------------------*/
-    $stmt->execute([':dept'=>$dept_id]);
+    $stmt->execute([':dept' => $dept_id]);
     $manager = $stmt->fetchColumn();
     $manager_info = getNameInfo($manager, $dept_id);
     $variables['data']['FOTHZUATua']['displayName'] = $manager_info['displayName'];
@@ -268,7 +268,7 @@ $variables['data']['jYTHHgL10M'] = $serial;
 $submit_form = json_encode([
     'query' => 'mutation ($documentId: ID!, $data: JSON, $actionId: ID!, $status: String)
 { submitDocument( id: $documentId data: $data actionId: $actionId status: $status )}',
-'variables' => $variables,
+    'variables' => $variables,
 ]);
 
 /*-----------------------------------------------------------------------------*/
@@ -279,8 +279,8 @@ $resp = curl_exec($curl);
 $resp_data = json_decode($resp, true);
 
 if ($resp_data['data']['submitDocument'] === 'Ok') {
-    echo json_encode(['status'=>'Check in/out Ok']);
+    echo json_encode(['status' => 'Check in/out Ok']);
 } else {
-    echo json_encode(['status'=>'Check in/out Failed', 'data'=>$resp_data]);
+    echo json_encode(['status' => 'Check in/out Failed', 'data' => $resp_data]);
 }
 exit;

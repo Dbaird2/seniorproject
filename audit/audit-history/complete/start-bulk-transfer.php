@@ -1,10 +1,10 @@
-<?php 
+<?php
 require_once "../../../config.php";
 check_auth();
 $dept_id = $_GET['dept_id'];
 $audit_id = (int)$_GET['audit_id'];
 $audit_type = match ($audit_id) {
-1 => 'cust',
+    1 => 'cust',
     2 => 'cust',
     3 => 'ocust',
     4 => 'mgmt',
@@ -17,7 +17,7 @@ $audit_type = match ($audit_id) {
 try {
     $select_q = "SELECT auditor, audit_data, forms_submitted FROM audit_history WHERE dept_id = :dept_id AND audit_id = :audit_id";
     $select_stmt = $dbh->prepare($select_q);
-    $select_stmt->execute([":dept_id"=>$dept_id,":audit_id"=>$audit_id]);
+    $select_stmt->execute([":dept_id" => $dept_id, ":audit_id" => $audit_id]);
     $data = $select_stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Error getting info: " . $e->getMessage());
@@ -50,6 +50,35 @@ foreach ($audit_data as $row) {
 }
 unset($_SESSION['info']);
 $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id, $data['forms_submitted']];
-header("Location: https://dataworks-7b7x.onrender.com/audit/audit-history/complete/select-forms.php");
-exit;
 
+$select_pc = "SELECT cardinality(custodian) FROM department WHERE dept_id = :id";
+$stmt = $dbh->prepare($select_pc);
+$stmt->execute([":id" => $dept_id]);
+$number_pc = $stmt->fetchColumn();
+
+$custodians = [];
+
+if ($number_pc > 1) {
+    for ($i = 1; $i <= $number_pc; $i++) {
+        $select_pc = "SELECT custodian[:i] FROM department WHERE dept_id = :id";
+        $stmt = $dbh->prepare($select_pc);
+        $stmt->execute([":id" => $dept_id, ":i" => $i]);
+        $custodians[] = $stmt->fetchColumn();
+    }
+
+    $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id, $data['forms_submitted'], $custodians];
+
+    header("Location: http://localhost:3000/audit/audit-history/complete/select-pc.php");
+    exit;
+} else if ($number_pc === 1) {
+    $_SESSION['selected_custodian_index'] = 1;
+    $_SESSION['selected_custodian'] = $custodians[1];
+
+    $_SESSION['info'] = [$index, 1, $dept_id, $audit_type, $dept_id, $audit_id, $data['forms_submitted'], $custodians];
+
+    header("Location: http://localhost:3000/audit/audit-history/complete/select-forms.php");
+    exit;
+} else if ($number_pc <= 0) {
+    echo '<br> Error no custodian labeled for ' . $dept_id;
+}
+exit;

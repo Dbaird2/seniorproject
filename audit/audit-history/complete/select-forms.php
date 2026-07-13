@@ -1,6 +1,10 @@
 <?php
 include_once "../../../config.php";
 check_auth();
+
+$selectedCustodian = $_SESSION['selected_custodian'] ?? null;
+$selectedCustodianIndex = $_SESSION['selected_custodian_index'] ?? null;
+
 $select_dept = "SELECT dept_name FROM department WHERE dept_id = :id";
 $stmt = $dbh->prepare($select_dept);
 $stmt->execute([":id" => $_SESSION['info'][2]]);

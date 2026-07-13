@@ -90,10 +90,10 @@ if (empty($apikey)) {
 // NAME
 $variables['data']['WDA7EMUZg_'] = $submitter['fullName'];
 
-
-$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[1] as cust FROM department d WHERE dept_id = :dept_id";
+$i = $_SESSION['selected_custodian_index'];
+$get_dept_manager = "SELECT dept_id, dept_name, dept_manager, custodian[:i] as cust FROM department d WHERE dept_id = :dept_id";
 $get_mana_stmt = $dbh->prepare($get_dept_manager);
-$get_mana_stmt->execute([":dept_id" => $dept_id]);
+$get_mana_stmt->execute([":dept_id" => $dept_id, ":i" => $i]);
 $dept_info = $get_mana_stmt->fetch(PDO::FETCH_ASSOC);
 $dept_name = $dept_info['dept_name'];
 $manager = trim($dept_info['dept_manager']);

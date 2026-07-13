@@ -88,9 +88,10 @@ $submitter_kauli = [
 
 $subdomain = "csub";
 /* CUSTODIAN INFO */
-$get_custodian = "SELECT unnest(custodian) FROM department WHERE dept_id = :dept";
+$i = $_SESSION['selected_custodian_index'];
+$get_custodian = "SELECT custodian[:i] FROM department WHERE dept_id = :dept"; //unnest(custodian)
 $get_cust_stmt = $dbh->prepare($get_custodian);
-$get_cust_stmt->execute([":dept" => $_SESSION['info'][2]]);
+$get_cust_stmt->execute([":dept" => $_SESSION['info'][2], ":i" => $i]);
 $dept_custodian = $get_cust_stmt->fetchColumn();
 
 $select = "SELECT email, f_name, l_name, school_id, signature, form_id, username FROM user_table WHERE CONCAT(f_name, ' ', l_name) = :fullname";
