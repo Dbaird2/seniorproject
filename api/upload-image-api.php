@@ -27,8 +27,8 @@ try {
     $time = $_POST['time'] ?? '';
     $deliveredTo = $_POST['lastName'] ?? '';
     $comments = $_POST['comment'] ?? '';
-    $latitude = $_POST['latitude'] ?? '';
-    $longitude = $_POST['longitude'] ?? '';
+    $latitude = $_POST['latitude'] ?? NULL;
+    $longitude = $_POST['longitude'] ?? NULL;
     $sigURL = NULL;
     $photoURL = NULL;
 
