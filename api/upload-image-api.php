@@ -3,12 +3,13 @@ include_once("../config.php");
 
 header('Content-Type: application/json');
 
+/*
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method Not Allowed']);
     exit;
 }
-
+*/
 
 /*
 echo json_encode([
@@ -42,9 +43,11 @@ try {
     }
 
     if (isset($_FILES['photo'])  && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $photoURL = 'nfjs';
     }
 
     if (isset($_FILES['signature']) && $_FILES['signature']['error'] === UPLOAD_ERR_OK) {
+        $sigURL = 'nfjs';
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
