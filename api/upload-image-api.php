@@ -66,8 +66,19 @@ try {
 
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
 
         curl_close($ch);
+
+        if ($response === false) {
+            throw new Exception('Photo cURL error: ' . $curlError);
+        }
+
+        if ($status < 200 || $status >= 300) {
+            throw new Exception(
+                'Photo upload failed. HTTP ' . $status . ': ' . $response
+            );
+        }
 
         $photoURL = $objectPath;
     } else {
@@ -98,8 +109,19 @@ try {
 
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
 
         curl_close($ch);
+
+        if ($response === false) {
+            throw new Exception('Photo cURL error: ' . $curlError);
+        }
+
+        if ($status < 200 || $status >= 300) {
+            throw new Exception(
+                'Photo upload failed. HTTP ' . $status . ': ' . $response
+            );
+        }
 
         $sigURL = $sigPath; // change to url path
     }
@@ -117,9 +139,25 @@ try {
 } catch (PDOException $e) {
     error_log($e->getMessage());
     http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Server error',
+        'details' => $e->getMessage()
+    ]);
+    /*
+    http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);
+    */
 } catch (Exception $e) {
     error_log($e->getMessage());
     http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Server error',
+        'details' => $e->getMessage()
+    ]);
+    /*
+    http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Server error']);
+    */
 }
