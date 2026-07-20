@@ -53,7 +53,7 @@ try {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/photos-api/" . $objectPath,
+            CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/photos-api/" . $objectPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
@@ -96,7 +96,7 @@ try {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/signatures-api/" . $sigPath,
+            CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/signatures-api/" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
