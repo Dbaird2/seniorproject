@@ -56,7 +56,7 @@ try {
             CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/photos-api/" . $objectPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_ANON'),
+                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
@@ -99,7 +99,7 @@ try {
             CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/signatures-api/" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_ANON'),
+                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
