@@ -1,5 +1,5 @@
 <?php
-include_once("../config.php");
+include("../config.php");
 
 header('Content-Type: application/json');
 
@@ -56,7 +56,7 @@ try {
             CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/photos-api/" . $objectPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
+                "Authorization: Bearer " . getenv('SB_anon'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
@@ -92,14 +92,14 @@ try {
 
         $sigPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
         $fileContent = file_get_contents($tempFile);
-        /*
+
         $ch = curl_init();
 
         curl_setopt_array($ch, [
             CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/signatures-api/" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
+                "Authorization: Bearer " . getenv('SB_anon'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
@@ -123,16 +123,8 @@ try {
                 'Photo upload failed. HTTP ' . $status . ': ' . $response
             );
         }
-*/
-        $sigUploadURL =
-            rtrim(getenv('SB_URL'), '/') .
-            '/storage/v1/object/signatures-api/' .
-            $sigPath;
 
-        throw new Exception('Generated URL: ' . $sigUploadURL);
-
-        $sigURL = 'sdg';
-        //$sigURL = $sigPath; // change to url path
+        $sigURL = $sigPath; // change to url path
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
