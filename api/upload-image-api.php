@@ -56,7 +56,7 @@ try {
             CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/photos-api" . $objectPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
+                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
@@ -88,7 +88,7 @@ try {
             CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/signatures-api" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
+                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
                 "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
