@@ -92,7 +92,7 @@ try {
 
         $sigPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
         $fileContent = file_get_contents($tempFile);
-
+        /*
         $ch = curl_init();
 
         curl_setopt_array($ch, [
@@ -106,13 +106,6 @@ try {
             CURLOPT_POSTFIELDS => $fileContent,
             CURLOPT_RETURNTRANSFER => true
         ]);
-
-        $sigUploadURL =
-            rtrim(getenv('SB_URL'), '/') .
-            '/storage/v1/object/signatures-api/' .
-            $sigPath;
-
-        throw new Exception('Generated URL: ' . $sigUploadURL);
 
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -130,8 +123,16 @@ try {
                 'Photo upload failed. HTTP ' . $status . ': ' . $response
             );
         }
+*/
+        $sigUploadURL =
+            rtrim(getenv('SB_URL'), '/') .
+            '/storage/v1/object/signatures-api/' .
+            $sigPath;
 
-        $sigURL = $sigPath; // change to url path
+        throw new Exception('Generated URL: ' . $sigUploadURL);
+
+        $sigURL = 'sdg';
+        //$sigURL = $sigPath; // change to url path
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
