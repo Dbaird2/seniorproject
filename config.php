@@ -7,6 +7,7 @@ $db_pass = $_ENV['DB_PASS'] ?? NULL;
 $db_pass = $_ENV['DB_PASS'] ?? NULL;
 $sburl = $_ENV['SB_URL'] ?? NULL;
 $sbsecret = $_ENV['SB_SECRET_KEY'] ?? NULL;
+$sb_anon = $_ENV['SB_ANON'] ?? NULL;
 
 try {
     if (session_status() === PHP_SESSION_NONE) {
