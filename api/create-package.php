@@ -1,33 +1,26 @@
 <?php
+
+declare(strict_types=1);
 include("../config.php");
 
 header('Content-Type: application/json');
 
-/*
+check_api_auth($dbh, 'low');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method Not Allowed']);
     exit;
 }
-*/
 
-/*
-echo json_encode([
-    "status" => "success",
-    "message" => "API is working!"
-]);
-*/
 
 try {
-    //$raw = file_get_contents('php://input');
-    //$payload = json_decode($raw, true);
-
     $deliveredBy = $_POST['user'] ?? '';
     $barcode = $_POST['barcode'] ?? '';
     $date = $_POST['date'] ?? '';
     $time = $_POST['time'] ?? '';
-    $deliveredTo = $_POST['lastName'] ?? '';
-    $comments = $_POST['comment'] ?? '';
+    $comments = isset($_POST['comment']) ? strip_tags(trim($_POST['comment'])) : '';
+    $deliveredTo = isset($_POST['lastName']) ? strip_tags(trim($_POST['lastName'])) : '';
     $latitude = $_POST['latitude'] ?? NULL;
     $longitude = $_POST['longitude'] ?? NULL;
     $sigURL = 'jfso';
@@ -44,8 +37,21 @@ try {
 
     if (isset($_FILES['photo'])  && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $photo = $_FILES['photo'];
+
+        if ($photo['size'] > 5 * 1024 * 1024) { //5 MB Limit
+            throw new Exception('File size exceeds limit.');
+        }
+
         $tmpFile = $photo['tmp_name'];
         $fileName = $photo['name'];
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE); // Security
+        $mimeType = $finfo->file($tmpFile);
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+        if (!in_array($mimeType, $allowedTypes)) {
+            throw new Exception('Invalid file type. Only JPG, PNG, and WebP are allowed.');
+        }
 
         $objectPath = "delivery-photos/" . $barcode . "_" . time() . ".jpg";
         $fileContents = file_get_contents($tmpFile);
@@ -138,6 +144,7 @@ try {
         'barcode' => $barcode
     ]);
 } catch (PDOException $e) {
+    /*
     error_log($e->getMessage());
     http_response_code(500);
     echo json_encode([
@@ -145,11 +152,11 @@ try {
         'error' => 'Server error',
         'details' => $e->getMessage()
     ]);
-    /*
+    */
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);
-    */
 } catch (Exception $e) {
+    /*
     error_log($e->getMessage());
     http_response_code(500);
     echo json_encode([
@@ -157,8 +164,7 @@ try {
         'error' => 'Server error',
         'details' => $e->getMessage()
     ]);
-    /*
+    */
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Server error']);
-    */
 }

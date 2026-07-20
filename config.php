@@ -57,3 +57,46 @@ function check_auth($level = 'low')
     }
     return true;
 }
+
+function check_api_auth($dbh, $requiredLevel = 'low')
+{
+    $levels = [
+        'low' => ['user', 'custodian', 'admin', 'management'],
+        'medium' => ['custodian', 'admin', 'management'],
+        'high' => ['admin']
+    ];
+
+    // 1. Get the Authorization token from the mobile app's request header
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+
+    if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'Authentication token required']);
+        exit;
+    }
+
+    $token = $matches[1];
+
+    // 2. Lookup the token in your database to see who it belongs to and what their role is
+    // (You will need to ensure your login endpoint stores a token in your user/session table upon successful Google Auth login)
+    $stmt = $dbh->prepare("SELECT role FROM users WHERE api_token = ? AND token_expires > NOW() LIMIT 1");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Invalid or expired token']);
+        exit;
+    }
+
+    // 3. Match their role against the permitted levels
+    $user_role = $user['role'];
+    if (!in_array($user_role, $levels[$requiredLevel] ?? [])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Insufficient permissions']);
+        exit;
+    }
+
+    return true; // Token is valid, role is authorized!
+}
