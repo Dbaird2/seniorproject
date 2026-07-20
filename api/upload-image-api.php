@@ -30,7 +30,7 @@ try {
     $comments = $_POST['comment'] ?? '';
     $latitude = $_POST['latitude'] ?? NULL;
     $longitude = $_POST['longitude'] ?? NULL;
-    $sigURL = NULL;
+    $sigURL = 'jfso';
     $photoURL = NULL;
 
     if ($barcode === '' || $deliveredTo === '' || $deliveredBy === '') {
