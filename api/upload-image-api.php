@@ -82,24 +82,35 @@ try {
         $sigPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
         $fileContent = file_get_contents($tempFile);
 
-        $ch = curl_init();
+        try {
 
-        curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/signatures-api" . $sigPath,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
-                "apikey: " . getenv('SB_SECRET_KEY'),
-                "Content-Type: image/jpeg"
-            ],
-            CURLOPT_POSTFIELDS => $fileContent,
-            CURLOPT_RETURNTRANSFER => true
-        ]);
+            $ch = curl_init();
 
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_setopt_array($ch, [
+                CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/signatures-api" . $sigPath,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
+                    "apikey: " . getenv('SB_SECRET_KEY'),
+                    "Content-Type: image/jpeg"
+                ],
+                CURLOPT_POSTFIELDS => $fileContent,
+                CURLOPT_RETURNTRANSFER => true
+            ]);
 
-        curl_close($ch);
+            $response = curl_exec($ch);
+            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'SB Database error']);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Server error']);
+        }
 
         $sigURL = $sigPath; // change to url path
     }
