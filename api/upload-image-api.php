@@ -76,23 +76,23 @@ try {
 
     if (isset($_FILES['signature']) && $_FILES['signature']['error'] === UPLOAD_ERR_OK) {
         $sig = $_FILES['signature'];
-        $tmpFile = $sig['tmp_name'];
+        $tempFile = $sig['tmp_name'];
         $fileName = $sig['name'];
 
-        $objectPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
-        $fileContents = file_get_contents($tmpFile);
+        $sigPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
+        $fileContent = file_get_contents($tempFile);
 
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/signatures-api" . $objectPath,
+            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/signatures-api" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
                 "apikey: " . getenv('DB_SUPA_PASS'),
                 "Content-Type: image/jpeg"
             ],
-            CURLOPT_POSTFIELDS => $fileContents,
+            CURLOPT_POSTFIELDS => $fileContent,
             CURLOPT_RETURNTRANSFER => true
         ]);
 
@@ -101,7 +101,7 @@ try {
 
         curl_close($ch);
 
-        $sigURL = $_FILES['signature']; // change to url path
+        $sigURL = $sigPath; // change to url path
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
