@@ -53,11 +53,11 @@ try {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/photos-api" . $objectPath,
+            CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/photos-api" . $objectPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
-                "apikey: " . getenv('DB_SUPA_PASS'),
+                "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
             CURLOPT_POSTFIELDS => $fileContents,
@@ -85,11 +85,11 @@ try {
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/signatures-api" . $sigPath,
+            CURLOPT_URL => getenv('SB_URL') . "/storage/v1/object/signatures-api" . $sigPath,
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
-                "apikey: " . getenv('DB_SUPA_PASS'),
+                "apikey: " . getenv('SB_SECRET_KEY'),
                 "Content-Type: image/jpeg"
             ],
             CURLOPT_POSTFIELDS => $fileContent,
