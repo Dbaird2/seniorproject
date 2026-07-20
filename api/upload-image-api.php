@@ -43,11 +43,65 @@ try {
     }
 
     if (isset($_FILES['photo'])  && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
-        $photoURL = 'nfjs';
+        $photo = $_FILES['photo'];
+        $tmpFile = $photo['tmp_name'];
+        $fileName = $photo['name'];
+
+        $objectPath = "delivery-photos/" . $barcode . "_" . time() . ".jpg";
+        $fileContents = file_get_contents($tmpFile);
+
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/photos-api" . $objectPath,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
+                "apikey: " . getenv('DB_SUPA_PASS'),
+                "Content-Type: image/jpeg"
+            ],
+            CURLOPT_POSTFIELDS => $fileContents,
+            CURLOPT_RETURNTRANSFER => true
+        ]);
+
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        $photoURL = $objectPath;
+    } else {
+        $photoURL = NULL;
     }
 
     if (isset($_FILES['signature']) && $_FILES['signature']['error'] === UPLOAD_ERR_OK) {
-        $sigURL = 'nfjs';
+        $sig = $_FILES['signature'];
+        $tmpFile = $sig['tmp_name'];
+        $fileName = $sig['name'];
+
+        $objectPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
+        $fileContents = file_get_contents($tmpFile);
+
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => getenv('DB_SUPA_HOST') . "/storage/v1/object/signatures-api" . $objectPath,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . getenv('DB_SUPA_PASS'),
+                "apikey: " . getenv('DB_SUPA_PASS'),
+                "Content-Type: image/jpeg"
+            ],
+            CURLOPT_POSTFIELDS => $fileContents,
+            CURLOPT_RETURNTRANSFER => true
+        ]);
+
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        $sigURL = $_FILES['signature']; // change to url path
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
