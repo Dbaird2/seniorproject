@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$isDevelopmentMode = true;
+$isDevelopmentMode = false;
 
 if (!$isDevelopmentMode) {
     // Call your new function that checks the DB for user tokens
