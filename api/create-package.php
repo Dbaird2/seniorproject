@@ -5,7 +5,7 @@ include("../config.php");
 
 header('Content-Type: application/json');
 
-check_api_auth($dbh, 'low');
+//check_api_auth($dbh, 'low');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -13,6 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$isDevelopmentMode = true;
+
+if (!$isDevelopmentMode) {
+    // Call your new function that checks the DB for user tokens
+    check_api_auth($dbh, 'low');
+}
 
 try {
     $deliveredBy = $_POST['user'] ?? '';
@@ -144,8 +150,8 @@ try {
         'barcode' => $barcode
     ]);
 } catch (PDOException $e) {
-    /*
     error_log($e->getMessage());
+    /*
     http_response_code(500);
     echo json_encode([
         'success' => false,
@@ -156,8 +162,8 @@ try {
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);
 } catch (Exception $e) {
-    /*
     error_log($e->getMessage());
+    /*
     http_response_code(500);
     echo json_encode([
         'success' => false,
