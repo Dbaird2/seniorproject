@@ -44,8 +44,16 @@ try {
     $photoUrl = null;
     if (!empty($package['photo_path'])) {
         $baseUrl = rtrim(getenv('SB_URL'), '/');
+
+        $encodedPhotoPath = implode(
+            '/',
+            array_map(
+                'rawurlencode',
+                explode('/', $package['photo_path'])
+            )
+        );
         // Endpoint structure for creating signed URLs in Supabase Storage
-        $supabaseStorageUrl = $baseUrl . "/storage/v1/object/sign/photos-api/" . $package['photo_path'];
+        $supabaseStorageUrl = $baseUrl . "/storage/v1/object/sign/photos-api/" . $encodedPhotoPath;
 
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -76,8 +84,16 @@ try {
     $sigUrl = null;
     if (!empty($package['signature_path'])) {
         $baseUrl = rtrim(getenv('SB_URL'), '/');
+
+        $encodedSigPath = implode(
+            '/',
+            array_map(
+                'rawurlencode',
+                explode('/', $package['signature_path'])
+            )
+        );
         // Endpoint structure for creating signed URLs in Supabase Storage
-        $supabaseStorageUrl = $baseUrl . "/storage/v1/object/sign/signatures-api/" . $package['signature_path'];
+        $supabaseStorageUrl = $baseUrl . "/storage/v1/object/sign/signatures-api/" . $encodedSigPath;
 
         $ch = curl_init();
         curl_setopt_array($ch, [
