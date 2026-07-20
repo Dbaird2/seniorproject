@@ -107,11 +107,19 @@ try {
             CURLOPT_RETURNTRANSFER => true
         ]);
 
+        $sigUploadURL =
+            rtrim(getenv('SB_URL'), '/') .
+            '/storage/v1/object/signatures-api/' .
+            $sigPath;
+
+        throw new Exception('Generated URL: ' . $sigUploadURL);
+
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
 
         curl_close($ch);
+
 
         if ($response === false) {
             throw new Exception('Photo cURL error: ' . $curlError);
