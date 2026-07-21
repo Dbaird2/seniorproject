@@ -185,7 +185,7 @@ function createSignedStorageUrl(
         return $signedPath;
     }
 
-    return $baseUrl . $signedPath;
+    return $baseUrl . '/storage/v1' . $signedPath;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
