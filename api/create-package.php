@@ -29,7 +29,7 @@ try {
     $deliveredTo = isset($_POST['lastName']) ? strip_tags(trim($_POST['lastName'])) : '';
     $latitude = $_POST['latitude'] ?? NULL;
     $longitude = $_POST['longitude'] ?? NULL;
-    $sigURL = 'jfso';
+    $sigURL = NULL;
     $photoURL = NULL;
 
     if ($barcode === '' || $deliveredTo === '' || $deliveredBy === '') {
