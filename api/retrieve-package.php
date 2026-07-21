@@ -79,7 +79,7 @@ try {
             $responseData = json_decode($response, true);
             // Supabase returns a relative path like /storage/v1/object/sign/...
             // We prepend the base project domain to make it a fully qualified URL
-            $photoUrl = $baseUrl . $responseData['signedURL'];
+            $photoUrl = $baseUrl . '/storage/v1' . $responseData['signedURL'];
         }
     }
 
@@ -122,10 +122,6 @@ try {
             $sigUrl = $baseUrl . '/storage/v1' . $responseData['signedURL'];
         }
     }
-
-    var_dump($sigUrl);
-    var_dump($photoUrl);
-    exit;
 
     // 5. Return payload
     echo json_encode([
