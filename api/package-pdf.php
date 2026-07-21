@@ -40,6 +40,68 @@ function encodeStoragePath(string $path): string
     );
 }
 
+function imageUrlToDataUri(?string $url): ?string
+{
+    if ($url === null || trim($url) === '') {
+        return null;
+    }
+
+    $ch = curl_init($url);
+
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_HTTPHEADER => [
+            'Accept: image/*'
+        ]
+    ]);
+
+    $imageBytes = curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+    $curlError = curl_error($ch);
+
+    curl_close($ch);
+
+    if (
+        $imageBytes === false ||
+        $status < 200 ||
+        $status >= 300
+    ) {
+        error_log(
+            'PDF image download failed. HTTP ' .
+                $status .
+                '. cURL error: ' .
+                $curlError .
+                '. URL: ' .
+                $url
+        );
+
+        return null;
+    }
+
+    if (
+        $contentType === null ||
+        !str_starts_with($contentType, 'image/')
+    ) {
+        error_log(
+            'PDF image returned invalid content type: ' .
+                (string)$contentType
+        );
+
+        return null;
+    }
+
+    return sprintf(
+        'data:%s;base64,%s',
+        $contentType,
+        base64_encode($imageBytes)
+    );
+}
+
 function createSignedStorageUrl(
     string $bucket,
     ?string $objectPath,
@@ -174,6 +236,9 @@ try {
         $package['photo_path']
     );
 
+    $signatureDataUri = imageUrlToDataUri($signatureUrl);
+    $photoDataUri = imageUrlToDataUri($photoUrl);
+
     $deliveredDate = '--';
 
     if (!empty($package['delivered_date'])) {
@@ -194,13 +259,13 @@ try {
         }
     }
 
-    $signatureHtml = $signatureUrl
+    $signatureHtml = $signatureDataUri
         ? '<img class="signature-image" src="' .
         html($signatureUrl) .
         '" alt="Delivery signature">'
         : '<span>--</span>';
 
-    $photoHtml = $photoUrl
+    $photoHtml = $photoDataUri
         ? '<img class="photo-image" src="' .
         html($photoUrl) .
         '" alt="Delivery photo">'
@@ -288,6 +353,16 @@ try {
                     max-height: 230px;
                     margin-top: 8px;
                     object-fit: contain;
+                }
+
+                .signature-image {
+                    width: 250px;
+                    max-height: 125px;
+                }
+
+                .photo-image {
+                    width: 300px;
+                    max-height: 230px;
                 }
             </style>
         </head>
