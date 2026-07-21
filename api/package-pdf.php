@@ -231,14 +231,22 @@ try {
         $package['signature_path']
     );
 
-    $photoUrl = createSignedStorageUrl(
-        'photos-api',
-        $package['photo_path']
-    );
+    if (!$package['photo_path'] === NULL) {
+        $photoUrl = createSignedStorageUrl(
+            'photos-api',
+            $package['photo_path']
+        );
+    } else {
+        $photoUrl = '';
+    }
 
     $signatureDataUri = imageUrlToDataUri($signatureUrl);
-    $photoDataUri = imageUrlToDataUri($photoUrl);
-
+    if ($photoUrl !== '') {
+        $photoDataUri = imageUrlToDataUri($photoUrl);
+    } else {
+        $photoDataUri = NULL;
+    }
+    
     $deliveredDate = '--';
 
     if (!empty($package['delivered_date'])) {
