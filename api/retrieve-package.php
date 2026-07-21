@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-check_auth();
+//check_auth();
 
 /*
 $isDevelopmentMode = true;
@@ -122,6 +122,10 @@ try {
             $sigUrl = $baseUrl . $responseData['signedURL'];
         }
     }
+
+    var_dump($sigUrl);
+    var_dump($photoUrl);
+    exit;
 
     // 5. Return payload
     echo json_encode([
