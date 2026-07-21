@@ -231,7 +231,7 @@ try {
         $package['signature_path']
     );
 
-    if (!$package['photo_path'] === NULL) {
+    if ($package['photo_path'] !== NULL) {
         $photoUrl = createSignedStorageUrl(
             'photos-api',
             $package['photo_path']
@@ -241,12 +241,13 @@ try {
     }
 
     $signatureDataUri = imageUrlToDataUri($signatureUrl);
+    
     if ($photoUrl !== '') {
         $photoDataUri = imageUrlToDataUri($photoUrl);
     } else {
         $photoDataUri = NULL;
     }
-    
+
     $deliveredDate = '--';
 
     if (!empty($package['delivered_date'])) {
