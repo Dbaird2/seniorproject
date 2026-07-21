@@ -13,15 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$currentUser = NULL;
+
 $isDevelopmentMode = false;
 
 if (!$isDevelopmentMode) {
     // Call your new function that checks the DB for user tokens
-    check_api_auth($dbh, 'low');
+    $currentUser = check_api_auth($dbh, 'low');
 }
 
 try {
-    $deliveredBy = $_POST['user'] ?? '';
+    $deliveredBy = $currentUser['f_name'] . ' ' . $currentUser['l_name'];
     $barcode = $_POST['barcode'] ?? '';
     $date = $_POST['date'] ?? '';
     $time = $_POST['time'] ?? '';

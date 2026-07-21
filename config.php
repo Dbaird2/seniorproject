@@ -58,7 +58,7 @@ function check_auth($level = 'low')
     return true;
 }
 
-function check_api_auth($dbh, $requiredLevel = 'low')
+function check_api_auth(PDO $dbh, string $requiredLevel = 'low'): array
 {
     $levels = [
         'low' => ['user', 'custodian', 'admin', 'management'],
@@ -66,37 +66,94 @@ function check_api_auth($dbh, $requiredLevel = 'low')
         'high' => ['admin']
     ];
 
-    // 1. Get the Authorization token from the mobile app's request header
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
-
-    if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-        http_response_code(401);
-        echo json_encode(['success' => false, 'error' => 'Authentication token required']);
+    if (!array_key_exists($requiredLevel, $levels)) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Invalid permission level configuration'
+        ]);
         exit;
     }
 
-    $token = $matches[1];
+    /*
+     * Read the Authorization header.
+     * The $_SERVER fallbacks are useful when getallheaders()
+     * is unavailable or the web server exposes it differently.
+     */
+    $headers = function_exists('getallheaders')
+        ? getallheaders()
+        : [];
 
-    // 2. Lookup the token in your database to see who it belongs to and what their role is
-    // (You will need to ensure your login endpoint stores a token in your user/session table upon successful Google Auth login)
-    $stmt = $dbh->prepare("SELECT role FROM users WHERE api_token = ? AND token_expires > NOW() LIMIT 1");
-    $stmt->execute([$token]);
+    $authHeader =
+        $headers['Authorization'] ??
+        $headers['authorization'] ??
+        $_SERVER['HTTP_AUTHORIZATION'] ??
+        $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ??
+        '';
+
+    if (
+        !preg_match(
+            '/^Bearer\s+(\S+)$/i',
+            trim($authHeader),
+            $matches
+        )
+    ) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Authentication token required'
+        ]);
+        exit;
+    }
+
+    $rawToken = $matches[1];
+
+    /*
+     * Use this only if login.php stores:
+     *
+     * hash('sha256', $rawToken)
+     */
+    $tokenHash = hash('sha256', $rawToken);
+
+    $stmt = $dbh->prepare(
+        'SELECT
+            id,
+            username,
+            email,
+            f_name,
+            l_name,
+            u_role,
+            dept_id,
+            is_active
+         FROM user_table
+         WHERE api_token = ?
+           AND token_expires > CURRENT_TIMESTAMP
+           AND is_active = TRUE
+         LIMIT 1'
+    );
+
+    $stmt->execute([$tokenHash]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Invalid or expired token']);
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Invalid or expired token'
+        ]);
         exit;
     }
 
-    // 3. Match their role against the permitted levels
-    $user_role = $user['role'];
-    if (!in_array($user_role, $levels[$requiredLevel] ?? [])) {
+    $userRole = $user['u_role'];
+
+    if (!in_array($userRole, $levels[$requiredLevel], true)) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Insufficient permissions']);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Insufficient permissions'
+        ]);
         exit;
     }
 
-    return true; // Token is valid, role is authorized!
+    return $user;
 }
