@@ -1528,16 +1528,6 @@ include('../navbar.php');
                         </span>
                     </div>
 
-                    <div class="package-detail-field">
-                        <strong>Coordinates:</strong>
-                        <span>
-                            ${
-                                hasCoordinates(packageData)
-                                    ? `${displayValue(packageData.latitude)}, ${displayValue(packageData.longitude)}`
-                                    : "--"
-                            }
-                        </span>
-                    </div>
                 </div>
 
                 <div class="package-signature-section">

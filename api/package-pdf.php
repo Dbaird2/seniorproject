@@ -324,11 +324,6 @@ try {
 
                 <tr>
                     <td>
-                        <span class="label">Terms &amp; Conditions:</span>
-                        --
-                    </td>
-
-                    <td>
                         <span class="label">To:</span>
                         ' . html($package['delivered_to']) . '
                     </td>
@@ -338,21 +333,6 @@ try {
                         --
                     </td>
 
-                    <td>
-                        <span class="label">Coordinates:</span>
-                        ' .
-        (
-            !empty($package['latitude']) &&
-            !empty($package['longitude'])
-            ? html(
-                $package['latitude'] .
-                    ', ' .
-                    $package['longitude']
-            )
-            : '--'
-        ) .
-        '
-                    </td>
                 </tr>
             </table>
 
