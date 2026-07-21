@@ -59,7 +59,7 @@ try {
             throw new Exception('Invalid file type. Only JPG, PNG, and WebP are allowed.');
         }
 
-        $objectPath = "delivery-photos/" . $barcode . "_" . time() . ".jpg";
+        $objectPath = "delivery-photos/" . $barcode . ".jpg";
         $fileContents = file_get_contents($tmpFile);
 
         $ch = curl_init();
