@@ -11,14 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-//check_auth();
+check_auth();
 
+/*
 $isDevelopmentMode = true;
 
 if (!$isDevelopmentMode) {
     // Call your new function that checks the DB for user tokens
     check_auth();
 }
+    */
 
 $barcode = $_GET['barcode'] ?? '';
 
