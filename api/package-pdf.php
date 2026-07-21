@@ -260,15 +260,19 @@ try {
     }
 
     $signatureHtml = $signatureDataUri
-        ? '<img class="signature-image" src="' .
-        html($signatureUrl) .
-        '" alt="Delivery signature">'
+        ? '<img
+            class="signature-image"
+            src="' . $signatureDataUri . '"
+            alt="Delivery signature"
+       >'
         : '<span>--</span>';
 
     $photoHtml = $photoDataUri
-        ? '<img class="photo-image" src="' .
-        html($photoUrl) .
-        '" alt="Delivery photo">'
+        ? '<img
+            class="photo-image"
+            src="' . $photoDataUri . '"
+            alt="Delivery photo"
+       >'
         : '<span>--</span>';
 
     $documentHtml = '
