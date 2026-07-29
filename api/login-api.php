@@ -23,8 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 try {
+    /*
     $email = trim($_POST["email"] ?? "");
     $pw = $_POST["pw"] ?? "";
+*/
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    $email = trim($input["email"] ?? "");
+    $pw = $input["pw"] ?? "";
 
     if ($email === "" || $pw === "") {
         sendJson(400, [
@@ -120,7 +126,6 @@ try {
             ]
         ]
     ]);
-
 } catch (PDOException $e) {
     error_log($e->__toString());
 
@@ -128,7 +133,6 @@ try {
         "success" => false,
         "error" => "Database error"
     ]);
-
 } catch (Throwable $e) {
     error_log($e->__toString());
 
