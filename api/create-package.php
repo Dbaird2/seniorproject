@@ -275,11 +275,35 @@ try {
         $sigURL = null;
     }
 
-    $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?)';
-    $stmt = $dbh->prepare($insert);
-    $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude]);
+    $check = 'SELECT * FROM packages WHERE barcode = :barcode';
+    $checkStmt = $dbh->prepare($check);
+    $checkStmt->execute(['barcode' => $barcode]);
 
+    if ($checkStmt->fetch()) {
+        $update = 'UPDATE packages SET delivered_date = :delivered_date, delivered_time = :delivered_time, delivered_by = :delivered_by, delivered_to = :delivered_to, comments = :comments, delivered_status = :delivered_status, signature_path = :signature_path, photo_path = :photo_path, latitude = :latitude, longitude = :longitude WHERE barcode = :barcode';
+        $updateStmt = $dbh->prepare($update);
+        $updateStmt->execute([
+            'delivered_date' => $date,
+            'delivered_time' => $time,
+            'delivered_by' => $deliveredBy,
+            'delivered_to' => $deliveredTo,
+            'comments' => $comments,
+            'delivered_status' => true,
+            'signature_path' => $sigURL,
+            'photo_path' => $photoURL,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'barcode' => $barcode
+        ]);
+    }
+
+    if (!$checkStmt->fetch()) {
+        $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)';
+        $stmt = $dbh->prepare($insert);
+        $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude]);
+    }
+    
     echo json_encode([
         'success' => true,
         'message' => 'Package info inserted successfully',
