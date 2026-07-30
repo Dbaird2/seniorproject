@@ -43,6 +43,12 @@ try {
         exit;
     }
 
+    $fullTimeStamp = $package['delivered_date'] . ' ' . $package['delivered_time'];
+
+    $time = new DateTime($fullTimeStamp, new DateTimeZone('UTC'));
+    $time->setTimezone(new DateTimeZone('America/Los_Angeles'));
+    $time->format('g:i a');
+
     $photoUrl = null;
     if (!empty($package['photo_path'])) {
         $baseUrl = rtrim(getenv('SB_URL'), '/');
@@ -129,7 +135,7 @@ try {
         'data' => [
             'barcode' => $package['barcode'],
             'delivered_date' => $package['delivered_date'],
-            'delivered_time' => $package['delivered_time'],
+            'delivered_time' => $time,
             'delivered_by' => $package['delivered_by'],
             'delivered_to' => $package['delivered_to'],
             'comments' => $package['comments'],
