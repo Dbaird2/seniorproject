@@ -279,7 +279,9 @@ try {
     $checkStmt = $dbh->prepare($check);
     $checkStmt->execute(['barcode' => $barcode]);
 
-    if ($checkStmt->fetch()) {
+    $existingRow = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($existingRow) {
         $update = 'UPDATE packages SET delivered_date = :delivered_date, delivered_time = :delivered_time, delivered_by = :delivered_by, delivered_to = :delivered_to, comments = :comments, delivered_status = :delivered_status, signature_path = :signature_path, photo_path = :photo_path, latitude = :latitude, longitude = :longitude WHERE barcode = :barcode';
         $updateStmt = $dbh->prepare($update);
         $updateStmt->execute([
@@ -297,7 +299,7 @@ try {
         ]);
     }
 
-    if (!$checkStmt->fetch()) {
+    if (!$existingRow) {
         $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
     VALUES (?,?,?,?,?,?,?,?,?,?,?)';
         $stmt = $dbh->prepare($insert);
