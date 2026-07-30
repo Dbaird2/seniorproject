@@ -1529,8 +1529,22 @@ include('../navbar.php');
         }
 
         function getValidCoordinates(packageData) {
-            const latitude = Number(packageData.latitude);
-            const longitude = Number(packageData.longitude);
+            const rawLatitude = packageData.latitude;
+            const rawLongitude = packageData.longitude;
+
+            if (
+                rawLatitude === null ||
+                rawLatitude === undefined ||
+                String(rawLatitude).trim() === "" ||
+                rawLongitude === null ||
+                rawLongitude === undefined ||
+                String(rawLongitude).trim() === ""
+            ) {
+                return null;
+            }
+
+            const latitude = Number(rawLatitude);
+            const longitude = Number(rawLongitude);
 
             if (
                 !Number.isFinite(latitude) ||
@@ -1661,11 +1675,6 @@ include('../navbar.php');
                 } =
                 await google.maps.importLibrary("maps");
 
-                const {
-                    AdvancedMarkerElement
-                } =
-                await google.maps.importLibrary("marker");
-
                 deliveryMap.innerHTML = "";
 
                 packageLocationMap = new Map(
@@ -1679,7 +1688,7 @@ include('../navbar.php');
                 );
 
                 packageLocationMarker =
-                    new AdvancedMarkerElement({
+                    new google.maps.Marker({
                         map: packageLocationMap,
                         position: coordinates,
                         title: "Package delivery location"
