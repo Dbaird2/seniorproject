@@ -34,6 +34,16 @@ try {
     $sigURL = NULL;
     $photoURL = NULL;
 
+    $safeBarcode = preg_replace(
+        '/[^A-Za-z0-9_-]/',
+        '_',
+        $barcode
+    );
+
+    if ($safeBarcode === null || $safeBarcode === '') {
+        throw new Exception('Unable to create a safe barcode filename.');
+    }
+
     if ($barcode === '' || $deliveredTo === '' || $deliveredBy === '') {
         http_response_code(400);
         echo json_encode([
@@ -43,39 +53,86 @@ try {
         exit;
     }
 
-    if (isset($_FILES['photo'])  && isset($_FILES['photo']['error']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+    if (
+        isset($_FILES['photo']) &&
+        isset($_FILES['photo']['error']) &&
+        $_FILES['photo']['error'] === UPLOAD_ERR_OK
+    ) {
         $photo = $_FILES['photo'];
 
-        if ($photo['size'] > 5 * 1024 * 1024) { //5 MB Limit
-            throw new Exception('File size exceeds limit.');
+        if ($photo['size'] > 5 * 1024 * 1024) {
+            throw new Exception('Photo size exceeds the 5 MB limit.');
         }
 
         $tmpFile = $photo['tmp_name'];
-        $fileName = $photo['name'];
 
-        $finfo = new finfo(FILEINFO_MIME_TYPE); // Security
-        $mimeType = $finfo->file($tmpFile);
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-        if (!in_array($mimeType, $allowedTypes)) {
-            throw new Exception('Invalid file type. Only JPG, PNG, and WebP are allowed.');
+        if (!is_uploaded_file($tmpFile)) {
+            throw new Exception('Invalid photo upload.');
         }
 
-        $objectPath = "delivery-photos/" . $barcode . "_" . time() . ".jpg";
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($tmpFile);
+
+        $allowedTypes = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp'
+        ];
+
+        if (
+            $mimeType === false ||
+            !isset($allowedTypes[$mimeType])
+        ) {
+            throw new Exception(
+                'Invalid photo type. Only JPG, PNG, and WebP are allowed.'
+            );
+        }
+
+        $extension = $allowedTypes[$mimeType];
+
+        $objectPath =
+            'delivery-photos/' .
+            $safeBarcode .
+            '_' .
+            time() .
+            '_' .
+            bin2hex(random_bytes(4)) .
+            '.' .
+            $extension;
+
         $fileContents = file_get_contents($tmpFile);
+
+        if ($fileContents === false) {
+            throw new Exception('Unable to read the uploaded photo.');
+        }
+
+        $encodedObjectPath = implode(
+            '/',
+            array_map(
+                'rawurlencode',
+                explode('/', $objectPath)
+            )
+        );
 
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/photos-api/" . $objectPath,
+            CURLOPT_URL =>
+            rtrim((string) getenv('SB_URL'), '/') .
+                '/storage/v1/object/photos-api/' .
+                $encodedObjectPath,
+
             CURLOPT_POST => true,
+
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
-                "apikey: " . getenv('SB_SECRET_KEY'),
-                "Content-Type: image/jpeg"
+                'Authorization: Bearer ' . getenv('SB_SECRET_KEY'),
+                'apikey: ' . getenv('SB_SECRET_KEY'),
+                'Content-Type: ' . $mimeType
             ],
+
             CURLOPT_POSTFIELDS => $fileContents,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30
         ]);
 
         $response = curl_exec($ch);
@@ -85,40 +142,111 @@ try {
         curl_close($ch);
 
         if ($response === false) {
-            throw new Exception('Photo cURL error: ' . $curlError);
+            throw new Exception(
+                'Photo cURL error: ' . $curlError
+            );
         }
 
         if ($status < 200 || $status >= 300) {
             throw new Exception(
-                'Photo upload failed. HTTP ' . $status . ': ' . $response
+                'Photo upload failed. HTTP ' .
+                    $status .
+                    ': ' .
+                    $response
             );
         }
 
         $photoURL = $objectPath;
     } else {
-        $photoURL = NULL;
+        $photoURL = null;
     }
 
-    if (isset($_FILES['signature']) && $_FILES['signature']['error'] === UPLOAD_ERR_OK) {
-        $sig = $_FILES['signature'];
-        $tempFile = $sig['tmp_name'];
-        $fileName = $sig['name'];
+    if (
+        isset($_FILES['signature']) &&
+        isset($_FILES['signature']['error']) &&
+        $_FILES['signature']['error'] === UPLOAD_ERR_OK
+    ) {
+        $signature = $_FILES['signature'];
 
-        $sigPath = "delivery-signature/" . $barcode . "_" . time() . ".jpg";
+        if ($signature['size'] > 5 * 1024 * 1024) {
+            throw new Exception(
+                'Signature size exceeds the 5 MB limit.'
+            );
+        }
+
+        $tempFile = $signature['tmp_name'];
+
+        if (!is_uploaded_file($tempFile)) {
+            throw new Exception('Invalid signature upload.');
+        }
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $signatureMimeType = $finfo->file($tempFile);
+
+        $allowedSignatureTypes = [
+            'image/png' => 'png',
+            'image/jpeg' => 'jpg'
+        ];
+
+        if (
+            $signatureMimeType === false ||
+            !isset(
+                $allowedSignatureTypes[$signatureMimeType]
+            )
+        ) {
+            throw new Exception(
+                'Invalid signature type. Only PNG and JPG are allowed.'
+            );
+        }
+
+        $signatureExtension =
+            $allowedSignatureTypes[$signatureMimeType];
+
+        $sigPath =
+            'delivery-signature/' .
+            $safeBarcode .
+            '_' .
+            time() .
+            '_' .
+            bin2hex(random_bytes(4)) .
+            '.' .
+            $signatureExtension;
+
         $fileContent = file_get_contents($tempFile);
+
+        if ($fileContent === false) {
+            throw new Exception(
+                'Unable to read the uploaded signature.'
+            );
+        }
+
+        $encodedSignaturePath = implode(
+            '/',
+            array_map(
+                'rawurlencode',
+                explode('/', $sigPath)
+            )
+        );
 
         $ch = curl_init();
 
         curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim(getenv('SB_URL'), '/') . "/storage/v1/object/signatures-api/" . $sigPath,
+            CURLOPT_URL =>
+            rtrim((string) getenv('SB_URL'), '/') .
+                '/storage/v1/object/signatures-api/' .
+                $encodedSignaturePath,
+
             CURLOPT_POST => true,
+
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . getenv('SB_SECRET_KEY'),
-                "apikey: " . getenv('SB_SECRET_KEY'),
-                "Content-Type: image/jpeg"
+                'Authorization: Bearer ' . getenv('SB_SECRET_KEY'),
+                'apikey: ' . getenv('SB_SECRET_KEY'),
+                'Content-Type: ' . $signatureMimeType
             ],
+
             CURLOPT_POSTFIELDS => $fileContent,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30
         ]);
 
         $response = curl_exec($ch);
@@ -127,18 +255,24 @@ try {
 
         curl_close($ch);
 
-
         if ($response === false) {
-            throw new Exception('Photo cURL error: ' . $curlError);
+            throw new Exception(
+                'Signature cURL error: ' . $curlError
+            );
         }
 
         if ($status < 200 || $status >= 300) {
             throw new Exception(
-                'Photo upload failed. HTTP ' . $status . ': ' . $response
+                'Signature upload failed. HTTP ' .
+                    $status .
+                    ': ' .
+                    $response
             );
         }
 
-        $sigURL = $sigPath; // change to url path
+        $sigURL = $sigPath;
+    } else {
+        $sigURL = null;
     }
 
     $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
