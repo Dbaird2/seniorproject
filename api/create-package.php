@@ -43,7 +43,7 @@ try {
         exit;
     }
 
-    if (isset($_FILES['photo'])  && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['photo'])  && $_FILES['photo'] !== '' && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $photo = $_FILES['photo'];
 
         if ($photo['size'] > 5 * 1024 * 1024) { //5 MB Limit
