@@ -1024,7 +1024,7 @@ include('../navbar.php');
                                         <?php else: ?>
                                             <?= escapeHtml(
                                                 date(
-                                                    'h:i A',
+                                                    'g:i A',
                                                     strtotime($package['delivered_time'])
                                                 )
                                             ) ?>
