@@ -134,6 +134,8 @@ $packageSql = "
 
 $packageStatement = $dbh->prepare($packageSql);
 
+$googleMapsApiKey = trim((string)getenv('GOOGLE_MAPS_API_KEY'));
+
 if ($search !== '') {
     $packageStatement->bindValue(
         ':search',
@@ -856,6 +858,81 @@ include('../navbar.php');
             background: #f4f4f4;
         }
 
+        .map-modal-window {
+            width: min(760px, 100%);
+        }
+
+        .map-modal-body {
+            padding: 24px;
+        }
+
+        .delivery-map {
+            width: 100%;
+            height: min(62vh, 520px);
+            min-height: 360px;
+            overflow: hidden;
+            border: 1px solid #d9dde0;
+            border-radius: 4px;
+            background: #eef1f3;
+        }
+
+        .map-loading,
+        .map-error,
+        .map-unavailable {
+            display: flex;
+            min-height: 360px;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .map-loading,
+        .map-unavailable {
+            color: #666666;
+        }
+
+        .map-error {
+            color: #a12626;
+            background: #fff2f2;
+        }
+
+        .map-coordinate-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 24px;
+            margin-top: 14px;
+            padding: 13px 15px;
+            border: 1px solid #e0e3e5;
+            border-radius: 4px;
+            color: #555555;
+            background: #f8fafb;
+            font-size: 13px;
+        }
+
+        .map-coordinate-summary strong {
+            color: #222222;
+        }
+
+        .open-google-maps-link {
+            display: inline-flex;
+            min-height: 34px;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 15px;
+            border: 1px solid #2f3438;
+            border-radius: 4px;
+            color: #ffffff;
+            background: #2f3438;
+            text-decoration: none;
+        }
+
+        .open-google-maps-link:hover {
+            color: #ffffff;
+            background: #171a1c;
+            text-decoration: none;
+        }
+
         body.modal-open {
             overflow: hidden;
         }
@@ -1324,6 +1401,77 @@ include('../navbar.php');
             </footer>
         </section>
     </div>
+
+    <div
+        class="package-modal"
+        id="mapModal"
+        aria-hidden="true">
+        <div class="modal-backdrop" data-close-modal></div>
+
+        <section
+            class="modal-window map-modal-window"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mapModalTitle">
+            <header class="modal-header">
+                <h2 id="mapModalTitle">Package Location</h2>
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    data-close-modal
+                    aria-label="Close">
+                    &times;
+                </button>
+            </header>
+
+            <div class="modal-body map-modal-body">
+                <div
+                    id="deliveryMap"
+                    class="delivery-map"
+                    aria-label="Map showing the package delivery location">
+                    <div class="map-loading">
+                        Click “View Package Location” to load the map.
+                    </div>
+                </div>
+
+                <div
+                    id="mapCoordinateSummary"
+                    class="map-coordinate-summary"
+                    hidden>
+                    <span>
+                        <strong>Latitude:</strong>
+                        <span id="mapLatitudeValue">--</span>
+                    </span>
+
+                    <span>
+                        <strong>Longitude:</strong>
+                        <span id="mapLongitudeValue">--</span>
+                    </span>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <a
+                    id="openGoogleMapsLink"
+                    class="open-google-maps-link"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    hidden>
+                    Open in Google Maps
+                </a>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    data-close-modal>
+                    Close
+                </button>
+            </footer>
+        </section>
+    </div>
+
     <script>
         "use strict";
 
@@ -1331,6 +1479,25 @@ include('../navbar.php');
 
         const photoModal = document.getElementById("photoModal");
         const historyModal = document.getElementById("historyModal");
+        const mapModal = document.getElementById("mapModal");
+        const mapModalTitle = document.getElementById("mapModalTitle");
+
+        const deliveryMap = document.getElementById("deliveryMap");
+        const mapCoordinateSummary =
+            document.getElementById("mapCoordinateSummary");
+        const mapLatitudeValue =
+            document.getElementById("mapLatitudeValue");
+        const mapLongitudeValue =
+            document.getElementById("mapLongitudeValue");
+        const openGoogleMapsLink =
+            document.getElementById("openGoogleMapsLink");
+
+        const googleMapsApiKey =
+            <?= json_encode($googleMapsApiKey, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+
+        let googleMapsLoadingPromise = null;
+        let packageLocationMap = null;
+        let packageLocationMarker = null;
 
         const fullDeliveryPhoto =
             document.getElementById("fullDeliveryPhoto");
@@ -1361,18 +1528,182 @@ include('../navbar.php');
             return escapeHtml(String(value));
         }
 
-        function hasCoordinates(packageData) {
-            const latitude = packageData.latitude;
-            const longitude = packageData.longitude;
+        function getValidCoordinates(packageData) {
+            const latitude = Number(packageData.latitude);
+            const longitude = Number(packageData.longitude);
 
-            return (
-                latitude !== null &&
-                latitude !== undefined &&
-                String(latitude).trim() !== "" &&
-                longitude !== null &&
-                longitude !== undefined &&
-                String(longitude).trim() !== ""
+            if (
+                !Number.isFinite(latitude) ||
+                !Number.isFinite(longitude) ||
+                latitude < -90 ||
+                latitude > 90 ||
+                longitude < -180 ||
+                longitude > 180
+            ) {
+                return null;
+            }
+
+            return {
+                lat: latitude,
+                lng: longitude
+            };
+        }
+
+        function hasCoordinates(packageData) {
+            return getValidCoordinates(packageData) !== null;
+        }
+
+        function loadGoogleMaps() {
+            if (
+                window.google &&
+                window.google.maps
+            ) {
+                return Promise.resolve();
+            }
+
+            if (googleMapsLoadingPromise) {
+                return googleMapsLoadingPromise;
+            }
+
+            if (!googleMapsApiKey) {
+                return Promise.reject(
+                    new Error(
+                        "The Google Maps API key is not configured."
+                    )
+                );
+            }
+
+            googleMapsLoadingPromise = new Promise(
+                (resolve, reject) => {
+                    const callbackName =
+                        "__initializePackageMapsApi";
+
+                    window[callbackName] = () => {
+                        delete window[callbackName];
+                        resolve();
+                    };
+
+                    const script =
+                        document.createElement("script");
+
+                    script.src =
+                        "https://maps.googleapis.com/maps/api/js" +
+                        "?key=" +
+                        encodeURIComponent(googleMapsApiKey) +
+                        "&loading=async" +
+                        "&libraries=marker" +
+                        "&callback=" +
+                        callbackName;
+
+                    script.async = true;
+                    script.defer = true;
+
+                    script.onerror = () => {
+                        delete window[callbackName];
+                        googleMapsLoadingPromise = null;
+
+                        reject(
+                            new Error(
+                                "Google Maps could not be loaded."
+                            )
+                        );
+                    };
+
+                    document.head.appendChild(script);
+                }
             );
+
+            return googleMapsLoadingPromise;
+        }
+
+        async function showPackageLocation(packageData) {
+            const coordinates =
+                getValidCoordinates(packageData);
+
+            if (!coordinates) {
+                return;
+            }
+
+            mapModalTitle.textContent =
+                packageData.barcode ?
+                `Package Location — ${packageData.barcode}` :
+                "Package Location";
+
+            mapLatitudeValue.textContent =
+                String(coordinates.lat);
+
+            mapLongitudeValue.textContent =
+                String(coordinates.lng);
+
+            mapCoordinateSummary.hidden = false;
+
+            openGoogleMapsLink.href =
+                "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(
+                    coordinates.lat + "," + coordinates.lng
+                );
+
+            openGoogleMapsLink.hidden = false;
+
+            deliveryMap.innerHTML = `
+                <div class="map-loading">
+                    Loading package location...
+                </div>
+            `;
+
+            openModal(mapModal);
+
+            try {
+                await loadGoogleMaps();
+
+                const {
+                    Map
+                } =
+                await google.maps.importLibrary("maps");
+
+                const {
+                    AdvancedMarkerElement
+                } =
+                await google.maps.importLibrary("marker");
+
+                deliveryMap.innerHTML = "";
+
+                packageLocationMap = new Map(
+                    deliveryMap, {
+                        center: coordinates,
+                        zoom: 18,
+                        mapTypeControl: true,
+                        streetViewControl: true,
+                        fullscreenControl: true
+                    }
+                );
+
+                packageLocationMarker =
+                    new AdvancedMarkerElement({
+                        map: packageLocationMap,
+                        position: coordinates,
+                        title: "Package delivery location"
+                    });
+
+                requestAnimationFrame(() => {
+                    packageLocationMap.setCenter(coordinates);
+                });
+            } catch (error) {
+                console.error(
+                    "Unable to load package location:",
+                    error
+                );
+
+                deliveryMap.innerHTML = `
+                    <div class="map-error">
+                        ${escapeHtml(
+                            error instanceof Error
+                                ? error.message
+                                : "Unable to load the package location."
+                        )}
+                    </div>
+                `;
+            }
         }
 
         function openModal(modal) {
@@ -1384,6 +1715,15 @@ include('../navbar.php');
         function closeModal(modal) {
             modal.classList.remove("open");
             modal.setAttribute("aria-hidden", "true");
+
+            if (modal === mapModal) {
+                mapModalTitle.textContent = "Package Location";
+                openGoogleMapsLink.hidden = true;
+                openGoogleMapsLink.removeAttribute("href");
+                mapCoordinateSummary.hidden = true;
+                mapLatitudeValue.textContent = "--";
+                mapLongitudeValue.textContent = "--";
+            }
 
             if (!document.querySelector(".package-modal.open")) {
                 document.body.classList.remove("modal-open");
@@ -1717,15 +2057,7 @@ include('../navbar.php');
 
             locationButton?.addEventListener("click", (event) => {
                 event.stopPropagation();
-
-                /*
-                 * Google Maps behavior will be added later.
-                 *
-                 * Coordinates are currently available through:
-                 *
-                 * locationButton.dataset.latitude
-                 * locationButton.dataset.longitude
-                 */
+                showPackageLocation(packageData);
             });
 
             closeButton?.addEventListener("click", (event) => {
