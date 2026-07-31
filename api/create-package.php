@@ -33,6 +33,7 @@ try {
     $longitude = $_POST['longitude'] ?? NULL;
     $sigURL = NULL;
     $photoURL = NULL;
+    $carrier = strtolower(trim($_POST['carrier'] ?? 'unknown'));
 
     $safeBarcode = preg_replace(
         '/[^A-Za-z0-9_-]/',
@@ -282,7 +283,7 @@ try {
     $existingRow = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
     if ($existingRow) {
-        $update = 'UPDATE packages SET delivered_date = :delivered_date, delivered_time = :delivered_time, delivered_by = :delivered_by, delivered_to = :delivered_to, comments = :comments, delivered_status = :delivered_status, signature_path = :signature_path, photo_path = :photo_path, latitude = :latitude, longitude = :longitude WHERE barcode = :barcode';
+        $update = 'UPDATE packages SET delivered_date = :delivered_date, delivered_time = :delivered_time, delivered_by = :delivered_by, delivered_to = :delivered_to, comments = :comments, delivered_status = :delivered_status, signature_path = :signature_path, photo_path = :photo_path, latitude = :latitude, longitude = :longitude, carrier = :carrier WHERE barcode = :barcode';
         $updateStmt = $dbh->prepare($update);
         $updateStmt->execute([
             'delivered_date' => $date,
@@ -295,13 +296,14 @@ try {
             'photo_path' => $photoURL,
             'latitude' => $latitude,
             'longitude' => $longitude,
+            'carrier' => $carrier,
             'barcode' => $barcode
         ]);
     }
 
     if (!$existingRow) {
-        $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?)';
+        $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude, carrier) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
         $stmt = $dbh->prepare($insert);
         $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude]);
     }
