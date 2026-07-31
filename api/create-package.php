@@ -305,9 +305,9 @@ try {
         $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude, carrier) 
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
         $stmt = $dbh->prepare($insert);
-        $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude]);
+        $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude, $carrier]);
     }
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Package info inserted successfully',
