@@ -1121,6 +1121,10 @@ include('../navbar.php');
                                     </td>
 
                                     <td>
+                                        <?= displayValue($package['delivered_to']) ?>
+                                    </td>
+
+                                    <td>
                                         <?php
                                         $carrier = trim(
                                             (string)($package['carrier'] ?? '')
@@ -1146,10 +1150,6 @@ include('../navbar.php');
                                                 }
                                             ) ?>
                                         <?php endif; ?>
-                                    </td>
-
-                                    <td>
-                                        <?= displayValue($package['carrier']) ?>
                                     </td>
 
                                     <td>
