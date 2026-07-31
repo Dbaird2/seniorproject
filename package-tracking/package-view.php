@@ -67,6 +67,7 @@ if ($search !== '') {
            OR delivered_by ILIKE :search
            OR delivered_to ILIKE :search
            OR comments ILIKE :search
+           OR carrier ILIKE :search
     ';
 
     $searchParameter = '%' . $search . '%';
@@ -120,6 +121,7 @@ $packageSql = "
         delivered_by,
         delivered_to,
         comments,
+        carrier,
         delivered_status,
         signature_path,
         photo_path,
@@ -350,7 +352,7 @@ include('../navbar.php');
             width: 220px;
         }
 
-        .comments-column {
+        .carrier-column {
             width: 250px;
         }
 
@@ -1049,8 +1051,8 @@ include('../navbar.php');
                                 Delivered To
                             </th>
 
-                            <th class="comments-column">
-                                Comments
+                            <th class="carrier-column">
+                                Carrier
                             </th>
 
                             <th class="status-column">
@@ -1119,11 +1121,35 @@ include('../navbar.php');
                                     </td>
 
                                     <td>
-                                        <?= displayValue($package['delivered_to']) ?>
+                                        <?php
+                                        $carrier = trim(
+                                            (string)($package['carrier'] ?? '')
+                                        );
+                                        ?>
+
+                                        <?php if (
+                                            $carrier === '' ||
+                                            strtolower($carrier) === 'unknown'
+                                        ): ?>
+                                            <span class="empty-value">--</span>
+                                        <?php else: ?>
+                                            <?= escapeHtml(
+                                                match (strtolower($carrier)) {
+                                                    'usps' => 'USPS',
+                                                    'ups' => 'UPS',
+                                                    'fedex' => 'FedEx',
+                                                    'amazon' => 'Amazon',
+                                                    'gofo' => 'GOFO',
+                                                    'ontrac' => 'OnTrac',
+                                                    'custom' => 'Custom',
+                                                    default => ucfirst($carrier),
+                                                }
+                                            ) ?>
+                                        <?php endif; ?>
                                     </td>
 
                                     <td>
-                                        <?= displayValue($package['comments']) ?>
+                                        <?= displayValue($package['carrier']) ?>
                                     </td>
 
                                     <td>
