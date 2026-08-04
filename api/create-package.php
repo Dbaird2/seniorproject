@@ -5,287 +5,487 @@ include("../config.php");
 
 header('Content-Type: application/json');
 
-//check_api_auth($dbh, 'low');
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['error' => 'Method Not Allowed']);
+    echo json_encode(['success' => false, 'error' => 'Method Not Allowed']);
     exit;
 }
 
-$currentUser = NULL;
-
+$currentUser = null;
 $isDevelopmentMode = false;
 
 if (!$isDevelopmentMode) {
-    // Call your new function that checks the DB for user tokens
     $currentUser = check_api_auth($dbh, 'low');
 }
 
-try {
-    $deliveredBy = $currentUser['f_name'] . ' ' . $currentUser['l_name'];
-    $barcode = $_POST['barcode'] ?? '';
-    $date = $_POST['date'] ?? '';
-    $time = $_POST['time'] ?? '';
-    $comments = isset($_POST['comment']) ? strip_tags(trim($_POST['comment'])) : '';
-    $deliveredTo = isset($_POST['lastName']) ? strip_tags(trim($_POST['lastName'])) : '';
-    $latitude = $_POST['latitude'] ?? NULL;
-    $longitude = $_POST['longitude'] ?? NULL;
-    $sigURL = NULL;
-    $photoURL = NULL;
-    $carrier = strtolower(trim($_POST['carrier'] ?? 'unknown'));
-
-    $safeBarcode = preg_replace(
-        '/[^A-Za-z0-9_-]/',
-        '_',
-        $barcode
-    );
-
-    if ($safeBarcode === null || $safeBarcode === '') {
-        throw new Exception('Unable to create a safe barcode filename.');
+function uploadToSupabase(
+    array $file,
+    string $bucket,
+    string $objectPath,
+    array $allowedTypes,
+    int $maxBytes,
+    string $fileLabel
+): string {
+    if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception($fileLabel . ' upload was not successful.');
     }
 
-    if ($barcode === '' || $deliveredTo === '' || $deliveredBy === '') {
+    $size = isset($file['size']) ? (int) $file['size'] : 0;
+
+    if ($size <= 0) {
+        throw new Exception($fileLabel . ' file is empty.');
+    }
+
+    if ($size > $maxBytes) {
+        throw new Exception($fileLabel . ' size exceeds the 5 MB limit.');
+    }
+
+    $tmpFile = (string) ($file['tmp_name'] ?? '');
+
+    if ($tmpFile === '' || !is_uploaded_file($tmpFile)) {
+        throw new Exception('Invalid ' . strtolower($fileLabel) . ' upload.');
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($tmpFile);
+
+    if ($mimeType === false || !isset($allowedTypes[$mimeType])) {
+        throw new Exception('Invalid ' . strtolower($fileLabel) . ' type.');
+    }
+
+    $fileContents = file_get_contents($tmpFile);
+
+    if ($fileContents === false) {
+        throw new Exception('Unable to read the uploaded ' . strtolower($fileLabel) . '.');
+    }
+
+    $encodedObjectPath = implode(
+        '/',
+        array_map('rawurlencode', explode('/', $objectPath))
+    );
+
+    $supabaseUrl = rtrim((string) getenv('SB_URL'), '/');
+    $secretKey = (string) getenv('SB_SECRET_KEY');
+
+    if ($supabaseUrl === '' || $secretKey === '') {
+        throw new Exception('Supabase storage configuration is missing.');
+    }
+
+    $ch = curl_init();
+
+    curl_setopt_array($ch, [
+        CURLOPT_URL =>
+            $supabaseUrl .
+            '/storage/v1/object/' .
+            rawurlencode($bucket) .
+            '/' .
+            $encodedObjectPath,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $secretKey,
+            'apikey: ' . $secretKey,
+            'Content-Type: ' . $mimeType
+        ],
+        CURLOPT_POSTFIELDS => $fileContents,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 30
+    ]);
+
+    $response = curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+
+    curl_close($ch);
+
+    if ($response === false) {
+        throw new Exception($fileLabel . ' cURL error: ' . $curlError);
+    }
+
+    if ($status < 200 || $status >= 300) {
+        throw new Exception(
+            $fileLabel . ' upload failed. HTTP ' . $status . ': ' . $response
+        );
+    }
+
+    return $objectPath;
+}
+
+function deleteSupabaseObject(string $bucket, ?string $objectPath): void
+{
+    if ($objectPath === null || $objectPath === '') {
+        return;
+    }
+
+    $supabaseUrl = rtrim((string) getenv('SB_URL'), '/');
+    $secretKey = (string) getenv('SB_SECRET_KEY');
+
+    if ($supabaseUrl === '' || $secretKey === '') {
+        return;
+    }
+
+    $encodedObjectPath = implode(
+        '/',
+        array_map('rawurlencode', explode('/', $objectPath))
+    );
+
+    $ch = curl_init();
+
+    curl_setopt_array($ch, [
+        CURLOPT_URL =>
+            $supabaseUrl .
+            '/storage/v1/object/' .
+            rawurlencode($bucket) .
+            '/' .
+            $encodedObjectPath,
+        CURLOPT_CUSTOMREQUEST => 'DELETE',
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $secretKey,
+            'apikey: ' . $secretKey
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15
+    ]);
+
+    $response = curl_exec($ch);
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+
+    curl_close($ch);
+
+    if ($response === false || $status < 200 || $status >= 300) {
+        error_log(
+            'Supabase cleanup failed for ' .
+            $bucket .
+            '/' .
+            $objectPath .
+            '. HTTP ' .
+            $status .
+            '. cURL: ' .
+            $curlError .
+            '. Response: ' .
+            (string) $response
+        );
+    }
+}
+
+$photoURL = null;
+$sigURL = null;
+
+try {
+    if (
+        !$isDevelopmentMode &&
+        (
+            !is_array($currentUser) ||
+            empty($currentUser['f_name']) ||
+            empty($currentUser['l_name'])
+        )
+    ) {
+        throw new Exception('Unable to determine the authenticated user.');
+    }
+
+    $deliveredBy = $isDevelopmentMode
+        ? 'Development User'
+        : trim(
+            (string) $currentUser['f_name'] .
+            ' ' .
+            (string) $currentUser['l_name']
+        );
+
+    $date = trim((string) ($_POST['date'] ?? ''));
+    $time = trim((string) ($_POST['time'] ?? ''));
+
+    $comments = isset($_POST['comment'])
+        ? strip_tags(trim((string) $_POST['comment']))
+        : '';
+
+    $deliveredTo = isset($_POST['lastName'])
+        ? strip_tags(trim((string) $_POST['lastName']))
+        : '';
+
+    $latitude = isset($_POST['latitude']) && $_POST['latitude'] !== ''
+        ? (string) $_POST['latitude']
+        : null;
+
+    $longitude = isset($_POST['longitude']) && $_POST['longitude'] !== ''
+        ? (string) $_POST['longitude']
+        : null;
+
+    /*
+     * New batch format:
+     * packages = JSON array of barcode/carrier objects.
+     *
+     * The single-package fallback keeps this endpoint
+     * compatible while the app is being updated.
+     */
+    $packages = [];
+
+    if (isset($_POST['packages']) && trim((string) $_POST['packages']) !== '') {
+        $decodedPackages = json_decode((string) $_POST['packages'], true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($decodedPackages)) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Invalid packages JSON.'
+            ]);
+            exit;
+        }
+
+        $packages = $decodedPackages;
+    } else {
+        $singleBarcode = trim((string) ($_POST['barcode'] ?? ''));
+
+        if ($singleBarcode !== '') {
+            $packages[] = [
+                'barcode' => $singleBarcode,
+                'carrier' => strtolower(
+                    trim((string) ($_POST['carrier'] ?? 'unknown'))
+                )
+            ];
+        }
+    }
+
+    if (count($packages) === 0) {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'error' => 'Missing required fields'
+            'error' => 'No packages were provided.'
         ]);
         exit;
     }
 
+    if ($deliveredTo === '' || $deliveredBy === '' || $date === '' || $time === '') {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Missing required delivery fields.'
+        ]);
+        exit;
+    }
+
+    $allowedCarriers = [
+        'usps',
+        'fedex',
+        'ups',
+        'amazon',
+        'gofo',
+        'ontrac',
+        'gls',
+        'custom',
+        'unknown'
+    ];
+
+    $normalizedPackages = [];
+    $seenBarcodes = [];
+
+    foreach ($packages as $index => $package) {
+        if (!is_array($package)) {
+            throw new Exception('Package entry ' . ($index + 1) . ' is invalid.');
+        }
+
+        $barcode = trim((string) ($package['barcode'] ?? ''));
+        $carrier = strtolower(
+            trim((string) ($package['carrier'] ?? 'unknown'))
+        );
+
+        if ($barcode === '') {
+            throw new Exception(
+                'Package entry ' . ($index + 1) . ' is missing its barcode.'
+            );
+        }
+
+        if (!in_array($carrier, $allowedCarriers, true)) {
+            $carrier = 'unknown';
+        }
+
+        if (isset($seenBarcodes[$barcode])) {
+            continue;
+        }
+
+        $seenBarcodes[$barcode] = true;
+
+        $normalizedPackages[] = [
+            'barcode' => $barcode,
+            'carrier' => $carrier
+        ];
+    }
+
+    if (count($normalizedPackages) === 0) {
+        throw new Exception('No valid packages remained after validation.');
+    }
+
+    /*
+     * The first barcode names the one shared photo and
+     * signature uploaded for the complete delivery.
+     */
+    $firstBarcode = $normalizedPackages[0]['barcode'];
+
+    $safeFirstBarcode = preg_replace(
+        '/[^A-Za-z0-9_-]/',
+        '_',
+        $firstBarcode
+    );
+
+    if ($safeFirstBarcode === null || $safeFirstBarcode === '') {
+        throw new Exception('Unable to create a safe delivery filename.');
+    }
+
+    $deliveryIdentifier = time() . '_' . bin2hex(random_bytes(4));
+
     if (
         isset($_FILES['photo']) &&
         isset($_FILES['photo']['error']) &&
-        $_FILES['photo']['error'] === UPLOAD_ERR_OK
+        $_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE
     ) {
         $photo = $_FILES['photo'];
 
-        if ($photo['size'] > 5 * 1024 * 1024) {
-            throw new Exception('Photo size exceeds the 5 MB limit.');
-        }
-
-        $tmpFile = $photo['tmp_name'];
-
-        if (!is_uploaded_file($tmpFile)) {
-            throw new Exception('Invalid photo upload.');
-        }
-
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($tmpFile);
-
-        $allowedTypes = [
+        $photoMimeTypes = [
             'image/jpeg' => 'jpg',
             'image/png' => 'png',
             'image/webp' => 'webp'
         ];
 
-        if (
-            $mimeType === false ||
-            !isset($allowedTypes[$mimeType])
-        ) {
+        $tmpFile = (string) ($photo['tmp_name'] ?? '');
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $tmpFile !== '' ? $finfo->file($tmpFile) : false;
+
+        if ($mimeType === false || !isset($photoMimeTypes[$mimeType])) {
             throw new Exception(
                 'Invalid photo type. Only JPG, PNG, and WebP are allowed.'
             );
         }
 
-        $extension = $allowedTypes[$mimeType];
-
-        $objectPath =
+        $photoPath =
             'delivery-photos/' .
-            $safeBarcode .
+            $safeFirstBarcode .
             '_' .
-            time() .
-            '_' .
-            bin2hex(random_bytes(4)) .
+            $deliveryIdentifier .
             '.' .
-            $extension;
+            $photoMimeTypes[$mimeType];
 
-        $fileContents = file_get_contents($tmpFile);
-
-        if ($fileContents === false) {
-            throw new Exception('Unable to read the uploaded photo.');
-        }
-
-        $encodedObjectPath = implode(
-            '/',
-            array_map(
-                'rawurlencode',
-                explode('/', $objectPath)
-            )
+        $photoURL = uploadToSupabase(
+            $photo,
+            'photos-api',
+            $photoPath,
+            $photoMimeTypes,
+            5 * 1024 * 1024,
+            'Photo'
         );
-
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL =>
-            rtrim((string) getenv('SB_URL'), '/') .
-                '/storage/v1/object/photos-api/' .
-                $encodedObjectPath,
-
-            CURLOPT_POST => true,
-
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . getenv('SB_SECRET_KEY'),
-                'apikey: ' . getenv('SB_SECRET_KEY'),
-                'Content-Type: ' . $mimeType
-            ],
-
-            CURLOPT_POSTFIELDS => $fileContents,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30
-        ]);
-
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-
-        curl_close($ch);
-
-        if ($response === false) {
-            throw new Exception(
-                'Photo cURL error: ' . $curlError
-            );
-        }
-
-        if ($status < 200 || $status >= 300) {
-            throw new Exception(
-                'Photo upload failed. HTTP ' .
-                    $status .
-                    ': ' .
-                    $response
-            );
-        }
-
-        $photoURL = $objectPath;
-    } else {
-        $photoURL = null;
     }
 
     if (
         isset($_FILES['signature']) &&
         isset($_FILES['signature']['error']) &&
-        $_FILES['signature']['error'] === UPLOAD_ERR_OK
+        $_FILES['signature']['error'] !== UPLOAD_ERR_NO_FILE
     ) {
         $signature = $_FILES['signature'];
 
-        if ($signature['size'] > 5 * 1024 * 1024) {
-            throw new Exception(
-                'Signature size exceeds the 5 MB limit.'
-            );
-        }
-
-        $tempFile = $signature['tmp_name'];
-
-        if (!is_uploaded_file($tempFile)) {
-            throw new Exception('Invalid signature upload.');
-        }
-
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $signatureMimeType = $finfo->file($tempFile);
-
-        $allowedSignatureTypes = [
+        $signatureMimeTypes = [
             'image/png' => 'png',
             'image/jpeg' => 'jpg'
         ];
 
+        $tmpFile = (string) ($signature['tmp_name'] ?? '');
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $signatureMimeType = $tmpFile !== '' ? $finfo->file($tmpFile) : false;
+
         if (
             $signatureMimeType === false ||
-            !isset(
-                $allowedSignatureTypes[$signatureMimeType]
-            )
+            !isset($signatureMimeTypes[$signatureMimeType])
         ) {
             throw new Exception(
                 'Invalid signature type. Only PNG and JPG are allowed.'
             );
         }
 
-        $signatureExtension =
-            $allowedSignatureTypes[$signatureMimeType];
-
-        $sigPath =
+        $signaturePath =
             'delivery-signature/' .
-            $safeBarcode .
+            $safeFirstBarcode .
             '_' .
-            time() .
-            '_' .
-            bin2hex(random_bytes(4)) .
+            $deliveryIdentifier .
             '.' .
-            $signatureExtension;
+            $signatureMimeTypes[$signatureMimeType];
 
-        $fileContent = file_get_contents($tempFile);
-
-        if ($fileContent === false) {
-            throw new Exception(
-                'Unable to read the uploaded signature.'
-            );
-        }
-
-        $encodedSignaturePath = implode(
-            '/',
-            array_map(
-                'rawurlencode',
-                explode('/', $sigPath)
-            )
+        $sigURL = uploadToSupabase(
+            $signature,
+            'signatures-api',
+            $signaturePath,
+            $signatureMimeTypes,
+            5 * 1024 * 1024,
+            'Signature'
         );
-
-        $ch = curl_init();
-
-        curl_setopt_array($ch, [
-            CURLOPT_URL =>
-            rtrim((string) getenv('SB_URL'), '/') .
-                '/storage/v1/object/signatures-api/' .
-                $encodedSignaturePath,
-
-            CURLOPT_POST => true,
-
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . getenv('SB_SECRET_KEY'),
-                'apikey: ' . getenv('SB_SECRET_KEY'),
-                'Content-Type: ' . $signatureMimeType
-            ],
-
-            CURLOPT_POSTFIELDS => $fileContent,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30
-        ]);
-
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-
-        curl_close($ch);
-
-        if ($response === false) {
-            throw new Exception(
-                'Signature cURL error: ' . $curlError
-            );
-        }
-
-        if ($status < 200 || $status >= 300) {
-            throw new Exception(
-                'Signature upload failed. HTTP ' .
-                    $status .
-                    ': ' .
-                    $response
-            );
-        }
-
-        $sigURL = $sigPath;
-    } else {
-        $sigURL = null;
     }
 
-    $check = 'SELECT * FROM packages WHERE barcode = :barcode';
-    $checkStmt = $dbh->prepare($check);
-    $checkStmt->execute(['barcode' => $barcode]);
+    $checkStmt = $dbh->prepare(
+        'SELECT barcode
+         FROM packages
+         WHERE barcode = :barcode
+         LIMIT 1'
+    );
 
-    $existingRow = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    $updateStmt = $dbh->prepare(
+        'UPDATE packages
+         SET
+             delivered_date = :delivered_date,
+             delivered_time = :delivered_time,
+             delivered_by = :delivered_by,
+             delivered_to = :delivered_to,
+             comments = :comments,
+             delivered_status = :delivered_status,
+             signature_path = :signature_path,
+             photo_path = :photo_path,
+             latitude = :latitude,
+             longitude = :longitude,
+             carrier = :carrier
+         WHERE barcode = :barcode'
+    );
 
-    if ($existingRow) {
-        $update = 'UPDATE packages SET delivered_date = :delivered_date, delivered_time = :delivered_time, delivered_by = :delivered_by, delivered_to = :delivered_to, comments = :comments, delivered_status = :delivered_status, signature_path = :signature_path, photo_path = :photo_path, latitude = :latitude, longitude = :longitude, carrier = :carrier WHERE barcode = :barcode';
-        $updateStmt = $dbh->prepare($update);
-        $updateStmt->execute([
+    $insertStmt = $dbh->prepare(
+        'INSERT INTO packages (
+             barcode,
+             delivered_date,
+             delivered_time,
+             delivered_by,
+             delivered_to,
+             comments,
+             delivered_status,
+             signature_path,
+             photo_path,
+             latitude,
+             longitude,
+             carrier
+         )
+         VALUES (
+             :barcode,
+             :delivered_date,
+             :delivered_time,
+             :delivered_by,
+             :delivered_to,
+             :comments,
+             :delivered_status,
+             :signature_path,
+             :photo_path,
+             :latitude,
+             :longitude,
+             :carrier
+         )'
+    );
+
+    $dbh->beginTransaction();
+
+    $insertedCount = 0;
+    $updatedCount = 0;
+    $processedBarcodes = [];
+
+    foreach ($normalizedPackages as $package) {
+        $barcode = $package['barcode'];
+        $carrier = $package['carrier'];
+
+        $checkStmt->execute(['barcode' => $barcode]);
+        $existingRow = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+        $commonValues = [
+            'barcode' => $barcode,
             'delivered_date' => $date,
             'delivered_time' => $time,
             'delivered_by' => $deliveredBy,
@@ -296,45 +496,54 @@ try {
             'photo_path' => $photoURL,
             'latitude' => $latitude,
             'longitude' => $longitude,
-            'carrier' => $carrier,
-            'barcode' => $barcode
-        ]);
+            'carrier' => $carrier
+        ];
+
+        if ($existingRow) {
+            $updateStmt->execute($commonValues);
+            $updatedCount++;
+        } else {
+            $insertStmt->execute($commonValues);
+            $insertedCount++;
+        }
+
+        $processedBarcodes[] = $barcode;
     }
 
-    if (!$existingRow) {
-        $insert = 'INSERT INTO packages (barcode, delivered_date, delivered_time, delivered_by, delivered_to, comments, delivered_status, signature_path, photo_path, latitude, longitude, carrier) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
-        $stmt = $dbh->prepare($insert);
-        $stmt->execute([$barcode, $date, $time, $deliveredBy, $deliveredTo, $comments, true, $sigURL, $photoURL, $latitude, $longitude, $carrier]);
-    }
+    $dbh->commit();
 
     echo json_encode([
         'success' => true,
-        'message' => 'Package info inserted successfully',
-        'barcode' => $barcode
+        'message' => 'Delivery uploaded successfully.',
+        'package_count' => count($processedBarcodes),
+        'inserted_count' => $insertedCount,
+        'updated_count' => $updatedCount,
+        'barcodes' => $processedBarcodes,
+        'photo_path' => $photoURL,
+        'signature_path' => $sigURL
     ]);
 } catch (PDOException $e) {
-    error_log($e->getMessage());
-    /*
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Server error',
-        'details' => $e->getMessage()
-    ]);
-    */
+    if ($dbh->inTransaction()) {
+        $dbh->rollBack();
+    }
+
+    deleteSupabaseObject('photos-api', $photoURL);
+    deleteSupabaseObject('signatures-api', $sigURL);
+
+    error_log('Batch package database error: ' . $e->getMessage());
+
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Database error']);
 } catch (Exception $e) {
-    error_log($e->getMessage());
-    /*
-    http_response_code(500);
-    echo json_encode([
-        'success' => false,
-        'error' => 'Server error',
-        'details' => $e->getMessage()
-    ]);
-    */
+    if ($dbh->inTransaction()) {
+        $dbh->rollBack();
+    }
+
+    deleteSupabaseObject('photos-api', $photoURL);
+    deleteSupabaseObject('signatures-api', $sigURL);
+
+    error_log('Batch package server error: ' . $e->getMessage());
+
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Server error']);
 }

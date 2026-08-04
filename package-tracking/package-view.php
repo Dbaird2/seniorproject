@@ -1145,6 +1145,7 @@ include('../navbar.php');
                                                     'amazon' => 'Amazon',
                                                     'gofo' => 'GOFO',
                                                     'ontrac' => 'OnTrac',
+                                                    'gls' => 'GLS',
                                                     'custom' => 'Custom',
                                                     default => ucfirst($carrier),
                                                 }
