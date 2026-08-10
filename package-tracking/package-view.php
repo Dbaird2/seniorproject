@@ -12,12 +12,19 @@ include_once('../config.php');
 
 function escapeHtml(mixed $value): string
 {
-    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars(
+        (string)$value,
+        ENT_QUOTES,
+        'UTF-8'
+    );
 }
 
 function displayValue(mixed $value): string
 {
-    if ($value === null || trim((string)$value) === '') {
+    if (
+        $value === null ||
+        trim((string)$value) === ''
+    ) {
         return '--';
     }
 
@@ -42,58 +49,140 @@ function buildPageUrl(
 |--------------------------------------------------------------------------
 */
 
-$allowedPageSizes = [10, 20, 30, 40, 50];
+$allowedPageSizes = [
+    10,
+    20,
+    30,
+    40,
+    50
+];
 
-$page = max(1, (int)($_GET['page'] ?? 1));
-$perPage = (int)($_GET['per_page'] ?? 10);
-$search = trim($_GET['search'] ?? '');
+$page = max(
+    1,
+    (int)($_GET['page'] ?? 1)
+);
 
-if (!in_array($perPage, $allowedPageSizes, true)) {
+$perPage = (int)(
+    $_GET['per_page'] ?? 10
+);
+
+$search = trim(
+    (string)($_GET['search'] ?? '')
+);
+
+if (
+    !in_array(
+        $perPage,
+        $allowedPageSizes,
+        true
+    )
+) {
     $perPage = 10;
 }
 
 /*
 |--------------------------------------------------------------------------
-| Build search clause
+| Build date/search conditions
 |--------------------------------------------------------------------------
+|
+| All package browsing is limited to the last year.
+|
+| No search:
+|   - only the newest 500 rows are available
+|
+| Search:
+|   - searches all packages from the last year
+|   - not limited to the newest 500
+|
 */
 
-$whereSql = '';
-$searchParameter = '';
+$whereParts = [
+    "
+    delivered_date >=
+        CURRENT_DATE - INTERVAL '1 year'
+    "
+];
+
+$params = [];
 
 if ($search !== '') {
-    $whereSql = '
-        WHERE barcode ILIKE :search
-           OR delivered_by ILIKE :search
-           OR delivered_to ILIKE :search
-           OR comments ILIKE :search
-           OR carrier ILIKE :search
-    ';
+    $whereParts[] = "
+        (
+            barcode ILIKE :search
+            OR delivered_by ILIKE :search
+            OR delivered_to ILIKE :search
+            OR comments ILIKE :search
+            OR carrier ILIKE :search
+        )
+    ";
 
-    $searchParameter = '%' . $search . '%';
+    $params['search'] =
+        '%' . $search . '%';
 }
+
+$whereSql =
+    'WHERE ' .
+    implode(
+        ' AND ',
+        $whereParts
+    );
 
 /*
 |--------------------------------------------------------------------------
 | Count matching packages
 |--------------------------------------------------------------------------
+|
+| For the default page, cap the visible result set at 500.
+| For searches, count every matching package from the last year.
+|
 */
 
-$countSql = "SELECT COUNT(*) FROM packages {$whereSql}";
-$countStatement = $dbh->prepare($countSql);
+if ($search === '') {
+    $countSql = "
+        SELECT COUNT(*)
+        FROM (
+            SELECT barcode
+            FROM packages
+            {$whereSql}
+            ORDER BY
+                delivered_date DESC,
+                delivered_time DESC
+            LIMIT 500
+        ) AS recent_packages
+    ";
+} else {
+    $countSql = "
+        SELECT COUNT(*)
+        FROM packages
+        {$whereSql}
+    ";
+}
+
+$countStatement =
+    $dbh->prepare(
+        $countSql
+    );
 
 if ($search !== '') {
     $countStatement->bindValue(
         ':search',
-        $searchParameter,
+        $params['search'],
         PDO::PARAM_STR
     );
 }
 
 $countStatement->execute();
 
-$totalRows = (int)$countStatement->fetchColumn();
-$totalPages = max(1, (int)ceil($totalRows / $perPage));
+$totalRows =
+    (int)$countStatement
+        ->fetchColumn();
+
+$totalPages = max(
+    1,
+    (int)ceil(
+        $totalRows / $perPage
+    )
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -105,7 +194,9 @@ if ($page > $totalPages) {
     $page = $totalPages;
 }
 
-$offset = ($page - 1) * $perPage;
+$offset =
+    ($page - 1) *
+    $perPage;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,35 +204,97 @@ $offset = ($page - 1) * $perPage;
 |--------------------------------------------------------------------------
 */
 
-$packageSql = "
-    SELECT
-        barcode,
-        delivered_date,
-        delivered_time,
-        delivered_by,
-        delivered_to,
-        comments,
-        carrier,
-        delivered_status,
-        signature_path,
-        photo_path,
-        latitude,
-        longitude
-    FROM packages
-    {$whereSql}
-    ORDER BY delivered_date DESC, delivered_time DESC
-    LIMIT :limit
-    OFFSET :offset
-";
+if ($search === '') {
+    /*
+     * Default view:
+     * newest 500 packages from the last year,
+     * then paginate inside that result set.
+     */
+    $packageSql = "
+        SELECT
+            barcode,
+            delivered_date,
+            delivered_time,
+            delivered_by,
+            delivered_to,
+            comments,
+            carrier,
+            delivered_status,
+            signature_path,
+            photo_path,
+            latitude,
+            longitude
+        FROM (
+            SELECT
+                barcode,
+                delivered_date,
+                delivered_time,
+                delivered_by,
+                delivered_to,
+                comments,
+                carrier,
+                delivered_status,
+                signature_path,
+                photo_path,
+                latitude,
+                longitude
+            FROM packages
+            {$whereSql}
+            ORDER BY
+                delivered_date DESC,
+                delivered_time DESC
+            LIMIT 500
+        ) AS recent_packages
+        ORDER BY
+            delivered_date DESC,
+            delivered_time DESC
+        LIMIT :limit
+        OFFSET :offset
+    ";
+} else {
+    /*
+     * Search view:
+     * search the entire last year.
+     */
+    $packageSql = "
+        SELECT
+            barcode,
+            delivered_date,
+            delivered_time,
+            delivered_by,
+            delivered_to,
+            comments,
+            carrier,
+            delivered_status,
+            signature_path,
+            photo_path,
+            latitude,
+            longitude
+        FROM packages
+        {$whereSql}
+        ORDER BY
+            delivered_date DESC,
+            delivered_time DESC
+        LIMIT :limit
+        OFFSET :offset
+    ";
+}
 
-$packageStatement = $dbh->prepare($packageSql);
+$packageStatement =
+    $dbh->prepare(
+        $packageSql
+    );
 
-$googleMapsApiKey = trim((string)getenv('GOOGLE_MAPS_API_KEY'));
+$googleMapsApiKey = trim(
+    (string)getenv(
+        'GOOGLE_MAPS_API_KEY'
+    )
+);
 
 if ($search !== '') {
     $packageStatement->bindValue(
         ':search',
-        $searchParameter,
+        $params['search'],
         PDO::PARAM_STR
     );
 }
@@ -160,7 +313,10 @@ $packageStatement->bindValue(
 
 $packageStatement->execute();
 
-$packages = $packageStatement->fetchAll(PDO::FETCH_ASSOC);
+$packages =
+    $packageStatement->fetchAll(
+        PDO::FETCH_ASSOC
+    );
 
 /*
 |--------------------------------------------------------------------------
@@ -168,12 +324,25 @@ $packages = $packageStatement->fetchAll(PDO::FETCH_ASSOC);
 |--------------------------------------------------------------------------
 */
 
-$paginationStart = max(1, $page - 2);
-$paginationEnd = min($totalPages, $page + 2);
+$paginationStart = max(
+    1,
+    $page - 2
+);
 
-$startingRow = $totalRows === 0 ? 0 : $offset + 1;
-$endingRow = min($offset + $perPage, $totalRows);
+$paginationEnd = min(
+    $totalPages,
+    $page + 2
+);
 
+$startingRow =
+    $totalRows === 0
+        ? 0
+        : $offset + 1;
+
+$endingRow = min(
+    $offset + $perPage,
+    $totalRows
+);
 include('../navbar.php');
 
 ?>
