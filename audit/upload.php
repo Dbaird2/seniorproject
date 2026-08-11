@@ -2,7 +2,29 @@
 include_once("../config.php");
 require '../vendor/autoload.php';
 
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+/*
+echo "Including: " . realpath(__DIR__ . "/../config.php") . "<br>";
+require_once __DIR__ . "/../config.php";
+echo "Included config<br>";
+var_dump(isset($dbh), $dbh ?? null);
+exit;
+*/
+/*
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+echo "STEP 1<br>";
+flush();
+*/
+
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
 try {
 
     $get_depts = "SELECT dept_id, dept_name FROM department";
@@ -12,58 +34,123 @@ try {
 
     $blank_msg = '';
     check_auth();
-    function getAuditedInfo($type, $tag, $audit_id, $auditing_id) {
+
+    function getAuditedInfo(
+        string $type,
+        string $tag,
+        int $currentAuditId,
+        ?int $previousAuditId = null
+    ): ?array {
         global $dbh;
-        $old = false;
+
+        /*
+     * Current audits only read records for their
+     * current audit ID. This prevents notes/found
+     * information from another audit ID from leaking in.
+     */
+        if (
+            $type === 'cust' ||
+            $type === 'mgmt' ||
+            $type === 'SPA'
+        ) {
+            $sql = "
+        SELECT *
+        FROM audited_asset
+        WHERE asset_tag = :tag
+          AND audit_id = :audit_id
+        LIMIT 1
+      ";
+
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute([
+                ':tag' => $tag,
+                ':audit_id' => $currentAuditId,
+            ]);
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ?: null;
+        }
+
+        /*
+     * Old audit views keep their existing historical
+     * behavior: previous rotating ID + archive ID.
+     */
         if ($type === 'ocust') {
-            $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 3)";
-        } else if ($type === 'omgmt') {
-            $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 6)";
-        } else if ($type === 'oSPA') {
-            $old = true;
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id IN (:prev, 9)";
-        }
-        if ($old) {
-            $stmt = $dbh->prepare($audited_tag);
-            $stmt->execute([":tag"=>$tag, ':prev'=>$audit_id]);
-            $tag_info = $stmt->fetch();
+            $archiveAuditId = 3;
+        } elseif ($type === 'omgmt') {
+            $archiveAuditId = 6;
+        } elseif ($type === 'oSPA') {
+            $archiveAuditId = 9;
         } else {
-            $audited_tag = "SELECT * FROM audited_asset WHERE asset_tag = :tag AND audit_id = :id";
-            $stmt = $dbh->prepare($audited_tag);
-            $stmt->execute([":tag"=>$tag, ':id'=>$auditing_id]);
-            $tag_info = $stmt->fetch();
+            return null;
         }
-        return $tag_info ?: null;
+
+        if ($previousAuditId === null) {
+            return null;
+        }
+
+        $sql = "
+      SELECT *
+      FROM audited_asset
+      WHERE asset_tag = :tag
+        AND audit_id IN (:previous_id, :archive_id)
+      LIMIT 1
+    ";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute([
+            ':tag' => $tag,
+            ':previous_id' => $previousAuditId,
+            ':archive_id' => $archiveAuditId,
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
+
+    // echo "STEP 2<br>"; flush();
+
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         $select_audit_freq = "SELECT * FROM audit_freq";
         $stmt = $dbh->query($select_audit_freq);
-        $audit_ids = $stmt->fetch();
-        $prev_id = '';
-        if ($_POST['audit-type'] === 'ocust') { 
-            $prev_id = ($audit_ids['curr_self_id'] === 1) ? 2 : 1;
-        } else if ($_POST['audit-type'] === 'omgmt') { 
-            $prev_id = ($audit_ids['curr_mgmt_id'] === 4) ? 5 : 4;
-        } else if ($_POST['audit-type'] === 'oSPA') { 
-            $prev_id = ($audit_ids['curr_spa_id'] === 7) ? 8 : 7;
+        $audit_ids = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$audit_ids) {
+            throw new Exception('Unable to load audit frequency information.');
         }
-        $echo = function($array) {
+
+        $currentSelfId = (int)$audit_ids['curr_self_id'];
+        $currentMgmtId = (int)$audit_ids['curr_mgmt_id'];
+        $currentSpaId = (int)$audit_ids['curr_spa_id'];
+
+        $prev_id = null;
+
+        if ($_POST['audit-type'] === 'ocust') {
+            $prev_id = ($currentSelfId === 1) ? 2 : 1;
+        } else if ($_POST['audit-type'] === 'omgmt') {
+            $prev_id = ($currentMgmtId === 4) ? 5 : 4;
+        } else if ($_POST['audit-type'] === 'oSPA') {
+            $prev_id = ($currentSpaId === 7) ? 8 : 7;
+        }
+
+        $echo = function ($array) {
             echo "<pre>";
             var_dump($array);
             echo "</pre>";
         };
-        //$echo($audit_ids); 
+
+        //$echo($audit_ids);
         //$echo($_POST);
+
         $audit_id = match ($_POST['audit-type']) {
-        "cust"  => $audit_ids['curr_self_id'],
-            "ocust" => 4,
-            "mgmt"  => $audit_ids['curr_mgmt_id'],
-            "omgmt" => 6,
-            "SPA"   => $audit_ids['curr_spa_id'],
-            "oSPA"  => 9
+            'cust'  => $currentSelfId,
+            'ocust' => 3,
+            'mgmt'  => $currentMgmtId,
+            'omgmt' => 6,
+            'SPA'   => $currentSpaId,
+            'oSPA'  => 9,
+            default => throw new Exception('Invalid audit type.'),
         };
         //echo $audit_id . '<br>';
         //$echo($audited_assets);
@@ -88,10 +175,9 @@ try {
                     LEFT JOIN bldg_table b ON r.bldg_id = b.bldg_id
                     LEFT JOIN department d ON a.dept_id = d.dept_id
                     WHERE dept_name = :name  AND asset_status != 'Disposed' ORDER BY a.asset_tag";
-
             }
             $select_stmt = $dbh->prepare($select_q);
-            $select_stmt->execute([":name"=>$name]);
+            $select_stmt->execute([":name" => $name]);
             $result = $select_stmt->fetchAll(PDO::FETCH_ASSOC);
             unset($_SESSION['data']);
             unset($_SESSION['info']);
@@ -99,16 +185,11 @@ try {
             $info = '';
             if (!empty($result)) {
                 foreach ($result as $index => $row) {
-                    if (!empty($row['asset_notes'])) {
-                        $info = explode(',', $row['asset_notes']);
-                    } else {
-                        $info = '';
-                    }
                     $_SESSION['data'][$index]['Unit'] = $row['bus_unit'];
                     $_SESSION['data'][$index]['Tag Number'] = $row['asset_tag'];
                     $_SESSION['data'][$index]['Descr'] = $row['asset_name'];
                     $_SESSION['data'][$index]['Serial ID'] = $row['serial_num'];
-                    $_SESSION['data'][$index]['Location'] = $row['bldg_id']. '-'.$row['room_loc'];
+                    $_SESSION['data'][$index]['Location'] = $row['bldg_id'] . '-' . $row['room_loc'];
                     $_SESSION['data'][$index]['VIN'] = '';
                     $_SESSION['data'][$index]['Custodian'] = trim(trim($row['custodian'], '{}'), '"') ?? '';
                     $_SESSION['data'][$index]['Dept'] = $row['dept_id'];
@@ -116,42 +197,36 @@ try {
                     $_SESSION['data'][$index]['Acq Date'] = $row['date_added'];
                     $_SESSION['data'][$index]['COST Total Cost'] = $row['asset_price'];
 
-                    if ($row['found'] === true) {
+                    $tag_info = getAuditedInfo(
+                        $_POST['audit-type'],
+                        (string)$row['asset_tag'],
+                        (int)$audit_id,
+                        $prev_id
+                    );
+
+                    if ($tag_info) {
                         $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                        $_SESSION['data'][$index]['Found Note'] = 'Found at ' . $row['found_at']; 
-                    }
-                    if (!empty($info)) {
-                        $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                        $_SESSION['data'][$index]['Found Room Tag'] = $info[0];
+                        $_SESSION['data'][$index]['Found Room Tag'] = '';
                         $_SESSION['data'][$index]['Found Room Number'] = '';
                         $_SESSION['data'][$index]['Found Building Name'] = '';
-                        $_SESSION['data'][$index]['Found Note'] = $info[1];
+                        $_SESSION['data'][$index]['Found Note'] =
+                            ($tag_info['dept_id'] ?? '') .
+                            (!empty($tag_info['note']) ? ', ' . $tag_info['note'] : '');
                         $_SESSION['data'][$index]['Found Timestamp'] = '';
                     } else {
-                        $tag_info = getAuditedInfo($_POST['audit-type'], $row['asset_tag'], $prev_id, $audit_id);
-                        if ($tag_info) {
-                            //$echo($tag_info);
-                            $_SESSION['data'][$index]['Tag Status'] = 'Found';
-                            $_SESSION['data'][$index]['Found Room Tag'] = '';
-                            $_SESSION['data'][$index]['Found Room Number'] = '';
-                            $_SESSION['data'][$index]['Found Building Name'] = '';
-                            $_SESSION['data'][$index]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                            $_SESSION['data'][$index]['Found Timestamp'] = '';
-                        } else {
-                            $_SESSION['data'][$index]['Tag Status'] = '';
-                            $_SESSION['data'][$index]['Found Room Tag'] = '';
-                            $_SESSION['data'][$index]['Found Room Number'] = '';
-                            $_SESSION['data'][$index]['Found Building Name'] = '';
-                            $_SESSION['data'][$index]['Found Note'] = '';
-                            $_SESSION['data'][$index]['Found Timestamp'] = '';
-                        }
+                        $_SESSION['data'][$index]['Tag Status'] = '';
+                        $_SESSION['data'][$index]['Found Room Tag'] = '';
+                        $_SESSION['data'][$index]['Found Room Number'] = '';
+                        $_SESSION['data'][$index]['Found Building Name'] = '';
+                        $_SESSION['data'][$index]['Found Note'] = '';
+                        $_SESSION['data'][$index]['Found Timestamp'] = '';
                     }
 
                     $highest_row++;
                 }
             }
             $_SESSION['info'] = [$highest_row, NULL, $name, $_POST['audit-type'], $name, $audit_id];
-            header("Location: https://dataworks-7b7x.onrender.com/audit/auditing.php");
+            header("Location: http://localhost:3000/audit/auditing.php");
             exit;
         }
 
@@ -221,59 +296,50 @@ try {
                                 continue;
                             }
                             if ($data[1][$r_index] === 'Tag Number') {
-                                $select_q = "SELECT asset_notes, asset_status FROM asset_info WHERE asset_tag = :tag";
+                                $select_q = "SELECT asset_status FROM asset_info WHERE asset_tag = :tag";
                                 $select_stmt = $dbh->prepare($select_q);
-                                $select_stmt->execute([":tag"=>$r_row]);
-                                $asset_notes = $select_stmt->fetchColumn();
-                                if (!empty($asset_notes)) {
-                                    $info = explode(",", $asset_notes);
+                                $select_stmt->execute([":tag" => $r_row]);
+                                $asset_status = $select_stmt->fetchColumn();
+
+                                $tag_info = getAuditedInfo(
+                                    $_POST['audit-type'],
+                                    (string)$r_row,
+                                    (int)$audit_id,
+                                    $prev_id
+                                );
+
+                                if ($tag_info) {
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] =
+                                        ($tag_info['dept_id'] ?? '') .
+                                        (!empty($tag_info['note']) ? ', ' . $tag_info['note'] : '');
                                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                    if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
+
+                                    if (!empty($asset_status) && $asset_status !== 'In Service') {
                                         $_SESSION['data'][$index - $skipped]['Found Note'] .= ',Disposed';
                                     }
-
                                 } else {
-                                    $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
-                                    if ($tag_info) {
-                                        $check_notes = "SELECT asset_tag FROM asset_info WHERE asset_notes ILIKE :dept";
-                                        $stmt = $dbh->prepare($check_notes);
-                                        $stmt->execute([':dept'=>'%'.$tag_info['dept_id'].'%']);
-                                        $notes = $stmt->fetchAll();
-                                        //$echo($tag_info);
-                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                        if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
-                                            $_SESSION['data'][$index - $skipped]['Found Note'] .= ',Disposed';
-                                        }
-                                    } else {
-                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                        if (!empty($asset_notes['asset_status']) && $asset_notes['asset_status'] !== 'In Service') {
-                                            $_SESSION['data'][$index - $skipped]['Found Note'] = ',Disposed';
-                                        } else {
-                                            $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                        }
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
 
-                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
+                                    if (!empty($asset_status) && $asset_status !== 'In Service') {
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = ',Disposed';
+                                    } else {
+                                        $_SESSION['data'][$index - $skipped]['Found Note'] = '';
                                     }
+
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                                 }
                             }
                             $_SESSION['data'][$index - $skipped][$data[1][$r_index]] = $r_row;
                         }
                     }
                     /* SHEET HAS 1 ROW HEADER */
-
                 } else if ($continue === false) {
                     $skipped = 0;
                     foreach ($data as $index => $row) {
@@ -289,36 +355,29 @@ try {
                                 continue;
                             }
                             if ($data[0][$r_index] === 'Tag Number') {
-                                $select_q = "SELECT asset_notes FROM asset_info WHERE asset_tag = :tag";
-                                $select_stmt = $dbh->prepare($select_q);
-                                $select_stmt->execute([":tag"=>$r_row]);
-                                $asset_notes = $select_stmt->fetchColumn();
-                                if (!empty($asset_notes)) {
-                                    $info = explode(",", $asset_notes);
+                                $tag_info = getAuditedInfo(
+                                    $_POST['audit-type'],
+                                    (string)$r_row,
+                                    (int)$audit_id,
+                                    $prev_id
+                                );
+
+                                if ($tag_info) {
                                     $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = $info[0];
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
                                     $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                    $_SESSION['data'][$index - $skipped]['Found Note'] = $info[1];
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] =
+                                        ($tag_info['dept_id'] ?? '') .
+                                        (!empty($tag_info['note']) ? ', ' . $tag_info['note'] : '');
                                     $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                                 } else {
-                                    $tag_info = getAuditedInfo($_POST['audit-type'], $r_row, $prev_id, $audit_id);
-                                    if ($tag_info) {
-                                        //$echo($tag_info);
-                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = 'Found';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Note'] = $tag_info['dept_id'] . ', ' .$tag_info['note'];
-                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                    } else {
-                                        $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Note'] = '';
-                                        $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
-                                    }
+                                    $_SESSION['data'][$index - $skipped]['Tag Status'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Tag'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Room Number'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Building Name'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Note'] = '';
+                                    $_SESSION['data'][$index - $skipped]['Found Timestamp'] = '';
                                 }
                             }
 
@@ -366,7 +425,7 @@ try {
                 $blank_msg = "File cannot be empty 2";
             }
         }
-/*  if ($csv) {
+        /*  if ($csv) {
     if (($handle = fopen($file_name, 'r')) !== FALSE) {
       while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $num = count($data);
@@ -390,238 +449,238 @@ try {
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audit File Upload</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit File Upload</title>
 </head>
 <style>
-  * {
-    margin: 0;
-  }
-
-  .is-upload {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    min-height: 100vh;
-
-  }
-
-  .container {
-    --transition: 300ms;
-    --folder-W: 120px;
-    --folder-H: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px;
-    background: linear-gradient(135deg, #6dd5ed, #2193b0);
-    border-radius: 15px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    height: calc(var(--folder-H) * 3);
-    position: relative;
-    width: 100%;
-  }
-
-  .folder {
-    position: absolute;
-    top: -25px;
-    left: calc(50% - 60px);
-    animation: float 2.5s infinite ease-in-out;
-    transition: transform var(--transition) ease;
-  }
-
-  .folder:hover {
-    transform: scale(1.05);
-  }
-
-  .folder .front-side,
-  .folder .back-side {
-    position: absolute;
-    transition: transform var(--transition);
-    transform-origin: bottom center;
-  }
-
-  .folder .back-side::before,
-  .folder .back-side::after {
-    content: "";
-    display: block;
-    background-color: white;
-    opacity: 0.5;
-    z-index: 0;
-    width: var(--folder-W);
-    height: var(--folder-H);
-    position: absolute;
-    transform-origin: bottom center;
-    border-radius: 15px;
-    transition: transform 350ms;
-    z-index: 0;
-  }
-
-  .container:hover .back-side::before {
-    transform: rotateX(-5deg) skewX(5deg);
-  }
-
-  .container:hover .back-side::after {
-    transform: rotateX(-15deg) skewX(12deg);
-  }
-
-  .folder .front-side {
-    z-index: 1;
-  }
-
-  .container:hover .front-side {
-    transform: rotateX(-40deg) skewX(15deg);
-  }
-
-  .folder .tip {
-    background: linear-gradient(135deg, #ff9a56, #ff6f56);
-    width: 80px;
-    height: 20px;
-    border-radius: 12px 12px 0 0;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    top: -10px;
-    z-index: 2;
-  }
-
-  .folder .cover {
-    background: linear-gradient(135deg, #ffe563, #ffc663);
-    width: var(--folder-W);
-    height: var(--folder-H);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-  }
-
-  .custom-file-upload {
-    font-size: 1.1em;
-    color: #ffffff;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background var(--transition) ease;
-    display: inline-block;
-    padding: 10px 35px;
-    position: relative;
-  }
-
-  .custom-file-upload:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
-
-  .custom-file-upload input[type="file"] {
-    display: none;
-  }
-
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
+    * {
+        margin: 0;
     }
 
-    50% {
-      transform: translateY(-5px);
+    .is-upload {
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        min-height: 100vh;
+
     }
 
-    100% {
-      transform: translateY(0px);
+    .container {
+        --transition: 300ms;
+        --folder-W: 120px;
+        --folder-H: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 10px;
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        height: calc(var(--folder-H) * 3);
+        position: relative;
+        width: 100%;
     }
-  }
 
-  .button-9 {
-    appearance: button;
-    backface-visibility: hidden;
-    background-color: #405cf5;
-    border-radius: 6px;
-    border-width: 0;
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    font-size: 100%;
-    height: 44px;
-    line-height: 1.15;
-    margin: 12px 0 0;
-    outline: none;
-    overflow: hidden;
-    padding: 0 25px;
-    position: relative;
-    text-align: center;
-    text-transform: none;
-    transform: translateZ(0);
-    transition: all .2s, box-shadow .08s ease-in;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: 50%;
-  }
+    .folder {
+        position: absolute;
+        top: -25px;
+        left: calc(50% - 60px);
+        animation: float 2.5s infinite ease-in-out;
+        transition: transform var(--transition) ease;
+    }
 
-  .button-9:disabled {
-    cursor: default;
-  }
+    .folder:hover {
+        transform: scale(1.05);
+    }
 
-  .button-9:focus {
-    box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
-  }
+    .folder .front-side,
+    .folder .back-side {
+        position: absolute;
+        transition: transform var(--transition);
+        transform-origin: bottom center;
+    }
 
-  .is-upload .header {
-    margin-bottom: 100px;
-  }
+    .folder .back-side::before,
+    .folder .back-side::after {
+        content: "";
+        display: block;
+        background-color: white;
+        opacity: 0.5;
+        z-index: 0;
+        width: var(--folder-W);
+        height: var(--folder-H);
+        position: absolute;
+        transform-origin: bottom center;
+        border-radius: 15px;
+        transition: transform 350ms;
+        z-index: 0;
+    }
 
-  .form-input {
-    padding: 14px 16px;
-    border: 2px solid #e3f2fd;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background-color: #fafafa;
-    color: #333;
-  }
+    .container:hover .back-side::before {
+        transform: rotateX(-5deg) skewX(5deg);
+    }
+
+    .container:hover .back-side::after {
+        transform: rotateX(-15deg) skewX(12deg);
+    }
+
+    .folder .front-side {
+        z-index: 1;
+    }
+
+    .container:hover .front-side {
+        transform: rotateX(-40deg) skewX(15deg);
+    }
+
+    .folder .tip {
+        background: linear-gradient(135deg, #ff9a56, #ff6f56);
+        width: 80px;
+        height: 20px;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: -10px;
+        z-index: 2;
+    }
+
+    .folder .cover {
+        background: linear-gradient(135deg, #ffe563, #ffc663);
+        width: var(--folder-W);
+        height: var(--folder-H);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+    }
+
+    .custom-file-upload {
+        font-size: 1.1em;
+        color: #ffffff;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background var(--transition) ease;
+        display: inline-block;
+        padding: 10px 35px;
+        position: relative;
+    }
+
+    .custom-file-upload:hover {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .custom-file-upload input[type="file"] {
+        display: none;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    .button-9 {
+        appearance: button;
+        backface-visibility: hidden;
+        background-color: #405cf5;
+        border-radius: 6px;
+        border-width: 0;
+        box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+        box-sizing: border-box;
+        color: #fff;
+        cursor: pointer;
+        font-size: 100%;
+        height: 44px;
+        line-height: 1.15;
+        margin: 12px 0 0;
+        outline: none;
+        overflow: hidden;
+        padding: 0 25px;
+        position: relative;
+        text-align: center;
+        text-transform: none;
+        transform: translateZ(0);
+        transition: all .2s, box-shadow .08s ease-in;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 50%;
+    }
+
+    .button-9:disabled {
+        cursor: default;
+    }
+
+    .button-9:focus {
+        box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+    }
+
+    .is-upload .header {
+        margin-bottom: 100px;
+    }
+
+    .form-input {
+        padding: 14px 16px;
+        border: 2px solid #e3f2fd;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #fafafa;
+        color: #333;
+    }
 </style>
 <?php include_once("../navbar.php"); ?>
 
 <body>
 
-  <div class="is-upload">
-    <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
-      <h4 class="header">Concerned about Excel formatting? Check out our help page <a href="#">here</a></h4>
-      <div class="container">
-        <div class="folder">
-          <div class="front-side">
-            <div class="tip"></div>
-            <div class="cover"></div>
-          </div>
-          <div class="back-side cover"></div>
-        </div>
-        <label class="custom-file-upload">
-          <input class="title" type="file" name="file" id="filePath" accept=".xlsx, .xls" />
-          Choose a file
-        </label>
-<h3><br>OR<br></h3>
-<input class="form-input" list="dept-ids" type="search" name="list-type" placeholder="Search Dept Name">
-<datalist id="dept-ids" id="list" name="list">
-<option value="SPA Audit">SPA</option>
-<?php foreach ($depts as $dept) { ?>
-<option value="<?= $dept['dept_name'] ?>"><?= $dept['dept_name'] ?></option>
-<?php } ?>
-</datalist> 
-          <select class="form-input" name="audit-type" id="audit-type">
-            <option value="cust">Self Audit</option>
-            <option value="ocust">Old Self Audit</option>
-<?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
-            <option value="mgmt">Management</option>
-            <option value="omgmt">Old Management</option>
-            <option value="SPA">SPA</option>
-            <option value="oSPA">Old SPA audit</option>
-        <?php } ?>
-          </select>
-        <button class="button-9" type="submit" role="button">Submit</button>
+    <div class="is-upload">
+        <form id="sheet" name="form" action="upload.php" method="POST" enctype="multipart/form-data">
+            <h4 class="header">Concerned about Excel for matting? Check out our help page <a href="#">here</a></h4>
+            <div class="container">
+                <div class="folder">
+                    <div class="front-side">
+                        <div class="tip"></div>
+                        <div class="cover"></div>
+                    </div>
+                    <div class="back-side cover"></div>
+                </div>
+                <label class="custom-file-upload">
+                    <input class="title" type="file" name="file" id="filePath" accept=".xlsx, .xls" />
+                    Choose a file
+                </label>
+                <h3><br>OR<br></h3>
+                <input class="form-input" list="dept-ids" type="search" name="list-type" placeholder="Search Dept Name">
+                <datalist id="dept-ids" id="list" name="list">
+                    <option value="SPA Audit">SPA</option>
+                    <?php foreach ($depts as $dept) { ?>
+                        <option value="<?= $dept['dept_name'] ?>"><?= $dept['dept_name'] ?></option>
+                    <?php } ?>
+                </datalist>
+                <select class="form-input" name="audit-type" id="audit-type">
+                    <option value="cust">Self Audit</option>
+                    <option value="ocust">Old Self Audit</option>
+                    <?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'management') { ?>
+                        <option value="mgmt">Management</option>
+                        <option value="omgmt">Old Management</option>
+                        <option value="SPA">SPA</option>
+                        <option value="oSPA">Old SPA audit</option>
+                    <?php } ?>
+                </select>
+                <button class="button-9" type="submit" role="button">Submit</button>
 
-      </div>
-      <h2 style="color:red;justify-self:center;"><?php echo $blank_msg; ?></h2>
-    </form>
-  </div>
+            </div>
+            <h2 style="color:red;justify-self:center;"><?php echo $blank_msg; ?></h2>
+        </form>
+    </div>
 </body>
